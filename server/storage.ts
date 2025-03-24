@@ -109,7 +109,8 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: now,
       bio: insertUser.bio ?? null,
-      avatar: insertUser.avatar ?? null 
+      avatar: insertUser.avatar ?? null,
+      userType: insertUser.userType ?? "general" // Устанавливаем значение по умолчанию для userType
     };
     this.users.set(id, user);
     return user;
