@@ -48,7 +48,7 @@ export interface IStorage {
   markMessageAsRead(id: number): Promise<boolean>;
   
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: any;
 }
 
 export class MemStorage implements IStorage {
@@ -58,7 +58,7 @@ export class MemStorage implements IStorage {
   private applications: Map<number, Application>;
   private messages: Map<number, Message>;
   
-  sessionStore: session.SessionStore;
+  sessionStore: any;
   
   currentUserId: number;
   currentResumeId: number;
@@ -104,7 +104,13 @@ export class MemStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
     const now = new Date();
-    const user: User = { ...insertUser, id, createdAt: now };
+    const user: User = { 
+      ...insertUser, 
+      id, 
+      createdAt: now,
+      bio: insertUser.bio ?? null,
+      avatar: insertUser.avatar ?? null 
+    };
     this.users.set(id, user);
     return user;
   }
@@ -132,7 +138,13 @@ export class MemStorage implements IStorage {
   async createResume(insertResume: InsertResume): Promise<Resume> {
     const id = this.currentResumeId++;
     const now = new Date();
-    const resume: Resume = { ...insertResume, id, createdAt: now, updatedAt: now };
+    const resume: Resume = { 
+      ...insertResume, 
+      id, 
+      createdAt: now, 
+      updatedAt: now,
+      talents: insertResume.talents || ({} as any)
+    };
     this.resumes.set(id, resume);
     return resume;
   }
@@ -193,7 +205,14 @@ export class MemStorage implements IStorage {
   async createProject(insertProject: InsertProject): Promise<Project> {
     const id = this.currentProjectId++;
     const now = new Date();
-    const project: Project = { ...insertProject, id, createdAt: now, updatedAt: now };
+    const project: Project = { 
+      ...insertProject, 
+      id, 
+      createdAt: now, 
+      updatedAt: now,
+      location: insertProject.location ?? null,
+      remote: insertProject.remote ?? null
+    };
     this.projects.set(id, project);
     return project;
   }
@@ -232,7 +251,12 @@ export class MemStorage implements IStorage {
   async createApplication(insertApplication: InsertApplication): Promise<Application> {
     const id = this.currentApplicationId++;
     const now = new Date();
-    const application: Application = { ...insertApplication, id, createdAt: now };
+    const application: Application = { 
+      ...insertApplication, 
+      id, 
+      createdAt: now,
+      message: insertApplication.message ?? null
+    };
     this.applications.set(id, application);
     return application;
   }
@@ -262,13 +286,23 @@ export class MemStorage implements IStorage {
       (message) => 
         (message.senderId === user1Id && message.receiverId === user2Id) ||
         (message.senderId === user2Id && message.receiverId === user1Id)
-    ).sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    ).sort((a, b) => {
+      // Проверки на null, чтобы избежать ошибок
+      const timeA = a.createdAt ? a.createdAt.getTime() : 0;
+      const timeB = b.createdAt ? b.createdAt.getTime() : 0;
+      return timeA - timeB;
+    });
   }
   
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
     const id = this.currentMessageId++;
     const now = new Date();
-    const message: Message = { ...insertMessage, id, createdAt: now };
+    const message: Message = { 
+      ...insertMessage, 
+      id, 
+      createdAt: now,
+      read: insertMessage.read ?? false
+    };
     this.messages.set(id, message);
     return message;
   }
