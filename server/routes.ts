@@ -344,6 +344,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Маршруты для верификации пользователя
+  
+  // Запрос на отправку кода верификации
+  app.post("/api/send-verification", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    try {
+      // Генерируем код верификации
+      const verificationCode = await storage.createVerificationCode(req.user.id);
+      
+      // Определяем метод отправки в зависимости от типа аутентификации пользователя
+      if (req.user.authType === 'email' && req.user.email) {
+        // Отправляем код по email
+        const emailSent = await sendEmail(
+          req.user.email,
+          "Подтверждение аккаунта weproject",
+          `Ваш код подтверждения: ${verificationCode}`
+        );
+        
+        if (emailSent) {
+          res.status(200).json({ message: "Код подтверждения отправлен на вашу почту" });
+        } else {
+          res.status(500).json({ message: "Не удалось отправить код подтверждения" });
+        }
+      } 
+      else if (req.user.authType === 'phone' && req.user.phone) {
+        // Отправляем код по SMS
+        const smsSent = await sendSMS(
+          req.user.phone,
+          `Ваш код подтверждения weproject: ${verificationCode}`
+        );
+        
+        if (smsSent) {
+          res.status(200).json({ message: "Код подтверждения отправлен на ваш телефон" });
+        } else {
+          res.status(500).json({ message: "Не удалось отправить код подтверждения" });
+        }
+      } 
+      else {
+        res.status(400).json({ message: "Не указан метод для отправки кода подтверждения" });
+      }
+    } catch (error) {
+      console.error("Ошибка при отправке кода верификации:", error);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  });
+  
+  // Подтверждение кода верификации
+  app.post("/api/verify", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    const { code } = req.body;
+    
+    if (!code) {
+      return res.status(400).json({ message: "Код подтверждения обязателен" });
+    }
+    
+    try {
+      const verified = await storage.verifyUser(req.user.id, code);
+      
+      if (verified) {
+        // Обновляем пользователя в сессии
+        const updatedUser = await storage.getUser(req.user.id);
+        if (updatedUser) {
+          req.login(updatedUser, (err) => {
+            if (err) throw err;
+            
+            // Удаляем пароль из ответа
+            const { password, ...userWithoutPassword } = updatedUser;
+            res.status(200).json({ 
+              message: "Аккаунт успешно подтвержден", 
+              user: userWithoutPassword 
+            });
+          });
+        } else {
+          throw new Error("Пользователь не найден");
+        }
+      } else {
+        res.status(400).json({ message: "Неверный код подтверждения или срок его действия истек" });
+      }
+    } catch (error) {
+      console.error("Ошибка при проверке кода верификации:", error);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

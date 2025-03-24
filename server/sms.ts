@@ -17,10 +17,11 @@ export async function sendSMS(phoneNumber: string, message: string): Promise<boo
     const apiKey = await askForSMSAPIKey();
     
     // В реальном приложении здесь будет логика отправки SMS через API сервиса
-    // Например, через Twilio или другой SMS-сервис
+    // Например, через Twilio, Nexmo или другой сервис
     
     // Имитация для разработки
-    console.log(`Отправка SMS на номер ${phoneNumber}: ${message}`);
+    console.log(`Отправка SMS на номер ${phoneNumber}:`);
+    console.log(`Сообщение: ${message}`);
     console.log(`Используемый API ключ: ${apiKey}`);
     
     return true;
