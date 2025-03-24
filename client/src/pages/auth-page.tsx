@@ -40,18 +40,35 @@ import { Loader2, Check as CheckIcon } from "lucide-react";
 
 // Login form schema
 const loginSchema = z.object({
-  username: z.string().min(1, "Имя пользователя обязательно"),
+  username: z.string().min(1, "Имя пользователя, email или телефон обязательны"),
   password: z.string().min(1, "Пароль обязателен"),
 });
 
-// Registration form schema
-const registerSchema = z.object({
+// Base schema for registration
+const baseRegisterSchema = z.object({
   username: z.string().min(3, "Имя пользователя должно быть не менее 3 символов"),
-  email: z.string().email("Неверный адрес электронной почты"),
   password: z.string().min(8, "Пароль должен быть не менее 8 символов"),
   confirmPassword: z.string().min(1, "Подтвердите пароль"),
   fullName: z.string().min(1, "Полное имя обязательно"),
-}).refine((data) => data.password === data.confirmPassword, {
+});
+
+// Email registration schema
+const emailRegisterSchema = baseRegisterSchema.extend({
+  email: z.string().email("Неверный адрес электронной почты"),
+  authType: z.literal('email'),
+});
+
+// Phone registration schema
+const phoneRegisterSchema = baseRegisterSchema.extend({
+  phone: z.string().min(10, "Телефон должен содержать не менее 10 цифр"),
+  authType: z.literal('phone'),
+});
+
+// Registration form schema (combined)
+const registerSchema = z.discriminatedUnion("authType", [
+  emailRegisterSchema,
+  phoneRegisterSchema
+]).refine((data) => data.password === data.confirmPassword, {
   message: "Пароли не совпадают",
   path: ["confirmPassword"],
 });
@@ -61,6 +78,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export default function AuthPage() {
   const [activeTab, setActiveTab] = useState<string>("login");
+  const [authType, setAuthType] = useState<"email" | "phone">("email");
   const [location, navigate] = useLocation();
   const { user, loginMutation, registerMutation } = useAuth();
 
@@ -85,12 +103,24 @@ export default function AuthPage() {
     resolver: zodResolver(registerSchema),
     defaultValues: {
       username: "",
-      email: "",
       password: "",
       confirmPassword: "",
       fullName: "",
+      authType: "email",
+      ...(authType === "email" ? { email: "" } : { phone: "" }),
     },
   });
+
+  // Обновить форму при изменении типа аутентификации
+  useEffect(() => {
+    registerForm.setValue("authType", authType);
+    
+    if (authType === "email") {
+      registerForm.setValue("phone", "");
+    } else {
+      registerForm.setValue("email", "");
+    }
+  }, [authType, registerForm]);
 
   // Handle login submission
   const onLoginSubmit = (values: LoginFormValues) => {

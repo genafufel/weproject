@@ -90,8 +90,12 @@ export class MemStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
+    // Проверяем, является ли username именем пользователя, email или телефоном
     return Array.from(this.users.values()).find(
-      (user) => user.username === username,
+      (user) => 
+        user.username === username || 
+        user.email === username || 
+        user.phone === username
     );
   }
   
@@ -110,7 +114,9 @@ export class MemStorage implements IStorage {
       createdAt: now,
       bio: insertUser.bio ?? null,
       avatar: insertUser.avatar ?? null,
-      userType: insertUser.userType ?? "general" // Устанавливаем значение по умолчанию для userType
+      userType: insertUser.userType ?? "general", // Устанавливаем значение по умолчанию для userType
+      email: insertUser.email ?? null,
+      phone: insertUser.phone ?? null
     };
     this.users.set(id, user);
     return user;

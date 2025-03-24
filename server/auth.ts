@@ -66,13 +66,36 @@ export function setupAuth(app: Express) {
       // Check if username already exists
       const existingUserByUsername = await storage.getUserByUsername(req.body.username);
       if (existingUserByUsername) {
-        return res.status(400).json({ message: "Username already exists" });
+        return res.status(400).json({ message: "Имя пользователя уже существует" });
       }
       
-      // Check if email already exists
-      const existingUserByEmail = await storage.getUserByEmail(req.body.email);
-      if (existingUserByEmail) {
-        return res.status(400).json({ message: "Email already exists" });
+      // Проверяем тип авторизации
+      if (req.body.authType === 'email') {
+        // Проверка, существует ли уже такой email
+        if (!req.body.email) {
+          return res.status(400).json({ message: "Email обязателен для этого типа регистрации" });
+        }
+        
+        const existingUserByEmail = await storage.getUserByEmail(req.body.email);
+        if (existingUserByEmail) {
+          return res.status(400).json({ message: "Email уже используется" });
+        }
+      } 
+      else if (req.body.authType === 'phone') {
+        // Проверка, существует ли уже такой телефон
+        if (!req.body.phone) {
+          return res.status(400).json({ message: "Номер телефона обязателен для этого типа регистрации" });
+        }
+        
+        // Проверка, существует ли пользователь с таким же телефоном
+        const existingUsers = Array.from(storage.users.values());
+        const existingUserByPhone = existingUsers.find(u => u.phone === req.body.phone);
+        if (existingUserByPhone) {
+          return res.status(400).json({ message: "Номер телефона уже используется" });
+        }
+      }
+      else {
+        return res.status(400).json({ message: "Некорректный тип аутентификации" });
       }
 
       const hashedPassword = await hashPassword(req.body.password);

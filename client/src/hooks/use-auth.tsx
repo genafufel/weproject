@@ -9,19 +9,40 @@ import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
-// Extend the user schema for registration validation
-const extendedUserSchema = insertUserSchema
-  .extend({
-    password: z.string().min(8, "Password must be at least 8 characters"),
-    confirmPassword: z.string(),
-  })
-  .omit({ 
-    userType: true  // Удаляем userType из формы, будет использоваться значение по умолчанию
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
+// Базовые схемы для разных типов аутентификации
+const baseAuthSchema = z.object({
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string(),
+  fullName: z.string().min(1, "Full name is required"),
+  bio: z.string().optional().nullable(),
+  avatar: z.string().optional().nullable(),
+  userType: z.string().optional()
+});
+
+// Схема для аутентификации по email
+const emailAuthSchema = baseAuthSchema.extend({
+  email: z.string().email("Invalid email address"),
+  phone: z.string().optional(),
+  authType: z.literal("email")
+});
+
+// Схема для аутентификации по телефону
+const phoneAuthSchema = baseAuthSchema.extend({
+  email: z.string().optional(),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  authType: z.literal("phone")
+});
+
+// Объединенная схема для регистрации
+const extendedUserSchema = z.discriminatedUnion("authType", [
+  emailAuthSchema,
+  phoneAuthSchema
+])
+.refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
 
 type AuthContextType = {
   user: SelectUser | null;
