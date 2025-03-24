@@ -10,13 +10,18 @@ import { useToast } from "@/hooks/use-toast";
 import { z } from "zod";
 
 // Extend the user schema for registration validation
-const extendedUserSchema = insertUserSchema.extend({
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string(),
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const extendedUserSchema = insertUserSchema
+  .extend({
+    password: z.string().min(8, "Password must be at least 8 characters"),
+    confirmPassword: z.string(),
+  })
+  .omit({ 
+    userType: true  // Удаляем userType из формы, будет использоваться значение по умолчанию
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type AuthContextType = {
   user: SelectUser | null;

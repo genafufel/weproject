@@ -10,7 +10,7 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   fullName: text("full_name").notNull(),
   bio: text("bio"),
-  userType: text("user_type").notNull(), // "applicant" or "projectOwner"
+  userType: text("user_type").default("general").notNull(), // общий тип пользователя
   avatar: text("avatar"),
   createdAt: timestamp("created_at").defaultNow(),
 });

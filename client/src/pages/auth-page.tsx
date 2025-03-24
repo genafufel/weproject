@@ -51,9 +51,6 @@ const registerSchema = z.object({
   password: z.string().min(8, "Пароль должен быть не менее 8 символов"),
   confirmPassword: z.string().min(1, "Подтвердите пароль"),
   fullName: z.string().min(1, "Полное имя обязательно"),
-  userType: z.enum(["applicant", "projectOwner"], {
-    required_error: "Выберите тип пользователя",
-  }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Пароли не совпадают",
   path: ["confirmPassword"],
@@ -92,7 +89,6 @@ export default function AuthPage() {
       password: "",
       confirmPassword: "",
       fullName: "",
-      userType: "applicant",
     },
   });
 
@@ -221,30 +217,7 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={registerForm.control}
-                      name="userType"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Я</FormLabel>
-                          <Select 
-                            onValueChange={field.onChange} 
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Выберите тип пользователя" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="applicant">Студент / Соискатель</SelectItem>
-                              <SelectItem value="projectOwner">Владелец проекта / Стартап</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+
                     <FormField
                       control={registerForm.control}
                       name="password"
