@@ -36,26 +36,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check as CheckIcon } from "lucide-react";
 
 // Login form schema
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  password: z.string().min(1, "Password is required"),
+  username: z.string().min(1, "Имя пользователя обязательно"),
+  password: z.string().min(1, "Пароль обязателен"),
 });
 
 // Registration form schema
 const registerSchema = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string().min(1, "Please confirm your password"),
-  fullName: z.string().min(1, "Full name is required"),
+  username: z.string().min(3, "Имя пользователя должно быть не менее 3 символов"),
+  email: z.string().email("Неверный адрес электронной почты"),
+  password: z.string().min(8, "Пароль должен быть не менее 8 символов"),
+  confirmPassword: z.string().min(1, "Подтвердите пароль"),
+  fullName: z.string().min(1, "Полное имя обязательно"),
   userType: z.enum(["applicant", "projectOwner"], {
-    required_error: "Please select a user type",
+    required_error: "Выберите тип пользователя",
   }),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
+  message: "Пароли не совпадают",
   path: ["confirmPassword"],
 });
 
@@ -117,17 +117,17 @@ export default function AuthPage() {
         <Card className="w-full max-w-md mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              Welcome to StartupMatch
+              Добро пожаловать в StartupMatch
             </CardTitle>
             <CardDescription className="text-center">
-              Connect with startups and find your next opportunity
+              Найдите стартапы и новые возможности
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
+                <TabsTrigger value="login">Вход</TabsTrigger>
+                <TabsTrigger value="register">Регистрация</TabsTrigger>
               </TabsList>
 
               {/* Login Form */}
@@ -139,9 +139,9 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Username</FormLabel>
+                          <FormLabel>Имя пользователя</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter your username" {...field} />
+                            <Input placeholder="Введите имя пользователя" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -152,9 +152,9 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel>Пароль</FormLabel>
                           <FormControl>
-                            <Input type="password" placeholder="Enter your password" {...field} />
+                            <Input type="password" placeholder="Введите пароль" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -168,10 +168,10 @@ export default function AuthPage() {
                       {loginMutation.isPending ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Logging in...
+                          Вход...
                         </>
                       ) : (
-                        "Login"
+                        "Войти"
                       )}
                     </Button>
                   </form>
@@ -187,9 +187,9 @@ export default function AuthPage() {
                       name="fullName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Full Name</FormLabel>
+                          <FormLabel>Полное имя</FormLabel>
                           <FormControl>
-                            <Input placeholder="Enter your full name" {...field} />
+                            <Input placeholder="Введите полное имя" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -200,9 +200,9 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Username</FormLabel>
+                          <FormLabel>Имя пользователя</FormLabel>
                           <FormControl>
-                            <Input placeholder="Choose a username" {...field} />
+                            <Input placeholder="Выберите имя пользователя" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -215,7 +215,7 @@ export default function AuthPage() {
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input type="email" placeholder="Enter your email" {...field} />
+                            <Input type="email" placeholder="Введите email" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -226,19 +226,19 @@ export default function AuthPage() {
                       name="userType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>I am a</FormLabel>
+                          <FormLabel>Я</FormLabel>
                           <Select 
                             onValueChange={field.onChange} 
                             defaultValue={field.value}
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select your user type" />
+                                <SelectValue placeholder="Выберите тип пользователя" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="applicant">Student / Job Seeker</SelectItem>
-                              <SelectItem value="projectOwner">Project Owner / Startup</SelectItem>
+                              <SelectItem value="applicant">Студент / Соискатель</SelectItem>
+                              <SelectItem value="projectOwner">Владелец проекта / Стартап</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -250,9 +250,9 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel>Пароль</FormLabel>
                           <FormControl>
-                            <Input type="password" placeholder="Create a password" {...field} />
+                            <Input type="password" placeholder="Создайте пароль" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -263,9 +263,9 @@ export default function AuthPage() {
                       name="confirmPassword"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Confirm Password</FormLabel>
+                          <FormLabel>Подтверждение пароля</FormLabel>
                           <FormControl>
-                            <Input type="password" placeholder="Confirm your password" {...field} />
+                            <Input type="password" placeholder="Подтвердите пароль" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -279,10 +279,10 @@ export default function AuthPage() {
                       {registerMutation.isPending ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating account...
+                          Создание аккаунта...
                         </>
                       ) : (
-                        "Create Account"
+                        "Создать аккаунт"
                       )}
                     </Button>
                   </form>
@@ -294,24 +294,24 @@ export default function AuthPage() {
             <p className="text-sm text-gray-500">
               {activeTab === "login" ? (
                 <>
-                  Don't have an account?{" "}
+                  Нет аккаунта?{" "}
                   <button
                     type="button"
                     className="text-primary hover:underline"
                     onClick={() => setActiveTab("register")}
                   >
-                    Sign up
+                    Зарегистрироваться
                   </button>
                 </>
               ) : (
                 <>
-                  Already have an account?{" "}
+                  Уже есть аккаунт?{" "}
                   <button
                     type="button"
                     className="text-primary hover:underline"
                     onClick={() => setActiveTab("login")}
                   >
-                    Log in
+                    Войти
                   </button>
                 </>
               )}
@@ -323,35 +323,35 @@ export default function AuthPage() {
       {/* Right side - Hero section */}
       <div className="hidden md:block w-1/2 bg-primary">
         <div className="h-full flex flex-col justify-center items-center p-12 text-white">
-          <h1 className="text-4xl font-bold mb-6">Kickstart Your Career</h1>
+          <h1 className="text-4xl font-bold mb-6">Начните свою карьеру</h1>
           <div className="max-w-md space-y-6">
             <p className="text-xl">
-              StartupMatch connects talented students with exciting opportunities in startups and projects.
+              StartupMatch соединяет талантливых студентов с интересными возможностями в стартапах и проектах.
             </p>
             <div className="space-y-4">
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
                   <CheckIcon className="h-6 w-6 text-white" />
                 </div>
-                <p className="ml-3">Build your portfolio with real-world projects</p>
+                <p className="ml-3">Создайте портфолио с реальными проектами</p>
               </div>
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
                   <CheckIcon className="h-6 w-6 text-white" />
                 </div>
-                <p className="ml-3">Connect with innovative startups and entrepreneurs</p>
+                <p className="ml-3">Работайте с инновационными стартапами и предпринимателями</p>
               </div>
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
                   <CheckIcon className="h-6 w-6 text-white" />
                 </div>
-                <p className="ml-3">Gain valuable experience across various industries</p>
+                <p className="ml-3">Получите ценный опыт в различных отраслях</p>
               </div>
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
                   <CheckIcon className="h-6 w-6 text-white" />
                 </div>
-                <p className="ml-3">Find the perfect talent for your next big idea</p>
+                <p className="ml-3">Найдите идеальный талант для вашей следующей большой идеи</p>
               </div>
             </div>
           </div>
