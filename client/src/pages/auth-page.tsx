@@ -143,10 +143,10 @@ export default function AuthPage() {
         <Card className="w-full max-w-md mx-auto">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
-              Добро пожаловать в StartupMatch
+              Добро пожаловать в weproject
             </CardTitle>
             <CardDescription className="text-center">
-              Найдите стартапы и новые возможности
+              Найдите проекты и новые возможности
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -234,19 +234,58 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={registerForm.control}
-                      name="email"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input type="email" placeholder="Введите email" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
+
+                    {/* Auth Type Selection */}
+                    <div className="space-y-2">
+                      <div className="flex justify-center gap-4 mb-2">
+                        <Button
+                          type="button"
+                          variant={authType === "email" ? "default" : "outline"}
+                          className="flex-1"
+                          onClick={() => setAuthType("email")}
+                        >
+                          Email
+                        </Button>
+                        <Button
+                          type="button"
+                          variant={authType === "phone" ? "default" : "outline"}
+                          className="flex-1"
+                          onClick={() => setAuthType("phone")}
+                        >
+                          Телефон
+                        </Button>
+                      </div>
+
+                      {authType === "email" ? (
+                        <FormField
+                          control={registerForm.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Email</FormLabel>
+                              <FormControl>
+                                <Input type="email" placeholder="Введите email" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      ) : (
+                        <FormField
+                          control={registerForm.control}
+                          name="phone"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Телефон</FormLabel>
+                              <FormControl>
+                                <Input type="tel" placeholder="Введите номер телефона" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       )}
-                    />
+                    </div>
 
                     <FormField
                       control={registerForm.control}
@@ -326,23 +365,23 @@ export default function AuthPage() {
       {/* Right side - Hero section */}
       <div className="hidden md:block w-1/2 bg-primary">
         <div className="h-full flex flex-col justify-center items-center p-12 text-white">
-          <h1 className="text-4xl font-bold mb-6">Начните свою карьеру</h1>
+          <h1 className="text-4xl font-bold mb-6">Найдите свой проект</h1>
           <div className="max-w-md space-y-6">
             <p className="text-xl">
-              StartupMatch соединяет талантливых студентов с интересными возможностями в стартапах и проектах.
+              weproject соединяет талантливых людей с интересными проектами в различных сферах.
             </p>
             <div className="space-y-4">
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
                   <CheckIcon className="h-6 w-6 text-white" />
                 </div>
-                <p className="ml-3">Создайте портфолио с реальными проектами</p>
+                <p className="ml-3">Создайте своё портфолио с реальными проектами</p>
               </div>
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
                   <CheckIcon className="h-6 w-6 text-white" />
                 </div>
-                <p className="ml-3">Работайте с инновационными стартапами и предпринимателями</p>
+                <p className="ml-3">Работайте над интересными проектами и реализуйте свои идеи</p>
               </div>
               <div className="flex items-start">
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
@@ -354,7 +393,7 @@ export default function AuthPage() {
                 <div className="flex-shrink-0 h-6 w-6 mt-1">
                   <CheckIcon className="h-6 w-6 text-white" />
                 </div>
-                <p className="ml-3">Найдите идеальный талант для вашей следующей большой идеи</p>
+                <p className="ml-3">Найдите идеальных участников для вашего проекта</p>
               </div>
             </div>
           </div>
