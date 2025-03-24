@@ -13,7 +13,8 @@ import TalentDetail from "@/pages/talent-detail";
 import CreateProject from "@/pages/create-project";
 import CreateResume from "@/pages/create-resume";
 import Messages from "@/pages/messages";
-import { AuthProvider } from "@/hooks/use-auth";
+import VerificationPage from "@/pages/verification-page";
+import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 
 function Router() {
