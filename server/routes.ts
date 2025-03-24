@@ -4,6 +4,8 @@ import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { z } from "zod";
 import { insertProjectSchema, insertResumeSchema, insertApplicationSchema, insertMessageSchema } from "@shared/schema";
+import { askForSMSAPIKey, sendSMS } from "./sms"; // Сервис для отправки SMS
+import { askForEmailAPIKey, sendEmail } from "./email"; // Сервис для отправки email
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes

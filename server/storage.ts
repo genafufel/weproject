@@ -11,8 +11,14 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByPhone(phone: string): Promise<User | undefined>;
+  getUserByVerificationCode(code: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, user: Partial<User>): Promise<User | undefined>;
+  
+  // Verification operations
+  createVerificationCode(userId: number): Promise<string>;
+  verifyUser(userId: number, code: string): Promise<boolean>;
   
   // Resume operations
   getResume(id: number): Promise<Resume | undefined>;
@@ -104,6 +110,62 @@ export class MemStorage implements IStorage {
       (user) => user.email === email,
     );
   }
+  
+  async getUserByPhone(phone: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.phone === phone,
+    );
+  }
+  
+  async getUserByVerificationCode(code: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(
+      (user) => user.verificationCode === code && 
+      user.verificationCodeExpires && 
+      user.verificationCodeExpires > new Date()
+    );
+  }
+  
+  async createVerificationCode(userId: number): Promise<string> {
+    const user = await this.getUser(userId);
+    if (!user) throw new Error("Пользователь не найден");
+    
+    // Генерируем случайный 6-значный код
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Устанавливаем срок действия кода (1 час)
+    const expires = new Date();
+    expires.setHours(expires.getHours() + 1);
+    
+    // Обновляем пользователя
+    await this.updateUser(userId, {
+      verificationCode: code,
+      verificationCodeExpires: expires
+    });
+    
+    return code;
+  }
+  
+  async verifyUser(userId: number, code: string): Promise<boolean> {
+    const user = await this.getUser(userId);
+    if (!user) return false;
+    
+    // Проверяем, что код совпадает и не истек
+    if (
+      user.verificationCode === code && 
+      user.verificationCodeExpires && 
+      user.verificationCodeExpires > new Date()
+    ) {
+      // Помечаем пользователя как верифицированного и очищаем код
+      await this.updateUser(userId, {
+        verified: true,
+        verificationCode: null,
+        verificationCodeExpires: null
+      });
+      return true;
+    }
+    
+    return false;
+  }
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = this.currentUserId++;
@@ -116,7 +178,10 @@ export class MemStorage implements IStorage {
       avatar: insertUser.avatar ?? null,
       userType: insertUser.userType ?? "general", // Устанавливаем значение по умолчанию для userType
       email: insertUser.email ?? null,
-      phone: insertUser.phone ?? null
+      phone: insertUser.phone ?? null,
+      verified: false,
+      verificationCode: null,
+      verificationCodeExpires: null
     };
     this.users.set(id, user);
     return user;
