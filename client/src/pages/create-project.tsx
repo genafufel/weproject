@@ -44,12 +44,22 @@ export default function CreateProject() {
   const [_, navigate] = useLocation();
   const { toast } = useToast();
   
+  // Тип для должности с требованиями
+  type Position = {
+    id: string;
+    title: string;
+    requirements: string[];
+  };
+
   // Состояния для полей формы
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [field, setField] = useState("");
-  const [positions, setPositions] = useState<string[]>(["Разработчик"]);
-  const [requirements, setRequirements] = useState<string[]>(["JavaScript"]);
+  const [positions, setPositions] = useState<Position[]>([{
+    id: Date.now().toString(),
+    title: "Разработчик",
+    requirements: ["JavaScript"]
+  }]);
   const [location, setLocation] = useState("");
   const [remote, setRemote] = useState(false);
   const [startDate, setStartDate] = useState<string>("");
@@ -58,38 +68,55 @@ export default function CreateProject() {
   
   // Состояния для добавления новых элементов
   const [isAddingPosition, setIsAddingPosition] = useState(false);
-  const [isAddingRequirement, setIsAddingRequirement] = useState(false);
   const [isAddingPhoto, setIsAddingPhoto] = useState(false);
   const [newPosition, setNewPosition] = useState("");
-  const [newRequirement, setNewRequirement] = useState("");
   const [newPhotoUrl, setNewPhotoUrl] = useState("");
+  
+  // Состояния для добавления требований к конкретной должности
+  const [editingPositionId, setEditingPositionId] = useState<string | null>(null);
+  const [newRequirement, setNewRequirement] = useState("");
   
   // Добавление позиции
   const handleAddPosition = () => {
     if (newPosition.trim()) {
-      setPositions([...positions, newPosition.trim()]);
+      const newPos: Position = {
+        id: Date.now().toString(),
+        title: newPosition.trim(),
+        requirements: []
+      };
+      setPositions([...positions, newPos]);
       setNewPosition("");
       setIsAddingPosition(false);
     }
   };
   
   // Удаление позиции
-  const removePosition = (index: number) => {
-    setPositions(positions.filter((_, i) => i !== index));
-  };
-  
-  // Добавление требования
-  const handleAddRequirement = () => {
-    if (newRequirement.trim()) {
-      setRequirements([...requirements, newRequirement.trim()]);
-      setNewRequirement("");
-      setIsAddingRequirement(false);
+  const removePosition = (id: string) => {
+    setPositions(positions.filter(p => p.id !== id));
+    if (editingPositionId === id) {
+      setEditingPositionId(null);
     }
   };
   
-  // Удаление требования
-  const removeRequirement = (index: number) => {
-    setRequirements(requirements.filter((_, i) => i !== index));
+  // Добавление требования к должности
+  const handleAddRequirement = (positionId: string) => {
+    if (newRequirement.trim()) {
+      setPositions(positions.map(p => 
+        p.id === positionId 
+          ? { ...p, requirements: [...p.requirements, newRequirement.trim()] } 
+          : p
+      ));
+      setNewRequirement("");
+    }
+  };
+  
+  // Удаление требования из должности
+  const removeRequirement = (positionId: string, requirementIndex: number) => {
+    setPositions(positions.map(p => 
+      p.id === positionId 
+        ? { ...p, requirements: p.requirements.filter((_, i) => i !== requirementIndex) } 
+        : p
+    ));
   };
   
   // Добавление фото
@@ -148,19 +175,25 @@ export default function CreateProject() {
       return;
     }
     
+    // Подготавливаем данные позиций для отправки на сервер
+    // В БД мы храним отдельно позиции и требования, поэтому разделяем их
+    const positionTitles = positions.map(p => p.title);
+    const allRequirements = positions.flatMap(p => p.requirements);
+  
     // Формируем данные для отправки
     const projectData = {
       userId: user?.id,
       title,
       description,
       field,
-      positions,
-      requirements,
+      positions: positionTitles,
+      requirements: allRequirements,
       photos,
       location,
       remote,
       startDate: startDate ? new Date(startDate) : undefined,
       endDate: endDate ? new Date(endDate) : undefined,
+      positionsWithRequirements: positions // Добавляем оригинальную структуру для будущего использования
     };
     
     console.log("Отправляю данные проекта через прямой fetch:", projectData);
@@ -281,122 +314,121 @@ export default function CreateProject() {
                   </p>
                 </div>
                 
-                {/* Требуемые должности */}
-                <div className="space-y-3">
-                  <Label>Требуемые должности</Label>
-                  <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                    {positions.map((position, index) => (
-                      <Badge key={index} className="py-1 px-3 gap-2">
-                        {position}
+                {/* Должности и требования */}
+                <div className="space-y-6">
+                  <div className="space-y-3">
+                    <Label className="text-lg font-semibold">Должности и требования</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Добавьте должности, которые требуются для вашего проекта, и укажите требования к каждой из них.
+                    </p>
+                  </div>
+                  
+                  {positions.map((position) => (
+                    <div key={position.id} className="rounded-md border p-4 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-medium text-lg">{position.title}</h3>
                         <Button
                           type="button"
                           variant="ghost"
-                          size="icon"
-                          className="h-5 w-5 p-0"
-                          onClick={() => removePosition(index)}
+                          size="sm"
+                          onClick={() => removePosition(position.id)}
+                          className="h-8 w-8 p-0"
                         >
-                          <X className="h-3 w-3" />
+                          <X className="h-4 w-4 text-muted-foreground" />
                         </Button>
-                      </Badge>
-                    ))}
-                    
-                    {!isAddingPosition && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsAddingPosition(true)}
-                      >
-                        <PlusIcon className="h-4 w-4 mr-1" />
-                        Добавить должность
-                      </Button>
-                    )}
-                  </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <Label>Требования для должности "{position.title}"</Label>
+                        <div className="flex flex-wrap gap-2">
+                          {position.requirements.map((req, reqIndex) => (
+                            <Badge key={reqIndex} variant="secondary" className="py-1 px-3 gap-2">
+                              {req}
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-5 w-5 p-0"
+                                onClick={() => removeRequirement(position.id, reqIndex)}
+                              >
+                                <X className="h-3 w-3" />
+                              </Button>
+                            </Badge>
+                          ))}
+                        </div>
+                        
+                        {editingPositionId === position.id ? (
+                          <div className="flex gap-2 mt-2">
+                            <Input
+                              placeholder="например, знание JavaScript, опыт работы с UI/UX"
+                              value={newRequirement}
+                              onChange={(e) => setNewRequirement(e.target.value)}
+                              onKeyDown={(e) => {
+                                if (e.key === "Enter") {
+                                  e.preventDefault();
+                                  handleAddRequirement(position.id);
+                                }
+                              }}
+                              className="flex-1"
+                            />
+                            <Button type="button" onClick={() => handleAddRequirement(position.id)}>
+                              Добавить
+                            </Button>
+                            <Button type="button" variant="ghost" onClick={() => setEditingPositionId(null)}>
+                              Отмена
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setEditingPositionId(position.id)}
+                            className="mt-2"
+                          >
+                            <PlusIcon className="h-4 w-4 mr-1" />
+                            Добавить требование
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
                   
-                  {isAddingPosition && (
-                    <div className="flex gap-2 mb-4">
-                      <Input
-                        placeholder="например, React-разработчик, UX/UI дизайнер"
-                        value={newPosition}
-                        onChange={(e) => setNewPosition(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            handleAddPosition();
-                          }
-                        }}
-                        className="flex-1"
-                      />
-                      <Button type="button" onClick={handleAddPosition}>
-                        Добавить
-                      </Button>
-                      <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
-                        Отмена
-                      </Button>
+                  {!isAddingPosition ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => setIsAddingPosition(true)}
+                      className="w-full"
+                    >
+                      <PlusIcon className="h-4 w-4 mr-1" />
+                      Добавить новую должность
+                    </Button>
+                  ) : (
+                    <div className="rounded-md border p-4 space-y-3">
+                      <Label>Новая должность</Label>
+                      <div className="flex gap-2">
+                        <Input
+                          placeholder="например, React-разработчик, UX/UI дизайнер"
+                          value={newPosition}
+                          onChange={(e) => setNewPosition(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              handleAddPosition();
+                            }
+                          }}
+                          className="flex-1"
+                        />
+                        <Button type="button" onClick={handleAddPosition}>
+                          Добавить
+                        </Button>
+                        <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
+                          Отмена
+                        </Button>
+                      </div>
                     </div>
                   )}
-                  <p className="text-sm text-muted-foreground">
-                    Перечислите должности, которые вам нужны для этого проекта.
-                  </p>
-                </div>
-                
-                {/* Требования */}
-                <div className="space-y-3">
-                  <Label>Требования</Label>
-                  <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                    {requirements.map((requirement, index) => (
-                      <Badge key={index} variant="secondary" className="py-1 px-3 gap-2">
-                        {requirement}
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          className="h-5 w-5 p-0"
-                          onClick={() => removeRequirement(index)}
-                        >
-                          <X className="h-3 w-3" />
-                        </Button>
-                      </Badge>
-                    ))}
-                    
-                    {!isAddingRequirement && (
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setIsAddingRequirement(true)}
-                      >
-                        <PlusIcon className="h-4 w-4 mr-1" />
-                        Добавить требование
-                      </Button>
-                    )}
-                  </div>
-                  
-                  {isAddingRequirement && (
-                    <div className="flex gap-2 mb-4">
-                      <Input
-                        placeholder="например, знание JavaScript, навыки дизайна"
-                        value={newRequirement}
-                        onChange={(e) => setNewRequirement(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            handleAddRequirement();
-                          }
-                        }}
-                        className="flex-1"
-                      />
-                      <Button type="button" onClick={handleAddRequirement}>
-                        Добавить
-                      </Button>
-                      <Button type="button" variant="ghost" onClick={() => setIsAddingRequirement(false)}>
-                        Отмена
-                      </Button>
-                    </div>
-                  )}
-                  <p className="text-sm text-muted-foreground">
-                    Укажите необходимые навыки и квалификацию.
-                  </p>
                 </div>
                 
                 {/* Фотографии проекта */}
@@ -527,7 +559,7 @@ export default function CreateProject() {
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/projects")}
                   >
                     Отмена
                   </Button>
