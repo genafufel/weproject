@@ -225,31 +225,14 @@ export default function Dashboard() {
                     </div>
                   </CardContent>
                   <CardFooter>
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => {
-                        // Переключаем на вкладку редактирования профиля или показываем модальное окно
-                        const modal = document.createElement('dialog');
-                        modal.className = 'p-6 rounded-lg shadow-lg bg-white max-w-lg w-full';
-                        modal.innerHTML = `
-                          <h2 class="text-xl font-bold mb-4">Редактирование профиля</h2>
-                          <p class="mb-4">Функция редактирования профиля находится в разработке.</p>
-                          <div class="flex justify-end">
-                            <button class="px-4 py-2 bg-primary text-white rounded hover:bg-primary/90" onclick="this.parentElement.parentElement.close()">
-                              Закрыть
-                            </button>
-                          </div>
-                        `;
-                        document.body.appendChild(modal);
-                        modal.showModal();
-                        modal.addEventListener('close', () => {
-                          document.body.removeChild(modal);
-                        });
-                      }}
-                    >
-                      Редактировать профиль
-                    </Button>
+                    <Link href="/edit-profile">
+                      <Button
+                        variant="outline"
+                        className="w-full"
+                      >
+                        Редактировать профиль
+                      </Button>
+                    </Link>
                   </CardFooter>
                 </Card>
               </div>

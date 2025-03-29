@@ -455,6 +455,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   });
+  
+  // Маршрут для обновления профиля пользователя
+  app.patch("/api/user/:id", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    const userId = parseInt(req.params.id);
+    
+    // Проверяем, имеет ли пользователь право обновлять этот профиль
+    if (userId !== req.user.id) {
+      return res.status(403).json({ message: "Forbidden: Вы не можете редактировать чужой профиль" });
+    }
+    
+    try {
+      // Разрешаем обновлять только определенные поля профиля
+      const allowedFields = ['fullName', 'email', 'phone', 'avatar'];
+      const updateData = Object.fromEntries(
+        Object.entries(req.body).filter(([key]) => allowedFields.includes(key))
+      );
+      
+      // Обновляем данные пользователя
+      const updatedUser = await storage.updateUser(userId, updateData);
+      
+      if (!updatedUser) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+      
+      // Обновляем пользователя в сессии
+      req.login(updatedUser, (err) => {
+        if (err) {
+          console.error("Ошибка при обновлении пользователя в сессии:", err);
+          return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+        }
+        
+        // Удаляем пароль из ответа
+        const { password, ...userWithoutPassword } = updatedUser;
+        res.json(userWithoutPassword);
+      });
+    } catch (error) {
+      console.error("Ошибка при обновлении профиля:", error);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
