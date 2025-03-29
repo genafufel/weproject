@@ -51,14 +51,36 @@ export default function Dashboard() {
     enabled: !!user?.id && projects?.length > 0,
   });
   
-  // Устанавливаем tab из URL если есть
+  // Устанавливаем tab из URL при монтировании
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const tab = urlParams.get('tab');
-    if (tab && ['overview', 'projects', 'resumes', 'applications', 'messages'].includes(tab)) {
-      setActiveTab(tab);
-    }
+    const updateTabFromUrl = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tab = urlParams.get('tab');
+      if (tab && ['overview', 'projects', 'resumes', 'applications', 'messages'].includes(tab)) {
+        setActiveTab(tab);
+      }
+    };
+    
+    // Вызываем при монтировании
+    updateTabFromUrl();
+    
+    // И добавляем слушатель событий popstate для обработки навигации браузера
+    window.addEventListener('popstate', updateTabFromUrl);
+    
+    // Удаляем слушатель при размонтировании
+    return () => {
+      window.removeEventListener('popstate', updateTabFromUrl);
+    };
   }, []);
+  
+  // Дополнительный обработчик для изменения URL при выборе вкладки
+  const onTabChange = (value: string) => {
+    setActiveTab(value);
+    // Обновляем URL без перезагрузки страницы
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', value);
+    window.history.pushState({}, '', url);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -75,7 +97,7 @@ export default function Dashboard() {
           
           <Tabs
             value={activeTab}
-            onValueChange={setActiveTab}
+            onValueChange={onTabChange}
             className="w-full"
           >
             <TabsList className="mb-8">
