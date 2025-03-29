@@ -179,7 +179,7 @@ export class MemStorage implements IStorage {
       userType: insertUser.userType ?? "general", // Устанавливаем значение по умолчанию для userType
       email: insertUser.email ?? null,
       phone: insertUser.phone ?? null,
-      verified: false,
+      verified: true, // Временно устанавливаем verified = true, чтобы не требовалась верификация
       verificationCode: null,
       verificationCodeExpires: null
     };

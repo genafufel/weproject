@@ -17,19 +17,16 @@ import VerificationPage from "@/pages/verification-page";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 
-// Компонент для маршрутов, требующих верификации
+// Компонент для маршрутов, требующих верификации (временно отключена проверка верификации)
 function VerifiedRoute({ component: Component, ...rest }: { component: React.ComponentType, path: string }) {
-  const { user } = useAuth();
+  // Преобразуем Component в функцию, возвращающую JSX.Element
+  const ComponentWrapper = () => <Component />;
   
+  // Используем обычный ProtectedRoute без проверки статуса верификации
   return (
     <ProtectedRoute 
       {...rest} 
-      component={() => {
-        if (user && !user.verified) {
-          return <VerificationPage />;
-        }
-        return <Component />;
-      }} 
+      component={ComponentWrapper}
     />
   );
 }
