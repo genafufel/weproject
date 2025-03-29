@@ -150,10 +150,12 @@ export default function CreateProject() {
     
     try {
       setUploadingPhoto(true);
+      console.log("Начинаем загрузку файла:", file.name, file.type, file.size);
       
       const formData = new FormData();
       formData.append('photo', file);
       
+      console.log("Отправляем запрос на сервер...");
       const response = await fetch('/api/upload/project-photo', {
         method: 'POST',
         body: formData,
@@ -161,10 +163,13 @@ export default function CreateProject() {
       });
       
       if (!response.ok) {
-        throw new Error('Ошибка загрузки изображения');
+        const errorText = await response.text();
+        console.error("Ошибка HTTP при загрузке фото:", response.status, errorText);
+        throw new Error(`Ошибка HTTP: ${response.status} ${errorText}`);
       }
       
       const data = await response.json();
+      console.log("Ответ сервера:", data);
       setPhotos([...photos, data.fileUrl]);
       
       toast({
@@ -172,9 +177,10 @@ export default function CreateProject() {
         description: "Фото проекта успешно загружено",
       });
     } catch (error: any) {
+      console.error("Ошибка загрузки фото:", error);
       toast({
         title: "Ошибка загрузки фото",
-        description: error.message,
+        description: error.message || "Неизвестная ошибка при загрузке файла",
         variant: "destructive",
       });
     } finally {

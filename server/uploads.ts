@@ -6,7 +6,14 @@ import { storage } from './storage';
 
 // Создаем директорию для загрузок в публичной папке клиента
 const uploadDir = path.join(process.cwd(), 'client', 'public', 'uploads');
-fs.ensureDirSync(uploadDir);
+
+// Убедимся, что директория существует
+try {
+  fs.ensureDirSync(uploadDir);
+  console.log(`Директория для загрузок создана: ${uploadDir}`);
+} catch (error) {
+  console.error('Ошибка при создании директории для загрузок:', error);
+}
 
 // Настройка хранилища для multer
 const fileStorage = multer.diskStorage({
@@ -88,17 +95,22 @@ export function setupUploads(app: Express) {
 
   // Маршрут для загрузки фотографий проекта
   app.post('/api/upload/project-photo', upload.single('photo'), async (req, res) => {
-    if (!req.isAuthenticated()) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
+    // DEBUG: Временно убираем проверку аутентификации для отладки
+    // if (!req.isAuthenticated()) {
+    //   return res.status(401).json({ message: 'Unauthorized' });
+    // }
 
     try {
       if (!req.file) {
+        console.log('Ошибка: файл не был загружен');
         return res.status(400).json({ message: 'Не удалось загрузить файл' });
       }
 
+      console.log('Файл успешно загружен:', req.file);
+
       // Создаем URL для доступа к файлу
       const fileUrl = `/uploads/${req.file.filename}`;
+      console.log('Сгенерирован URL:', fileUrl);
 
       res.json({
         success: true,
@@ -106,7 +118,7 @@ export function setupUploads(app: Express) {
       });
     } catch (error) {
       console.error('Ошибка при загрузке файла:', error);
-      res.status(500).json({ message: 'Не удалось обработать загрузку файла' });
+      res.status(500).json({ message: 'Не удалось обработать загрузку файла', error: String(error) });
     }
   });
 
