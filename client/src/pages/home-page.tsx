@@ -135,7 +135,7 @@ export default function HomePage() {
                     <div className="p-6">
                       <h3 className="text-lg font-medium text-gray-900">
                         <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none">
-                          <a>{field.title}</a>
+                          {field.title}
                         </Link>
                       </h3>
                       <p className="mt-2 text-sm text-gray-500">
@@ -145,10 +145,11 @@ export default function HomePage() {
                         <span className="text-sm font-medium text-primary">
                           {field.count} active projects
                         </span>
-                        <Link href={`/projects?field=${encodeURIComponent(field.title)}`}>
-                          <a className="text-sm font-medium text-primary hover:text-blue-700">
-                            View all <span aria-hidden="true">→</span>
-                          </a>
+                        <Link 
+                          href={`/projects?field=${encodeURIComponent(field.title)}`}
+                          className="text-sm font-medium text-primary hover:text-blue-700"
+                        >
+                          View all <span aria-hidden="true">→</span>
                         </Link>
                       </div>
                     </div>
