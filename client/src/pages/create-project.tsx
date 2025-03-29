@@ -53,11 +53,14 @@ const projectFields = [
   { value: "Other", label: "Другое" },
 ];
 
+// Определяем тип для полей с массивами, который может быть как обычным массивом, так и массивом объектов react-hook-form
+type FieldArrayType = string[] | { id: string; value: string }[];
+
 // Extend the project schema for form validation
 const projectFormSchema = insertProjectSchema.extend({
-  positions: z.array(z.string()),
-  requirements: z.array(z.string()),
-  photos: z.array(z.string()).optional(),
+  positions: z.any(), // Используем any для FieldArray из react-hook-form
+  requirements: z.any(), // Используем any для FieldArray из react-hook-form
+  photos: z.any().optional(), // Используем any для FieldArray из react-hook-form
   newPosition: z.string().optional(),
   newRequirement: z.string().optional(),
   newPhotoUrl: z.string().url("Пожалуйста, введите корректный URL изображения").optional(),
@@ -160,7 +163,21 @@ export default function CreateProject() {
   const onSubmit = (values: ProjectFormValues) => {
     // Remove the temporary fields used for adding new items
     const { newPosition, newRequirement, newPhotoUrl, ...projectData } = values;
-    createProjectMutation.mutate(projectData);
+    
+    // Преобразуем поля, которые должны быть массивами
+    const formattedData = {
+      ...projectData,
+      // Преобразуем поля в простые массивы строк
+      positions: positionFields.map((field: any) => 
+        typeof field === 'string' ? field : field.value || ''),
+      requirements: requirementFields.map((field: any) => 
+        typeof field === 'string' ? field : field.value || ''),
+      photos: photoFields.map((field: any) => 
+        typeof field === 'string' ? field : field.value || '')
+    };
+    
+    console.log("Отправляю данные проекта:", formattedData);
+    createProjectMutation.mutate(formattedData);
   };
 
   return (
