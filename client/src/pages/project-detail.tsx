@@ -89,14 +89,14 @@ export default function ProjectDetail() {
     data: userApplications,
     isLoading: applicationsLoading,
   } = useQuery({
-    queryKey: [`/api/applications`],
+    queryKey: [`/api/applications?projectId=${projectId}&userId=${user?.id}`],
     enabled: !!user && user.userType === "applicant",
   });
   
   // Determine if user has already applied
   const hasApplied = userApplications && 
     Array.isArray(userApplications) && 
-    userApplications.some((app: any) => app.projectId === projectId);
+    userApplications.length > 0;
   
   // Set default resume when resumes are loaded
   useEffect(() => {
@@ -112,7 +112,7 @@ export default function ProjectDetail() {
       return await res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/applications`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/applications?projectId=${projectId}&userId=${user?.id}`] });
       toast({
         title: "Заявка отправлена",
         description: "Ваш отклик был отправлен владельцу проекта.",

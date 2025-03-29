@@ -234,8 +234,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     
     const projectId = req.query.projectId ? parseInt(req.query.projectId as string) : undefined;
+    const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
     
-    if (projectId) {
+    if (projectId && userId) {
+      // Checking if user has applied to a specific project
+      // This is used on project detail page to check if current user has already applied
+      const project = await storage.getProject(projectId);
+      if (!project) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      // Get all applications by the user
+      const userApps = await storage.getApplicationsByUserId(userId);
+      // Filter only applications for the specified project
+      const projectApplications = userApps.filter(app => app.projectId === projectId);
+      res.json(projectApplications);
+    } else if (projectId) {
       // First check if user owns the project
       const project = await storage.getProject(projectId);
       if (!project || project.userId !== req.user.id) {
