@@ -221,15 +221,17 @@ export default function Projects() {
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle className="text-xl">
-                          <Link href={`/projects/${project.id}`}>
-                            <a className="hover:text-primary">{project.title}</a>
+                          <Link href={`/projects/${project.id}`} className="hover:text-primary">
+                            {project.title}
                           </Link>
                         </CardTitle>
                         <p className="text-sm text-gray-500 mt-1">
                           Опубликовано: <span className="text-primary">{project.ownerName || "Владелец проекта"}</span>
                         </p>
                       </div>
-                      <Badge>{project.field}</Badge>
+                      <Badge>{typeof project.field === 'object' ? 
+                        (project.field?.label || project.field?.title || JSON.stringify(project.field)) : 
+                        project.field}</Badge>
                     </div>
                   </CardHeader>
                   
@@ -239,9 +241,9 @@ export default function Projects() {
                     <div className="mb-4">
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-2">
-                        {(project.positions || []).map((position: string, index: number) => (
+                        {(project.positions || []).map((position: any, index: number) => (
                           <Badge key={index} variant="outline" className="bg-blue-50">
-                            {position}
+                            {typeof position === 'string' ? position : position.title}
                           </Badge>
                         ))}
                       </div>
