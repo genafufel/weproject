@@ -44,6 +44,9 @@ function Router() {
       <Route path="/projects/:id" component={ProjectDetail} />
       <Route path="/talent/:id" component={TalentDetail} />
       
+      {/* Страница верификации (доступна только для авторизованных пользователей) */}
+      <ProtectedRoute path="/verification" component={VerificationPage} />
+      
       {/* Protected Routes с проверкой верификации */}
       <VerifiedRoute path="/dashboard" component={Dashboard} />
       <VerifiedRoute path="/create-project" component={CreateProject} />

@@ -85,7 +85,12 @@ export default function AuthPage() {
   // Redirect if already logged in
   useEffect(() => {
     if (user) {
-      navigate("/");
+      // Если пользователь не подтверждён, отправляем на страницу верификации
+      if (!user.verified) {
+        navigate("/verification");
+      } else {
+        navigate("/");
+      }
     }
   }, [user, navigate]);
 

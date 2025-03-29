@@ -5,6 +5,8 @@ import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
+import { sendEmail } from "./email";
+import { sendSMS } from "./sms";
 import { User as SelectUser } from "@shared/schema";
 
 declare global {
@@ -88,8 +90,7 @@ export function setupAuth(app: Express) {
         }
         
         // Проверка, существует ли пользователь с таким же телефоном
-        const existingUsers = Array.from(storage.users.values());
-        const existingUserByPhone = existingUsers.find(u => u.phone === req.body.phone);
+        const existingUserByPhone = await storage.getUserByPhone(req.body.phone);
         if (existingUserByPhone) {
           return res.status(400).json({ message: "Номер телефона уже используется" });
         }
@@ -104,12 +105,52 @@ export function setupAuth(app: Express) {
         password: hashedPassword,
       });
 
+      // После создания пользователя генерируем код верификации
+      let verificationSent = false;
+      let verificationMessage = "";
+      
+      try {
+        const verificationCode = await storage.createVerificationCode(user.id);
+        
+        // Отправляем код в зависимости от метода аутентификации
+        if (user.authType === 'email' && user.email) {
+          const emailSent = await sendEmail(
+            user.email,
+            "Подтверждение аккаунта weproject",
+            `Ваш код подтверждения: ${verificationCode}`
+          );
+          
+          verificationSent = emailSent;
+          verificationMessage = emailSent 
+            ? "Код подтверждения отправлен на вашу почту"
+            : "Не удалось отправить код подтверждения на почту";
+        } 
+        else if (user.authType === 'phone' && user.phone) {
+          const smsSent = await sendSMS(
+            user.phone,
+            `Ваш код подтверждения weproject: ${verificationCode}`
+          );
+          
+          verificationSent = smsSent;
+          verificationMessage = smsSent 
+            ? "Код подтверждения отправлен на ваш телефон"
+            : "Не удалось отправить код подтверждения на телефон";
+        }
+      } catch (error) {
+        console.error("Ошибка при отправке кода верификации:", error);
+      }
+
       // Remove password from the response
       const { password, ...userWithoutPassword } = user;
 
       req.login(user, (err) => {
         if (err) return next(err);
-        res.status(201).json(userWithoutPassword);
+        
+        res.status(201).json({
+          ...userWithoutPassword,
+          verificationSent,
+          verificationMessage
+        });
       });
     } catch (error) {
       next(error);
@@ -117,11 +158,11 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: any, user: SelectUser | false, info: any) => {
       if (err) return next(err);
       if (!user) return res.status(401).json({ message: "Invalid username or password" });
       
-      req.login(user, (err) => {
+      req.login(user, (err: any) => {
         if (err) return next(err);
         
         // Remove password from the response

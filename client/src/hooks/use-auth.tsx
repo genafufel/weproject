@@ -97,12 +97,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const res = await apiRequest("POST", "/api/register", registrationData);
       return await res.json();
     },
-    onSuccess: (userData: Omit<SelectUser, "password">) => {
+    onSuccess: (userData: Omit<SelectUser, "password"> & { verificationSent?: boolean, verificationMessage?: string }) => {
       queryClient.setQueryData(["/api/user"], userData);
-      toast({
-        title: "Registration successful",
-        description: `Welcome to StartupMatch, ${userData.fullName}!`,
-      });
+      
+      // Отображаем сообщение о верификации, если есть
+      if (userData.verificationMessage) {
+        toast({
+          title: "Регистрация успешна",
+          description: userData.verificationMessage,
+        });
+      } else {
+        toast({
+          title: "Регистрация успешна",
+          description: `Добро пожаловать в weproject, ${userData.fullName}!`,
+        });
+      }
     },
     onError: (error: Error) => {
       toast({
