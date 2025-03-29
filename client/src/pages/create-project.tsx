@@ -110,7 +110,11 @@ export default function CreateProject() {
   const handleAddPosition = () => {
     const newPosition = form.getValues("newPosition");
     if (newPosition) {
-      appendPosition(newPosition as any);
+      // Добавляем новый элемент и проверяем, что он добавился
+      appendPosition({ id: `pos-${Date.now()}`, value: newPosition } as any);
+      console.log("Добавлена должность:", newPosition);
+      console.log("Текущие должности:", [...positionFields, { id: `pos-${Date.now()}`, value: newPosition }]);
+      
       form.setValue("newPosition", "");
       setIsAddingPosition(false);
     }
@@ -120,7 +124,11 @@ export default function CreateProject() {
   const handleAddRequirement = () => {
     const newRequirement = form.getValues("newRequirement");
     if (newRequirement) {
-      appendRequirement(newRequirement as any);
+      // Добавляем новый элемент и проверяем, что он добавился
+      appendRequirement({ id: `req-${Date.now()}`, value: newRequirement } as any);
+      console.log("Добавлено требование:", newRequirement);
+      console.log("Текущие требования:", [...requirementFields, { id: `req-${Date.now()}`, value: newRequirement }]);
+      
       form.setValue("newRequirement", "");
       setIsAddingRequirement(false);
     }
@@ -130,7 +138,11 @@ export default function CreateProject() {
   const handleAddPhoto = () => {
     const newPhotoUrl = form.getValues("newPhotoUrl");
     if (newPhotoUrl) {
-      appendPhoto(newPhotoUrl as any);
+      // Добавляем новый элемент и проверяем, что он добавился
+      appendPhoto({ id: `photo-${Date.now()}`, value: newPhotoUrl } as any);
+      console.log("Добавлено фото:", newPhotoUrl);
+      console.log("Текущие фото:", [...photoFields, { id: `photo-${Date.now()}`, value: newPhotoUrl }]);
+      
       form.setValue("newPhotoUrl", "");
       setIsAddingPhoto(false);
     }
