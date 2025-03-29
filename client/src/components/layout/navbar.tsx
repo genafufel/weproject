@@ -125,7 +125,7 @@ export function Navbar() {
                   <Button variant="default">Войти</Button>
                 </Link>
                 <Link href="/auth">
-                  <Button variant="outline">Регистрация</Button>
+                  <Button variant="outline" className="bg-white hover:bg-gray-50 text-gray-800 border-gray-300">Регистрация</Button>
                 </Link>
               </>
             )}

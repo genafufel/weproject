@@ -89,7 +89,7 @@ export default function HomePage() {
                     </div>
                     <div className="mt-3 sm:mt-0 sm:ml-3">
                       <Link href={user ? "/create-project" : "/auth"}>
-                        <Button size="lg" variant="outline" className="w-full">
+                        <Button size="lg" variant="outline" className="w-full bg-white hover:bg-gray-50 text-gray-800 border-gray-300">
                           Разместить проект
                         </Button>
                       </Link>

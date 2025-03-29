@@ -320,7 +320,8 @@ export default function AuthPage() {
                     />
                     <Button 
                       type="submit" 
-                      className="w-full"
+                      className="w-full bg-white hover:bg-gray-50 text-gray-800 border-gray-300"
+                      variant="outline"
                       disabled={registerMutation.isPending}
                     >
                       {registerMutation.isPending ? (
