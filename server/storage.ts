@@ -159,18 +159,7 @@ export class MemStorage implements IStorage {
         title: "Маркетплейс услуг",
         description: "Платформа для поиска и предложения услуг фрилансеров",
         field: "Information Technology",
-        positions: [
-          {
-            title: "UX/UI Дизайнер",
-            description: "Разработка интерфейса и пользовательского опыта",
-            requirements: ["Figma", "Adobe XD", "UI/UX", "Прототипирование"]
-          },
-          {
-            title: "Frontend Разработчик",
-            description: "Реализация пользовательского интерфейса",
-            requirements: ["React", "TypeScript", "CSS", "Responsive Design"]
-          }
-        ],
+        positions: ["UX/UI Дизайнер", "Frontend Разработчик"],
         requirements: ["Опыт работы с веб-технологиями", "Ответственность", "Работа в команде"],
         location: "Москва (удаленно)",
         remote: true,

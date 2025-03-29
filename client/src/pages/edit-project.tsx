@@ -25,8 +25,52 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+// Определение типа для проекта
+interface ProjectPosition {
+  id: string;
+  title: string;
+  requirements: string[];
+}
+
+interface Project {
+  id: number;
+  userId: number;
+  title: string;
+  description: string;
+  field: string;
+  positions: string[];
+  requirements: string[];
+  location: string | null;
+  remote: boolean;
+  photos: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+  positionsWithRequirements?: ProjectPosition[];
+}
 import { Calendar as CalendarIcon, X as XIcon, Plus as PlusIcon, Loader2 } from "lucide-react";
-import { projectFields } from "@/lib/constants";
+
+// Определяем поля проектов для использования в форме
+const projectFields = [
+  { value: "IT", label: "Информационные технологии" },
+  { value: "Design", label: "Дизайн" },
+  { value: "Marketing", label: "Маркетинг" },
+  { value: "Business", label: "Бизнес" },
+  { value: "Education", label: "Образование" },
+  { value: "Art", label: "Искусство" },
+  { value: "Science", label: "Наука" },
+  { value: "Engineering", label: "Инженерия" },
+  { value: "Finance", label: "Финансы" },
+  { value: "Healthcare", label: "Здравоохранение" },
+  { value: "Media", label: "Медиа" },
+  { value: "Legal", label: "Юриспруденция" },
+  { value: "Social", label: "Социальная сфера" },
+  { value: "Entertainment", label: "Развлечения" },
+  { value: "Sports", label: "Спорт" },
+  { value: "Other", label: "Другое" }
+];
 
 export default function EditProject() {
   const { user } = useAuth();
@@ -37,7 +81,7 @@ export default function EditProject() {
   const projectId = parseInt(location.split("/")[2]);
   
   // Fetch project data
-  const { data: project, isLoading, error } = useQuery({
+  const { data: project, isLoading, error } = useQuery<Project>({
     queryKey: [`/api/projects/${projectId}`],
   });
   
@@ -45,7 +89,7 @@ export default function EditProject() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [field, setField] = useState<string>("");
-  const [positions, setPositions] = useState<{ id: string; title: string; requirements: string[] }[]>([]);
+  const [positions, setPositions] = useState<ProjectPosition[]>([]);
   const [newPosition, setNewPosition] = useState("");
   const [isAddingPosition, setIsAddingPosition] = useState(false);
   const [editingPositionId, setEditingPositionId] = useState<string | null>(null);
@@ -99,7 +143,7 @@ export default function EditProject() {
   // Add a new position
   const handleAddPosition = () => {
     if (newPosition.trim()) {
-      const newPos = {
+      const newPos: ProjectPosition = {
         id: generateId(),
         title: newPosition.trim(),
         requirements: []
