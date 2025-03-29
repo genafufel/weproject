@@ -53,6 +53,7 @@ export default function ProjectDetail() {
   const [applyDialogOpen, setApplyDialogOpen] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
   const [applicationMessage, setApplicationMessage] = useState("");
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   
   // Extract project ID from the URL
   const projectId = parseInt(location.split("/")[2]);
@@ -130,8 +131,7 @@ export default function ProjectDetail() {
     },
   });
   
-  // Состояние для выбранной позиции
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+  // Комментарий был добавлен к состоянию для выбранной позиции выше
 
   // Format date for display
   const formatDate = (dateString: string) => {
@@ -146,7 +146,15 @@ export default function ProjectDetail() {
       return;
     }
     
-    if (user.userType !== "applicant") {
+    // Если тип пользователя не установлен или не соискатель
+    if (!user.userType) {
+      navigate("/edit-profile"); // Перенаправление на страницу редактирования профиля для выбора типа пользователя
+      toast({
+        title: "Настройте тип профиля",
+        description: "Чтобы откликаться на проекты, нужно настроить тип профиля как 'Соискатель'",
+      });
+      return;
+    } else if (user.userType !== "applicant") {
       toast({
         title: "Невозможно откликнуться",
         description: "Только соискатели могут откликаться на проекты.",
@@ -312,13 +320,23 @@ export default function ProjectDetail() {
                           <Briefcase className="h-5 w-5 text-primary mr-2 mt-0.5" />
                           <span>{position}</span>
                         </div>
-                        {user && user.userType === "applicant" && !hasApplied && (
+                        {user ? (
+                          user.userType === "applicant" && !hasApplied ? (
+                            <Button 
+                              size="sm" 
+                              onClick={() => handlePositionClick(position)}
+                              variant="outline"
+                            >
+                              Откликнуться
+                            </Button>
+                          ) : null
+                        ) : (
                           <Button 
                             size="sm" 
-                            onClick={() => handlePositionClick(position)}
+                            onClick={() => navigate("/auth")}
                             variant="outline"
                           >
-                            Откликнуться
+                            Войти
                           </Button>
                         )}
                       </li>
@@ -370,12 +388,12 @@ export default function ProjectDetail() {
                         Откликнуться на проект
                       </Button>
                     )
-                  ) : user?.userType === "projectOwner" ? (
+                  ) : user ? (
                     <div className="text-center p-4 bg-gray-50 text-gray-700 rounded-lg">
                       Только соискатели могут откликаться на проекты.
                     </div>
                   ) : (
-                    <Button className="w-full" onClick={handleApply}>
+                    <Button className="w-full" onClick={() => navigate("/auth")}>
                       Войдите, чтобы откликнуться
                     </Button>
                   )}
