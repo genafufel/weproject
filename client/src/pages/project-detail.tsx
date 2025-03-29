@@ -82,7 +82,7 @@ export default function ProjectDetail() {
     isLoading: resumesLoading,
   } = useQuery<any[]>({
     queryKey: [`/api/resumes?userId=${user?.id}`],
-    enabled: !!user && user.userType === "applicant",
+    enabled: !!user,
   });
   
   // Check if user has already applied for this project
@@ -91,7 +91,7 @@ export default function ProjectDetail() {
     isLoading: applicationsLoading,
   } = useQuery<any[] | null>({
     queryKey: [`/api/applications?projectId=${projectId}&userId=${user?.id}`],
-    enabled: !!user && user.userType === "applicant",
+    enabled: !!user,
     queryFn: getQueryFn<any[] | null>({ on401: "returnNull" }) as any
   });
   
@@ -146,18 +146,11 @@ export default function ProjectDetail() {
       return;
     }
     
-    // Если тип пользователя не установлен или не соискатель
-    if (!user.userType) {
-      navigate("/edit-profile"); // Перенаправление на страницу редактирования профиля для выбора типа пользователя
+    // Проверка на владельца проекта (не может откликаться на свой же проект)
+    if (project?.userId === user.id) {
       toast({
-        title: "Настройте тип профиля",
-        description: "Чтобы откликаться на проекты, нужно настроить тип профиля как 'Соискатель'",
-      });
-      return;
-    } else if (user.userType !== "applicant") {
-      toast({
-        title: "Невозможно откликнуться",
-        description: "Только соискатели могут откликаться на проекты.",
+        title: "Не можете откликнуться на собственный проект",
+        description: "Вы не можете подать заявку на свой собственный проект.",
         variant: "destructive",
       });
       return;
@@ -321,15 +314,21 @@ export default function ProjectDetail() {
                           <span>{position}</span>
                         </div>
                         {user ? (
-                          user.userType === "applicant" && !hasApplied ? (
-                            <Button 
-                              size="sm" 
-                              onClick={() => handlePositionClick(position)}
-                              variant="outline"
-                            >
-                              Откликнуться
-                            </Button>
-                          ) : null
+                          hasApplied ? (
+                            <Badge variant="outline" className="bg-green-50 text-green-700">
+                              Вы откликнулись
+                            </Badge>
+                          ) : (
+                            project?.userId !== user.id && (
+                              <Button 
+                                size="sm" 
+                                onClick={() => handlePositionClick(position)}
+                                variant="outline"
+                              >
+                                Откликнуться
+                              </Button>
+                            )
+                          )
                         ) : (
                           <Button 
                             size="sm" 
@@ -374,31 +373,33 @@ export default function ProjectDetail() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {user?.userType === "applicant" ? (
-                    hasApplied ? (
-                      <div className="text-center p-4 bg-green-50 text-green-700 rounded-lg">
-                        Вы уже подали заявку на этот проект.
+                  {user ? (
+                    project?.userId === user.id ? (
+                      <div className="text-center p-4 bg-gray-50 text-gray-700 rounded-lg">
+                        Это ваш проект
                       </div>
                     ) : (
-                      <Button
-                        className="w-full"
-                        onClick={handleApply}
-                        disabled={!user || applicationsLoading}
-                      >
-                        Откликнуться на проект
-                      </Button>
+                      hasApplied ? (
+                        <div className="text-center p-4 bg-green-50 text-green-700 rounded-lg">
+                          Вы уже подали заявку на этот проект.
+                        </div>
+                      ) : (
+                        <Button
+                          className="w-full"
+                          onClick={handleApply}
+                          disabled={applicationsLoading}
+                        >
+                          Откликнуться на проект
+                        </Button>
+                      )
                     )
-                  ) : user ? (
-                    <div className="text-center p-4 bg-gray-50 text-gray-700 rounded-lg">
-                      Только соискатели могут откликаться на проекты.
-                    </div>
                   ) : (
                     <Button className="w-full" onClick={() => navigate("/auth")}>
                       Войдите, чтобы откликнуться
                     </Button>
                   )}
                 </CardContent>
-                {!hasApplied && user?.userType === "applicant" && !resumes?.length && (
+                {!hasApplied && user && project?.userId !== user.id && !resumes?.length && (
                   <CardFooter className="border-t pt-4">
                     <div className="w-full text-center text-sm">
                       <p className="text-gray-500 mb-2">Сначала создайте резюме.</p>
