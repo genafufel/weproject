@@ -51,6 +51,7 @@ type AuthContextType = {
   loginMutation: UseMutationResult<Omit<SelectUser, "password">, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
   registerMutation: UseMutationResult<Omit<SelectUser, "password">, Error, RegisterData>;
+  createProjectMutation: UseMutationResult<any, Error, any>;
 };
 
 type LoginData = Pick<InsertUser, "username" | "password">;
@@ -140,6 +141,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     },
   });
+  
+  // Мутация для создания проекта через аутентифицированный контекст
+  const createProjectMutation = useMutation({
+    mutationFn: async (projectData: any) => {
+      console.log("Создание проекта через Auth контекст:", projectData);
+      const res = await apiRequest("POST", "/api/projects", projectData);
+      return await res.json();
+    },
+    onSuccess: (project) => {
+      queryClient.invalidateQueries({ queryKey: [`/api/projects?userId=${user?.id}`] });
+      toast({
+        title: "Проект успешно создан",
+        description: "Ваш проект создан и теперь доступен для соискателей.",
+      });
+    },
+    onError: (error: Error) => {
+      console.error("Ошибка при создании проекта через Auth контекст:", error);
+      toast({
+        title: "Не удалось создать проект",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
 
   return (
     <AuthContext.Provider
@@ -150,6 +175,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loginMutation,
         logoutMutation,
         registerMutation,
+        createProjectMutation,
       }}
     >
       {children}

@@ -1,13 +1,13 @@
 import { useState, useId } from "react";
 import { useLocation } from "wouter";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/hooks/use-auth";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { apiRequest, queryClient, getQueryFn } from "@/lib/queryClient";
 import { insertProjectSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -136,9 +136,35 @@ export default function CreateProject() {
     }
   };
   
+  // Запрос для проверки состояния аутентификации через endpoint
+  const { data: authCheckData, isLoading: isAuthCheckLoading } = useQuery({
+    queryKey: ['/api/auth-check'],
+    queryFn: async () => {
+      try {
+        const res = await fetch('/api/auth-check');
+        if (!res.ok) {
+          if (res.status === 401) {
+            console.warn("Пользователь не аутентифицирован");
+            return null;
+          }
+          throw new Error(`Ошибка проверки аутентификации: ${res.status}`);
+        }
+        const data = await res.json();
+        console.log("Успешная проверка аутентификации:", data);
+        return data;
+      } catch (err) {
+        console.error("Ошибка проверки аутентификации:", err);
+        return null;
+      }
+    },
+  });
+  
   // Create project mutation
   const createProjectMutation = useMutation({
     mutationFn: async (data: Omit<ProjectFormValues, "newPosition" | "newRequirement" | "newPhotoUrl">) => {
+      // Сначала проверим состояние аутентификации
+      console.log("Auth check before submitting project:", authCheckData);
+      
       const res = await apiRequest("POST", "/api/projects", data);
       return await res.json();
     },

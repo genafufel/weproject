@@ -10,6 +10,30 @@ import { askForEmailAPIKey, sendEmail } from "./email"; // Сервис для �
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
+  
+  // Endpoint для проверки состояния аутентификации
+  app.get("/api/auth-check", (req, res) => {
+    console.log("Auth check request received");
+    console.log("Is authenticated:", req.isAuthenticated());
+    console.log("Session ID:", req.sessionID);
+    console.log("Session:", req.session);
+    console.log("User:", req.user);
+    
+    if (req.isAuthenticated()) {
+      res.json({
+        isAuthenticated: true,
+        sessionID: req.sessionID,
+        hasSession: !!req.session,
+        hasUser: !!req.user,
+        userId: req.user?.id
+      });
+    } else {
+      res.status(401).json({
+        isAuthenticated: false,
+        message: "Пользователь не аутентифицирован"
+      });
+    }
+  });
 
   // Resume Routes
   app.get("/api/resumes", async (req, res) => {
