@@ -95,13 +95,13 @@ export default function CreateProject() {
   
   // Set up field arrays for positions, requirements, and photos
   const { fields: positionFields, append: appendPosition, remove: removePosition } = 
-    useFieldArray({ control: form.control, name: "positions" });
+    useFieldArray({ control: form.control, name: "positions" as any });
   
   const { fields: requirementFields, append: appendRequirement, remove: removeRequirement } = 
-    useFieldArray({ control: form.control, name: "requirements" });
+    useFieldArray({ control: form.control, name: "requirements" as any });
     
   const { fields: photoFields, append: appendPhoto, remove: removePhoto } = 
-    useFieldArray({ control: form.control, name: "photos" });
+    useFieldArray({ control: form.control, name: "photos" as any });
   
   // Add a new position
   const handleAddPosition = () => {
@@ -258,9 +258,9 @@ export default function CreateProject() {
                   <div>
                     <FormLabel>Требуемые должности</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {positionFields.map((field, index) => (
+                      {positionFields.map((field: any, index) => (
                         <Badge key={field.id} className="py-1 px-3 gap-2">
-                          {field as any}
+                          {typeof field === 'string' ? field : field.value || ''}
                           <Button
                             type="button"
                             variant="ghost"
@@ -325,9 +325,9 @@ export default function CreateProject() {
                   <div>
                     <FormLabel>Требования</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {requirementFields.map((field, index) => (
+                      {requirementFields.map((field: any, index) => (
                         <Badge key={field.id} variant="secondary" className="py-1 px-3 gap-2">
-                          {field as any}
+                          {typeof field === 'string' ? field : field.value || ''}
                           <Button
                             type="button"
                             variant="ghost"
@@ -392,10 +392,10 @@ export default function CreateProject() {
                   <div>
                     <FormLabel>Фотографии проекта</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {photoFields.map((field, index) => (
+                      {photoFields.map((field: any, index) => (
                         <div key={field.id} className="relative group">
                           <img 
-                            src={field as any}
+                            src={typeof field === 'string' ? field : field.value || ''}
                             alt="Фото проекта" 
                             className="h-24 w-32 object-cover rounded-md" 
                           />
