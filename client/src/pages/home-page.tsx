@@ -83,7 +83,7 @@ export default function HomePage() {
                     <div className="rounded-md shadow">
                       <Link href="/projects">
                         <Button size="lg" className="w-full">
-                          Найти проекты
+                          Проекты
                         </Button>
                       </Link>
                     </div>
@@ -203,7 +203,7 @@ export default function HomePage() {
             <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
               <div className="inline-flex rounded-md shadow">
                 <Link href={user ? "/dashboard" : "/auth"}>
-                  <Button variant="secondary" size="lg">
+                  <Button variant="secondary" size="lg" className="bg-white text-gray-800 hover:bg-gray-50">
                     {user ? "В личный кабинет" : "Создать аккаунт"}
                   </Button>
                 </Link>

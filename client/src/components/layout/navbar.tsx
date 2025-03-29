@@ -28,8 +28,8 @@ export function Navbar() {
 
   // Navigation links for both desktop and mobile
   const navLinks = [
-    { href: "/projects", label: "Найти проекты", exact: false },
-    { href: "/talent", label: "Найти таланты", exact: false },
+    { href: "/projects", label: "Проекты", exact: false },
+    { href: "/talent", label: "Сотрудники", exact: false },
   ];
 
   // Additional links for authenticated users (пустой массив, так как мы убираем эти ссылки из верхней панели)
