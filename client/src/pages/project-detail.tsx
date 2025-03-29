@@ -89,12 +89,14 @@ export default function ProjectDetail() {
     data: userApplications,
     isLoading: applicationsLoading,
   } = useQuery({
-    queryKey: [`/api/applications?projectId=${projectId}&userId=${user?.id}`],
+    queryKey: [`/api/applications`],
     enabled: !!user && user.userType === "applicant",
   });
   
   // Determine if user has already applied
-  const hasApplied = userApplications && userApplications.length > 0;
+  const hasApplied = userApplications && 
+    Array.isArray(userApplications) && 
+    userApplications.some((app: any) => app.projectId === projectId);
   
   // Set default resume when resumes are loaded
   useEffect(() => {
@@ -110,17 +112,17 @@ export default function ProjectDetail() {
       return await res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/applications?projectId=${projectId}&userId=${user?.id}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/applications`] });
       toast({
-        title: "Application submitted",
-        description: "Your application has been sent to the project owner.",
+        title: "Заявка отправлена",
+        description: "Ваш отклик был отправлен владельцу проекта.",
       });
       setApplyDialogOpen(false);
       setApplicationMessage("");
     },
     onError: (error: Error) => {
       toast({
-        title: "Application failed",
+        title: "Ошибка при отправке заявки",
         description: error.message,
         variant: "destructive",
       });
@@ -145,8 +147,8 @@ export default function ProjectDetail() {
     
     if (user.userType !== "applicant") {
       toast({
-        title: "Unable to apply",
-        description: "Only applicants can apply for projects.",
+        title: "Невозможно откликнуться",
+        description: "Только соискатели могут откликаться на проекты.",
         variant: "destructive",
       });
       return;
@@ -159,8 +161,8 @@ export default function ProjectDetail() {
   const handleSubmitApplication = () => {
     if (!selectedResumeId) {
       toast({
-        title: "Resume required",
-        description: "Please select a resume for your application.",
+        title: "Резюме обязательно",
+        description: "Пожалуйста, выберите резюме для вашего отклика.",
         variant: "destructive",
       });
       return;
