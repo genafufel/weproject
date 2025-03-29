@@ -146,7 +146,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const createProjectMutation = useMutation({
     mutationFn: async (projectData: any) => {
       console.log("Создание проекта через Auth контекст:", projectData);
-      const res = await apiRequest("POST", "/api/projects", projectData);
+      
+      // Прямой fetch запрос с явным включением cookies
+      const res = await fetch("/api/projects", {
+        method: "POST",
+        credentials: "include", // Важно: включает cookies в запрос
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectData),
+      });
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("Ошибка HTTP при создании проекта:", res.status, errorText);
+        throw new Error(`Ошибка создания проекта: ${res.status} ${errorText}`);
+      }
+      
       return await res.json();
     },
     onSuccess: (project) => {

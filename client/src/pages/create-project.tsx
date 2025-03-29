@@ -186,7 +186,7 @@ export default function CreateProject() {
   });
   
   // Handle form submission
-  const onSubmit = (values: ProjectFormValues) => {
+  const onSubmit = async (values: ProjectFormValues) => {
     // Remove the temporary fields used for adding new items
     const { newPosition, newRequirement, newPhotoUrl, ...projectData } = values;
     
@@ -202,30 +202,47 @@ export default function CreateProject() {
         typeof field === 'string' ? field : field.value || '')
     };
     
-    console.log("Отправляю данные проекта через AuthContext:", formattedData);
+    console.log("Отправляю данные проекта через прямой fetch:", formattedData);
     
-    // Попробуем использовать мутацию из AuthContext вместо локальной мутации
-    if (authCheckData?.isAuthenticated) {
-      // Если у нас есть доступ к контексту аутентификации - используем его
-      if (createProjectMutation) {
-        createProjectMutation.mutate(formattedData);
-      } else {
-        toast({
-          title: "Ошибка создания проекта",
-          description: "Не удалось получить доступ к API для создания проекта.",
-          variant: "destructive",
-        });
-      }
-    } else {
-      // Показываем предупреждение, что пользователь не аутентифицирован
-      toast({
-        title: "Необходимо войти в систему",
-        description: "Пожалуйста, войдите в систему или перезагрузите страницу и попробуйте снова.",
-        variant: "destructive",
+    // Используем прямой fetch запрос с явными credentials: "include"
+    try {
+      const response = await fetch("/api/projects", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // Важно: включить cookies
+        body: JSON.stringify(formattedData),
       });
       
-      // Пробуем использовать локальную мутацию как резервный вариант
-      createProjectMutation.mutate(formattedData);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Ошибка HTTP при создании проекта:", response.status, errorText);
+        throw new Error(`Ошибка создания проекта: ${response.status} ${errorText}`);
+      }
+      
+      const project = await response.json();
+      console.log("Проект успешно создан:", project);
+      
+      // Обновляем кеш запросов
+      queryClient.invalidateQueries({ queryKey: [`/api/projects?userId=${user?.id}`] });
+      
+      // Показываем сообщение об успехе
+      toast({
+        title: "Проект успешно создан",
+        description: "Ваш проект создан и теперь доступен для соискателей.",
+      });
+      
+      // Перенаправляем на страницу с проектами
+      navigate("/projects");
+      
+    } catch (error: any) {
+      console.error("Ошибка при создании проекта:", error);
+      toast({
+        title: "Не удалось создать проект",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
