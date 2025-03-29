@@ -59,7 +59,7 @@ export default function ProjectDetail() {
   
   // Fetch project details
   const {
-    data: project = {},
+    data: project,
     isLoading: projectLoading,
     error: projectError,
   } = useQuery<any>({
@@ -68,7 +68,7 @@ export default function ProjectDetail() {
   
   // Fetch project owner info
   const {
-    data: projectOwner = {},
+    data: projectOwner,
     isLoading: ownerLoading,
   } = useQuery<any>({
     queryKey: [`/api/users/${project?.userId}`],
