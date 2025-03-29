@@ -290,7 +290,7 @@ export default function Projects() {
                 Создайте аккаунт, чтобы откликаться на проекты и создавать своё портфолио.
               </p>
               <Link href="/auth">
-                <Button variant="secondary" size="lg">
+                <Button variant="secondary" size="lg" className="bg-white text-gray-800 hover:bg-gray-50">
                   Создать аккаунт
                 </Button>
               </Link>

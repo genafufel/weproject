@@ -330,7 +330,7 @@ export default function Talent() {
                 Создайте аккаунт, чтобы связаться со студентами и начинающими специалистами.
               </p>
               <Link href="/auth">
-                <Button variant="secondary" size="lg">
+                <Button variant="secondary" size="lg" className="bg-white text-gray-800 hover:bg-gray-50">
                   Создать аккаунт
                 </Button>
               </Link>
