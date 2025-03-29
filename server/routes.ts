@@ -231,7 +231,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Application Routes
   app.get("/api/applications", async (req, res) => {
-    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    // Проверка авторизации не требуется для запросов проверки существования заявок
+    // if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     
     const projectId = req.query.projectId ? parseInt(req.query.projectId as string) : undefined;
     const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
@@ -244,23 +245,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Project not found" });
       }
       
+      // Пользователь не аутентифицирован - возвращаем пустой массив
+      if (!req.isAuthenticated()) {
+        return res.json([]);
+      }
+      
       // Get all applications by the user
       const userApps = await storage.getApplicationsByUserId(userId);
       // Filter only applications for the specified project
       const projectApplications = userApps.filter(app => app.projectId === projectId);
       res.json(projectApplications);
     } else if (projectId) {
+      // Проверяем авторизацию для других запросов
+      if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+      
       // First check if user owns the project
       const project = await storage.getProject(projectId);
-      if (!project || project.userId !== req.user.id) {
+      if (!project || project.userId !== req.user!.id) {
         return res.status(403).json({ message: "Forbidden: You don't have permission to view these applications" });
       }
       
       const applications = await storage.getApplicationsByProjectId(projectId);
       res.json(applications);
     } else {
+      // Проверяем авторизацию для других запросов
+      if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+      
       // Return the current user's applications
-      const applications = await storage.getApplicationsByUserId(req.user.id);
+      const applications = await storage.getApplicationsByUserId(req.user!.id);
       res.json(applications);
     }
   });
@@ -271,13 +283,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertApplicationSchema.parse({
         ...req.body,
-        userId: req.user.id,
+        userId: req.user!.id,
         status: "pending" // Force status to be pending for new applications
       });
       
       // Check if the resume belongs to the applicant
       const resume = await storage.getResume(validatedData.resumeId);
-      if (!resume || resume.userId !== req.user.id) {
+      if (!resume || resume.userId !== req.user!.id) {
         return res.status(403).json({ message: "Forbidden: You don't have permission to use this resume" });
       }
       
@@ -309,7 +321,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     // Only the project owner can update the application status
     const project = await storage.getProject(application.projectId);
-    if (!project || project.userId !== req.user.id) {
+    if (!project || project.userId !== req.user!.id) {
       return res.status(403).json({ message: "Forbidden: You don't have permission to update this application" });
     }
     
@@ -325,11 +337,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     if (otherUserId) {
       // Get conversation between current user and specified user
-      const conversation = await storage.getConversation(req.user.id, otherUserId);
+      const conversation = await storage.getConversation(req.user!.id, otherUserId);
       res.json(conversation);
     } else {
       // Get all messages for the current user
-      const messages = await storage.getMessagesByUserId(req.user.id);
+      const messages = await storage.getMessagesByUserId(req.user!.id);
       res.json(messages);
     }
   });
@@ -340,7 +352,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertMessageSchema.parse({
         ...req.body,
-        senderId: req.user.id,
+        senderId: req.user!.id,
         read: false
       });
       
@@ -372,7 +384,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     // Only the receiver can mark a message as read
-    if (message.receiverId !== req.user.id) {
+    if (message.receiverId !== req.user!.id) {
       return res.status(403).json({ message: "Forbidden: You don't have permission to mark this message as read" });
     }
     
@@ -392,13 +404,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       // Генерируем код верификации
-      const verificationCode = await storage.createVerificationCode(req.user.id);
+      const verificationCode = await storage.createVerificationCode(req.user!.id);
       
       // Определяем метод отправки в зависимости от типа аутентификации пользователя
-      if (req.user.authType === 'email' && req.user.email) {
+      if (req.user!.authType === 'email' && req.user!.email) {
         // Отправляем код по email
         const emailSent = await sendEmail(
-          req.user.email,
+          req.user!.email,
           "Подтверждение аккаунта weproject",
           `Ваш код подтверждения: ${verificationCode}`
         );
@@ -409,10 +421,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
           res.status(500).json({ message: "Не удалось отправить код подтверждения" });
         }
       } 
-      else if (req.user.authType === 'phone' && req.user.phone) {
+      else if (req.user!.authType === 'phone' && req.user!.phone) {
         // Отправляем код по SMS
         const smsSent = await sendSMS(
-          req.user.phone,
+          req.user!.phone,
           `Ваш код подтверждения weproject: ${verificationCode}`
         );
         
@@ -442,11 +454,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      const verified = await storage.verifyUser(req.user.id, code);
+      const verified = await storage.verifyUser(req.user!.id, code);
       
       if (verified) {
         // Обновляем пользователя в сессии
-        const updatedUser = await storage.getUser(req.user.id);
+        const updatedUser = await storage.getUser(req.user!.id);
         if (updatedUser) {
           req.login(updatedUser, (err) => {
             if (err) throw err;
@@ -477,7 +489,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const userId = parseInt(req.params.id);
     
     // Проверяем, имеет ли пользователь право обновлять этот профиль
-    if (userId !== req.user.id) {
+    if (userId !== req.user!.id) {
       return res.status(403).json({ message: "Forbidden: Вы не можете редактировать чужой профиль" });
     }
     

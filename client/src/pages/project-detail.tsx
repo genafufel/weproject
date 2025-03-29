@@ -4,7 +4,7 @@ import { useLocation, Link } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/hooks/use-auth";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { apiRequest, queryClient, getQueryFn } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -59,38 +59,39 @@ export default function ProjectDetail() {
   
   // Fetch project details
   const {
-    data: project,
+    data: project = {},
     isLoading: projectLoading,
     error: projectError,
-  } = useQuery({
+  } = useQuery<any>({
     queryKey: [`/api/projects/${projectId}`],
   });
   
   // Fetch project owner info
   const {
-    data: projectOwner,
+    data: projectOwner = {},
     isLoading: ownerLoading,
-  } = useQuery({
+  } = useQuery<any>({
     queryKey: [`/api/users/${project?.userId}`],
     enabled: !!project?.userId,
   });
   
   // Fetch user's resumes for application
   const {
-    data: resumes,
+    data: resumes = [],
     isLoading: resumesLoading,
-  } = useQuery({
+  } = useQuery<any[]>({
     queryKey: [`/api/resumes?userId=${user?.id}`],
     enabled: !!user && user.userType === "applicant",
   });
   
   // Check if user has already applied for this project
   const {
-    data: userApplications,
+    data: userApplications = [],
     isLoading: applicationsLoading,
-  } = useQuery({
+  } = useQuery<any[] | null>({
     queryKey: [`/api/applications?projectId=${projectId}&userId=${user?.id}`],
     enabled: !!user && user.userType === "applicant",
+    queryFn: getQueryFn<any[] | null>({ on401: "returnNull" }) as any
   });
   
   // Determine if user has already applied
@@ -236,25 +237,25 @@ export default function ProjectDetail() {
               <div className="bg-white rounded-lg shadow-sm p-6">
                 <div className="flex justify-between items-start flex-wrap gap-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">{project.title}</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">{project?.title || 'Проект'}</h1>
                     <div className="flex items-center mt-2 text-gray-500">
                       <Calendar className="h-4 w-4 mr-1" />
-                      <span className="text-sm">Опубликовано {formatDate(project.createdAt)}</span>
+                      <span className="text-sm">Опубликовано {project?.createdAt ? formatDate(project.createdAt) : ''}</span>
                     </div>
                   </div>
-                  <Badge className="text-sm">{project.field}</Badge>
+                  <Badge className="text-sm">{project?.field || ''}</Badge>
                 </div>
                 
                 <div className="flex items-center mt-4">
                   <MapPin className="h-5 w-5 text-gray-400 mr-1" />
                   <span className="text-gray-700">
-                    {project.remote ? "Удаленно" : project.location || "Место не указано"}
+                    {project?.remote ? "Удаленно" : project?.location || "Место не указано"}
                   </span>
                 </div>
               </div>
               
               {/* Project photos */}
-              {project.photos && project.photos.length > 0 && (
+              {project?.photos && project.photos.length > 0 && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Фотографии проекта</CardTitle>
@@ -290,7 +291,7 @@ export default function ProjectDetail() {
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-blue max-w-none">
-                    <p className="whitespace-pre-line">{project.description}</p>
+                    <p className="whitespace-pre-line">{project?.description || 'Описание отсутствует'}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -305,7 +306,7 @@ export default function ProjectDetail() {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3">
-                    {(project.positions || []).map((position: string, index: number) => (
+                    {(project?.positions || []).map((position: string, index: number) => (
                       <li key={index} className="flex items-start justify-between border-b pb-2">
                         <div className="flex items-start">
                           <Briefcase className="h-5 w-5 text-primary mr-2 mt-0.5" />
@@ -336,7 +337,7 @@ export default function ProjectDetail() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
-                    {(project.requirements || []).map((requirement: string, index: number) => (
+                    {(project?.requirements || []).map((requirement: string, index: number) => (
                       <Badge key={index} variant="secondary">{requirement}</Badge>
                     ))}
                   </div>
@@ -402,7 +403,7 @@ export default function ProjectDetail() {
                       <AvatarImage src={projectOwner?.avatar} alt={projectOwner?.fullName || "Владелец проекта"} />
                       <AvatarFallback>
                         {projectOwner?.fullName
-                          ? projectOwner.fullName.split(' ').map(n => n[0]).join('').toUpperCase()
+                          ? projectOwner.fullName.slice(0, 2).toUpperCase()
                           : "ВП"}
                       </AvatarFallback>
                     </Avatar>
@@ -416,7 +417,7 @@ export default function ProjectDetail() {
                   
                   {user ? (
                     <Button variant="outline" className="w-full" asChild>
-                      <Link href={`/messages?userId=${project.userId}`}>
+                      <Link href={`/messages?userId=${project?.userId || ''}`}>
                         Написать владельцу проекта
                       </Link>
                     </Button>
@@ -462,11 +463,11 @@ export default function ProjectDetail() {
               </Card>
               
               {/* Edit button for project owner */}
-              {user && project.userId === user.id && (
+              {user && project?.userId === user.id && (
                 <Card>
                   <CardContent className="pt-6">
                     <Button className="w-full" variant="outline" asChild>
-                      <Link href={`/edit-project/${project.id}`}>
+                      <Link href={`/edit-project/${project?.id || ''}`}>
                         <EditIcon className="h-4 w-4 mr-2" />
                         Редактировать проект
                       </Link>
@@ -488,7 +489,7 @@ export default function ProjectDetail() {
             <DialogTitle>
               {selectedPosition 
                 ? `Отклик на позицию "${selectedPosition}"` 
-                : `Отклик на проект "${project.title}"`}
+                : `Отклик на проект "${project?.title || 'Проект'}"`}
             </DialogTitle>
             <DialogDescription>
               Отправьте заявку, чтобы принять участие в проекте. Выберите резюме и добавьте сопроводительное сообщение.
