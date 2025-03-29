@@ -7,30 +7,30 @@ export function Footer() {
   
   const footerSections = [
     {
-      title: "Platform",
+      title: "Платформа",
       links: [
-        { label: "Browse Projects", href: "/projects" },
-        { label: "Find Talent", href: "/talent" },
-        { label: "Post a Project", href: "/create-project" },
-        { label: "Create Resume", href: "/create-resume" },
+        { label: "Все проекты", href: "/projects" },
+        { label: "Найти таланты", href: "/talent" },
+        { label: "Разместить проект", href: "/create-project" },
+        { label: "Создать резюме", href: "/create-resume" },
       ],
     },
     {
-      title: "Resources",
+      title: "Ресурсы",
       links: [
-        { label: "Blog", href: "#" },
-        { label: "Success Stories", href: "#" },
-        { label: "Guides", href: "#" },
-        { label: "Events", href: "#" },
+        { label: "Блог", href: "#" },
+        { label: "Истории успеха", href: "#" },
+        { label: "Руководства", href: "#" },
+        { label: "События", href: "#" },
       ],
     },
     {
-      title: "Company",
+      title: "Компания",
       links: [
-        { label: "About Us", href: "#" },
-        { label: "Contact", href: "#" },
-        { label: "Privacy Policy", href: "#" },
-        { label: "Terms of Service", href: "#" },
+        { label: "О нас", href: "#" },
+        { label: "Контакты", href: "#" },
+        { label: "Политика конфиденциальности", href: "#" },
+        { label: "Условия использования", href: "#" },
       ],
     },
   ];
@@ -44,8 +44,8 @@ export function Footer() {
               <Logo />
             </div>
             <p className="mt-4 text-base text-gray-600">
-              Connecting talented students with exciting startup opportunities. 
-              Build your portfolio, grow your network, and launch your career.
+              Объединяем талантливых студентов с интересными стартап-возможностями.
+              Создавайте портфолио, расширяйте сеть контактов и начинайте карьеру.
             </p>
             <div className="mt-6 flex space-x-6">
               <a href="#" className="text-gray-400 hover:text-gray-500">
@@ -89,7 +89,7 @@ export function Footer() {
         </div>
         <div className="mt-12 border-t border-gray-200 pt-8">
           <p className="text-base text-gray-400 text-center">
-            &copy; {currentYear} weproject. All rights reserved.
+            &copy; {currentYear} weproject. Все права защищены.
           </p>
         </div>
       </div>

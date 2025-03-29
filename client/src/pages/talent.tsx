@@ -37,20 +37,20 @@ import {
 
 // Field directions for filtering
 const fieldDirections = [
-  { value: "all", label: "All Fields" },
-  { value: "Computer Science", label: "Computer Science" },
-  { value: "Information Technology", label: "Information Technology" },
-  { value: "Graphic Design", label: "Graphic Design" },
-  { value: "UX/UI Design", label: "UX/UI Design" },
-  { value: "Business Administration", label: "Business Administration" },
-  { value: "Marketing", label: "Marketing" },
-  { value: "Finance", label: "Finance" },
-  { value: "Education", label: "Education" },
-  { value: "Engineering", label: "Engineering" },
-  { value: "Arts", label: "Arts" },
-  { value: "Event Management", label: "Event Management" },
-  { value: "Health Sciences", label: "Health Sciences" },
-  { value: "Other", label: "Other" },
+  { value: "all", label: "Все направления" },
+  { value: "Computer Science", label: "Компьютерные науки" },
+  { value: "Information Technology", label: "Информационные технологии" },
+  { value: "Graphic Design", label: "Графический дизайн" },
+  { value: "UX/UI Design", label: "UX/UI дизайн" },
+  { value: "Business Administration", label: "Бизнес-администрирование" },
+  { value: "Marketing", label: "Маркетинг" },
+  { value: "Finance", label: "Финансы" },
+  { value: "Education", label: "Образование" },
+  { value: "Engineering", label: "Инженерия" },
+  { value: "Arts", label: "Искусство" },
+  { value: "Event Management", label: "Организация мероприятий" },
+  { value: "Health Sciences", label: "Медицинские науки" },
+  { value: "Other", label: "Другое" },
 ];
 
 export default function Talent() {
@@ -171,9 +171,9 @@ export default function Talent() {
         <div className="bg-primary text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-3xl font-bold mb-4">Find Talented Students</h1>
+              <h1 className="text-3xl font-bold mb-4">Найти талантливых студентов</h1>
               <p className="text-blue-100 text-lg mb-8">
-                Discover motivated students and early-career professionals with fresh ideas and skills.
+                Откройте для себя мотивированных студентов и молодых специалистов со свежими идеями и навыками.
               </p>
               
               {/* Search form */}
@@ -182,14 +182,14 @@ export default function Talent() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Search by name, skill, or field"
+                    placeholder="Поиск по имени, навыкам или направлению"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-9 bg-white text-gray-900 border-0"
                   />
                 </div>
                 <Button type="submit" variant="secondary">
-                  Search
+                  Поиск
                 </Button>
               </form>
             </div>
@@ -201,11 +201,11 @@ export default function Talent() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium text-gray-500">Filters:</span>
+                <span className="text-sm font-medium text-gray-500">Фильтры:</span>
                 
                 <Select value={selectedField} onValueChange={handleFieldChange}>
                   <SelectTrigger className="w-[200px]">
-                    <SelectValue placeholder="Field of Study" />
+                    <SelectValue placeholder="Область изучения" />
                   </SelectTrigger>
                   <SelectContent>
                     {fieldDirections.map((field) => (
@@ -218,23 +218,23 @@ export default function Talent() {
               </div>
               
               <div className="flex items-center space-x-2 text-sm text-gray-500">
-                <span>{`${filteredResumes.length} results`}</span>
+                <span>{`${filteredResumes.length} результатов`}</span>
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="flex items-center gap-1">
-                      Sort by
+                      Сортировка
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                    <DropdownMenuLabel>Сортировать по</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuCheckboxItem checked>
-                      Relevance
+                      Релевантности
                     </DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem>
-                      Recently active
+                      Последней активности
                     </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -251,16 +251,16 @@ export default function Talent() {
             </div>
           ) : error ? (
             <div className="text-center py-12">
-              <p className="text-red-500">Failed to load talent. Please try again later.</p>
+              <p className="text-red-500">Не удалось загрузить таланты. Пожалуйста, попробуйте позже.</p>
             </div>
           ) : !filteredResumes.length ? (
             <div className="text-center py-12">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No results found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Результаты не найдены</h3>
               <p className="text-gray-500 mb-6">
-                We couldn't find any talent matching your search criteria.
+                Мы не смогли найти таланты, соответствующие критериям поиска.
               </p>
               <Button asChild variant="outline">
-                <Link href="/talent">Clear all filters</Link>
+                <Link href="/talent">Очистить все фильтры</Link>
               </Button>
             </div>
           ) : (
@@ -289,7 +289,7 @@ export default function Talent() {
                       ))}
                       {resume.skills.length > 3 && (
                         <Badge variant="outline" className="bg-blue-50">
-                          +{resume.skills.length - 3} more
+                          +{resume.skills.length - 3} ещё
                         </Badge>
                       )}
                     </div>
@@ -298,7 +298,7 @@ export default function Talent() {
                   <CardFooter className="pt-0 flex justify-center">
                     <Link href={`/talent/${resume.id}`}>
                       <Button className="w-full">
-                        View Profile
+                        Просмотр профиля
                       </Button>
                     </Link>
                   </CardFooter>
@@ -310,13 +310,13 @@ export default function Talent() {
           {/* Post a resume CTA for applicants */}
           {user?.userType === "applicant" && (
             <div className="mt-12 bg-primary rounded-lg p-8 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">Showcase your skills to project owners</h2>
+              <h2 className="text-2xl font-bold mb-2">Покажите свои навыки владельцам проектов</h2>
               <p className="mb-6 text-blue-100">
-                Create a compelling resume to get noticed by startups and project creators.
+                Создайте привлекательное резюме, чтобы привлечь внимание стартапов и создателей проектов.
               </p>
               <Link href="/create-resume">
                 <Button variant="secondary" size="lg">
-                  Create Your Resume
+                  Создать резюме
                 </Button>
               </Link>
             </div>
@@ -325,13 +325,13 @@ export default function Talent() {
           {/* Create account CTA for non-logged in users */}
           {!user && (
             <div className="mt-12 bg-primary rounded-lg p-8 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">Looking for talent for your project?</h2>
+              <h2 className="text-2xl font-bold mb-2">Ищете таланты для своего проекта?</h2>
               <p className="mb-6 text-blue-100">
-                Create an account to connect with students and early-career professionals.
+                Создайте аккаунт, чтобы связаться со студентами и начинающими специалистами.
               </p>
               <Link href="/auth">
                 <Button variant="secondary" size="lg">
-                  Create Account
+                  Создать аккаунт
                 </Button>
               </Link>
             </div>
