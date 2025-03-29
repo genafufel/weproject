@@ -269,7 +269,7 @@ export default function CreateResume() {
                       <Card key={field.id} className="border border-gray-200">
                         <CardContent className="pt-6">
                           <div className="flex justify-between items-start mb-4">
-                            <FormLabel className="text-base font-medium">Education #{index + 1}</FormLabel>
+                            <FormLabel className="text-base font-medium">Образование #{index + 1}</FormLabel>
                             <Button
                               type="button"
                               variant="ghost"
@@ -278,7 +278,7 @@ export default function CreateResume() {
                               disabled={educationFields.length === 1}
                             >
                               <Trash2 className="h-4 w-4 mr-1" />
-                              Remove
+                              Удалить
                             </Button>
                           </div>
                           
@@ -288,9 +288,9 @@ export default function CreateResume() {
                               name={`education.${index}.institution`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Institution</FormLabel>
+                                  <FormLabel>Учебное заведение</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="University/School Name" {...field} />
+                                    <Input placeholder="Название университета/школы" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -302,9 +302,9 @@ export default function CreateResume() {
                               name={`education.${index}.degree`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Degree</FormLabel>
+                                  <FormLabel>Степень/Квалификация</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="e.g., Bachelor's, Master's" {...field} />
+                                    <Input placeholder="Например, Бакалавр, Магистр" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -317,9 +317,9 @@ export default function CreateResume() {
                             name={`education.${index}.fieldOfStudy`}
                             render={({ field }) => (
                               <FormItem className="mb-4">
-                                <FormLabel>Field of Study</FormLabel>
+                                <FormLabel>Область обучения</FormLabel>
                                 <FormControl>
-                                  <Input placeholder="e.g., Computer Science" {...field} />
+                                  <Input placeholder="Например, Информатика, Экономика" {...field} />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -332,9 +332,9 @@ export default function CreateResume() {
                               name={`education.${index}.startDate`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Start Date</FormLabel>
+                                  <FormLabel>Дата начала</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="e.g., 09/2018" {...field} />
+                                    <Input placeholder="Например, 09/2018" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -346,9 +346,9 @@ export default function CreateResume() {
                               name={`education.${index}.endDate`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>End Date (or expected)</FormLabel>
+                                  <FormLabel>Дата окончания (или ожидаемая)</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="e.g., 06/2022 or Present" {...field} />
+                                    <Input placeholder="Например, 06/2022 или Настоящее время" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -361,10 +361,10 @@ export default function CreateResume() {
                             name={`education.${index}.description`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Description (Optional)</FormLabel>
+                                <FormLabel>Описание (необязательно)</FormLabel>
                                 <FormControl>
                                   <Textarea
-                                    placeholder="Relevant coursework, achievements, etc."
+                                    placeholder="Релевантные курсы, достижения и т.д."
                                     className="resize-y"
                                     {...field}
                                   />
@@ -403,7 +403,7 @@ export default function CreateResume() {
                       <Card key={field.id} className="border border-gray-200">
                         <CardContent className="pt-6">
                           <div className="flex justify-between items-start mb-4">
-                            <FormLabel className="text-base font-medium">Experience #{index + 1}</FormLabel>
+                            <FormLabel className="text-base font-medium">Опыт #{index + 1}</FormLabel>
                             <Button
                               type="button"
                               variant="ghost"
@@ -411,7 +411,7 @@ export default function CreateResume() {
                               onClick={() => removeExperience(index)}
                             >
                               <Trash2 className="h-4 w-4 mr-1" />
-                              Remove
+                              Удалить
                             </Button>
                           </div>
                           
@@ -421,9 +421,9 @@ export default function CreateResume() {
                               name={`experience.${index}.company`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Company/Organization</FormLabel>
+                                  <FormLabel>Компания/Организация</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="Company Name" {...field} />
+                                    <Input placeholder="Название компании" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -435,9 +435,9 @@ export default function CreateResume() {
                               name={`experience.${index}.position`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Position</FormLabel>
+                                  <FormLabel>Должность</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="e.g., Intern, Developer" {...field} />
+                                    <Input placeholder="Например, Стажер, Разработчик" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -451,9 +451,9 @@ export default function CreateResume() {
                               name={`experience.${index}.startDate`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Start Date</FormLabel>
+                                  <FormLabel>Дата начала</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="e.g., 06/2021" {...field} />
+                                    <Input placeholder="Например, 06/2021" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -465,9 +465,9 @@ export default function CreateResume() {
                               name={`experience.${index}.endDate`}
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>End Date</FormLabel>
+                                  <FormLabel>Дата окончания</FormLabel>
                                   <FormControl>
-                                    <Input placeholder="e.g., 08/2021 or Present" {...field} />
+                                    <Input placeholder="Например, 08/2021 или Настоящее время" {...field} />
                                   </FormControl>
                                   <FormMessage />
                                 </FormItem>
@@ -480,10 +480,10 @@ export default function CreateResume() {
                             name={`experience.${index}.description`}
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Description</FormLabel>
+                                <FormLabel>Описание</FormLabel>
                                 <FormControl>
                                   <Textarea
-                                    placeholder="Describe your responsibilities and achievements"
+                                    placeholder="Опишите ваши обязанности и достижения"
                                     className="resize-y"
                                     {...field}
                                   />
