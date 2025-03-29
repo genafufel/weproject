@@ -81,22 +81,20 @@ export function Navbar() {
                   <Bell className="h-5 w-5" />
                 </Button>
                 
-                <Link href="/dashboard">
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.avatar || undefined} alt={user.fullName} />
-                      <AvatarFallback>
-                        {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </Link>
-                
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <span className="text-sm">Меню</span>
-                    </Button>
+                    <Link href="/dashboard">
+                      <Button variant="ghost" className="relative h-8 w-8 rounded-full" asChild>
+                        <div>
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={user.avatar || undefined} alt={user.fullName} />
+                            <AvatarFallback>
+                              {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                            </AvatarFallback>
+                          </Avatar>
+                        </div>
+                      </Button>
+                    </Link>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <div className="flex flex-col space-y-1 p-2">
