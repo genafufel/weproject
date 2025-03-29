@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -10,10 +10,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Loader2, Upload, User, Check } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 // Создаем схему валидации для формы редактирования профиля
 const profileSchema = z.object({
@@ -29,6 +30,9 @@ export default function EditProfile() {
   const { user, loginMutation } = useAuth();
   const { toast } = useToast();
   const [, navigate] = useLocation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | undefined>(undefined);
   
   // Если пользователь не аутентифицирован, перенаправляем на страницу входа
   if (!user) {
@@ -76,6 +80,86 @@ export default function EditProfile() {
     },
   });
   
+  // Обработчик загрузки аватара
+  const uploadAvatarMutation = useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('avatar', file);
+      
+      const response = await fetch('/api/upload/avatar', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Ошибка загрузки изображения');
+      }
+      
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      // Обновляем данные формы
+      form.setValue('avatar', data.fileUrl);
+      setAvatarPreview(data.fileUrl);
+      
+      toast({
+        title: "Фото загружено",
+        description: "Ваше фото профиля успешно загружено.",
+      });
+      
+      // Обновляем кэш пользователя
+      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      
+      setUploadingAvatar(false);
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Ошибка загрузки фото",
+        description: error.message,
+        variant: "destructive",
+      });
+      setUploadingAvatar(false);
+    }
+  });
+  
+  // Обработчик изменения файла
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    // Проверка типа файла
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Неверный формат файла",
+        description: "Пожалуйста, выберите изображение",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Проверка размера файла (максимум 5 МБ)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Файл слишком большой",
+        description: "Максимальный размер файла - 5 МБ",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Создаем превью
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setAvatarPreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(file);
+    
+    // Загружаем файл
+    setUploadingAvatar(true);
+    uploadAvatarMutation.mutate(file);
+  };
+  
   // Обработчик отправки формы
   const onSubmit = (values: ProfileFormValues) => {
     updateProfileMutation.mutate(values);
@@ -102,6 +186,57 @@ export default function EditProfile() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {/* Секция загрузки фото */}
+              <div className="mb-6">
+                <div className="flex items-center gap-6">
+                  <div>
+                    <Avatar className="h-24 w-24">
+                      <AvatarImage 
+                        src={avatarPreview || user.avatar || undefined} 
+                        alt={user.fullName || "Аватар"} 
+                      />
+                      <AvatarFallback>
+                        <User className="h-12 w-12 text-gray-400" />
+                      </AvatarFallback>
+                    </Avatar>
+                  </div>
+                  
+                  <div className="flex flex-col gap-2">
+                    <h3 className="text-lg font-medium">Фото профиля</h3>
+                    <p className="text-sm text-gray-500">
+                      Это изображение будет отображаться в вашем профиле
+                    </p>
+                    <div className="flex gap-2 mt-2">
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => fileInputRef.current?.click()}
+                        disabled={uploadingAvatar}
+                      >
+                        {uploadingAvatar ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Загрузка...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="mr-2 h-4 w-4" />
+                            Загрузить фото
+                          </>
+                        )}
+                      </Button>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                   <FormField
