@@ -77,16 +77,48 @@ export function Navbar() {
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             {user ? (
               <>
-                <Link href="/dashboard?tab=resumes">
-                  <Button variant="ghost" className="text-gray-700">
-                    Мои резюме
-                  </Button>
-                </Link>
-                <Link href="/dashboard?tab=projects">
-                  <Button variant="ghost" className="text-gray-700">
-                    Мои проекты
-                  </Button>
-                </Link>
+                <Button 
+                  variant="ghost" 
+                  className="text-gray-700"
+                  onClick={() => {
+                    const url = new URL(window.location.href);
+                    url.pathname = "/dashboard";
+                    url.searchParams.set('tab', 'resumes');
+                    window.history.pushState({}, '', url);
+                    
+                    if (window.location.pathname === '/dashboard') {
+                      // Если уже на странице dashboard, создаем событие для обновления вкладки
+                      const event = new CustomEvent('tabchange', { detail: { tab: 'resumes' } });
+                      window.dispatchEvent(event);
+                    } else {
+                      // Иначе переходим на dashboard
+                      window.location.href = url.toString();
+                    }
+                  }}
+                >
+                  Мои резюме
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="text-gray-700"
+                  onClick={() => {
+                    const url = new URL(window.location.href);
+                    url.pathname = "/dashboard";
+                    url.searchParams.set('tab', 'projects');
+                    window.history.pushState({}, '', url);
+                    
+                    if (window.location.pathname === '/dashboard') {
+                      // Если уже на странице dashboard, создаем событие для обновления вкладки
+                      const event = new CustomEvent('tabchange', { detail: { tab: 'projects' } });
+                      window.dispatchEvent(event);
+                    } else {
+                      // Иначе переходим на dashboard
+                      window.location.href = url.toString();
+                    }
+                  }}
+                >
+                  Мои проекты
+                </Button>
                 <Button variant="ghost" size="icon" aria-label="Notifications">
                   <Bell className="h-5 w-5" />
                 </Button>
@@ -225,20 +257,48 @@ export function Navbar() {
                   >
                     Личный кабинет
                   </Link>
-                  <Link 
-                    href="/dashboard?tab=resumes"
+                  <button 
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      const url = new URL(window.location.href);
+                      url.pathname = "/dashboard";
+                      url.searchParams.set('tab', 'resumes');
+                      window.history.pushState({}, '', url);
+                      
+                      if (window.location.pathname === '/dashboard') {
+                        // Если уже на странице dashboard, создаем событие для обновления вкладки
+                        const event = new CustomEvent('tabchange', { detail: { tab: 'resumes' } });
+                        window.dispatchEvent(event);
+                      } else {
+                        // Иначе переходим на dashboard
+                        window.location.href = url.toString();
+                      }
+                    }}
                   >
                     Мои резюме
-                  </Link>
-                  <Link 
-                    href="/dashboard?tab=projects"
+                  </button>
+                  <button 
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      const url = new URL(window.location.href);
+                      url.pathname = "/dashboard";
+                      url.searchParams.set('tab', 'projects');
+                      window.history.pushState({}, '', url);
+                      
+                      if (window.location.pathname === '/dashboard') {
+                        // Если уже на странице dashboard, создаем событие для обновления вкладки
+                        const event = new CustomEvent('tabchange', { detail: { tab: 'projects' } });
+                        window.dispatchEvent(event);
+                      } else {
+                        // Иначе переходим на dashboard
+                        window.location.href = url.toString();
+                      }
+                    }}
                   >
                     Мои проекты
-                  </Link>
+                  </button>
                   <Link 
                     href="/simple-create-project"
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"

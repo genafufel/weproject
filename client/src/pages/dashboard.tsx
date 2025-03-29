@@ -51,7 +51,7 @@ export default function Dashboard() {
     enabled: !!user?.id && projects?.length > 0,
   });
   
-  // Устанавливаем tab из URL при монтировании
+  // Устанавливаем tab из URL при монтировании и слушаем события изменения таба
   useEffect(() => {
     const updateTabFromUrl = () => {
       const urlParams = new URLSearchParams(window.location.search);
@@ -61,15 +61,24 @@ export default function Dashboard() {
       }
     };
     
+    // Определяем обработчик пользовательского события tabchange
+    const handleTabChange = (event: any) => {
+      if (event.detail && event.detail.tab) {
+        setActiveTab(event.detail.tab);
+      }
+    };
+    
     // Вызываем при монтировании
     updateTabFromUrl();
     
-    // И добавляем слушатель событий popstate для обработки навигации браузера
+    // Добавляем слушатели событий
     window.addEventListener('popstate', updateTabFromUrl);
+    window.addEventListener('tabchange', handleTabChange);
     
-    // Удаляем слушатель при размонтировании
+    // Удаляем слушатели при размонтировании
     return () => {
       window.removeEventListener('popstate', updateTabFromUrl);
+      window.removeEventListener('tabchange', handleTabChange);
     };
   }, []);
   
