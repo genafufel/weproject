@@ -53,14 +53,11 @@ const projectFields = [
   { value: "Other", label: "Другое" },
 ];
 
-// Определяем тип для полей с массивами, который может быть как обычным массивом, так и массивом объектов react-hook-form
-type FieldArrayType = string[] | { id: string; value: string }[];
-
 // Extend the project schema for form validation
 const projectFormSchema = insertProjectSchema.extend({
-  positions: z.any(), // Используем any для FieldArray из react-hook-form
-  requirements: z.any(), // Используем any для FieldArray из react-hook-form
-  photos: z.any().optional(), // Используем any для FieldArray из react-hook-form
+  positions: z.array(z.string()).min(1, "Добавьте хотя бы одну должность"),
+  requirements: z.array(z.string()).min(1, "Добавьте хотя бы одно требование"),
+  photos: z.array(z.string().url("Некорректный URL")).optional(),
   newPosition: z.string().optional(),
   newRequirement: z.string().optional(),
   newPhotoUrl: z.string().url("Пожалуйста, введите корректный URL изображения").optional(),
@@ -98,22 +95,22 @@ export default function CreateProject() {
   
   // Set up field arrays for positions, requirements, and photos
   const { fields: positionFields, append: appendPosition, remove: removePosition } = 
-    useFieldArray({ control: form.control, name: "positions" as any });
+    useFieldArray({ control: form.control, name: "positions" });
   
   const { fields: requirementFields, append: appendRequirement, remove: removeRequirement } = 
-    useFieldArray({ control: form.control, name: "requirements" as any });
+    useFieldArray({ control: form.control, name: "requirements" });
     
   const { fields: photoFields, append: appendPhoto, remove: removePhoto } = 
-    useFieldArray({ control: form.control, name: "photos" as any });
+    useFieldArray({ control: form.control, name: "photos" });
   
   // Add a new position
   const handleAddPosition = () => {
     const newPosition = form.getValues("newPosition");
     if (newPosition) {
-      // Добавляем новый элемент и проверяем, что он добавился
-      appendPosition({ id: `pos-${Date.now()}`, value: newPosition } as any);
+      // Теперь добавляем просто строку вместо объекта
+      appendPosition(newPosition);
       console.log("Добавлена должность:", newPosition);
-      console.log("Текущие должности:", [...positionFields, { id: `pos-${Date.now()}`, value: newPosition }]);
+      console.log("Текущие должности:", [...positionFields, newPosition]);
       
       form.setValue("newPosition", "");
       setIsAddingPosition(false);
@@ -124,10 +121,10 @@ export default function CreateProject() {
   const handleAddRequirement = () => {
     const newRequirement = form.getValues("newRequirement");
     if (newRequirement) {
-      // Добавляем новый элемент и проверяем, что он добавился
-      appendRequirement({ id: `req-${Date.now()}`, value: newRequirement } as any);
+      // Теперь добавляем просто строку вместо объекта
+      appendRequirement(newRequirement);
       console.log("Добавлено требование:", newRequirement);
-      console.log("Текущие требования:", [...requirementFields, { id: `req-${Date.now()}`, value: newRequirement }]);
+      console.log("Текущие требования:", [...requirementFields, newRequirement]);
       
       form.setValue("newRequirement", "");
       setIsAddingRequirement(false);
@@ -138,10 +135,10 @@ export default function CreateProject() {
   const handleAddPhoto = () => {
     const newPhotoUrl = form.getValues("newPhotoUrl");
     if (newPhotoUrl) {
-      // Добавляем новый элемент и проверяем, что он добавился
-      appendPhoto({ id: `photo-${Date.now()}`, value: newPhotoUrl } as any);
+      // Теперь добавляем просто строку вместо объекта
+      appendPhoto(newPhotoUrl);
       console.log("Добавлено фото:", newPhotoUrl);
-      console.log("Текущие фото:", [...photoFields, { id: `photo-${Date.now()}`, value: newPhotoUrl }]);
+      console.log("Текущие фото:", [...photoFields, newPhotoUrl]);
       
       form.setValue("newPhotoUrl", "");
       setIsAddingPhoto(false);
@@ -202,16 +199,12 @@ export default function CreateProject() {
     // Remove the temporary fields used for adding new items
     const { newPosition, newRequirement, newPhotoUrl, ...projectData } = values;
     
-    // Преобразуем поля, которые должны быть массивами
+    // Передаем данные как есть - поскольку теперь мы добавляем только строки
     const formattedData = {
       ...projectData,
-      // Преобразуем поля в простые массивы строк
-      positions: positionFields.map((field: any) => 
-        typeof field === 'string' ? field : field.value || ''),
-      requirements: requirementFields.map((field: any) => 
-        typeof field === 'string' ? field : field.value || ''),
-      photos: photoFields.map((field: any) => 
-        typeof field === 'string' ? field : field.value || '')
+      positions: positionFields, 
+      requirements: requirementFields,
+      photos: photoFields
     };
     
     console.log("Отправляю данные проекта через прямой fetch:", formattedData);
