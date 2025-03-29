@@ -58,6 +58,8 @@ export default function Projects() {
   const [searchTerm, setSearchTerm] = useState(params.get("search") || "");
   const [selectedField, setSelectedField] = useState(params.get("field") || "all");
   const [remoteOnly, setRemoteOnly] = useState(params.get("remote") === "true");
+  const [dateFrom, setDateFrom] = useState<string>(params.get("dateFrom") || "");
+  const [dateTo, setDateTo] = useState<string>(params.get("dateTo") || "");
   
   // Build query string for API
   const buildQueryString = () => {
@@ -66,6 +68,8 @@ export default function Projects() {
     if (searchTerm) queryParams.append("search", searchTerm);
     if (selectedField && selectedField !== "all") queryParams.append("field", selectedField);
     if (remoteOnly) queryParams.append("remote", "true");
+    if (dateFrom) queryParams.append("dateFrom", dateFrom);
+    if (dateTo) queryParams.append("dateTo", dateTo);
     
     return queryParams.toString();
   };
@@ -100,6 +104,17 @@ export default function Projects() {
   // Handle remote toggle
   const handleRemoteToggle = (checked: boolean) => {
     setRemoteOnly(checked);
+    setTimeout(updateUrlWithFilters, 0);
+  };
+  
+  // Handle date change
+  const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateFrom(e.target.value);
+    setTimeout(updateUrlWithFilters, 0);
+  };
+  
+  const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDateTo(e.target.value);
     setTimeout(updateUrlWithFilters, 0);
   };
 
@@ -164,6 +179,28 @@ export default function Projects() {
                     onCheckedChange={handleRemoteToggle}
                   />
                   <Label htmlFor="remote-only">Только удаленно</Label>
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Label htmlFor="date-from" className="mr-1 whitespace-nowrap text-xs">Дата начала:</Label>
+                  <Input
+                    id="date-from"
+                    type="date"
+                    value={dateFrom}
+                    onChange={handleDateFromChange}
+                    className="w-auto"
+                  />
+                </div>
+                
+                <div className="flex items-center space-x-2">
+                  <Label htmlFor="date-to" className="mr-1 whitespace-nowrap text-xs">Дата окончания:</Label>
+                  <Input
+                    id="date-to"
+                    type="date"
+                    value={dateTo}
+                    onChange={handleDateToChange}
+                    className="w-auto"
+                  />
                 </div>
               </div>
               
@@ -251,9 +288,18 @@ export default function Projects() {
                   </CardContent>
                   
                   <CardFooter className="flex justify-between items-center pt-0">
-                    <div className="flex items-center text-sm text-gray-500">
-                      <MapPin className="h-4 w-4 mr-1 text-gray-400" />
-                      <span>{project.remote ? "Удаленно" : project.location || "Местоположение не указано"}</span>
+                    <div className="flex flex-col space-y-1">
+                      <div className="flex items-center text-sm text-gray-500">
+                        <MapPin className="h-4 w-4 mr-1 text-gray-400" />
+                        <span>{project.remote ? "Удаленно" : project.location || "Местоположение не указано"}</span>
+                      </div>
+                      {(project.startDate || project.endDate) && (
+                        <div className="text-xs text-gray-500">
+                          {project.startDate && new Date(project.startDate).toLocaleDateString('ru-RU')}
+                          {project.startDate && project.endDate && " - "}
+                          {project.endDate && new Date(project.endDate).toLocaleDateString('ru-RU')}
+                        </div>
+                      )}
                     </div>
                     
                     <Link href={`/projects/${project.id}`}>

@@ -173,7 +173,13 @@ export class MemStorage implements IStorage {
         ],
         requirements: ["Опыт работы с веб-технологиями", "Ответственность", "Работа в команде"],
         location: "Москва (удаленно)",
-        remote: true
+        remote: true,
+        photos: [
+          "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+          "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+        ],
+        startDate: new Date("2023-04-01"),
+        endDate: new Date("2023-08-31")
       };
       
       const project = await this.createProject(testProject);
@@ -337,6 +343,8 @@ export class MemStorage implements IStorage {
     field?: string;
     remote?: boolean;
     search?: string;
+    dateFrom?: Date;
+    dateTo?: Date;
   }): Promise<Project[]> {
     let projects = Array.from(this.projects.values());
     
@@ -354,6 +362,20 @@ export class MemStorage implements IStorage {
         projects = projects.filter(project => 
           project.title.toLowerCase().includes(searchLower) || 
           project.description.toLowerCase().includes(searchLower)
+        );
+      }
+      
+      // Фильтрация по дате начала проекта
+      if (filters.dateFrom) {
+        projects = projects.filter(project => 
+          project.startDate && new Date(project.startDate) >= filters.dateFrom!
+        );
+      }
+      
+      // Фильтрация по дате окончания проекта
+      if (filters.dateTo) {
+        projects = projects.filter(project => 
+          project.endDate && new Date(project.endDate) <= filters.dateTo!
         );
       }
     }
@@ -376,7 +398,10 @@ export class MemStorage implements IStorage {
       createdAt: now, 
       updatedAt: now,
       location: insertProject.location ?? null,
-      remote: insertProject.remote ?? null
+      remote: insertProject.remote ?? null,
+      photos: insertProject.photos ?? null,
+      startDate: insertProject.startDate ?? null,
+      endDate: insertProject.endDate ?? null
     };
     this.projects.set(id, project);
     return project;

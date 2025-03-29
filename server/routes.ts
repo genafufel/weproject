@@ -114,12 +114,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const remote = req.query.remote !== undefined ? req.query.remote === "true" : undefined;
     const search = req.query.search as string | undefined;
     const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+    const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom as string) : undefined;
+    const dateTo = req.query.dateTo ? new Date(req.query.dateTo as string) : undefined;
     
     if (userId) {
       const projects = await storage.getProjectsByUserId(userId);
       res.json(projects);
     } else {
-      const projects = await storage.getProjects({ field, remote, search });
+      const projects = await storage.getProjects({ field, remote, search, dateFrom, dateTo });
       res.json(projects);
     }
   });

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useId } from "react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -9,6 +9,7 @@ import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { insertProjectSchema } from "@shared/schema";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,7 +39,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PlusIcon, X, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 // Define fields available for projects
 const projectFields = [
@@ -55,8 +55,12 @@ const projectFields = [
 
 // Extend the project schema for form validation
 const projectFormSchema = insertProjectSchema.extend({
+  positions: z.array(z.string()),
+  requirements: z.array(z.string()),
+  photos: z.array(z.string()).optional(),
   newPosition: z.string().optional(),
   newRequirement: z.string().optional(),
+  newPhotoUrl: z.string().url("Пожалуйста, введите корректный URL изображения").optional(),
 }).omit({ userId: true });
 
 type ProjectFormValues = z.infer<typeof projectFormSchema>;
@@ -67,6 +71,7 @@ export default function CreateProject() {
   const { toast } = useToast();
   const [isAddingPosition, setIsAddingPosition] = useState(false);
   const [isAddingRequirement, setIsAddingRequirement] = useState(false);
+  const [isAddingPhoto, setIsAddingPhoto] = useState(false);
   
   // Initialize form with default values
   const form = useForm<ProjectFormValues>({
@@ -79,23 +84,30 @@ export default function CreateProject() {
       requirements: [],
       location: "",
       remote: false,
+      photos: [],
+      startDate: undefined,
+      endDate: undefined,
       newPosition: "",
       newRequirement: "",
+      newPhotoUrl: "",
     },
   });
   
-  // Set up field arrays for positions and requirements
+  // Set up field arrays for positions, requirements, and photos
   const { fields: positionFields, append: appendPosition, remove: removePosition } = 
     useFieldArray({ control: form.control, name: "positions" });
   
   const { fields: requirementFields, append: appendRequirement, remove: removeRequirement } = 
     useFieldArray({ control: form.control, name: "requirements" });
+    
+  const { fields: photoFields, append: appendPhoto, remove: removePhoto } = 
+    useFieldArray({ control: form.control, name: "photos" });
   
   // Add a new position
   const handleAddPosition = () => {
     const newPosition = form.getValues("newPosition");
     if (newPosition) {
-      appendPosition(newPosition);
+      appendPosition(newPosition as any);
       form.setValue("newPosition", "");
       setIsAddingPosition(false);
     }
@@ -105,15 +117,25 @@ export default function CreateProject() {
   const handleAddRequirement = () => {
     const newRequirement = form.getValues("newRequirement");
     if (newRequirement) {
-      appendRequirement(newRequirement);
+      appendRequirement(newRequirement as any);
       form.setValue("newRequirement", "");
       setIsAddingRequirement(false);
     }
   };
   
+  // Add a new photo URL
+  const handleAddPhoto = () => {
+    const newPhotoUrl = form.getValues("newPhotoUrl");
+    if (newPhotoUrl) {
+      appendPhoto(newPhotoUrl as any);
+      form.setValue("newPhotoUrl", "");
+      setIsAddingPhoto(false);
+    }
+  };
+  
   // Create project mutation
   const createProjectMutation = useMutation({
-    mutationFn: async (data: Omit<ProjectFormValues, "newPosition" | "newRequirement">) => {
+    mutationFn: async (data: Omit<ProjectFormValues, "newPosition" | "newRequirement" | "newPhotoUrl">) => {
       const res = await apiRequest("POST", "/api/projects", data);
       return await res.json();
     },
@@ -137,7 +159,7 @@ export default function CreateProject() {
   // Handle form submission
   const onSubmit = (values: ProjectFormValues) => {
     // Remove the temporary fields used for adding new items
-    const { newPosition, newRequirement, ...projectData } = values;
+    const { newPosition, newRequirement, newPhotoUrl, ...projectData } = values;
     createProjectMutation.mutate(projectData);
   };
 
@@ -238,7 +260,7 @@ export default function CreateProject() {
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
                       {positionFields.map((field, index) => (
                         <Badge key={field.id} className="py-1 px-3 gap-2">
-                          {field.value}
+                          {field as any}
                           <Button
                             type="button"
                             variant="ghost"
@@ -305,7 +327,7 @@ export default function CreateProject() {
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
                       {requirementFields.map((field, index) => (
                         <Badge key={field.id} variant="secondary" className="py-1 px-3 gap-2">
-                          {field.value}
+                          {field as any}
                           <Button
                             type="button"
                             variant="ghost"
@@ -367,6 +389,130 @@ export default function CreateProject() {
                     </FormDescription>
                   </div>
                   
+                  <div>
+                    <FormLabel>Фотографии проекта</FormLabel>
+                    <div className="mt-2 mb-4 flex flex-wrap gap-2">
+                      {photoFields.map((field, index) => (
+                        <div key={field.id} className="relative group">
+                          <img 
+                            src={field as any}
+                            alt="Фото проекта" 
+                            className="h-24 w-32 object-cover rounded-md" 
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            onClick={() => removePhoto(index)}
+                          >
+                            <X className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      ))}
+                      
+                      {!isAddingPhoto && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="h-24 w-32"
+                          onClick={() => setIsAddingPhoto(true)}
+                        >
+                          <PlusIcon className="h-4 w-4 mr-1" />
+                          Добавить фото
+                        </Button>
+                      )}
+                    </div>
+                    
+                    {isAddingPhoto && (
+                      <div className="flex gap-2 mb-4">
+                        <FormField
+                          control={form.control}
+                          name="newPhotoUrl"
+                          render={({ field }) => (
+                            <FormItem className="flex-1">
+                              <FormControl>
+                                <Input
+                                  placeholder="Введите URL изображения (например, https://example.com/image.jpg)"
+                                  {...field}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.preventDefault();
+                                      handleAddPhoto();
+                                    }
+                                  }}
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <Button type="button" onClick={handleAddPhoto}>
+                          Добавить
+                        </Button>
+                        <Button type="button" variant="ghost" onClick={() => setIsAddingPhoto(false)}>
+                          Отмена
+                        </Button>
+                      </div>
+                    )}
+                    <FormDescription>
+                      Добавьте фотографии, которые показывают ваш проект или связанные с ним изображения.
+                    </FormDescription>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <FormField
+                      control={form.control}
+                      name="startDate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Дата начала проекта</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="date" 
+                              {...field} 
+                              value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : ''}
+                              onChange={(e) => {
+                                const date = e.target.value ? new Date(e.target.value) : undefined;
+                                field.onChange(date);
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Оставьте пустым, если проект не имеет конкретной даты начала.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <FormField
+                      control={form.control}
+                      name="endDate"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Дата окончания проекта</FormLabel>
+                          <FormControl>
+                            <Input 
+                              type="date" 
+                              {...field} 
+                              value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : ''}
+                              onChange={(e) => {
+                                const date = e.target.value ? new Date(e.target.value) : undefined;
+                                field.onChange(date);
+                              }}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Оставьте пустым, если проект не имеет конкретной даты окончания.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <FormField
                       control={form.control}
@@ -375,7 +521,14 @@ export default function CreateProject() {
                         <FormItem>
                           <FormLabel>Расположение</FormLabel>
                           <FormControl>
-                            <Input placeholder="например, Москва, Санкт-Петербург" {...field} />
+                            <Input 
+                              placeholder="например, Москва, Санкт-Петербург" 
+                              value={field.value || ''} 
+                              onChange={field.onChange}
+                              onBlur={field.onBlur}
+                              name={field.name}
+                              ref={field.ref}
+                            />
                           </FormControl>
                           <FormDescription>
                             Оставьте пустым, если расположение гибкое.
@@ -398,7 +551,7 @@ export default function CreateProject() {
                           </div>
                           <FormControl>
                             <Switch
-                              checked={field.value}
+                              checked={field.value || false}
                               onCheckedChange={field.onChange}
                             />
                           </FormControl>

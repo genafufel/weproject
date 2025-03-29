@@ -45,6 +45,9 @@ export const projects = pgTable("projects", {
   requirements: jsonb("requirements").notNull(), // Array of requirements
   location: text("location"),
   remote: boolean("remote").default(false),
+  photos: jsonb("photos"), // Array of photo URLs
+  startDate: timestamp("start_date"), // Project start date
+  endDate: timestamp("end_date"), // Project end date
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
