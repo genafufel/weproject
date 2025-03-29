@@ -1,6 +1,7 @@
 import { users, type User, type InsertUser, resumes, type Resume, type InsertResume, projects, type Project, type InsertProject, applications, type Application, type InsertApplication, messages, type Message, type InsertMessage } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
+import { hashPassword } from "./auth";
 
 const MemoryStore = createMemoryStore(session);
 
@@ -88,6 +89,98 @@ export class MemStorage implements IStorage {
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
     });
+    
+    // Создаем тестового пользователя при инициализации
+    this.createTestUserData();
+  }
+  
+  // Метод для создания тестовых данных
+  private async createTestUserData() {
+    try {
+      // Проверяем, существует ли уже пользователь с именем "test"
+      const existingUser = await this.getUserByUsername("test");
+      if (existingUser) {
+        console.log("Тестовый пользователь уже существует:", existingUser.username);
+        return;
+      }
+      
+      // Создаем тестового пользователя
+      const hashedPassword = await hashPassword("test");
+      const testUser: InsertUser = {
+        fullName: "Тестовый Пользователь",
+        username: "test",
+        password: hashedPassword,
+        email: "test@example.com",
+        phone: "+7 (900) 123-4567",
+        authType: "email", // Добавляем обязательное поле authType
+        userType: "general",
+        bio: "Тестовая учетная запись для разработки",
+        verified: true
+      };
+      
+      const user = await this.createUser(testUser);
+      console.log("Создан тестовый пользователь:", user.username);
+      console.log("Логин: test");
+      console.log("Пароль: test");
+      
+      // Создаем тестовое резюме
+      const testResume: InsertResume = {
+        userId: user.id,
+        title: "Full Stack Разработчик",
+        direction: "Computer Science",
+        skills: ["JavaScript", "TypeScript", "React", "Node.js", "Express"],
+        experience: [
+          {
+            position: "Junior Developer",
+            company: "Tech Solutions",
+            startDate: "2022-01-01",
+            endDate: "2023-01-01",
+            description: "Разработка и поддержка веб-приложений"
+          }
+        ],
+        education: [
+          {
+            institution: "Технический Университет",
+            degree: "Бакалавр",
+            fieldOfStudy: "Компьютерные науки",
+            startDate: "2018-09-01",
+            endDate: "2022-06-01"
+          }
+        ],
+        talents: {}
+      };
+      
+      const resume = await this.createResume(testResume);
+      console.log("Создано тестовое резюме:", resume.title);
+      
+      // Создаем тестовый проект
+      const testProject: InsertProject = {
+        userId: user.id,
+        title: "Маркетплейс услуг",
+        description: "Платформа для поиска и предложения услуг фрилансеров",
+        field: "Information Technology",
+        positions: [
+          {
+            title: "UX/UI Дизайнер",
+            description: "Разработка интерфейса и пользовательского опыта",
+            requirements: ["Figma", "Adobe XD", "UI/UX", "Прототипирование"]
+          },
+          {
+            title: "Frontend Разработчик",
+            description: "Реализация пользовательского интерфейса",
+            requirements: ["React", "TypeScript", "CSS", "Responsive Design"]
+          }
+        ],
+        requirements: ["Опыт работы с веб-технологиями", "Ответственность", "Работа в команде"],
+        location: "Москва (удаленно)",
+        remote: true
+      };
+      
+      const project = await this.createProject(testProject);
+      console.log("Создан тестовый проект:", project.title);
+    } catch (error) {
+      console.error("Ошибка при создании тестовых данных:", error);
+    }
   }
 
   // User operations
