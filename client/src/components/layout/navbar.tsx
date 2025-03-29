@@ -28,15 +28,15 @@ export function Navbar() {
 
   // Navigation links for both desktop and mobile
   const navLinks = [
-    { href: "/", label: "Home", exact: true },
-    { href: "/projects", label: "Find Projects" },
-    { href: "/talent", label: "Find Talent" },
+    { href: "/", label: "Главная", exact: true },
+    { href: "/projects", label: "Найти проекты" },
+    { href: "/talent", label: "Найти таланты" },
   ];
 
   // Additional links for authenticated users
   const authLinks = [
-    { href: "/dashboard", label: "Dashboard" },
-    { href: "/messages", label: "Messages" },
+    { href: "/dashboard", label: "Личный кабинет" },
+    { href: "/messages", label: "Сообщения" },
   ];
 
   return (
@@ -106,12 +106,12 @@ export function Navbar() {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <Link href="/dashboard" className="w-full cursor-pointer">
-                        Dashboard
+                        Личный кабинет
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link href="/messages" className="w-full cursor-pointer">
-                        Messages
+                        Сообщения
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
@@ -120,7 +120,7 @@ export function Navbar() {
                       onClick={handleLogout}
                       disabled={logoutMutation.isPending}
                     >
-                      {logoutMutation.isPending ? "Logging out..." : "Log out"}
+                      {logoutMutation.isPending ? "Выход..." : "Выйти"}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -128,10 +128,10 @@ export function Navbar() {
             ) : (
               <>
                 <Link href="/auth">
-                  <Button variant="default">Log in</Button>
+                  <Button variant="default">Войти</Button>
                 </Link>
                 <Link href="/auth">
-                  <Button variant="outline">Sign up</Button>
+                  <Button variant="outline">Регистрация</Button>
                 </Link>
               </>
             )}
@@ -214,7 +214,7 @@ export function Navbar() {
                     disabled={logoutMutation.isPending}
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                   >
-                    {logoutMutation.isPending ? "Logging out..." : "Log out"}
+                    {logoutMutation.isPending ? "Выход..." : "Выйти"}
                   </button>
                 </div>
               </>
@@ -225,14 +225,14 @@ export function Navbar() {
                   className="block text-left py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Log in
+                  Войти
                 </Link>
                 <Link 
                   href="/auth" 
                   className="block text-left py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Sign up
+                  Регистрация
                 </Link>
               </div>
             )}

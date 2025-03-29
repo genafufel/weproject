@@ -9,26 +9,26 @@ import { CheckIcon } from "lucide-react";
 // Fields for categories section
 const fields = [
   {
-    title: "IT & Technology",
-    description: "Web development, mobile apps, software engineering, and more.",
+    title: "IT и технологии",
+    description: "Веб-разработка, мобильные приложения, программная инженерия и многое другое.",
     image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 287,
   },
   {
-    title: "Art & Design",
-    description: "Graphic design, UX/UI, animation, illustration, and visual arts.",
+    title: "Искусство и дизайн",
+    description: "Графический дизайн, UX/UI, анимация, иллюстрация и визуальное искусство.",
     image: "https://images.unsplash.com/photo-1526289034009-0240ddb68ce3?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 145,
   },
   {
-    title: "Event Management",
-    description: "Event planning, coordination, marketing, and production.",
+    title: "Организация мероприятий",
+    description: "Планирование мероприятий, координация, маркетинг и продюсирование.",
     image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 89,
   },
   {
-    title: "Finance & Business",
-    description: "Business analysis, financial planning, accounting, and consulting.",
+    title: "Финансы и бизнес",
+    description: "Бизнес-анализ, финансовое планирование, бухгалтерский учет и консалтинг.",
     image: "https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 124,
   },
@@ -38,23 +38,23 @@ const fields = [
 const steps = [
   {
     number: "1",
-    title: "Create Your Profile",
-    description: "Sign up and create a detailed profile showcasing your skills, experience, and interests."
+    title: "Создайте профиль",
+    description: "Зарегистрируйтесь и создайте подробный профиль, демонстрирующий ваши навыки, опыт и интересы."
   },
   {
     number: "2",
-    title: "Browse Opportunities",
-    description: "Explore projects or talent based on your needs, with powerful filters to find the perfect match."
+    title: "Ищите возможности",
+    description: "Изучайте проекты или таланты с помощью мощных фильтров, чтобы найти идеальное соответствие."
   },
   {
     number: "3",
-    title: "Connect & Discuss",
-    description: "Reach out through our messaging system to discuss project details and requirements."
+    title: "Общайтесь и обсуждайте",
+    description: "Используйте нашу систему обмена сообщениями для обсуждения деталей и требований проекта."
   },
   {
     number: "4",
-    title: "Collaborate & Succeed",
-    description: "Work together to bring your projects to life and build your portfolio of success."
+    title: "Сотрудничайте и достигайте успеха",
+    description: "Работайте вместе, чтобы воплотить ваши проекты в жизнь и пополнить портфолио успешных проектов."
   }
 ];
 
@@ -73,24 +73,24 @@ export default function HomePage() {
               <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
                 <div className="sm:text-center lg:text-left">
                   <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                    <span className="block">Connect. Create.</span>
-                    <span className="block text-primary">Launch Together.</span>
+                    <span className="block">Объединяйтесь. Создавайте.</span>
+                    <span className="block text-primary">Запускайте вместе.</span>
                   </h1>
                   <p className="mt-3 text-base text-gray-600 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Join the platform that brings students and startups together. Find opportunities to build your experience or discover fresh talent for your next project.
+                    Присоединяйтесь к платформе, которая объединяет студентов и стартапы. Найдите возможности для приобретения опыта или откройте для себя новые таланты для вашего следующего проекта.
                   </p>
                   <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
                       <Link href="/projects">
                         <Button size="lg" className="w-full">
-                          Find Projects
+                          Найти проекты
                         </Button>
                       </Link>
                     </div>
                     <div className="mt-3 sm:mt-0 sm:ml-3">
                       <Link href={user ? "/create-project" : "/auth"}>
                         <Button size="lg" variant="outline" className="w-full">
-                          Post a Project
+                          Разместить проект
                         </Button>
                       </Link>
                     </div>
@@ -112,12 +112,12 @@ export default function HomePage() {
         <div className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Fields</h2>
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Направления</h2>
               <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Explore Projects in Various Fields
+                Изучайте проекты в разных областях
               </p>
               <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                Connect with projects and opportunities across different industries.
+                Найдите проекты и возможности в различных отраслях.
               </p>
             </div>
             
@@ -143,13 +143,13 @@ export default function HomePage() {
                       </p>
                       <div className="mt-4 flex justify-between items-center">
                         <span className="text-sm font-medium text-primary">
-                          {field.count} active projects
+                          {field.count} активных проектов
                         </span>
                         <Link 
                           href={`/projects?field=${encodeURIComponent(field.title)}`}
                           className="text-sm font-medium text-primary hover:text-blue-700"
                         >
-                          View all <span aria-hidden="true">→</span>
+                          Показать все <span aria-hidden="true">→</span>
                         </Link>
                       </div>
                     </div>
@@ -164,12 +164,12 @@ export default function HomePage() {
         <div className="bg-gray-50 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">How It Works</h2>
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Как это работает</h2>
               <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                Simple Steps to Get Started
+                Простые шаги для начала работы
               </p>
               <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                Whether you're looking for projects or recruiting talent, our platform makes it easy.
+                Независимо от того, ищете ли вы проекты или набираете таланты, наша платформа делает это простым.
               </p>
             </div>
             
@@ -197,21 +197,21 @@ export default function HomePage() {
         <div className="bg-primary">
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
             <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              <span className="block">Ready to find your next opportunity?</span>
-              <span className="block text-blue-100">Join thousands of students and startups today.</span>
+              <span className="block">Готовы найти свою следующую возможность?</span>
+              <span className="block text-blue-100">Присоединяйтесь к тысячам студентов и стартапов уже сегодня.</span>
             </h2>
             <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
               <div className="inline-flex rounded-md shadow">
                 <Link href={user ? "/dashboard" : "/auth"}>
                   <Button variant="secondary" size="lg">
-                    {user ? "Go to Dashboard" : "Create Account"}
+                    {user ? "В личный кабинет" : "Создать аккаунт"}
                   </Button>
                 </Link>
               </div>
               <div className="ml-3 inline-flex rounded-md shadow">
                 <Link href="/projects">
                   <Button variant="default" size="lg" className="bg-blue-600 hover:bg-blue-700">
-                    Learn more
+                    Узнать больше
                   </Button>
                 </Link>
               </div>
