@@ -75,10 +75,11 @@ export function Footer() {
               <ul className="mt-4 space-y-4">
                 {section.links.map((link) => (
                   <li key={link.label}>
-                    <Link href={link.href}>
-                      <a className="text-base text-gray-600 hover:text-gray-900">
-                        {link.label}
-                      </a>
+                    <Link 
+                      href={link.href}
+                      className="text-base text-gray-600 hover:text-gray-900"
+                    >
+                      {link.label}
                     </Link>
                   </li>
                 ))}
@@ -88,7 +89,7 @@ export function Footer() {
         </div>
         <div className="mt-12 border-t border-gray-200 pt-8">
           <p className="text-base text-gray-400 text-center">
-            &copy; {currentYear} StartupMatch. All rights reserved.
+            &copy; {currentYear} weproject. All rights reserved.
           </p>
         </div>
       </div>
