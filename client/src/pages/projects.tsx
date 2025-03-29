@@ -35,16 +35,16 @@ import { Label } from "@/components/ui/label";
 
 // Project fields for filtering
 const projectFields = [
-  { value: "all", label: "All Fields" },
-  { value: "IT", label: "IT & Technology" },
-  { value: "Design", label: "Art & Design" },
-  { value: "Events", label: "Event Management" },
-  { value: "Finance", label: "Finance & Business" },
-  { value: "Marketing", label: "Marketing & PR" },
-  { value: "Education", label: "Education & Training" },
-  { value: "Research", label: "Research & Science" },
-  { value: "Writing", label: "Writing & Content" },
-  { value: "Other", label: "Other" },
+  { value: "all", label: "Все направления" },
+  { value: "IT", label: "IT и технологии" },
+  { value: "Design", label: "Искусство и дизайн" },
+  { value: "Events", label: "Организация мероприятий" },
+  { value: "Finance", label: "Финансы и бизнес" },
+  { value: "Marketing", label: "Маркетинг и PR" },
+  { value: "Education", label: "Образование и обучение" },
+  { value: "Research", label: "Исследования и наука" },
+  { value: "Writing", label: "Копирайтинг и контент" },
+  { value: "Other", label: "Другое" },
 ];
 
 export default function Projects() {
@@ -78,10 +78,10 @@ export default function Projects() {
   
   // Fetch projects based on filters
   const {
-    data: projects,
+    data: projects = [],
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<any[]>({
     queryKey: [`/api/projects?${buildQueryString()}`],
   });
   
@@ -112,9 +112,9 @@ export default function Projects() {
         <div className="bg-primary text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-3xl font-bold mb-4">Discover Projects</h1>
+              <h1 className="text-3xl font-bold mb-4">Поиск проектов</h1>
               <p className="text-blue-100 text-lg mb-8">
-                Find exciting opportunities across various fields to build your portfolio and launch your career.
+                Найдите интересные возможности в различных областях для формирования вашего портфолио и развития карьеры.
               </p>
               
               {/* Search form */}
@@ -123,14 +123,14 @@ export default function Projects() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Search projects by title or keyword"
+                    placeholder="Поиск проектов по названию или ключевым словам"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-9 bg-white text-gray-900 border-0"
                   />
                 </div>
                 <Button type="submit" variant="secondary">
-                  Search
+                  Поиск
                 </Button>
               </form>
             </div>
@@ -142,11 +142,11 @@ export default function Projects() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium text-gray-500">Filters:</span>
+                <span className="text-sm font-medium text-gray-500">Фильтры:</span>
                 
                 <Select value={selectedField} onValueChange={handleFieldChange}>
                   <SelectTrigger className="w-[180px]">
-                    <SelectValue placeholder="Field" />
+                    <SelectValue placeholder="Направление" />
                   </SelectTrigger>
                   <SelectContent>
                     {projectFields.map((field) => (
@@ -163,28 +163,28 @@ export default function Projects() {
                     checked={remoteOnly}
                     onCheckedChange={handleRemoteToggle}
                   />
-                  <Label htmlFor="remote-only">Remote only</Label>
+                  <Label htmlFor="remote-only">Только удаленно</Label>
                 </div>
               </div>
               
               <div className="flex items-center space-x-2 text-sm text-gray-500">
-                <span>{isLoading ? "Loading..." : `${projects?.length || 0} results`}</span>
+                <span>{isLoading ? "Загрузка..." : `${projects?.length || 0} результатов`}</span>
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="flex items-center gap-1">
-                      Sort by
+                      Сортировка
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+                    <DropdownMenuLabel>Сортировка</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuCheckboxItem checked>
-                      Newest first
+                      Сначала новые
                     </DropdownMenuCheckboxItem>
                     <DropdownMenuCheckboxItem>
-                      Oldest first
+                      Сначала старые
                     </DropdownMenuCheckboxItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -201,16 +201,16 @@ export default function Projects() {
             </div>
           ) : error ? (
             <div className="text-center py-12">
-              <p className="text-red-500">Failed to load projects. Please try again later.</p>
+              <p className="text-red-500">Не удалось загрузить проекты. Пожалуйста, попробуйте позже.</p>
             </div>
           ) : !projects?.length ? (
             <div className="text-center py-12">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">No projects found</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">Проекты не найдены</h3>
               <p className="text-gray-500 mb-6">
-                We couldn't find any projects matching your search criteria.
+                Мы не смогли найти проекты, соответствующие вашим критериям поиска.
               </p>
               <Button asChild variant="outline">
-                <Link href="/projects">Clear all filters</Link>
+                <Link href="/projects">Очистить все фильтры</Link>
               </Button>
             </div>
           ) : (
@@ -226,7 +226,7 @@ export default function Projects() {
                           </Link>
                         </CardTitle>
                         <p className="text-sm text-gray-500 mt-1">
-                          Posted by <span className="text-primary">{project.ownerName || "Project Owner"}</span>
+                          Опубликовано: <span className="text-primary">{project.ownerName || "Владелец проекта"}</span>
                         </p>
                       </div>
                       <Badge>{project.field}</Badge>
@@ -237,7 +237,7 @@ export default function Projects() {
                     <p className="text-gray-600 line-clamp-3 mb-4">{project.description}</p>
                     
                     <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Positions needed:</h4>
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-2">
                         {(project.positions || []).map((position: string, index: number) => (
                           <Badge key={index} variant="outline" className="bg-blue-50">
@@ -251,12 +251,12 @@ export default function Projects() {
                   <CardFooter className="flex justify-between items-center pt-0">
                     <div className="flex items-center text-sm text-gray-500">
                       <MapPin className="h-4 w-4 mr-1 text-gray-400" />
-                      <span>{project.remote ? "Remote" : project.location || "No location specified"}</span>
+                      <span>{project.remote ? "Удаленно" : project.location || "Местоположение не указано"}</span>
                     </div>
                     
                     <Link href={`/projects/${project.id}`}>
                       <Button variant="default" size="sm">
-                        Apply Now
+                        Откликнуться
                       </Button>
                     </Link>
                   </CardFooter>
@@ -268,13 +268,13 @@ export default function Projects() {
           {/* Post a project CTA for non-applicants */}
           {user?.userType === "projectOwner" && (
             <div className="mt-12 bg-primary rounded-lg p-8 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">Need more talent for your projects?</h2>
+              <h2 className="text-2xl font-bold mb-2">Нужны таланты для ваших проектов?</h2>
               <p className="mb-6 text-blue-100">
-                Post a new project to connect with talented students and early-career professionals.
+                Разместите новый проект, чтобы связаться с талантливыми студентами и начинающими специалистами.
               </p>
               <Link href="/create-project">
                 <Button variant="secondary" size="lg">
-                  Post a New Project
+                  Разместить проект
                 </Button>
               </Link>
             </div>
@@ -283,13 +283,13 @@ export default function Projects() {
           {/* Create account CTA for non-logged in users */}
           {!user && (
             <div className="mt-12 bg-primary rounded-lg p-8 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">Ready to apply for projects?</h2>
+              <h2 className="text-2xl font-bold mb-2">Готовы откликнуться на проекты?</h2>
               <p className="mb-6 text-blue-100">
-                Create an account to apply for projects and build your portfolio.
+                Создайте аккаунт, чтобы откликаться на проекты и создавать своё портфолио.
               </p>
               <Link href="/auth">
                 <Button variant="secondary" size="lg">
-                  Create Account
+                  Создать аккаунт
                 </Button>
               </Link>
             </div>
