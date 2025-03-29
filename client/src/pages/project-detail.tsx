@@ -34,8 +34,17 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { MapPin, Calendar, Briefcase, ArrowLeft, Loader2 } from "lucide-react";
+import { 
+  MapPin, 
+  Calendar, 
+  Briefcase, 
+  ArrowLeft, 
+  Loader2, 
+  Image as ImageIcon, 
+  Edit as EditIcon 
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 export default function ProjectDetail() {
   const { user } = useAuth();
@@ -118,10 +127,13 @@ export default function ProjectDetail() {
     },
   });
   
+  // Состояние для выбранной позиции
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+
   // Format date for display
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' });
   };
   
   // Handle apply button click
@@ -161,7 +173,13 @@ export default function ProjectDetail() {
     });
   };
   
-  // Loading state
+  // Обработчик для клика на позицию
+  const handlePositionClick = (position: string) => {
+    setSelectedPosition(position);
+    setApplyDialogOpen(true);
+  };
+
+  // Загрузка
   if (projectLoading) {
     return (
       <div className="flex flex-col min-h-screen">
@@ -174,17 +192,17 @@ export default function ProjectDetail() {
     );
   }
   
-  // Error state
+  // Ошибка
   if (projectError || !project) {
     return (
       <div className="flex flex-col min-h-screen">
         <Navbar />
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Project Not Found</h1>
-            <p className="text-gray-600 mb-8">The project you're looking for doesn't exist or has been removed.</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Проект не найден</h1>
+            <p className="text-gray-600 mb-8">Проект, который вы ищете, не существует или был удален.</p>
             <Button asChild>
-              <Link href="/projects">Browse All Projects</Link>
+              <Link href="/projects">Просмотреть все проекты</Link>
             </Button>
           </div>
         </main>
@@ -204,7 +222,7 @@ export default function ProjectDetail() {
             <Button variant="ghost" size="sm" asChild className="pl-0">
               <Link href="/projects">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to Projects
+                Назад к проектам
               </Link>
             </Button>
           </div>
@@ -219,7 +237,7 @@ export default function ProjectDetail() {
                     <h1 className="text-3xl font-bold text-gray-900">{project.title}</h1>
                     <div className="flex items-center mt-2 text-gray-500">
                       <Calendar className="h-4 w-4 mr-1" />
-                      <span className="text-sm">Posted on {formatDate(project.createdAt)}</span>
+                      <span className="text-sm">Опубликовано {formatDate(project.createdAt)}</span>
                     </div>
                   </div>
                   <Badge className="text-sm">{project.field}</Badge>
@@ -228,15 +246,45 @@ export default function ProjectDetail() {
                 <div className="flex items-center mt-4">
                   <MapPin className="h-5 w-5 text-gray-400 mr-1" />
                   <span className="text-gray-700">
-                    {project.remote ? "Remote" : project.location || "No location specified"}
+                    {project.remote ? "Удаленно" : project.location || "Место не указано"}
                   </span>
                 </div>
               </div>
               
+              {/* Project photos */}
+              {project.photos && project.photos.length > 0 && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Фотографии проекта</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Carousel className="w-full">
+                      <CarouselContent>
+                        {project.photos.map((photo: string, index: number) => (
+                          <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
+                            <div className="p-1">
+                              <div className="overflow-hidden rounded-lg">
+                                <img 
+                                  src={photo} 
+                                  alt={`Фото проекта ${index + 1}`} 
+                                  className="h-52 w-full object-cover transition-all hover:scale-105"
+                                />
+                              </div>
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious className="left-2" />
+                      <CarouselNext className="right-2" />
+                    </Carousel>
+                  </CardContent>
+                </Card>
+              )}
+              
               {/* Project description */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Project Description</CardTitle>
+                  <CardTitle>Описание проекта</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="prose prose-blue max-w-none">
@@ -248,17 +296,28 @@ export default function ProjectDetail() {
               {/* Positions */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Positions Available</CardTitle>
+                  <CardTitle>Доступные позиции</CardTitle>
                   <CardDescription>
-                    The project is looking for the following roles:
+                    Проект ищет следующие роли:
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-2">
+                  <ul className="space-y-3">
                     {(project.positions || []).map((position: string, index: number) => (
-                      <li key={index} className="flex items-start">
-                        <Briefcase className="h-5 w-5 text-primary mr-2 mt-0.5" />
-                        <span>{position}</span>
+                      <li key={index} className="flex items-start justify-between border-b pb-2">
+                        <div className="flex items-start">
+                          <Briefcase className="h-5 w-5 text-primary mr-2 mt-0.5" />
+                          <span>{position}</span>
+                        </div>
+                        {user && user.userType === "applicant" && !hasApplied && (
+                          <Button 
+                            size="sm" 
+                            onClick={() => handlePositionClick(position)}
+                            variant="outline"
+                          >
+                            Откликнуться
+                          </Button>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -268,9 +327,9 @@ export default function ProjectDetail() {
               {/* Requirements */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Requirements</CardTitle>
+                  <CardTitle>Требования</CardTitle>
                   <CardDescription>
-                    Skills and qualifications needed for this project:
+                    Навыки и квалификации, необходимые для этого проекта:
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -288,16 +347,16 @@ export default function ProjectDetail() {
               {/* Action card */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Interested in this project?</CardTitle>
+                  <CardTitle>Заинтересовались проектом?</CardTitle>
                   <CardDescription>
-                    Apply now to connect with the project owner.
+                    Подайте заявку, чтобы связаться с владельцем проекта.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   {user?.userType === "applicant" ? (
                     hasApplied ? (
                       <div className="text-center p-4 bg-green-50 text-green-700 rounded-lg">
-                        You have already applied to this project.
+                        Вы уже подали заявку на этот проект.
                       </div>
                     ) : (
                       <Button
@@ -305,25 +364,25 @@ export default function ProjectDetail() {
                         onClick={handleApply}
                         disabled={!user || applicationsLoading}
                       >
-                        Apply for this Project
+                        Откликнуться на проект
                       </Button>
                     )
                   ) : user?.userType === "projectOwner" ? (
                     <div className="text-center p-4 bg-gray-50 text-gray-700 rounded-lg">
-                      Only applicants can apply for projects.
+                      Только соискатели могут откликаться на проекты.
                     </div>
                   ) : (
                     <Button className="w-full" onClick={handleApply}>
-                      Sign in to Apply
+                      Войдите, чтобы откликнуться
                     </Button>
                   )}
                 </CardContent>
                 {!hasApplied && user?.userType === "applicant" && !resumes?.length && (
                   <CardFooter className="border-t pt-4">
                     <div className="w-full text-center text-sm">
-                      <p className="text-gray-500 mb-2">You need to create a resume first.</p>
+                      <p className="text-gray-500 mb-2">Сначала создайте резюме.</p>
                       <Button asChild variant="outline" size="sm" className="w-full">
-                        <Link href="/create-resume">Create Resume</Link>
+                        <Link href="/create-resume">Создать резюме</Link>
                       </Button>
                     </div>
                   </CardFooter>
@@ -333,21 +392,21 @@ export default function ProjectDetail() {
               {/* Project owner card */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Project Owner</CardTitle>
+                  <CardTitle>Владелец проекта</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center">
                     <Avatar className="h-12 w-12 mr-4">
-                      <AvatarImage src={projectOwner?.avatar} alt={projectOwner?.fullName || "Project Owner"} />
+                      <AvatarImage src={projectOwner?.avatar} alt={projectOwner?.fullName || "Владелец проекта"} />
                       <AvatarFallback>
                         {projectOwner?.fullName
                           ? projectOwner.fullName.split(' ').map(n => n[0]).join('').toUpperCase()
-                          : "PO"}
+                          : "ВП"}
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-medium text-gray-900">{projectOwner?.fullName || "Project Owner"}</h3>
-                      <p className="text-sm text-gray-500">{projectOwner?.bio || "No bio available"}</p>
+                      <h3 className="font-medium text-gray-900">{projectOwner?.fullName || "Владелец проекта"}</h3>
+                      <p className="text-sm text-gray-500">{projectOwner?.bio || "Информация отсутствует"}</p>
                     </div>
                   </div>
                   
@@ -356,13 +415,13 @@ export default function ProjectDetail() {
                   {user ? (
                     <Button variant="outline" className="w-full" asChild>
                       <Link href={`/messages?userId=${project.userId}`}>
-                        Message Project Owner
+                        Написать владельцу проекта
                       </Link>
                     </Button>
                   ) : (
                     <Button variant="outline" className="w-full" asChild>
                       <Link href="/auth">
-                        Sign in to Message
+                        Войдите, чтобы написать сообщение
                       </Link>
                     </Button>
                   )}
@@ -372,7 +431,7 @@ export default function ProjectDetail() {
               {/* Share this project card */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Share this Project</CardTitle>
+                  <CardTitle>Поделиться проектом</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="flex justify-around">
@@ -399,6 +458,20 @@ export default function ProjectDetail() {
                   </div>
                 </CardContent>
               </Card>
+              
+              {/* Edit button for project owner */}
+              {user && project.userId === user.id && (
+                <Card>
+                  <CardContent className="pt-6">
+                    <Button className="w-full" variant="outline" asChild>
+                      <Link href={`/edit-project/${project.id}`}>
+                        <EditIcon className="h-4 w-4 mr-2" />
+                        Редактировать проект
+                      </Link>
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           </div>
         </div>
@@ -410,26 +483,30 @@ export default function ProjectDetail() {
       <Dialog open={applyDialogOpen} onOpenChange={setApplyDialogOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Apply for {project.title}</DialogTitle>
+            <DialogTitle>
+              {selectedPosition 
+                ? `Отклик на позицию "${selectedPosition}"` 
+                : `Отклик на проект "${project.title}"`}
+            </DialogTitle>
             <DialogDescription>
-              Submit your application for this project. Choose a resume and add a message to the project owner.
+              Отправьте заявку, чтобы принять участие в проекте. Выберите резюме и добавьте сопроводительное сообщение.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <label htmlFor="resume" className="text-sm font-medium text-gray-700">
-                Select Resume
+                Выберите резюме
               </label>
               
               {resumesLoading ? (
                 <div className="flex items-center space-x-2">
                   <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                  <span className="text-sm text-gray-500">Loading your resumes...</span>
+                  <span className="text-sm text-gray-500">Загрузка ваших резюме...</span>
                 </div>
               ) : !resumes?.length ? (
                 <div className="text-sm text-red-500">
-                  You don't have any resumes. Please create one first.
+                  У вас нет резюме. Пожалуйста, создайте его сначала.
                 </div>
               ) : (
                 <Select
@@ -437,7 +514,7 @@ export default function ProjectDetail() {
                   onValueChange={(value) => setSelectedResumeId(parseInt(value))}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a resume" />
+                    <SelectValue placeholder="Выберите резюме" />
                   </SelectTrigger>
                   <SelectContent>
                     {resumes.map((resume: any) => (
@@ -452,11 +529,11 @@ export default function ProjectDetail() {
             
             <div className="space-y-2">
               <label htmlFor="message" className="text-sm font-medium text-gray-700">
-                Cover Message (Optional)
+                Сопроводительное сообщение (необязательно)
               </label>
               <Textarea
                 id="message"
-                placeholder="Introduce yourself and explain why you're interested in this project..."
+                placeholder="Расскажите о себе и почему вы заинтересованы в этом проекте..."
                 value={applicationMessage}
                 onChange={(e) => setApplicationMessage(e.target.value)}
                 rows={4}
@@ -469,7 +546,7 @@ export default function ProjectDetail() {
               variant="outline"
               onClick={() => setApplyDialogOpen(false)}
             >
-              Cancel
+              Отмена
             </Button>
             <Button
               onClick={handleSubmitApplication}
@@ -478,10 +555,10 @@ export default function ProjectDetail() {
               {applyMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Submitting...
+                  Отправка...
                 </>
               ) : (
-                "Submit Application"
+                "Отправить отклик"
               )}
             </Button>
           </DialogFooter>
