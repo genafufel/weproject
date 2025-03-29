@@ -81,15 +81,21 @@ export function Navbar() {
                   <Bell className="h-5 w-5" />
                 </Button>
                 
+                <Link href="/dashboard">
+                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src={user.avatar || undefined} alt={user.fullName} />
+                      <AvatarFallback>
+                        {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </Link>
+                
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.avatar || undefined} alt={user.fullName} />
-                        <AvatarFallback>
-                          {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                    <Button variant="ghost" size="sm">
+                      <span className="text-sm">Меню</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -192,12 +198,14 @@ export function Navbar() {
               <>
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
-                    <Avatar className="h-10 w-10">
-                      <AvatarImage src={user.avatar || undefined} alt={user.fullName} />
-                      <AvatarFallback>
-                        {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.avatar || undefined} alt={user.fullName} />
+                        <AvatarFallback>
+                          {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </Link>
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium text-gray-800">{user.fullName}</div>
@@ -205,6 +213,20 @@ export function Navbar() {
                   </div>
                 </div>
                 <div className="mt-3 space-y-1">
+                  <Link 
+                    href="/dashboard"
+                    className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Личный кабинет
+                  </Link>
+                  <Link 
+                    href="/messages"
+                    className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Сообщения
+                  </Link>
                   <button
                     onClick={handleLogout}
                     disabled={logoutMutation.isPending}
