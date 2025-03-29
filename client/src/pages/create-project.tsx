@@ -202,8 +202,31 @@ export default function CreateProject() {
         typeof field === 'string' ? field : field.value || '')
     };
     
-    console.log("Отправляю данные проекта:", formattedData);
-    createProjectMutation.mutate(formattedData);
+    console.log("Отправляю данные проекта через AuthContext:", formattedData);
+    
+    // Попробуем использовать мутацию из AuthContext вместо локальной мутации
+    if (authCheckData?.isAuthenticated) {
+      // Если у нас есть доступ к контексту аутентификации - используем его
+      if (createProjectMutation) {
+        createProjectMutation.mutate(formattedData);
+      } else {
+        toast({
+          title: "Ошибка создания проекта",
+          description: "Не удалось получить доступ к API для создания проекта.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      // Показываем предупреждение, что пользователь не аутентифицирован
+      toast({
+        title: "Необходимо войти в систему",
+        description: "Пожалуйста, войдите в систему или перезагрузите страницу и попробуйте снова.",
+        variant: "destructive",
+      });
+      
+      // Пробуем использовать локальную мутацию как резервный вариант
+      createProjectMutation.mutate(formattedData);
+    }
   };
 
   return (
