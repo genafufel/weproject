@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useLocation } from "wouter";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/use-auth";
@@ -24,7 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusIcon, X } from "lucide-react";
+import { PlusIcon, X, Upload, Loader2 } from "lucide-react";
 
 // Define fields available for projects
 const projectFields = [
@@ -41,7 +41,7 @@ const projectFields = [
 
 export default function CreateProject() {
   const { user } = useAuth();
-  const [_, navigate] = useLocation();
+  const [locationPath, navigate] = useLocation();
   const { toast } = useToast();
   
   // Тип для должности с требованиями
@@ -70,6 +70,7 @@ export default function CreateProject() {
   const [isAddingPosition, setIsAddingPosition] = useState(false);
   const [isAddingPhoto, setIsAddingPhoto] = useState(false);
   const [newPosition, setNewPosition] = useState("");
+  // Больше не используем URL для фотографий, но оставляем для совместимости
   const [newPhotoUrl, setNewPhotoUrl] = useState("");
   
   // Состояния для добавления требований к конкретной должности
@@ -119,24 +120,79 @@ export default function CreateProject() {
     ));
   };
   
-  // Добавление фото
-  const handleAddPhoto = () => {
-    if (newPhotoUrl.trim()) {
-      try {
-        // Проверка, является ли URL действительным
-        new URL(newPhotoUrl);
-        setPhotos([...photos, newPhotoUrl.trim()]);
-        setNewPhotoUrl("");
-        setIsAddingPhoto(false);
-      } catch (e) {
-        toast({
-          title: "Ошибка",
-          description: "Пожалуйста, введите корректный URL изображения",
-          variant: "destructive",
-        });
+  // Ссылка на скрытый input для загрузки файла
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  
+  // Новый обработчик для загрузки фото через файл
+  const handleFileUpload = async (file: File) => {
+    if (!file) return;
+    
+    // Проверка типа файла
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Неверный формат файла",
+        description: "Пожалуйста, выберите изображение",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Проверка размера файла (максимум 5 МБ)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Файл слишком большой",
+        description: "Максимальный размер файла - 5 МБ",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      setUploadingPhoto(true);
+      
+      const formData = new FormData();
+      formData.append('photo', file);
+      
+      const response = await fetch('/api/upload/project-photo', {
+        method: 'POST',
+        body: formData,
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        throw new Error('Ошибка загрузки изображения');
       }
+      
+      const data = await response.json();
+      setPhotos([...photos, data.fileUrl]);
+      
+      toast({
+        title: "Фото загружено",
+        description: "Фото проекта успешно загружено",
+      });
+    } catch (error: any) {
+      toast({
+        title: "Ошибка загрузки фото",
+        description: error.message,
+        variant: "destructive",
+      });
+    } finally {
+      setUploadingPhoto(false);
+      setIsAddingPhoto(false);
     }
   };
+  
+  // Обработчик изменения файла
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      handleFileUpload(file);
+    }
+  };
+  
+  // Оставляем пустой обработчик для совместимости
+  const handleAddPhoto = () => {};
   
   // Удаление фото
   const removePhoto = (index: number) => {
@@ -469,25 +525,44 @@ export default function CreateProject() {
                   </div>
                   
                   {isAddingPhoto && (
-                    <div className="flex gap-2 mb-4">
-                      <Input
-                        placeholder="Введите URL изображения (например, https://example.com/image.jpg)"
-                        value={newPhotoUrl}
-                        onChange={(e) => setNewPhotoUrl(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            handleAddPhoto();
-                          }
-                        }}
-                        className="flex-1"
-                      />
-                      <Button type="button" onClick={handleAddPhoto}>
-                        Добавить
-                      </Button>
-                      <Button type="button" variant="ghost" onClick={() => setIsAddingPhoto(false)}>
-                        Отмена
-                      </Button>
+                    <div className="flex flex-col gap-4 mb-4 p-4 border rounded-md">
+                      <div>
+                        <h3 className="text-lg font-medium mb-2">Загрузить фото проекта</h3>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Выберите изображение с вашего устройства
+                        </p>
+                        
+                        <input
+                          type="file"
+                          ref={fileInputRef}
+                          className="hidden"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                        />
+                        
+                        <div className="flex gap-2">
+                          <Button 
+                            type="button" 
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={uploadingPhoto}
+                          >
+                            {uploadingPhoto ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Загрузка...
+                              </>
+                            ) : (
+                              <>
+                                <Upload className="mr-2 h-4 w-4" />
+                                Выбрать файл
+                              </>
+                            )}
+                          </Button>
+                          <Button type="button" variant="ghost" onClick={() => setIsAddingPhoto(false)}>
+                            Отмена
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   )}
                   <p className="text-sm text-muted-foreground">

@@ -86,6 +86,30 @@ export function setupUploads(app: Express) {
     }
   });
 
+  // Маршрут для загрузки фотографий проекта
+  app.post('/api/upload/project-photo', upload.single('photo'), async (req, res) => {
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'Не удалось загрузить файл' });
+      }
+
+      // Создаем URL для доступа к файлу
+      const fileUrl = `/uploads/${req.file.filename}`;
+
+      res.json({
+        success: true,
+        fileUrl
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке файла:', error);
+      res.status(500).json({ message: 'Не удалось обработать загрузку файла' });
+    }
+  });
+
   // Vite в режиме разработки автоматически обслуживает файлы из client/public
   // В продакшене это делается через express.static в index.ts
   // Нам не нужно настраивать статический доступ к файлам
