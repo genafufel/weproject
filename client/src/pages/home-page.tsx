@@ -38,23 +38,23 @@ const fields = [
 const steps = [
   {
     number: "1",
-    title: "Создайте профиль",
-    description: "Зарегистрируйтесь и создайте подробный профиль, демонстрирующий ваши навыки, опыт и интересы."
+    title: "Расскажите о себе",
+    description: "Создайте яркий профиль, который выделит ваши таланты, достижения и стремления."
   },
   {
     number: "2",
-    title: "Ищите возможности",
-    description: "Изучайте проекты или таланты с помощью мощных фильтров, чтобы найти идеальное соответствие."
+    title: "Найдите свой путь",
+    description: "Используйте удобный поиск, чтобы найти проекты или специалистов, идеально соответствующих вашим требованиям."
   },
   {
     number: "3",
-    title: "Общайтесь и обсуждайте",
-    description: "Используйте нашу систему обмена сообщениями для обсуждения деталей и требований проекта."
+    title: "Начните диалог",
+    description: "Обсудите детали, задайте вопросы и определите условия сотрудничества через встроенный мессенджер."
   },
   {
     number: "4",
-    title: "Сотрудничайте и достигайте успеха",
-    description: "Работайте вместе, чтобы воплотить ваши проекты в жизнь и пополнить портфолио успешных проектов."
+    title: "Реализуйте потенциал",
+    description: "Совместными усилиями воплотите идеи в реальность, развивая свои навыки и расширяя портфолио."
   }
 ];
 
@@ -73,11 +73,11 @@ export default function HomePage() {
               <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
                 <div className="sm:text-center lg:text-left">
                   <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                    <span className="block">Объединяйтесь. Создавайте.</span>
-                    <span className="block text-primary">Запускайте вместе.</span>
+                    <span className="block">Вместе. Творите.</span>
+                    <span className="block text-primary">Реализуйте идеи.</span>
                   </h1>
                   <p className="mt-3 text-base text-gray-600 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Присоединяйтесь к платформе, которая объединяет студентов и стартапы. Найдите возможности для приобретения опыта или откройте для себя новые таланты для вашего следующего проекта.
+                    Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
                   </p>
                   <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
                     <div className="rounded-md shadow">
@@ -112,12 +112,12 @@ export default function HomePage() {
         <div className="bg-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Направления</h2>
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
               <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
-                Изучайте проекты в разных областях
+                Откройте мир возможностей
               </p>
               <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                Найдите проекты и возможности в различных отраслях.
+                Исследуйте разнообразные проекты и найдите именно то, что соответствует вашим интересам.
               </p>
             </div>
             
@@ -164,12 +164,12 @@ export default function HomePage() {
         <div className="bg-gray-50 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Как это работает</h2>
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
               <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-                Простые шаги для начала работы
+                Четыре простых шага к достижению цели
               </p>
               <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
-                Независимо от того, ищете ли вы проекты или набираете таланты, наша платформа делает это простым.
+                Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
               </p>
             </div>
             
@@ -197,8 +197,8 @@ export default function HomePage() {
         <div className="bg-primary">
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
             <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-              <span className="block">Готовы найти свою следующую возможность?</span>
-              <span className="block text-blue-100">Присоединяйтесь к тысячам студентов и стартапов уже сегодня.</span>
+              <span className="block">Ваше будущее начинается здесь</span>
+              <span className="block text-blue-100">Станьте частью сообщества профессионалов и новаторов</span>
             </h2>
             <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
               <div className="inline-flex rounded-md shadow">
