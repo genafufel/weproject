@@ -28,16 +28,12 @@ export function Navbar() {
 
   // Navigation links for both desktop and mobile
   const navLinks = [
-    { href: "/", label: "Главная", exact: true },
-    { href: "/projects", label: "Найти проекты" },
-    { href: "/talent", label: "Найти таланты" },
+    { href: "/projects", label: "Найти проекты", exact: false },
+    { href: "/talent", label: "Найти таланты", exact: false },
   ];
 
-  // Additional links for authenticated users
-  const authLinks = [
-    { href: "/dashboard", label: "Личный кабинет" },
-    { href: "/messages", label: "Сообщения" },
-  ];
+  // Additional links for authenticated users (пустой массив, так как мы убираем эти ссылки из верхней панели)
+  const authLinks: { href: string; label: string }[] = [];
 
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">

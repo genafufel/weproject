@@ -65,19 +65,19 @@ type ResumeFormValues = z.infer<typeof resumeFormSchema>;
 
 // Field of study directions
 const studyDirections = [
-  "Computer Science",
-  "Information Technology",
-  "Graphic Design",
-  "UX/UI Design",
-  "Business Administration",
-  "Marketing",
-  "Finance",
-  "Education",
-  "Engineering",
-  "Arts",
-  "Event Management",
-  "Health Sciences",
-  "Other"
+  "Компьютерные науки",
+  "Информационные технологии",
+  "Графический дизайн",
+  "UX/UI дизайн",
+  "Бизнес администрирование",
+  "Маркетинг",
+  "Финансы",
+  "Образование",
+  "Инженерия",
+  "Искусство",
+  "Организация мероприятий",
+  "Здравоохранение",
+  "Другое"
 ];
 
 export default function CreateResume() {
@@ -184,17 +184,17 @@ export default function CreateResume() {
       <main className="flex-1 bg-gray-50 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Create Your Resume</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Создать резюме</h1>
             <p className="mt-1 text-gray-600">
-              Build a comprehensive resume to showcase your skills and experience to project owners.
+              Создайте подробное резюме, чтобы продемонстрировать свои навыки и опыт владельцам проектов.
             </p>
           </div>
           
           <Card>
             <CardHeader>
-              <CardTitle>Resume Details</CardTitle>
+              <CardTitle>Детали резюме</CardTitle>
               <CardDescription>
-                Provide information about your education, skills, and experience.
+                Предоставьте информацию о вашем образовании, навыках и опыте.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -205,12 +205,12 @@ export default function CreateResume() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Resume Title</FormLabel>
+                        <FormLabel>Название резюме</FormLabel>
                         <FormControl>
-                          <Input placeholder="e.g., Full Stack Developer, UX Designer, etc." {...field} />
+                          <Input placeholder="Например, Full Stack разработчик, UX дизайнер и т.д." {...field} />
                         </FormControl>
                         <FormDescription>
-                          A clear title helps project owners understand your focus.
+                          Четкое название помогает владельцам проектов понять вашу специализацию.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -222,11 +222,11 @@ export default function CreateResume() {
                     name="direction"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Field/Direction of Study</FormLabel>
+                        <FormLabel>Направление обучения/специализация</FormLabel>
                         <FormControl>
                           <Input
                             list="study-directions"
-                            placeholder="e.g., Computer Science, Graphic Design, etc."
+                            placeholder="Например, компьютерные науки, графический дизайн и т.д."
                             {...field}
                           />
                         </FormControl>
@@ -236,7 +236,7 @@ export default function CreateResume() {
                           ))}
                         </datalist>
                         <FormDescription>
-                          Your main field of study or expertise.
+                          Ваша основная область обучения или специализации.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -246,7 +246,7 @@ export default function CreateResume() {
                   {/* Education Section */}
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <FormLabel className="text-base font-medium">Education</FormLabel>
+                      <FormLabel className="text-base font-medium">Образование</FormLabel>
                       <Button
                         type="button"
                         variant="outline"
@@ -261,7 +261,7 @@ export default function CreateResume() {
                         })}
                       >
                         <PlusIcon className="h-4 w-4 mr-1" />
-                        Add Education
+                        Добавить образование
                       </Button>
                     </div>
                     
@@ -381,7 +381,7 @@ export default function CreateResume() {
                   {/* Experience Section */}
                   <div className="space-y-4">
                     <div className="flex justify-between items-center">
-                      <FormLabel className="text-base font-medium">Experience (Optional)</FormLabel>
+                      <FormLabel className="text-base font-medium">Опыт работы (необязательно)</FormLabel>
                       <Button
                         type="button"
                         variant="outline"
@@ -395,7 +395,7 @@ export default function CreateResume() {
                         })}
                       >
                         <PlusIcon className="h-4 w-4 mr-1" />
-                        Add Experience
+                        Добавить опыт
                       </Button>
                     </div>
                     
@@ -499,7 +499,7 @@ export default function CreateResume() {
                   
                   {/* Skills Section */}
                   <div>
-                    <FormLabel className="text-base font-medium">Skills</FormLabel>
+                    <FormLabel className="text-base font-medium">Навыки</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
                       {skillFields.map((field, index) => (
                         <Badge key={field.id} className="py-1 px-3 gap-2">
@@ -524,7 +524,7 @@ export default function CreateResume() {
                           onClick={() => setIsAddingSkill(true)}
                         >
                           <PlusIcon className="h-4 w-4 mr-1" />
-                          Add Skill
+                          Добавить навык
                         </Button>
                       )}
                     </div>
@@ -538,7 +538,7 @@ export default function CreateResume() {
                             <FormItem className="flex-1">
                               <FormControl>
                                 <Input
-                                  placeholder="e.g., JavaScript, Photoshop, Project Management"
+                                  placeholder="Например, JavaScript, Photoshop, Управление проектами"
                                   {...field}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
@@ -553,21 +553,21 @@ export default function CreateResume() {
                           )}
                         />
                         <Button type="button" onClick={handleAddSkill}>
-                          Add
+                          Добавить
                         </Button>
                         <Button type="button" variant="ghost" onClick={() => setIsAddingSkill(false)}>
-                          Cancel
+                          Отмена
                         </Button>
                       </div>
                     )}
                     <FormDescription>
-                      List your technical and professional skills.
+                      Перечислите ваши технические и профессиональные навыки.
                     </FormDescription>
                   </div>
                   
                   {/* Talents Section */}
                   <div>
-                    <FormLabel className="text-base font-medium">Special Talents (Optional)</FormLabel>
+                    <FormLabel className="text-base font-medium">Особые таланты (необязательно)</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
                       {talentFields.map((field, index) => (
                         <Badge key={field.id} variant="secondary" className="py-1 px-3 gap-2">
@@ -592,7 +592,7 @@ export default function CreateResume() {
                           onClick={() => setIsAddingTalent(true)}
                         >
                           <PlusIcon className="h-4 w-4 mr-1" />
-                          Add Talent
+                          Добавить талант
                         </Button>
                       )}
                     </div>
@@ -606,7 +606,7 @@ export default function CreateResume() {
                             <FormItem className="flex-1">
                               <FormControl>
                                 <Input
-                                  placeholder="e.g., Public Speaking, Creative Writing, Photography"
+                                  placeholder="Например, публичные выступления, писательство, фотография"
                                   {...field}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
@@ -621,15 +621,15 @@ export default function CreateResume() {
                           )}
                         />
                         <Button type="button" onClick={handleAddTalent}>
-                          Add
+                          Добавить
                         </Button>
                         <Button type="button" variant="ghost" onClick={() => setIsAddingTalent(false)}>
-                          Cancel
+                          Отмена
                         </Button>
                       </div>
                     )}
                     <FormDescription>
-                      Highlight your special abilities that set you apart.
+                      Выделите свои особые способности, которые выделяют вас среди других.
                     </FormDescription>
                   </div>
                   
@@ -639,7 +639,7 @@ export default function CreateResume() {
                       variant="outline"
                       onClick={() => navigate("/dashboard")}
                     >
-                      Cancel
+                      Отмена
                     </Button>
                     <Button
                       type="submit"
@@ -648,10 +648,10 @@ export default function CreateResume() {
                       {createResumeMutation.isPending ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating...
+                          Создание...
                         </>
                       ) : (
-                        "Create Resume"
+                        "Создать резюме"
                       )}
                     </Button>
                   </div>
