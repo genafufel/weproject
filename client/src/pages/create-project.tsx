@@ -1,29 +1,15 @@
-import { useState, useId } from "react";
+import { useState } from "react";
 import { useLocation } from "wouter";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import { useAuth } from "@/hooks/use-auth";
-import { apiRequest, queryClient, getQueryFn } from "@/lib/queryClient";
-import { insertProjectSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/use-auth";
+import { queryClient } from "@/lib/queryClient";
+import { Navbar } from "@/components/layout/navbar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
 import {
   Select,
   SelectContent,
@@ -38,7 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusIcon, X, Loader2 } from "lucide-react";
+import { PlusIcon, X } from "lucide-react";
 
 // Define fields available for projects
 const projectFields = [
@@ -53,161 +39,131 @@ const projectFields = [
   { value: "Other", label: "Другое" },
 ];
 
-// Extend the project schema for form validation
-const projectFormSchema = insertProjectSchema.extend({
-  positions: z.array(z.string()).min(1, "Добавьте хотя бы одну должность"),
-  requirements: z.array(z.string()).min(1, "Добавьте хотя бы одно требование"),
-  photos: z.array(z.string().url("Некорректный URL")).optional(),
-  newPosition: z.string().optional(),
-  newRequirement: z.string().optional(),
-  newPhotoUrl: z.string().url("Пожалуйста, введите корректный URL изображения").optional(),
-}).omit({ userId: true });
-
-type ProjectFormValues = z.infer<typeof projectFormSchema>;
-
 export default function CreateProject() {
   const { user } = useAuth();
   const [_, navigate] = useLocation();
   const { toast } = useToast();
+  
+  // Состояния для полей формы
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [field, setField] = useState("");
+  const [positions, setPositions] = useState<string[]>(["Разработчик"]);
+  const [requirements, setRequirements] = useState<string[]>(["JavaScript"]);
+  const [location, setLocation] = useState("");
+  const [remote, setRemote] = useState(false);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [photos, setPhotos] = useState<string[]>([]);
+  
+  // Состояния для добавления новых элементов
   const [isAddingPosition, setIsAddingPosition] = useState(false);
   const [isAddingRequirement, setIsAddingRequirement] = useState(false);
   const [isAddingPhoto, setIsAddingPhoto] = useState(false);
+  const [newPosition, setNewPosition] = useState("");
+  const [newRequirement, setNewRequirement] = useState("");
+  const [newPhotoUrl, setNewPhotoUrl] = useState("");
   
-  // Initialize form with default values
-  const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(projectFormSchema),
-    defaultValues: {
-      title: "",
-      description: "",
-      field: "",
-      positions: [],
-      requirements: [],
-      location: "",
-      remote: false,
-      photos: [],
-      startDate: undefined,
-      endDate: undefined,
-      newPosition: "",
-      newRequirement: "",
-      newPhotoUrl: "",
-    },
-  });
-  
-  // Set up field arrays for positions, requirements, and photos
-  const { fields: positionFields, append: appendPosition, remove: removePosition } = 
-    useFieldArray({ control: form.control, name: "positions" });
-  
-  const { fields: requirementFields, append: appendRequirement, remove: removeRequirement } = 
-    useFieldArray({ control: form.control, name: "requirements" });
-    
-  const { fields: photoFields, append: appendPhoto, remove: removePhoto } = 
-    useFieldArray({ control: form.control, name: "photos" });
-  
-  // Add a new position
+  // Добавление позиции
   const handleAddPosition = () => {
-    const newPosition = form.getValues("newPosition");
-    if (newPosition) {
-      // Теперь добавляем просто строку вместо объекта
-      appendPosition(newPosition);
-      console.log("Добавлена должность:", newPosition);
-      console.log("Текущие должности:", [...positionFields, newPosition]);
-      
-      form.setValue("newPosition", "");
+    if (newPosition.trim()) {
+      setPositions([...positions, newPosition.trim()]);
+      setNewPosition("");
       setIsAddingPosition(false);
     }
   };
   
-  // Add a new requirement
+  // Удаление позиции
+  const removePosition = (index: number) => {
+    setPositions(positions.filter((_, i) => i !== index));
+  };
+  
+  // Добавление требования
   const handleAddRequirement = () => {
-    const newRequirement = form.getValues("newRequirement");
-    if (newRequirement) {
-      // Теперь добавляем просто строку вместо объекта
-      appendRequirement(newRequirement);
-      console.log("Добавлено требование:", newRequirement);
-      console.log("Текущие требования:", [...requirementFields, newRequirement]);
-      
-      form.setValue("newRequirement", "");
+    if (newRequirement.trim()) {
+      setRequirements([...requirements, newRequirement.trim()]);
+      setNewRequirement("");
       setIsAddingRequirement(false);
     }
   };
   
-  // Add a new photo URL
+  // Удаление требования
+  const removeRequirement = (index: number) => {
+    setRequirements(requirements.filter((_, i) => i !== index));
+  };
+  
+  // Добавление фото
   const handleAddPhoto = () => {
-    const newPhotoUrl = form.getValues("newPhotoUrl");
-    if (newPhotoUrl) {
-      // Теперь добавляем просто строку вместо объекта
-      appendPhoto(newPhotoUrl);
-      console.log("Добавлено фото:", newPhotoUrl);
-      console.log("Текущие фото:", [...photoFields, newPhotoUrl]);
-      
-      form.setValue("newPhotoUrl", "");
-      setIsAddingPhoto(false);
+    if (newPhotoUrl.trim()) {
+      try {
+        // Проверка, является ли URL действительным
+        new URL(newPhotoUrl);
+        setPhotos([...photos, newPhotoUrl.trim()]);
+        setNewPhotoUrl("");
+        setIsAddingPhoto(false);
+      } catch (e) {
+        toast({
+          title: "Ошибка",
+          description: "Пожалуйста, введите корректный URL изображения",
+          variant: "destructive",
+        });
+      }
     }
   };
   
-  // Запрос для проверки состояния аутентификации через endpoint
-  const { data: authCheckData, isLoading: isAuthCheckLoading } = useQuery({
-    queryKey: ['/api/auth-check'],
-    queryFn: async () => {
-      try {
-        const res = await fetch('/api/auth-check');
-        if (!res.ok) {
-          if (res.status === 401) {
-            console.warn("Пользователь не аутентифицирован");
-            return null;
-          }
-          throw new Error(`Ошибка проверки аутентификации: ${res.status}`);
-        }
-        const data = await res.json();
-        console.log("Успешная проверка аутентификации:", data);
-        return data;
-      } catch (err) {
-        console.error("Ошибка проверки аутентификации:", err);
-        return null;
-      }
-    },
-  });
+  // Удаление фото
+  const removePhoto = (index: number) => {
+    setPhotos(photos.filter((_, i) => i !== index));
+  };
   
-  // Create project mutation
-  const createProjectMutation = useMutation({
-    mutationFn: async (data: Omit<ProjectFormValues, "newPosition" | "newRequirement" | "newPhotoUrl">) => {
-      // Сначала проверим состояние аутентификации
-      console.log("Auth check before submitting project:", authCheckData);
-      
-      const res = await apiRequest("POST", "/api/projects", data);
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/projects?userId=${user?.id}`] });
+  // Обработка отправки формы
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Проверка обязательных полей
+    if (!title.trim()) {
       toast({
-        title: "Проект успешно создан",
-        description: "Ваш проект создан и теперь доступен для соискателей.",
-      });
-      navigate("/dashboard");
-    },
-    onError: (error: Error) => {
-      toast({
-        title: "Не удалось создать проект",
-        description: error.message,
+        title: "Ошибка",
+        description: "Пожалуйста, укажите название проекта",
         variant: "destructive",
       });
-    },
-  });
-  
-  // Handle form submission
-  const onSubmit = async (values: ProjectFormValues) => {
-    // Remove the temporary fields used for adding new items
-    const { newPosition, newRequirement, newPhotoUrl, ...projectData } = values;
+      return;
+    }
     
-    // Передаем данные как есть - поскольку теперь мы добавляем только строки
-    const formattedData = {
-      ...projectData,
-      positions: positionFields, 
-      requirements: requirementFields,
-      photos: photoFields
+    if (!field) {
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, выберите область проекта",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!description.trim()) {
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, добавьте описание проекта",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Формируем данные для отправки
+    const projectData = {
+      userId: user?.id,
+      title,
+      description,
+      field,
+      positions,
+      requirements,
+      photos,
+      location,
+      remote,
+      startDate: startDate ? new Date(startDate) : undefined,
+      endDate: endDate ? new Date(endDate) : undefined,
     };
     
-    console.log("Отправляю данные проекта через прямой fetch:", formattedData);
+    console.log("Отправляю данные проекта через прямой fetch:", projectData);
     
     // Используем прямой fetch запрос с явными credentials: "include"
     try {
@@ -217,7 +173,7 @@ export default function CreateProject() {
           "Content-Type": "application/json",
         },
         credentials: "include", // Важно: включить cookies
-        body: JSON.stringify(formattedData),
+        body: JSON.stringify(projectData),
       });
       
       if (!response.ok) {
@@ -272,412 +228,318 @@ export default function CreateProject() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-                  <FormField
-                    control={form.control}
-                    name="title"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Название проекта</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Введите четкое, описательное название" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Сделайте название конкретным и привлекающим внимание.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Название проекта */}
+                <div className="space-y-3">
+                  <Label htmlFor="title">Название проекта</Label>
+                  <Input 
+                    id="title"
+                    placeholder="Введите четкое, описательное название" 
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                   />
-                  
-                  <FormField
-                    control={form.control}
-                    name="field"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Область проекта</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                        >
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Выберите область вашего проекта" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {projectFields.map((projectField) => (
-                              <SelectItem key={projectField.value} value={projectField.value}>
-                                {projectField.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormDescription>
-                          Выберите область, которая лучше всего представляет ваш проект.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Описание проекта</FormLabel>
-                        <FormControl>
-                          <Textarea
-                            placeholder="Опишите ваш проект подробно"
-                            className="min-h-32 resize-y"
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Включите цели проекта, сроки и то, чего вы хотите достичь.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  
-                  <div>
-                    <FormLabel>Требуемые должности</FormLabel>
-                    <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {positionFields.map((field: any, index) => (
-                        <Badge key={field.id} className="py-1 px-3 gap-2">
-                          {typeof field === 'string' ? field : field.value || ''}
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-5 w-5 p-0"
-                            onClick={() => removePosition(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </Badge>
+                  <p className="text-sm text-muted-foreground">
+                    Сделайте название конкретным и привлекающим внимание.
+                  </p>
+                </div>
+                
+                {/* Область проекта */}
+                <div className="space-y-3">
+                  <Label htmlFor="field">Область проекта</Label>
+                  <Select 
+                    value={field} 
+                    onValueChange={setField}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Выберите область вашего проекта" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {projectFields.map((projectField) => (
+                        <SelectItem key={projectField.value} value={projectField.value}>
+                          {projectField.label}
+                        </SelectItem>
                       ))}
-                      
-                      {!isAddingPosition && (
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground">
+                    Выберите область, которая лучше всего представляет ваш проект.
+                  </p>
+                </div>
+                
+                {/* Описание проекта */}
+                <div className="space-y-3">
+                  <Label htmlFor="description">Описание проекта</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="Опишите ваш проект подробно"
+                    className="min-h-32 resize-y"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    Включите цели проекта, сроки и то, чего вы хотите достичь.
+                  </p>
+                </div>
+                
+                {/* Требуемые должности */}
+                <div className="space-y-3">
+                  <Label>Требуемые должности</Label>
+                  <div className="mt-2 mb-4 flex flex-wrap gap-2">
+                    {positions.map((position, index) => (
+                      <Badge key={index} className="py-1 px-3 gap-2">
+                        {position}
                         <Button
                           type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setIsAddingPosition(true)}
+                          variant="ghost"
+                          size="icon"
+                          className="h-5 w-5 p-0"
+                          onClick={() => removePosition(index)}
                         >
-                          <PlusIcon className="h-4 w-4 mr-1" />
-                          Добавить должность
+                          <X className="h-3 w-3" />
                         </Button>
-                      )}
-                    </div>
+                      </Badge>
+                    ))}
                     
-                    {isAddingPosition && (
-                      <div className="flex gap-2 mb-4">
-                        <FormField
-                          control={form.control}
-                          name="newPosition"
-                          render={({ field }) => (
-                            <FormItem className="flex-1">
-                              <FormControl>
-                                <Input
-                                  placeholder="например, React-разработчик, UX/UI дизайнер"
-                                  {...field}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      handleAddPosition();
-                                    }
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="button" onClick={handleAddPosition}>
-                          Добавить
-                        </Button>
-                        <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
-                          Отмена
-                        </Button>
-                      </div>
+                    {!isAddingPosition && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsAddingPosition(true)}
+                      >
+                        <PlusIcon className="h-4 w-4 mr-1" />
+                        Добавить должность
+                      </Button>
                     )}
-                    <FormDescription>
-                      Перечислите должности, которые вам нужны для этого проекта.
-                    </FormDescription>
                   </div>
                   
-                  <div>
-                    <FormLabel>Требования</FormLabel>
-                    <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {requirementFields.map((field: any, index) => (
-                        <Badge key={field.id} variant="secondary" className="py-1 px-3 gap-2">
-                          {typeof field === 'string' ? field : field.value || ''}
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-5 w-5 p-0"
-                            onClick={() => removeRequirement(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </Badge>
-                      ))}
-                      
-                      {!isAddingRequirement && (
+                  {isAddingPosition && (
+                    <div className="flex gap-2 mb-4">
+                      <Input
+                        placeholder="например, React-разработчик, UX/UI дизайнер"
+                        value={newPosition}
+                        onChange={(e) => setNewPosition(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddPosition();
+                          }
+                        }}
+                        className="flex-1"
+                      />
+                      <Button type="button" onClick={handleAddPosition}>
+                        Добавить
+                      </Button>
+                      <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
+                        Отмена
+                      </Button>
+                    </div>
+                  )}
+                  <p className="text-sm text-muted-foreground">
+                    Перечислите должности, которые вам нужны для этого проекта.
+                  </p>
+                </div>
+                
+                {/* Требования */}
+                <div className="space-y-3">
+                  <Label>Требования</Label>
+                  <div className="mt-2 mb-4 flex flex-wrap gap-2">
+                    {requirements.map((requirement, index) => (
+                      <Badge key={index} variant="secondary" className="py-1 px-3 gap-2">
+                        {requirement}
                         <Button
                           type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setIsAddingRequirement(true)}
+                          variant="ghost"
+                          size="icon"
+                          className="h-5 w-5 p-0"
+                          onClick={() => removeRequirement(index)}
                         >
-                          <PlusIcon className="h-4 w-4 mr-1" />
-                          Добавить требование
+                          <X className="h-3 w-3" />
                         </Button>
-                      )}
-                    </div>
+                      </Badge>
+                    ))}
                     
-                    {isAddingRequirement && (
-                      <div className="flex gap-2 mb-4">
-                        <FormField
-                          control={form.control}
-                          name="newRequirement"
-                          render={({ field }) => (
-                            <FormItem className="flex-1">
-                              <FormControl>
-                                <Input
-                                  placeholder="например, знание JavaScript, навыки дизайна"
-                                  {...field}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      handleAddRequirement();
-                                    }
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="button" onClick={handleAddRequirement}>
-                          Добавить
-                        </Button>
-                        <Button type="button" variant="ghost" onClick={() => setIsAddingRequirement(false)}>
-                          Отмена
-                        </Button>
-                      </div>
+                    {!isAddingRequirement && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setIsAddingRequirement(true)}
+                      >
+                        <PlusIcon className="h-4 w-4 mr-1" />
+                        Добавить требование
+                      </Button>
                     )}
-                    <FormDescription>
-                      Укажите необходимые навыки и квалификацию.
-                    </FormDescription>
                   </div>
                   
-                  <div>
-                    <FormLabel>Фотографии проекта</FormLabel>
-                    <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {photoFields.map((field: any, index) => (
-                        <div key={field.id} className="relative group">
-                          <img 
-                            src={typeof field === 'string' ? field : field.value || ''}
-                            alt="Фото проекта" 
-                            className="h-24 w-32 object-cover rounded-md" 
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={() => removePhoto(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      ))}
-                      
-                      {!isAddingPhoto && (
+                  {isAddingRequirement && (
+                    <div className="flex gap-2 mb-4">
+                      <Input
+                        placeholder="например, знание JavaScript, навыки дизайна"
+                        value={newRequirement}
+                        onChange={(e) => setNewRequirement(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddRequirement();
+                          }
+                        }}
+                        className="flex-1"
+                      />
+                      <Button type="button" onClick={handleAddRequirement}>
+                        Добавить
+                      </Button>
+                      <Button type="button" variant="ghost" onClick={() => setIsAddingRequirement(false)}>
+                        Отмена
+                      </Button>
+                    </div>
+                  )}
+                  <p className="text-sm text-muted-foreground">
+                    Укажите необходимые навыки и квалификацию.
+                  </p>
+                </div>
+                
+                {/* Фотографии проекта */}
+                <div className="space-y-3">
+                  <Label>Фотографии проекта</Label>
+                  <div className="mt-2 mb-4 flex flex-wrap gap-2">
+                    {photos.map((photo, index) => (
+                      <div key={index} className="relative group">
+                        <img 
+                          src={photo}
+                          alt="Фото проекта" 
+                          className="h-24 w-32 object-cover rounded-md" 
+                        />
                         <Button
                           type="button"
-                          variant="outline"
-                          size="sm"
-                          className="h-24 w-32"
-                          onClick={() => setIsAddingPhoto(true)}
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => removePhoto(index)}
                         >
-                          <PlusIcon className="h-4 w-4 mr-1" />
-                          Добавить фото
-                        </Button>
-                      )}
-                    </div>
-                    
-                    {isAddingPhoto && (
-                      <div className="flex gap-2 mb-4">
-                        <FormField
-                          control={form.control}
-                          name="newPhotoUrl"
-                          render={({ field }) => (
-                            <FormItem className="flex-1">
-                              <FormControl>
-                                <Input
-                                  placeholder="Введите URL изображения (например, https://example.com/image.jpg)"
-                                  {...field}
-                                  onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                      e.preventDefault();
-                                      handleAddPhoto();
-                                    }
-                                  }}
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <Button type="button" onClick={handleAddPhoto}>
-                          Добавить
-                        </Button>
-                        <Button type="button" variant="ghost" onClick={() => setIsAddingPhoto(false)}>
-                          Отмена
+                          <X className="h-3 w-3" />
                         </Button>
                       </div>
+                    ))}
+                    
+                    {!isAddingPhoto && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-24 w-32"
+                        onClick={() => setIsAddingPhoto(true)}
+                      >
+                        <PlusIcon className="h-4 w-4 mr-1" />
+                        Добавить фото
+                      </Button>
                     )}
-                    <FormDescription>
-                      Добавьте фотографии, которые показывают ваш проект или связанные с ним изображения.
-                    </FormDescription>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="startDate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Дата начала проекта</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="date" 
-                              {...field} 
-                              value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : ''}
-                              onChange={(e) => {
-                                const date = e.target.value ? new Date(e.target.value) : undefined;
-                                field.onChange(date);
-                              }}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Оставьте пустым, если проект не имеет конкретной даты начала.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                  {isAddingPhoto && (
+                    <div className="flex gap-2 mb-4">
+                      <Input
+                        placeholder="Введите URL изображения (например, https://example.com/image.jpg)"
+                        value={newPhotoUrl}
+                        onChange={(e) => setNewPhotoUrl(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            handleAddPhoto();
+                          }
+                        }}
+                        className="flex-1"
+                      />
+                      <Button type="button" onClick={handleAddPhoto}>
+                        Добавить
+                      </Button>
+                      <Button type="button" variant="ghost" onClick={() => setIsAddingPhoto(false)}>
+                        Отмена
+                      </Button>
+                    </div>
+                  )}
+                  <p className="text-sm text-muted-foreground">
+                    Добавьте фотографии, которые показывают ваш проект или связанные с ним изображения.
+                  </p>
+                </div>
+                
+                {/* Даты проекта */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="startDate">Дата начала проекта</Label>
+                    <Input 
+                      id="startDate"
+                      type="date" 
+                      value={startDate}
+                      onChange={(e) => setStartDate(e.target.value)}
                     />
-                    
-                    <FormField
-                      control={form.control}
-                      name="endDate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Дата окончания проекта</FormLabel>
-                          <FormControl>
-                            <Input 
-                              type="date" 
-                              {...field} 
-                              value={field.value instanceof Date ? field.value.toISOString().split('T')[0] : ''}
-                              onChange={(e) => {
-                                const date = e.target.value ? new Date(e.target.value) : undefined;
-                                field.onChange(date);
-                              }}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Оставьте пустым, если проект не имеет конкретной даты окончания.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <p className="text-sm text-muted-foreground">
+                      Оставьте пустым, если проект не имеет конкретной даты начала.
+                    </p>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <FormField
-                      control={form.control}
-                      name="location"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Расположение</FormLabel>
-                          <FormControl>
-                            <Input 
-                              placeholder="например, Москва, Санкт-Петербург" 
-                              value={field.value || ''} 
-                              onChange={field.onChange}
-                              onBlur={field.onBlur}
-                              name={field.name}
-                              ref={field.ref}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            Оставьте пустым, если расположение гибкое.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                  <div className="space-y-3">
+                    <Label htmlFor="endDate">Дата окончания проекта</Label>
+                    <Input 
+                      id="endDate"
+                      type="date" 
+                      value={endDate}
+                      onChange={(e) => setEndDate(e.target.value)}
                     />
-                    
-                    <FormField
-                      control={form.control}
-                      name="remote"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                          <div className="space-y-0.5">
-                            <FormLabel className="text-base">Удаленная работа</FormLabel>
-                            <FormDescription>
-                              Открыт ли этот проект для удаленного сотрудничества?
-                            </FormDescription>
-                          </div>
-                          <FormControl>
-                            <Switch
-                              checked={field.value || false}
-                              onCheckedChange={field.onChange}
-                            />
-                          </FormControl>
-                        </FormItem>
-                      )}
+                    <p className="text-sm text-muted-foreground">
+                      Оставьте пустым, если проект не имеет конкретной даты окончания.
+                    </p>
+                  </div>
+                </div>
+                
+                {/* Расположение и удаленная работа */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-3">
+                    <Label htmlFor="location">Расположение</Label>
+                    <Input 
+                      id="location"
+                      placeholder="Например, Москва, Санкт-Петербург" 
+                      value={location}
+                      onChange={(e) => setLocation(e.target.value)}
                     />
+                    <p className="text-sm text-muted-foreground">
+                      Где физически находится ваш проект.
+                    </p>
                   </div>
                   
-                  <div className="flex justify-end gap-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => navigate("/dashboard")}
-                    >
-                      Отмена
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={createProjectMutation.isPending}
-                    >
-                      {createProjectMutation.isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Создание...
-                        </>
-                      ) : (
-                        "Создать проект"
-                      )}
-                    </Button>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="remote">Возможна удаленная работа</Label>
+                      <Switch
+                        id="remote"
+                        checked={remote}
+                        onCheckedChange={setRemote}
+                      />
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      Включите, если участники могут работать удаленно.
+                    </p>
                   </div>
-                </form>
-              </Form>
+                </div>
+                
+                {/* Кнопки */}
+                <div className="flex justify-end space-x-4 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate(-1)}
+                  >
+                    Отмена
+                  </Button>
+                  <Button type="submit">
+                    Создать проект
+                  </Button>
+                </div>
+              </form>
             </CardContent>
           </Card>
         </div>
       </main>
-      
-      <Footer />
     </div>
   );
 }
