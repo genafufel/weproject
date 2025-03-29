@@ -14,8 +14,7 @@ export function Logo({ size = "default" }: { size?: "small" | "default" | "large
   };
 
   return (
-    <Link href="/">
-      <a className="flex items-center">
+    <Link href="/" className="flex items-center">
         <svg
           className={`w-auto ${sizeClasses[size]}`}
           viewBox="0 0 100 100"
@@ -33,7 +32,6 @@ export function Logo({ size = "default" }: { size?: "small" | "default" | "large
           <circle cx="47.5" cy="50" r="10" stroke="white" strokeWidth="6" />
         </svg>
         <span className={`ml-2 ${textSizes[size]} font-bold text-primary`}>weproject</span>
-      </a>
     </Link>
   );
 }
