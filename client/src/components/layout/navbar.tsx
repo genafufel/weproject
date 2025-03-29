@@ -77,6 +77,16 @@ export function Navbar() {
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             {user ? (
               <>
+                <Link href="/dashboard?tab=resumes">
+                  <Button variant="ghost" className="text-gray-700">
+                    Мои резюме
+                  </Button>
+                </Link>
+                <Link href="/dashboard?tab=projects">
+                  <Button variant="ghost" className="text-gray-700">
+                    Мои проекты
+                  </Button>
+                </Link>
                 <Button variant="ghost" size="icon" aria-label="Notifications">
                   <Bell className="h-5 w-5" />
                 </Button>
@@ -211,6 +221,20 @@ export function Navbar() {
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Личный кабинет
+                  </Link>
+                  <Link 
+                    href="/dashboard?tab=resumes"
+                    className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Мои резюме
+                  </Link>
+                  <Link 
+                    href="/dashboard?tab=projects"
+                    className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Мои проекты
                   </Link>
                   <Link 
                     href="/messages"
