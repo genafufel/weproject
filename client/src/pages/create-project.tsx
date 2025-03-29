@@ -42,15 +42,15 @@ import { useToast } from "@/hooks/use-toast";
 
 // Define fields available for projects
 const projectFields = [
-  { value: "IT", label: "IT & Technology" },
-  { value: "Design", label: "Art & Design" },
-  { value: "Events", label: "Event Management" },
-  { value: "Finance", label: "Finance & Business" },
-  { value: "Marketing", label: "Marketing & PR" },
-  { value: "Education", label: "Education & Training" },
-  { value: "Research", label: "Research & Science" },
-  { value: "Writing", label: "Writing & Content" },
-  { value: "Other", label: "Other" },
+  { value: "IT", label: "IT и технологии" },
+  { value: "Design", label: "Искусство и дизайн" },
+  { value: "Events", label: "Организация мероприятий" },
+  { value: "Finance", label: "Финансы и бизнес" },
+  { value: "Marketing", label: "Маркетинг и PR" },
+  { value: "Education", label: "Образование и обучение" },
+  { value: "Research", label: "Исследования и наука" },
+  { value: "Writing", label: "Копирайтинг и контент" },
+  { value: "Other", label: "Другое" },
 ];
 
 // Extend the project schema for form validation
@@ -120,14 +120,14 @@ export default function CreateProject() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/projects?userId=${user?.id}`] });
       toast({
-        title: "Project created successfully",
-        description: "Your project has been created and is now visible to applicants.",
+        title: "Проект успешно создан",
+        description: "Ваш проект создан и теперь доступен для соискателей.",
       });
       navigate("/dashboard");
     },
     onError: (error: Error) => {
       toast({
-        title: "Failed to create project",
+        title: "Не удалось создать проект",
         description: error.message,
         variant: "destructive",
       });
@@ -148,17 +148,17 @@ export default function CreateProject() {
       <main className="flex-1 bg-gray-50 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Create a New Project</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Создать новый проект</h1>
             <p className="mt-1 text-gray-600">
-              Post your project and find talented students to help you bring it to life.
+              Опубликуйте свой проект и найдите талантливых студентов, которые помогут воплотить его в жизнь.
             </p>
           </div>
           
           <Card>
             <CardHeader>
-              <CardTitle>Project Details</CardTitle>
+              <CardTitle>Детали проекта</CardTitle>
               <CardDescription>
-                Provide details about your project to attract the right candidates.
+                Предоставьте информацию о вашем проекте, чтобы привлечь подходящих кандидатов.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -169,12 +169,12 @@ export default function CreateProject() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Project Title</FormLabel>
+                        <FormLabel>Название проекта</FormLabel>
                         <FormControl>
-                          <Input placeholder="Enter a clear, descriptive title" {...field} />
+                          <Input placeholder="Введите четкое, описательное название" {...field} />
                         </FormControl>
                         <FormDescription>
-                          Make your title specific and attention-grabbing.
+                          Сделайте название конкретным и привлекающим внимание.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -186,14 +186,14 @@ export default function CreateProject() {
                     name="field"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Project Field</FormLabel>
+                        <FormLabel>Область проекта</FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
                         >
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Select the field of your project" />
+                              <SelectValue placeholder="Выберите область вашего проекта" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -205,7 +205,7 @@ export default function CreateProject() {
                           </SelectContent>
                         </Select>
                         <FormDescription>
-                          Choose the field that best represents your project.
+                          Выберите область, которая лучше всего представляет ваш проект.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -217,16 +217,16 @@ export default function CreateProject() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Project Description</FormLabel>
+                        <FormLabel>Описание проекта</FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder="Describe your project in detail"
+                            placeholder="Опишите ваш проект подробно"
                             className="min-h-32 resize-y"
                             {...field}
                           />
                         </FormControl>
                         <FormDescription>
-                          Include project goals, timeline, and what you're looking to achieve.
+                          Включите цели проекта, сроки и то, чего вы хотите достичь.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -234,7 +234,7 @@ export default function CreateProject() {
                   />
                   
                   <div>
-                    <FormLabel>Required Positions</FormLabel>
+                    <FormLabel>Требуемые должности</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
                       {positionFields.map((field, index) => (
                         <Badge key={field.id} className="py-1 px-3 gap-2">
@@ -259,7 +259,7 @@ export default function CreateProject() {
                           onClick={() => setIsAddingPosition(true)}
                         >
                           <PlusIcon className="h-4 w-4 mr-1" />
-                          Add Position
+                          Добавить должность
                         </Button>
                       )}
                     </div>
@@ -273,7 +273,7 @@ export default function CreateProject() {
                             <FormItem className="flex-1">
                               <FormControl>
                                 <Input
-                                  placeholder="e.g., React Developer, UX/UI Designer"
+                                  placeholder="например, React-разработчик, UX/UI дизайнер"
                                   {...field}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
@@ -288,20 +288,20 @@ export default function CreateProject() {
                           )}
                         />
                         <Button type="button" onClick={handleAddPosition}>
-                          Add
+                          Добавить
                         </Button>
                         <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
-                          Cancel
+                          Отмена
                         </Button>
                       </div>
                     )}
                     <FormDescription>
-                      List the roles you need for this project.
+                      Перечислите должности, которые вам нужны для этого проекта.
                     </FormDescription>
                   </div>
                   
                   <div>
-                    <FormLabel>Requirements</FormLabel>
+                    <FormLabel>Требования</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
                       {requirementFields.map((field, index) => (
                         <Badge key={field.id} variant="secondary" className="py-1 px-3 gap-2">
@@ -326,7 +326,7 @@ export default function CreateProject() {
                           onClick={() => setIsAddingRequirement(true)}
                         >
                           <PlusIcon className="h-4 w-4 mr-1" />
-                          Add Requirement
+                          Добавить требование
                         </Button>
                       )}
                     </div>
@@ -340,7 +340,7 @@ export default function CreateProject() {
                             <FormItem className="flex-1">
                               <FormControl>
                                 <Input
-                                  placeholder="e.g., JavaScript knowledge, Design skills"
+                                  placeholder="например, знание JavaScript, навыки дизайна"
                                   {...field}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
@@ -355,15 +355,15 @@ export default function CreateProject() {
                           )}
                         />
                         <Button type="button" onClick={handleAddRequirement}>
-                          Add
+                          Добавить
                         </Button>
                         <Button type="button" variant="ghost" onClick={() => setIsAddingRequirement(false)}>
-                          Cancel
+                          Отмена
                         </Button>
                       </div>
                     )}
                     <FormDescription>
-                      Specify the skills and qualifications required.
+                      Укажите необходимые навыки и квалификацию.
                     </FormDescription>
                   </div>
                   
@@ -373,12 +373,12 @@ export default function CreateProject() {
                       name="location"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Location</FormLabel>
+                          <FormLabel>Расположение</FormLabel>
                           <FormControl>
-                            <Input placeholder="e.g., New York, NY" {...field} />
+                            <Input placeholder="например, Москва, Санкт-Петербург" {...field} />
                           </FormControl>
                           <FormDescription>
-                            Leave blank if location is flexible.
+                            Оставьте пустым, если расположение гибкое.
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
@@ -391,9 +391,9 @@ export default function CreateProject() {
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
                           <div className="space-y-0.5">
-                            <FormLabel className="text-base">Remote Work</FormLabel>
+                            <FormLabel className="text-base">Удаленная работа</FormLabel>
                             <FormDescription>
-                              Is this project open to remote collaboration?
+                              Открыт ли этот проект для удаленного сотрудничества?
                             </FormDescription>
                           </div>
                           <FormControl>
@@ -413,7 +413,7 @@ export default function CreateProject() {
                       variant="outline"
                       onClick={() => navigate("/dashboard")}
                     >
-                      Cancel
+                      Отмена
                     </Button>
                     <Button
                       type="submit"
@@ -422,10 +422,10 @@ export default function CreateProject() {
                       {createProjectMutation.isPending ? (
                         <>
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Creating...
+                          Создание...
                         </>
                       ) : (
-                        "Create Project"
+                        "Создать проект"
                       )}
                     </Button>
                   </div>
