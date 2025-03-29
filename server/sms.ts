@@ -1,7 +1,7 @@
 import { ask_secrets } from "./utils";
 
 // Временное решение для имитации отправки SMS
-let smsApiKey: string | null = null;
+let smsApiKey = "";
 
 export async function askForSMSAPIKey(): Promise<string> {
   if (!smsApiKey) {

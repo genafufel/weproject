@@ -1,7 +1,7 @@
 import { ask_secrets } from "./utils";
 
 // Временное решение для имитации отправки Email
-let emailApiKey: string | null = null;
+let emailApiKey = "";
 
 export async function askForEmailAPIKey(): Promise<string> {
   if (!emailApiKey) {

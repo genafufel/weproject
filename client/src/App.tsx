@@ -17,6 +17,23 @@ import VerificationPage from "@/pages/verification-page";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 
+// Компонент для маршрутов, требующих верификации
+function VerifiedRoute({ component: Component, ...rest }: { component: React.ComponentType, path: string }) {
+  const { user } = useAuth();
+  
+  return (
+    <ProtectedRoute 
+      {...rest} 
+      component={() => {
+        if (user && !user.verified) {
+          return <VerificationPage />;
+        }
+        return <Component />;
+      }} 
+    />
+  );
+}
+
 function Router() {
   return (
     <Switch>
@@ -27,11 +44,11 @@ function Router() {
       <Route path="/projects/:id" component={ProjectDetail} />
       <Route path="/talent/:id" component={TalentDetail} />
       
-      {/* Protected Routes */}
-      <ProtectedRoute path="/dashboard" component={Dashboard} />
-      <ProtectedRoute path="/create-project" component={CreateProject} />
-      <ProtectedRoute path="/create-resume" component={CreateResume} />
-      <ProtectedRoute path="/messages" component={Messages} />
+      {/* Protected Routes с проверкой верификации */}
+      <VerifiedRoute path="/dashboard" component={Dashboard} />
+      <VerifiedRoute path="/create-project" component={CreateProject} />
+      <VerifiedRoute path="/create-resume" component={CreateResume} />
+      <VerifiedRoute path="/messages" component={Messages} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />
