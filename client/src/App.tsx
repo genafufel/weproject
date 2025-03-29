@@ -11,6 +11,7 @@ import Talent from "@/pages/talent";
 import ProjectDetail from "@/pages/project-detail";
 import TalentDetail from "@/pages/talent-detail";
 import CreateProject from "@/pages/create-project";
+import SimpleCreateProject from "@/pages/simple-create-project";
 import CreateResume from "@/pages/create-resume";
 import Messages from "@/pages/messages";
 import VerificationPage from "@/pages/verification-page";
@@ -47,6 +48,10 @@ function Router() {
       {/* Protected Routes с проверкой верификации */}
       <VerifiedRoute path="/dashboard" component={Dashboard} />
       <VerifiedRoute path="/create-project" component={CreateProject} />
+      
+      {/* Упрощенная форма создания проекта */}
+      <VerifiedRoute path="/simple-create-project" component={SimpleCreateProject} />
+      
       <VerifiedRoute path="/create-resume" component={CreateResume} />
       <VerifiedRoute path="/messages" component={Messages} />
       
