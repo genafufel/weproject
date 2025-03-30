@@ -115,6 +115,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
   });
+  
+  // Добавляем PATCH маршрут для резюме для частичного обновления (используется при редактировании)
+  app.patch("/api/resumes/:id", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    const resumeId = parseInt(req.params.id);
+    const resume = await storage.getResume(resumeId);
+    
+    if (!resume) {
+      return res.status(404).json({ message: "Resume not found" });
+    }
+    
+    if (resume.userId !== req.user.id) {
+      return res.status(403).json({ message: "Forbidden: You don't have permission to update this resume" });
+    }
+    
+    try {
+      // Проверяем правильность формата для массивов
+      if (req.body.talents && !Array.isArray(req.body.talents)) {
+        req.body.talents = [];
+      }
+      
+      if (req.body.photos && !Array.isArray(req.body.photos)) {
+        req.body.photos = [];
+      }
+      
+      console.log("PATCH resume data:", req.body);
+      
+      const updatedResume = await storage.updateResume(resumeId, req.body);
+      res.json(updatedResume);
+    } catch (error) {
+      console.error("Error updating resume:", error);
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ errors: error.errors });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
 
   app.delete("/api/resumes/:id", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
