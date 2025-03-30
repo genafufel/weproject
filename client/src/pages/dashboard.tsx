@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -10,9 +10,13 @@ import { useAuth } from "@/hooks/use-auth";
 import { PlusIcon, Briefcase, FileText, Inbox, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
   
   // Получаем проекты пользователя
@@ -89,6 +93,40 @@ export default function Dashboard() {
     const url = new URL(window.location.href);
     url.searchParams.set('tab', value);
     window.history.pushState({}, '', url);
+  };
+  
+  // Мутация для переключения видимости резюме
+  const toggleVisibilityMutation = useMutation({
+    mutationFn: async (resumeId: number) => {
+      const response = await apiRequest(
+        'PATCH', 
+        `/api/resumes/${resumeId}/toggle-visibility`
+      );
+      return await response.json();
+    },
+    onSuccess: () => {
+      // Инвалидируем кеш для обновления списка резюме
+      queryClient.invalidateQueries({queryKey: [`/api/resumes?userId=${user?.id}`]});
+      queryClient.invalidateQueries({queryKey: ["/api/public/resumes"]});
+      
+      toast({
+        title: "Видимость резюме обновлена",
+        description: "Изменения успешно сохранены",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Ошибка обновления",
+        description: "Не удалось изменить видимость резюме",
+        variant: "destructive",
+      });
+      console.error("Ошибка при изменении видимости резюме:", error);
+    }
+  });
+  
+  // Функция для переключения видимости резюме
+  const toggleResumeVisibility = (resumeId: number, isCurrentlyPublic: boolean | null | undefined) => {
+    toggleVisibilityMutation.mutate(resumeId);
   };
 
   return (
@@ -304,11 +342,19 @@ export default function Dashboard() {
                           </div>
                         </div>
                       </CardContent>
-                      <CardFooter className="flex justify-between">
-                        <Link href={`/resumes/${resume.id}`}>
-                          <Button variant="outline">Просмотреть</Button>
-                        </Link>
-                        <Link href={`/resumes/${resume.id}/edit`}>
+                      <CardFooter className="flex flex-wrap gap-2 justify-between">
+                        <div className="flex gap-2">
+                          <Link href={`/talent/${resume.id}`}>
+                            <Button variant="outline">Просмотреть</Button>
+                          </Link>
+                          <Button 
+                            variant={resume.isPublic !== false ? "outline" : "destructive"} 
+                            onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
+                          >
+                            {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
+                          </Button>
+                        </div>
+                        <Link href={`/edit-resume/${resume.id}`}>
                           <Button>Редактировать</Button>
                         </Link>
                       </CardFooter>

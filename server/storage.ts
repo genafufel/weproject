@@ -417,7 +417,10 @@ export class MemStorage implements IStorage {
   }
   
   getAllResumes(): Resume[] {
-    return Array.from(this.resumes.values());
+    // Возвращаем только публичные резюме
+    return Array.from(this.resumes.values()).filter(
+      (resume) => resume.isPublic !== false
+    );
   }
   
   async createResume(insertResume: InsertResume): Promise<Resume> {
@@ -429,7 +432,8 @@ export class MemStorage implements IStorage {
       createdAt: now, 
       updatedAt: now,
       talents: insertResume.talents || ([] as any),
-      photos: insertResume.photos || ([] as any)
+      photos: insertResume.photos || ([] as any),
+      isPublic: true // По умолчанию резюме публичное
     };
     this.resumes.set(id, resume);
     return resume;

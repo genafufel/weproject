@@ -345,6 +345,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
   });
+  
+  // API-эндпоинт для переключения видимости резюме
+  app.patch("/api/resumes/:id/toggle-visibility", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    const resumeId = parseInt(req.params.id);
+    const resume = await storage.getResume(resumeId);
+    
+    if (!resume) {
+      return res.status(404).json({ message: "Resume not found" });
+    }
+    
+    if (resume.userId !== req.user.id) {
+      return res.status(403).json({ message: "Forbidden: You don't have permission to update this resume" });
+    }
+    
+    try {
+      // Инвертируем текущее значение видимости
+      const isPublic = resume.isPublic === false ? true : false;
+      
+      const updatedResume = await storage.updateResume(resumeId, { isPublic });
+      res.json(updatedResume);
+    } catch (error) {
+      console.error("Error toggling resume visibility:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
 
   app.delete("/api/resumes/:id", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
