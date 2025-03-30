@@ -155,33 +155,65 @@ export default function CreateResume() {
         // Типизируем resumeData как any, чтобы избежать ошибок типизации
         const typedData = resumeData as any;
         
-        // Обработка данных из API - определяем тип данных и обрабатываем соответственно
+        // Улучшенная функция обработки данных из API
         const processArrayOrJSON = (data: any): any[] => {
+          // Если данных нет, возвращаем пустой массив
           if (!data) return [];
+          
+          // Если это уже массив, возвращаем его
           if (Array.isArray(data)) return data;
+          
+          // Если это строка в формате JSON, пробуем преобразовать в массив
           if (typeof data === 'string') {
             try {
-              return JSON.parse(data);
+              const parsed = JSON.parse(data);
+              return Array.isArray(parsed) ? parsed : [];
             } catch (e) {
-              console.error('Error parsing JSON string:', e);
+              console.error('Ошибка при парсинге JSON-строки:', e);
               return [];
             }
           }
-          // Если это объект (например, пустой объект {}), возвращаем пустой массив
+          
+          // Если это пустой объект {}, возвращаем пустой массив
           if (typeof data === 'object' && Object.keys(data).length === 0) {
+            console.log('Получен пустой объект, возвращаем пустой массив');
             return [];
           }
+          
+          // Если это объект с данными, пробуем преобразовать его в массив
+          if (typeof data === 'object') {
+            try {
+              // Пробуем конвертировать объект в массив
+              const values = Object.values(data);
+              if (values.length > 0) {
+                console.log('Преобразуем объект в массив:', values);
+                return values;
+              }
+            } catch (e) {
+              console.error('Ошибка при преобразовании объекта в массив:', e);
+            }
+          }
+          
+          // Для всех остальных случаев возвращаем пустой массив
+          console.warn('Неизвестный формат данных, возвращаем пустой массив:', data);
           return [];
         };
         
         console.log("Полученные данные резюме:", typedData);
         
-        // Обработка данных резюме
+        // Обработка данных резюме используя нашу улучшенную функцию
         const educationData = processArrayOrJSON(typedData.education);
         const experienceData = processArrayOrJSON(typedData.experience);
-        const skillsData = Array.isArray(typedData.skills) ? typedData.skills : [];
-        const talentsData = Array.isArray(typedData.talents) ? typedData.talents : [];
-        const photosData = Array.isArray(typedData.photos) ? typedData.photos : [];
+        const skillsData = processArrayOrJSON(typedData.skills);
+        const talentsData = processArrayOrJSON(typedData.talents);
+        const photosData = processArrayOrJSON(typedData.photos);
+        
+        console.log('Обработанные поля:',
+          'Образование:', educationData,
+          'Опыт:', experienceData,
+          'Навыки:', skillsData,
+          'Таланты:', talentsData,
+          'Фотографии:', photosData);
         
         // Reset form with values from loaded resume
         form.reset({
