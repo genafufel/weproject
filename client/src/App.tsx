@@ -50,7 +50,7 @@ function Router() {
       {/* Protected Routes с проверкой верификации */}
       <VerifiedRoute path="/dashboard" component={Dashboard} />
       <VerifiedRoute path="/create-project" component={CreateProject} />
-      <VerifiedRoute path="/edit-project/:id" component={EditProject} />
+      <VerifiedRoute path="/projects/:id/edit" component={EditProject} />
       <VerifiedRoute path="/edit-profile" component={EditProfile} />
       
       {/* Упрощенная форма создания проекта */}
