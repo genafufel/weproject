@@ -134,6 +134,10 @@ export function Navbar() {
                   <Link href="/dashboard">
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
+                        <AvatarImage 
+                          src={user.avatar || undefined} 
+                          alt={user.fullName || "Аватар пользователя"} 
+                        />
                         <AvatarFallback>
                           {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>
@@ -250,6 +254,10 @@ export function Navbar() {
                   <div className="flex-shrink-0">
                     <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
                       <Avatar className="h-10 w-10">
+                        <AvatarImage 
+                          src={user.avatar || undefined} 
+                          alt={user.fullName || "Аватар пользователя"} 
+                        />
                         <AvatarFallback>
                           {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>

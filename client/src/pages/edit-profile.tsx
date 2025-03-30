@@ -27,7 +27,7 @@ const profileSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileSchema>;
 
 export default function EditProfile() {
-  const { user, loginMutation } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
   const [, navigate] = useLocation();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -62,13 +62,9 @@ export default function EditProfile() {
         description: "Ваш профиль был успешно обновлен.",
       });
       
-      // Обновляем данные пользователя в контексте авторизации
-      // Здесь мы выполняем повторный вход для обновления данных пользователя
-      loginMutation.mutate({ username: user.username, password: "" }, {
-        onSuccess: () => {
-          navigate("/dashboard");
-        }
-      });
+      // Просто инвалидируем кэш пользователя и перенаправляем пользователя
+      queryClient.invalidateQueries({ queryKey: ['/api/user'] });
+      navigate("/dashboard");
     },
     onError: (error: Error) => {
       toast({
