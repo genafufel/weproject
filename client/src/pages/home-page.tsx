@@ -103,14 +103,6 @@ export default function HomePage() {
             <div className="absolute left-0 top-0 bottom-0 w-[30px] bg-gradient-to-r from-gray-300 to-transparent"></div>
           </div>
           
-          {/* Добавляем стиль анимации */}
-          <style jsx>{`
-            @keyframes shimmer {
-              0% { background-position: 100% 0; }
-              100% { background-position: -100% 0; }
-            }
-          `}</style>
-          
           {/* Контейнер для контента */}
           <div className="relative flex items-center h-full z-10">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
