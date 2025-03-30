@@ -431,18 +431,22 @@ export default function Talent() {
                 return (
                   <Card key={resume.id} className="overflow-hidden hover:shadow-md transition-all">
                     {hasPhoto && (
-                      <div className="aspect-[16/9] w-full overflow-hidden">
-                        <img 
-                          src={photos[0]} 
-                          alt={`Фото из портфолио ${resume.title}`} 
-                          className="w-full h-full object-cover transition-all hover:scale-105"
-                        />
-                      </div>
+                      <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
+                        <div className="aspect-[16/9] w-full overflow-hidden">
+                          <img 
+                            src={photos[0]} 
+                            alt={`Фото из портфолио ${resume.title}`} 
+                            className="w-full h-full object-cover transition-all hover:scale-105"
+                          />
+                        </div>
+                      </Link>
                     )}
                     
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
-                        <h3 className="text-lg font-medium text-gray-900">{resume.title}</h3>
+                        <Link href={`/talent/${resume.id}`} className="hover:underline">
+                          <h3 className="text-lg font-medium text-gray-900">{resume.title}</h3>
+                        </Link>
                         
                         {isOwnResume && (
                           <Link href={`/edit-resume/${resume.id}`}>
