@@ -21,7 +21,7 @@ const profileSchema = z.object({
   fullName: z.string().min(2, { message: "ФИО должно содержать не менее 2 символов" }),
   email: z.string().email({ message: "Введите корректный email" }),
   phone: z.string().min(10, { message: "Номер телефона должен содержать не менее 10 цифр" }),
-  avatar: z.string().url({ message: "Введите корректный URL изображения" }).optional().or(z.literal('')),
+
 });
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
@@ -47,7 +47,6 @@ export default function EditProfile() {
       fullName: user.fullName || "",
       email: user.email || "",
       phone: user.phone || "",
-      avatar: user.avatar || "",
     },
   });
   
@@ -89,18 +88,18 @@ export default function EditProfile() {
       const response = await fetch('/api/upload/avatar', {
         method: 'POST',
         body: formData,
-        credentials: 'include',
+        credentials: 'include', // Важно для передачи куки сессии
       });
       
       if (!response.ok) {
-        throw new Error('Ошибка загрузки изображения');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Ошибка загрузки изображения');
       }
       
       return await response.json();
     },
     onSuccess: (data) => {
-      // Обновляем данные формы
-      form.setValue('avatar', data.fileUrl);
+      // Устанавливаем превью аватара
       setAvatarPreview(data.fileUrl);
       
       toast({
@@ -192,7 +191,7 @@ export default function EditProfile() {
                   <div>
                     <Avatar className="h-24 w-24">
                       <AvatarImage 
-                        src={avatarPreview || user.avatar || undefined} 
+                        src={avatarPreview || undefined} 
                         alt={user.fullName || "Аватар"} 
                       />
                       <AvatarFallback>
@@ -290,22 +289,7 @@ export default function EditProfile() {
                     )}
                   />
                   
-                  <FormField
-                    control={form.control}
-                    name="avatar"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>URL аватара</FormLabel>
-                        <FormControl>
-                          <Input placeholder="https://example.com/avatar.jpg" {...field} />
-                        </FormControl>
-                        <FormDescription>
-                          Ссылка на изображение для вашего профиля
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+
                   
                   <CardFooter className="flex justify-between px-0">
                     <Button

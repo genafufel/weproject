@@ -11,8 +11,8 @@ export const users = pgTable("users", {
   phone: text("phone").unique(),
   fullName: text("full_name").notNull(),
   bio: text("bio"),
+  avatar: text("avatar"), // URL аватара пользователя
   userType: text("user_type").default("general").notNull(), // общий тип пользователя
-  avatar: text("avatar"),
   authType: text("auth_type").notNull(), // "email" или "phone"
   verified: boolean("verified").default(false).notNull(), // Статус верификации
   verificationCode: text("verification_code"), // Код верификации

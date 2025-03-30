@@ -51,11 +51,15 @@ export const upload = multer({
 export function setupUploads(app: Express) {
   // Маршрут для загрузки фотографии профиля
   app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
-    // Убираем проверку аутентификации пока что для тестирования
-    // Для получения ID пользователя будем использовать query параметр userId
-    const userId = req.query.userId || req.body.userId;
-
     try {
+      // Проверяем, аутентифицирован ли пользователь
+      if (!req.isAuthenticated()) {
+        return res.status(401).json({ message: 'Необходима авторизация' });
+      }
+
+      // Получаем ID пользователя из сессии
+      const userId = req.user?.id;
+
       if (!req.file) {
         return res.status(400).json({ message: 'Не удалось загрузить файл' });
       }
@@ -63,30 +67,22 @@ export function setupUploads(app: Express) {
       // Создаем URL для доступа к файлу
       const fileUrl = `/uploads/${req.file.filename}`;
       
-      if (userId) {
-        // Обновляем аватар пользователя в БД, если предоставлен userId
-        const updatedUser = await storage.updateUser(parseInt(userId as string), {
-          avatar: fileUrl
-        });
+      // Обновляем аватар пользователя в БД
+      const updatedUser = await storage.updateUser(userId, {
+        avatar: fileUrl
+      });
 
-        if (!updatedUser) {
-          return res.status(404).json({ message: 'Пользователь не найден' });
-        }
-
-        // Удаляем пароль из ответа
-        const { password, ...userWithoutPassword } = updatedUser;
-        res.json({
-          success: true,
-          fileUrl,
-          user: userWithoutPassword
-        });
-      } else {
-        // Если userId не предоставлен, просто возвращаем URL файла
-        res.json({
-          success: true,
-          fileUrl
-        });
+      if (!updatedUser) {
+        return res.status(404).json({ message: 'Пользователь не найден' });
       }
+
+      // Удаляем пароль из ответа
+      const { password, ...userWithoutPassword } = updatedUser;
+      res.json({
+        success: true,
+        fileUrl,
+        user: userWithoutPassword
+      });
     } catch (error) {
       console.error('Ошибка при загрузке файла:', error);
       res.status(500).json({ message: 'Не удалось обработать загрузку файла', error: String(error) });

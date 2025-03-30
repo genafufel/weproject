@@ -116,6 +116,7 @@ export class MemStorage implements IStorage {
         authType: "email", // Добавляем обязательное поле authType
         userType: "general",
         bio: "Тестовая учетная запись для разработки",
+        avatar: "/uploads/default-avatar-test.jpg",
         verified: true
       };
       
@@ -195,6 +196,7 @@ export class MemStorage implements IStorage {
         authType: "email",
         userType: "general",
         bio: "Опытный UX/UI дизайнер с портфолио",
+        avatar: "/uploads/default-avatar-designer.jpg",
         verified: true
       };
       
@@ -245,6 +247,7 @@ export class MemStorage implements IStorage {
         authType: "email",
         userType: "general",
         bio: "Специалист по маркетингу с опытом работы в IT-компаниях",
+        avatar: "/uploads/default-avatar-marketer.jpg",
         verified: true
       };
       

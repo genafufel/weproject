@@ -16,7 +16,6 @@ const baseAuthSchema = z.object({
   confirmPassword: z.string(),
   fullName: z.string().min(1, "Full name is required"),
   bio: z.string().optional().nullable(),
-  avatar: z.string().optional().nullable(),
   userType: z.string().optional()
 });
 
