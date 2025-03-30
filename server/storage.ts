@@ -148,8 +148,12 @@ export class MemStorage implements IStorage {
             endDate: "2022-06-01"
           }
         ],
-        talents: [],
-        photos: []
+        talents: ["Быстрое обучение", "Работа в команде", "Аналитическое мышление"],
+        photos: [
+          "/uploads/developer_profile1.jpg",
+          "/uploads/developer_code.jpg",
+          "/uploads/developer_workspace.jpg"
+        ]
       };
       
       const resume = await this.createResume(testResume);
@@ -161,13 +165,16 @@ export class MemStorage implements IStorage {
         title: "Маркетплейс услуг",
         description: "Платформа для поиска и предложения услуг фрилансеров",
         field: "Information Technology",
-        positions: ["UX/UI Дизайнер", "Frontend Разработчик"],
-        requirements: ["Опыт работы с веб-технологиями", "Ответственность", "Работа в команде"],
+        positions: ["UX/UI Дизайнер", "Frontend Разработчик", "Backend Разработчик", "Менеджер проекта"],
+        requirements: ["Опыт работы с веб-технологиями", "Ответственность", "Работа в команде", "Креативное мышление", "Проактивность"],
         location: "Москва (удаленно)",
         remote: true,
         photos: [
-          "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
-          "https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+          "/uploads/marketplace_mockup.jpg",
+          "/uploads/marketplace_team.jpg", 
+          "/uploads/marketplace_wireframes.jpg",
+          "/uploads/marketplace_code.jpg",
+          "/uploads/marketplace_demo.jpg"
         ],
         startDate: new Date("2023-04-01"),
         endDate: new Date("2023-08-31")
@@ -216,8 +223,13 @@ export class MemStorage implements IStorage {
             endDate: "2020-06-01"
           }
         ],
-        talents: [],
-        photos: []
+        talents: ["Креативное мышление", "Работа с цветами", "Внимание к деталям", "Дизайн-мышление"],
+        photos: [
+          "/uploads/designer_portfolio1.jpg",
+          "/uploads/designer_portfolio2.jpg",
+          "/uploads/designer_workspace.jpg",
+          "/uploads/designer_mockup.jpg"
+        ]
       };
       
       const designerResumeCreated = await this.createResume(designerResume);
@@ -268,8 +280,13 @@ export class MemStorage implements IStorage {
             endDate: "2019-06-01"
           }
         ],
-        talents: [],
-        photos: []
+        talents: ["Стратегическое мышление", "Анализ данных", "Копирайтинг", "Управление проектами", "Нетворкинг"],
+        photos: [
+          "/uploads/marketer_analytics.jpg",
+          "/uploads/marketer_presentation.jpg",
+          "/uploads/marketer_event.jpg",
+          "/uploads/marketer_office.jpg"
+        ]
       };
       
       const marketerResumeCreated = await this.createResume(marketerResume);
