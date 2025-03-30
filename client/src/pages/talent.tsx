@@ -60,6 +60,23 @@ const fieldDirections = [
   { value: "Other", label: "Другое" },
 ];
 
+// Переводы для полей направлений
+const directionTranslations: Record<string, string> = {
+  "Computer Science": "Компьютерные науки",
+  "Information Technology": "Информационные технологии",
+  "Graphic Design": "Графический дизайн",
+  "UX/UI Design": "UX/UI дизайн",
+  "Business Administration": "Бизнес-администрирование",
+  "Marketing": "Маркетинг",
+  "Finance": "Финансы",
+  "Education": "Образование",
+  "Engineering": "Инженерия",
+  "Arts": "Искусство",
+  "Event Management": "Организация мероприятий",
+  "Health Sciences": "Медицинские науки",
+  "Other": "Другое",
+};
+
 export default function Talent() {
   const { user } = useAuth();
   const [location, setLocation] = useLocation();
@@ -405,7 +422,9 @@ export default function Talent() {
                       </div>
                       
                       {resume.direction && (
-                        <p className="text-sm text-gray-500 mb-2">{resume.direction}</p>
+                        <p className="text-sm text-gray-500 mb-2">
+                          {directionTranslations[resume.direction] || resume.direction}
+                        </p>
                       )}
                       
                       {resumeUser && (
