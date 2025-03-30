@@ -68,20 +68,38 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Фоновое видео с YouTube */}
-          <div className="absolute inset-0">
-            {/* Используем iframe с видео на YouTube */}
-            <div className="absolute inset-0 w-full h-full overflow-hidden">
-              <iframe 
-                className="absolute w-[100%] h-[100%] object-cover" 
-                src="https://www.youtube.com/embed/Jfr8bM64EYk?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&iv_load_policy=3&playlist=Jfr8bM64EYk"
-                title="Старинная книга, страницы"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+          {/* Анимированный фон страницы с книжным текстом */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
+            {/* Имитация текста на странице с анимацией */}
+            <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 bottom-0 p-16">
+                  {/* Анимированные параграфы текста */}
+                  <div className="grid grid-cols-1 gap-3 opacity-[0.15]">
+                    {Array(20).fill(0).map((_, i) => (
+                      <div 
+                        key={`para-${i}`} 
+                        className="space-y-2 animate-pulse" 
+                        style={{ 
+                          animationDelay: `${i * 0.1}s`, 
+                          animationDuration: '3s'
+                        }}
+                      >
+                        <div className="h-3 bg-gray-800 rounded w-11/12"></div>
+                        <div className="h-3 bg-gray-800 rounded w-full"></div>
+                        <div className="h-3 bg-gray-800 rounded w-10/12"></div>
+                        <div className="h-3 bg-gray-800 rounded w-full"></div>
+                        <div className="h-3 bg-gray-800 rounded w-9/12"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
+            {/* Динамическое освещение страницы */}
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-200 to-transparent opacity-40"></div>
+            {/* Имитация перелистывания страницы - анимированная тень */}
+            <div className="absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-gray-300 to-transparent opacity-30 animate-pulse"></div>
           </div>
           
           {/* Контейнер для контента */}
