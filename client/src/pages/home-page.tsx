@@ -67,7 +67,7 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <div className="relative overflow-hidden bg-gray-50">
+        <div className="relative overflow-hidden bg-gray-50 h-[600px]">
           {/* Фоновое изображение секции */}
           <div className="absolute inset-0">
             <img
@@ -75,45 +75,31 @@ export default function HomePage() {
               src="https://images.unsplash.com/photo-1497215842964-222b430dc094?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
               alt="Нейтральный рабочий фон"
             />
-            <div className="absolute inset-0 bg-gray-900 bg-opacity-30"></div>
+            <div className="absolute inset-0 bg-gray-900 bg-opacity-40"></div>
           </div>
           
           {/* Контейнер для контента */}
-          <div className="relative max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 z-10 lg:py-24">
-            <div className="bg-white rounded-lg shadow-xl overflow-hidden">
-              <div className="lg:grid lg:grid-cols-2">
-                {/* Левая колонка с текстом */}
-                <div className="px-6 py-12 sm:p-16">
-                  <div>
-                    <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                      <span className="block">Вместе. Творите.</span>
-                      <span className="block text-primary">Реализуйте идеи.</span>
-                    </h1>
-                    <p className="mt-6 text-lg text-gray-600 max-w-2xl">
-                      Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
-                    </p>
-                    <div className="mt-8 flex flex-col sm:flex-row gap-4">
-                      <Link href="/projects">
-                        <Button size="lg" className="w-full">
-                          Проекты
-                        </Button>
-                      </Link>
-                      <Link href={user ? "/create-project" : "/auth"}>
-                        <Button size="lg" variant="outline" className="w-full bg-white hover:bg-gray-50 text-gray-800 border-gray-300">
-                          Разместить проект
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Правая колонка с изображением */}
-                <div className="hidden lg:block relative">
-                  <img
-                    className="absolute inset-0 h-full w-full object-cover"
-                    src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
-                    alt="Современное рабочее пространство"
-                  />
+          <div className="relative flex items-center justify-center h-full z-10">
+            <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-5xl mx-4">
+              <div className="text-center">
+                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                  <span className="block">Вместе. Творите.</span>
+                  <span className="block text-primary">Реализуйте идеи.</span>
+                </h1>
+                <p className="mt-6 text-lg text-gray-600 max-w-3xl mx-auto">
+                  Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
+                </p>
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link href="/projects">
+                    <Button size="lg" className="px-12">
+                      Проекты
+                    </Button>
+                  </Link>
+                  <Link href={user ? "/create-project" : "/auth"}>
+                    <Button size="lg" variant="outline" className="px-12 bg-white hover:bg-gray-50 text-gray-800 border-gray-300">
+                      Разместить проект
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </div>
