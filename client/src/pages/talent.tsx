@@ -110,21 +110,17 @@ export default function Talent() {
     setLocation(queryString ? `/talent?${queryString}` : "/talent", { replace: true });
   };
   
-  // Fetch all resumes (we'll filter them locally)
+  // Fetch all resumes from public API (we'll filter them locally)
   const {
     data: resumes,
     isLoading,
     error,
   } = useQuery<Resume[]>({
-    queryKey: ["/api/resumes/all"],
+    queryKey: ["/api/public/resumes"],
     queryFn: async () => {
-      const res = await fetch("/api/resumes?all=true");
+      const res = await fetch("/api/public/resumes");
       
       if (!res.ok) {
-        if (res.status === 401) {
-          // Not authenticated - return empty array to avoid error display
-          return [];
-        }
         throw new Error("Failed to fetch resumes");
       }
       

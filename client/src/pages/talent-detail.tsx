@@ -78,15 +78,15 @@ export default function TalentDetail() {
   // Extract resume ID from the URL
   const resumeId = parseInt(location.split("/")[2]);
   
-  // Получаем резюме с сервера
+  // Получаем резюме с сервера через публичный API
   const {
     data: resume,
     isLoading,
     error,
   } = useQuery<Resume>({
-    queryKey: [`/api/resumes/${resumeId}`],
+    queryKey: [`/api/public/resumes/${resumeId}`],
     queryFn: async () => {
-      const res = await fetch(`/api/resumes/${resumeId}`);
+      const res = await fetch(`/api/public/resumes/${resumeId}`);
       
       if (!res.ok) {
         throw new Error(`Не удалось загрузить резюме: ${res.status}`);
@@ -96,7 +96,7 @@ export default function TalentDetail() {
     }
   });
   
-  // Получаем данные о пользователе, которому принадлежит резюме
+  // Получаем данные о пользователе, которому принадлежит резюме (API уже публичное)
   const { data: resumeUser } = useQuery<User>({
     queryKey: [`/api/users/${resume?.userId}`],
     queryFn: async () => {
