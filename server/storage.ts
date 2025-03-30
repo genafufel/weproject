@@ -173,6 +173,103 @@ export class MemStorage implements IStorage {
       
       const project = await this.createProject(testProject);
       console.log("Создан тестовый проект:", project.title);
+      
+      // Дополнительные тестовые пользователи и их резюме
+      
+      // Пользователь 2: Дизайнер
+      const designerUser: InsertUser = {
+        fullName: "Анна Дизайнер",
+        username: "designer",
+        password: hashedPassword, // используем тот же пароль для простоты
+        email: "designer@example.com",
+        phone: "+7 (900) 555-1234",
+        authType: "email",
+        userType: "general",
+        bio: "Опытный UX/UI дизайнер с портфолио",
+        verified: true
+      };
+      
+      const designer = await this.createUser(designerUser);
+      
+      const designerResume: InsertResume = {
+        userId: designer.id,
+        title: "UX/UI Дизайнер",
+        direction: "Graphic Design",
+        skills: ["Figma", "Adobe XD", "Sketch", "Photoshop", "Illustrator", "Прототипирование"],
+        experience: [
+          {
+            position: "UX/UI Дизайнер",
+            company: "Креативное Агентство",
+            startDate: "2020-03-01",
+            endDate: "2023-02-01",
+            description: "Создание пользовательских интерфейсов для мобильных и веб-приложений"
+          }
+        ],
+        education: [
+          {
+            institution: "Школа Дизайна",
+            degree: "Бакалавр",
+            fieldOfStudy: "Графический дизайн",
+            startDate: "2016-09-01",
+            endDate: "2020-06-01"
+          }
+        ],
+        talents: {}
+      };
+      
+      const designerResumeCreated = await this.createResume(designerResume);
+      console.log("Создано тестовое резюме:", designerResumeCreated.title);
+      
+      // Пользователь 3: Маркетолог
+      const marketerUser: InsertUser = {
+        fullName: "Иван Маркетолог",
+        username: "marketer",
+        password: hashedPassword, // используем тот же пароль для простоты
+        email: "marketer@example.com",
+        phone: "+7 (900) 777-9876",
+        authType: "email",
+        userType: "general",
+        bio: "Специалист по маркетингу с опытом работы в IT-компаниях",
+        verified: true
+      };
+      
+      const marketer = await this.createUser(marketerUser);
+      
+      const marketerResume: InsertResume = {
+        userId: marketer.id,
+        title: "Digital Маркетолог",
+        direction: "Marketing",
+        skills: ["SEO", "SMM", "Контекстная реклама", "Google Analytics", "Яндекс.Метрика", "Email-маркетинг"],
+        experience: [
+          {
+            position: "Маркетолог",
+            company: "Технологический Стартап",
+            startDate: "2021-06-01",
+            endDate: "2023-01-01",
+            description: "Разработка и реализация маркетинговых стратегий для IT-продуктов"
+          },
+          {
+            position: "SMM-специалист",
+            company: "Медиа Агентство",
+            startDate: "2019-03-01",
+            endDate: "2021-05-01",
+            description: "Ведение социальных сетей и создание контента для клиентов"
+          }
+        ],
+        education: [
+          {
+            institution: "Экономический Университет",
+            degree: "Магистр",
+            fieldOfStudy: "Маркетинг",
+            startDate: "2017-09-01",
+            endDate: "2019-06-01"
+          }
+        ],
+        talents: {}
+      };
+      
+      const marketerResumeCreated = await this.createResume(marketerResume);
+      console.log("Создано тестовое резюме:", marketerResumeCreated.title);
     } catch (error) {
       console.error("Ошибка при создании тестовых данных:", error);
     }
