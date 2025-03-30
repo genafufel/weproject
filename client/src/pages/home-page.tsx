@@ -70,8 +70,12 @@ export default function HomePage() {
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
           {/* Фоновое изображение секции */}
           <div className="absolute inset-0">
-            <div className="h-full w-full bg-gradient-to-br from-blue-50 via-gray-100 to-blue-100"></div>
-            <div className="absolute inset-0 bg-gray-900 bg-opacity-30"></div>
+            <img
+              className="h-full w-full object-cover"
+              src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+              alt="Спокойный рабочий фон с ноутбуком"
+            />
+            <div className="absolute inset-0 bg-gray-900 bg-opacity-65"></div>
           </div>
           
           {/* Контейнер для контента */}
