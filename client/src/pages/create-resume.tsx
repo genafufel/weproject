@@ -342,14 +342,15 @@ export default function CreateResume() {
       const res = await apiRequest("POST", "/api/resumes", resumeData);
       return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: (resume) => {
       // Используем хук для инвалидации кеша резюме
       invalidateResumes();
       toast({
         title: "Резюме успешно создано",
         description: "Ваше резюме создано и теперь доступно владельцам проектов.",
       });
-      navigate("/dashboard");
+      // Перенаправляем на страницу нового резюме
+      navigate(`/talent/${resume.id}`);
     },
     onError: (error: Error) => {
       toast({
@@ -371,14 +372,15 @@ export default function CreateResume() {
       const res = await apiRequest("PATCH", `/api/resumes/${resumeId}`, updateData);
       return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: (resume) => {
       // Используем хук для инвалидации кеша резюме, с указанием конкретного ID
       invalidateResumes(Number(resumeId));
       toast({
         title: "Резюме успешно обновлено",
         description: "Ваше резюме обновлено и изменения видны владельцам проектов.",
       });
-      navigate("/dashboard");
+      // Перенаправляем на страницу резюме после обновления
+      navigate(`/talent/${resumeId}`);
     },
     onError: (error: Error) => {
       toast({

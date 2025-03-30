@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { useLocation, Link } from "wouter";
+import { useLocation, Link, useRoute } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest, queryClient, getQueryFn } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { saveReturnUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -142,6 +143,7 @@ export default function ProjectDetail() {
   // Handle apply button click
   const handleApply = () => {
     if (!user) {
+      saveReturnUrl(location);
       navigate("/auth");
       return;
     }
@@ -332,7 +334,10 @@ export default function ProjectDetail() {
                         ) : (
                           <Button 
                             size="sm" 
-                            onClick={() => navigate("/auth")}
+                            onClick={() => {
+                              saveReturnUrl(location);
+                              navigate("/auth");
+                            }}
                             variant="outline"
                           >
                             Войти
@@ -394,7 +399,13 @@ export default function ProjectDetail() {
                       )
                     )
                   ) : (
-                    <Button className="w-full" onClick={() => navigate("/auth")}>
+                    <Button 
+                      className="w-full" 
+                      onClick={() => {
+                        saveReturnUrl(location);
+                        navigate("/auth");
+                      }}
+                    >
                       Войдите, чтобы откликнуться
                     </Button>
                   )}
@@ -441,10 +452,15 @@ export default function ProjectDetail() {
                       </Link>
                     </Button>
                   ) : (
-                    <Button variant="outline" className="w-full" asChild>
-                      <Link href="/auth">
-                        Войдите, чтобы написать сообщение
-                      </Link>
+                    <Button 
+                      variant="outline" 
+                      className="w-full" 
+                      onClick={() => {
+                        saveReturnUrl(location);
+                        navigate("/auth");
+                      }}
+                    >
+                      Войдите, чтобы написать сообщение
                     </Button>
                   )}
                 </CardContent>

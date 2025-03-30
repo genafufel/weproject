@@ -289,8 +289,8 @@ export default function CreateProject() {
         description: "Ваш проект создан и теперь доступен для соискателей.",
       });
       
-      // Перенаправляем на страницу с проектами
-      navigate("/projects");
+      // Перенаправляем на страницу созданного проекта
+      navigate(`/projects/${project.id}`);
       
     } catch (error: any) {
       console.error("Ошибка при создании проекта:", error);

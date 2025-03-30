@@ -1,6 +1,8 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
-import { Redirect, Route } from "wouter";
+import { Redirect, Route, useLocation } from "wouter";
+import { saveReturnUrl } from "@/lib/utils";
+import { useEffect } from "react";
 
 export function ProtectedRoute({
   path,
@@ -10,6 +12,14 @@ export function ProtectedRoute({
   component: () => React.JSX.Element;
 }) {
   const { user, isLoading } = useAuth();
+  const [location] = useLocation();
+
+  // Сохраняем текущий URL для последующего возврата
+  useEffect(() => {
+    if (!user && !isLoading) {
+      saveReturnUrl(location);
+    }
+  }, [user, isLoading, location]);
 
   if (isLoading) {
     return (

@@ -7,6 +7,7 @@ import { z } from "zod";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { getReturnUrl, clearReturnUrl } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -89,7 +90,14 @@ export default function AuthPage() {
       if (!user.verified) {
         navigate("/verification");
       } else {
-        navigate("/");
+        // Проверка на сохраненный returnUrl
+        const returnUrl = getReturnUrl();
+        if (returnUrl) {
+          clearReturnUrl(); // Очищаем URL после использования
+          navigate(returnUrl);
+        } else {
+          navigate("/");
+        }
       }
     }
   }, [user, navigate]);
