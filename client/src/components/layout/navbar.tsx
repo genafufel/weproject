@@ -134,7 +134,7 @@ export function Navbar() {
                       </Avatar>
                     </Button>
                   </Link>
-                  <div className="invisible group-hover:visible absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:delay-0 delay-500">
+                  <div className="invisible group-hover:visible absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:delay-0 delay-200">
                     <div className="py-1">
                       <div className="flex flex-col space-y-1 p-2">
                         <p className="text-sm font-medium leading-none">{user.fullName}</p>
