@@ -148,7 +148,8 @@ export class MemStorage implements IStorage {
             endDate: "2022-06-01"
           }
         ],
-        talents: {}
+        talents: [],
+        photos: []
       };
       
       const resume = await this.createResume(testResume);
@@ -215,7 +216,8 @@ export class MemStorage implements IStorage {
             endDate: "2020-06-01"
           }
         ],
-        talents: {}
+        talents: [],
+        photos: []
       };
       
       const designerResumeCreated = await this.createResume(designerResume);
@@ -266,7 +268,8 @@ export class MemStorage implements IStorage {
             endDate: "2019-06-01"
           }
         ],
-        talents: {}
+        talents: [],
+        photos: []
       };
       
       const marketerResumeCreated = await this.createResume(marketerResume);
@@ -405,8 +408,8 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: now, 
       updatedAt: now,
-      talents: insertResume.talents || ({} as any),
-      photos: insertResume.photos || ({} as any)
+      talents: insertResume.talents || ([] as any),
+      photos: insertResume.photos || ([] as any)
     };
     this.resumes.set(id, resume);
     return resume;
@@ -491,7 +494,7 @@ export class MemStorage implements IStorage {
       updatedAt: now,
       location: insertProject.location ?? null,
       remote: insertProject.remote ?? null,
-      photos: insertProject.photos ?? null,
+      photos: insertProject.photos || ([] as any),
       startDate: insertProject.startDate ?? null,
       endDate: insertProject.endDate ?? null
     };
