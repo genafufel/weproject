@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --secondary: 220 90% 80%;
+    --secondary: 220 90% 60%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -20,7 +20,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --ring: 221.2 83.2% 33.3%;
   }
   
   * {
@@ -35,5 +35,22 @@
   textarea,
   select {
     @apply bg-white;
+  }
+  
+  /* Затемненные синие цвета */
+  .text-blue-100 {
+    color: rgb(153, 177, 229) !important; /* Темнее стандартного text-blue-100 */
+  }
+  
+  .text-blue-200 {
+    color: rgb(118, 150, 223) !important; /* Темнее стандартного text-blue-200 */
+  }
+  
+  .text-blue-300 {
+    color: rgb(82, 122, 215) !important; /* Темнее стандартного text-blue-300 */
+  }
+  
+  .hover\:text-blue-700:hover {
+    color: rgb(25, 58, 137) !important; /* Темнее стандартного hover:text-blue-700 */
   }
 }
