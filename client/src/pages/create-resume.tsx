@@ -91,10 +91,23 @@ export default function CreateResume() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Get resume ID from URL path (for edit mode - /resumes/:id/edit)
-  // Extract ID from URL segments, similar to the approach in edit-project.tsx
+  // Two ways to get resume ID
+  // 1. From URL path for /resumes/:id/edit route
+  // 2. From query parameter for ?id=X route
+  const urlParams = new URLSearchParams(window.location.search);
+  const queryId = urlParams.get('id');
+  
+  // Check if we're on the edit path
   const isPathEditMode = location.includes("/resumes/") && location.includes("/edit");
-  const resumeId = isPathEditMode ? location.split("/")[2] : null;
+  const pathId = isPathEditMode ? location.split("/")[2] : null;
+  
+  // Use either the path ID or query parameter ID
+  const resumeId = pathId || queryId;
+  
+  console.log("Путь:", location);
+  console.log("ID из пути:", pathId);
+  console.log("ID из query параметра:", queryId);
+  console.log("Используемый ID:", resumeId);
   
   useEffect(() => {
     console.log("Редактирование резюме с ID:", resumeId, "Путь:", location);
