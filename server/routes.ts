@@ -44,16 +44,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     if (all) {
       // Получение всех резюме для страницы талантов
-      const allResumes = Array.from(storage.getAllResumes());
-      res.json(allResumes);
+      const allResumes = storage.getAllResumes();
+      
+      // Убедимся, что photos и talents всегда массивы
+      const formattedResumes = allResumes.map(resume => {
+        // Создаем копию резюме для безопасного изменения
+        const formattedResume = { ...resume };
+        
+        // Проверяем и преобразуем photos
+        if (!formattedResume.photos) {
+          formattedResume.photos = [];
+        } else if (!Array.isArray(formattedResume.photos)) {
+          try {
+            formattedResume.photos = JSON.parse(formattedResume.photos as any);
+          } catch {
+            formattedResume.photos = [];
+          }
+        }
+        
+        // Проверяем и преобразуем talents
+        if (!formattedResume.talents) {
+          formattedResume.talents = [];
+        } else if (!Array.isArray(formattedResume.talents)) {
+          try {
+            formattedResume.talents = JSON.parse(formattedResume.talents as any);
+          } catch {
+            formattedResume.talents = [];
+          }
+        }
+        
+        return formattedResume;
+      });
+      
+      res.json(formattedResumes);
     } else if (userId) {
       // Получение резюме конкретного пользователя
       const resumes = await storage.getResumesByUserId(userId);
-      res.json(resumes);
+      
+      // Форматируем резюме перед отправкой
+      const formattedResumes = resumes.map(resume => {
+        const formattedResume = { ...resume };
+        
+        // Проверяем и преобразуем photos
+        if (!formattedResume.photos) {
+          formattedResume.photos = [];
+        } else if (!Array.isArray(formattedResume.photos)) {
+          try {
+            formattedResume.photos = JSON.parse(formattedResume.photos as any);
+          } catch {
+            formattedResume.photos = [];
+          }
+        }
+        
+        // Проверяем и преобразуем talents
+        if (!formattedResume.talents) {
+          formattedResume.talents = [];
+        } else if (!Array.isArray(formattedResume.talents)) {
+          try {
+            formattedResume.talents = JSON.parse(formattedResume.talents as any);
+          } catch {
+            formattedResume.talents = [];
+          }
+        }
+        
+        return formattedResume;
+      });
+      
+      res.json(formattedResumes);
     } else if (req.user) {
       // Если userId не указан, возвращаем резюме текущего пользователя
       const resumes = await storage.getResumesByUserId(req.user.id);
-      res.json(resumes);
+      
+      // Форматируем резюме перед отправкой
+      const formattedResumes = resumes.map(resume => {
+        const formattedResume = { ...resume };
+        
+        // Проверяем и преобразуем photos
+        if (!formattedResume.photos) {
+          formattedResume.photos = [];
+        } else if (!Array.isArray(formattedResume.photos)) {
+          try {
+            formattedResume.photos = JSON.parse(formattedResume.photos as any);
+          } catch {
+            formattedResume.photos = [];
+          }
+        }
+        
+        // Проверяем и преобразуем talents
+        if (!formattedResume.talents) {
+          formattedResume.talents = [];
+        } else if (!Array.isArray(formattedResume.talents)) {
+          try {
+            formattedResume.talents = JSON.parse(formattedResume.talents as any);
+          } catch {
+            formattedResume.talents = [];
+          }
+        }
+        
+        return formattedResume;
+      });
+      
+      res.json(formattedResumes);
     } else {
       res.status(400).json({ message: "Missing userId parameter" });
     }
@@ -67,7 +158,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Resume not found" });
     }
     
-    res.json(resume);
+    // Форматируем resume перед отправкой
+    const formattedResume = { ...resume };
+    
+    // Проверяем и преобразуем photos
+    if (!formattedResume.photos) {
+      formattedResume.photos = [];
+    } else if (!Array.isArray(formattedResume.photos)) {
+      try {
+        formattedResume.photos = JSON.parse(formattedResume.photos as any);
+      } catch {
+        formattedResume.photos = [];
+      }
+    }
+    
+    // Проверяем и преобразуем talents
+    if (!formattedResume.talents) {
+      formattedResume.talents = [];
+    } else if (!Array.isArray(formattedResume.talents)) {
+      try {
+        formattedResume.talents = JSON.parse(formattedResume.talents as any);
+      } catch {
+        formattedResume.talents = [];
+      }
+    }
+    
+    res.json(formattedResume);
   });
 
   app.post("/api/resumes", async (req, res) => {

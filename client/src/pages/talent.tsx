@@ -128,7 +128,9 @@ export default function Talent() {
         throw new Error("Failed to fetch resumes");
       }
       
-      return res.json();
+      const data = await res.json();
+      console.log("Получены данные о всех резюме:", data);
+      return data;
     },
   });
   
@@ -216,6 +218,8 @@ export default function Talent() {
 
   // Helper to get resume photos
   const getResumePhotos = (resume: Resume): string[] => {
+    console.log("Получение фотографий для резюме:", resume.id, "photos =", resume.photos);
+    
     if (!resume.photos) return [];
     
     try {
@@ -223,7 +227,9 @@ export default function Talent() {
         return JSON.parse(resume.photos);
       }
       if (Array.isArray(resume.photos)) {
-        return resume.photos;
+        const result = resume.photos;
+        console.log("Возвращаем массив фотографий:", result);
+        return result;
       }
     } catch (e) {
       console.error("Failed to parse photos", e);
