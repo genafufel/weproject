@@ -360,7 +360,7 @@ export default function ProjectDetail() {
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {(project?.requirements || []).map((requirement: string, index: number) => (
-                      <Badge key={index} variant="secondary">{requirement}</Badge>
+                      <Badge key={index} className="bg-primary text-white hover:bg-primary/90">{requirement}</Badge>
                     ))}
                   </div>
                 </CardContent>

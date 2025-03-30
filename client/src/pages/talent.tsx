@@ -479,12 +479,12 @@ export default function Talent() {
                     <CardContent className="pb-4">
                       <div className="flex flex-wrap gap-1 mb-4">
                         {skills.slice(0, 5).map((skill, index) => (
-                          <Badge key={index} variant="outline" className="bg-blue-50 text-primary border-primary">
+                          <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
                             {skill}
                           </Badge>
                         ))}
                         {skills.length > 5 && (
-                          <Badge variant="outline" className="bg-blue-50 text-primary border-primary">
+                          <Badge className="bg-primary text-white hover:bg-primary/90">
                             +{skills.length - 5} ещё
                           </Badge>
                         )}

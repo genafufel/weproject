@@ -290,7 +290,7 @@ export default function Projects() {
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-2">
                         {(project.positions || []).map((position: any, index: number) => (
-                          <Badge key={index} variant="outline" className="bg-blue-50 text-primary border-primary">
+                          <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
                             {typeof position === 'string' ? position : position.title}
                           </Badge>
                         ))}

@@ -421,7 +421,7 @@ export default function TalentDetail() {
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
                     {skills.map((skill, index) => (
-                      <Badge key={index} variant="outline" className="bg-blue-50">{skill}</Badge>
+                      <Badge key={index} className="bg-primary text-white hover:bg-primary/90">{skill}</Badge>
                     ))}
                   </div>
                 </CardContent>
@@ -436,7 +436,7 @@ export default function TalentDetail() {
                   <CardContent>
                     <div className="flex flex-wrap gap-2">
                       {talents.map((talent: string, index: number) => (
-                        <Badge key={index} variant="secondary">{talent}</Badge>
+                        <Badge key={index} className="bg-primary text-white hover:bg-primary/90">{talent}</Badge>
                       ))}
                     </div>
                   </CardContent>
