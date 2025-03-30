@@ -84,11 +84,11 @@ export default function EditProfile() {
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('avatar', file);
+      formData.append('userId', user.id.toString());
       
-      const response = await fetch('/api/upload/avatar', {
+      const response = await fetch(`/api/upload/avatar?userId=${user.id}`, {
         method: 'POST',
         body: formData,
-        credentials: 'include', // Важно для передачи куки сессии
       });
       
       if (!response.ok) {
@@ -191,7 +191,7 @@ export default function EditProfile() {
                   <div>
                     <Avatar className="h-24 w-24">
                       <AvatarImage 
-                        src={avatarPreview || undefined} 
+                        src={avatarPreview || user.avatar || undefined} 
                         alt={user.fullName || "Аватар"} 
                       />
                       <AvatarFallback>

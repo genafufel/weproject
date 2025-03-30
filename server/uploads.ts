@@ -52,13 +52,12 @@ export function setupUploads(app: Express) {
   // Маршрут для загрузки фотографии профиля
   app.post('/api/upload/avatar', upload.single('avatar'), async (req, res) => {
     try {
-      // Проверяем, аутентифицирован ли пользователь
-      if (!req.isAuthenticated()) {
-        return res.status(401).json({ message: 'Необходима авторизация' });
-      }
+      // Получаем ID пользователя из параметров запроса или из body
+      const userId = req.query.userId || req.body.userId;
 
-      // Получаем ID пользователя из сессии
-      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(400).json({ message: 'ID пользователя не предоставлен' });
+      }
 
       if (!req.file) {
         return res.status(400).json({ message: 'Не удалось загрузить файл' });
@@ -68,7 +67,7 @@ export function setupUploads(app: Express) {
       const fileUrl = `/uploads/${req.file.filename}`;
       
       // Обновляем аватар пользователя в БД
-      const updatedUser = await storage.updateUser(userId, {
+      const updatedUser = await storage.updateUser(Number(userId), {
         avatar: fileUrl
       });
 
