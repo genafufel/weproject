@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Search, ChevronDown, GraduationCap, Briefcase } from "lucide-react";
+import { Loader2, Search, ChevronDown, GraduationCap, Briefcase, Mail, Edit, Phone } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -29,6 +29,17 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
 import { Resume } from "@shared/schema";
 
 // Field directions for filtering
@@ -52,6 +63,12 @@ const fieldDirections = [
 export default function Talent() {
   const { user } = useAuth();
   const [location, setLocation] = useLocation();
+  const { toast } = useToast();
+  
+  // State для контактной формы
+  const [selectedContact, setSelectedContact] = useState<{ userId: number; fullName: string; } | null>(null);
+  const [messageText, setMessageText] = useState("");
+  const [sendingMessage, setSendingMessage] = useState(false);
   
   // Parse URL parameters
   const params = new URLSearchParams(location.split("?")[1] || "");
@@ -206,6 +223,62 @@ export default function Talent() {
       </div>
     ) : null;
   };
+  
+  // Функция для отправки сообщения
+  const handleSendMessage = async () => {
+    if (!user) {
+      toast({
+        title: "Необходима авторизация",
+        description: "Для отправки сообщений необходимо войти в систему",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    if (!selectedContact || !messageText.trim()) {
+      toast({
+        title: "Ошибка отправки",
+        description: "Пожалуйста, введите текст сообщения",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setSendingMessage(true);
+    
+    try {
+      const response = await fetch("/api/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          receiverId: selectedContact.userId,
+          content: messageText,
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error("Не удалось отправить сообщение");
+      }
+      
+      toast({
+        title: "Сообщение отправлено",
+        description: `Ваше сообщение успешно отправлено ${selectedContact.fullName}`,
+      });
+      
+      setMessageText("");
+      setSelectedContact(null);
+    } catch (error) {
+      toast({
+        title: "Ошибка отправки",
+        description: "Не удалось отправить сообщение. Пожалуйста, попробуйте позже.",
+        variant: "destructive",
+      });
+    } finally {
+      setSendingMessage(false);
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -312,21 +385,34 @@ export default function Talent() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredResumes.map((resume) => {
                 const skills = getResumeSkills(resume);
-                const user = userData?.[resume.userId];
+                const resumeUser = userData?.[resume.userId];
+                const isOwnResume = user && resumeUser && user.id === resume.userId;
                 
                 return (
                   <Card key={resume.id} className="overflow-hidden hover:shadow-md transition-all">
                     <CardHeader className="pb-3">
-                      <h3 className="text-lg font-medium text-gray-900">{resume.title}</h3>
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-lg font-medium text-gray-900">{resume.title}</h3>
+                        
+                        {isOwnResume && (
+                          <Link href={`/edit-resume/${resume.id}`}>
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                              <Edit className="h-4 w-4" />
+                              <span className="sr-only">Редактировать резюме</span>
+                            </Button>
+                          </Link>
+                        )}
+                      </div>
+                      
                       {resume.direction && (
                         <p className="text-sm text-gray-500 mb-2">{resume.direction}</p>
                       )}
                       
-                      {user && (
+                      {resumeUser && (
                         <div className="flex items-center mt-2">
                           <div className="flex-1 min-w-0">
                             <p className="text-sm font-medium text-primary truncate">
-                              {user.fullName}
+                              {resumeUser.fullName}
                             </p>
                             {getEducationDisplay(resume)}
                           </div>
@@ -349,7 +435,47 @@ export default function Talent() {
                       </div>
                     </CardContent>
                     
-                    <CardFooter className="pt-0 flex justify-end">
+                    <CardFooter className="pt-0 flex justify-between">
+                      {!isOwnResume && resumeUser && user && (
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button 
+                              variant="outline" 
+                              className="flex items-center gap-1"
+                              onClick={() => setSelectedContact({ userId: resumeUser.id, fullName: resumeUser.fullName })}
+                            >
+                              <Mail className="h-4 w-4" />
+                              Связаться
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-md">
+                            <DialogHeader>
+                              <DialogTitle>Сообщение для {resumeUser.fullName}</DialogTitle>
+                              <DialogDescription>
+                                Отправьте сообщение автору резюме, чтобы обсудить возможное сотрудничество.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-4 py-4">
+                              <Textarea
+                                placeholder="Введите ваше сообщение здесь..."
+                                value={messageText}
+                                onChange={(e) => setMessageText(e.target.value)}
+                                className="min-h-[120px]"
+                              />
+                            </div>
+                            <DialogFooter>
+                              <Button 
+                                type="submit" 
+                                onClick={handleSendMessage}
+                                disabled={sendingMessage || !messageText.trim()}
+                              >
+                                {sendingMessage ? "Отправка..." : "Отправить сообщение"}
+                              </Button>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      )}
+                      
                       <Link href={`/talent/${resume.id}`}>
                         <Button>
                           Просмотр резюме

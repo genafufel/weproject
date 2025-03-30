@@ -523,6 +523,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Внутренняя ошибка сервера" });
     }
   });
+  
+  // User Routes
+  app.get("/api/users/:id", async (req, res) => {
+    const userId = parseInt(req.params.id);
+    const user = await storage.getUser(userId);
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    // Не отправляем пароль и другие чувствительные данные
+    const { password, verificationCode, ...userData } = user;
+    
+    res.json(userData);
+  });
 
   const httpServer = createServer(app);
   return httpServer;
