@@ -68,18 +68,28 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Фоновое видео секции - страница книги */}
-          <div className="absolute inset-0 bg-gray-100">
-            <video 
-              className="absolute inset-0 w-full h-full object-cover" 
-              autoPlay 
-              loop 
-              muted 
-              playsInline
-            >
-              <source src="/videos/book-page.mp4" type="video/mp4" />
-            </video>
-            <div className="absolute inset-0 bg-gray-900 bg-opacity-40"></div>
+          {/* Стилизованный фон, имитирующий страницу книги с текстом */}
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200">
+            {/* Имитация текста на странице */}
+            <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full relative overflow-hidden">
+                <div className="absolute inset-x-0 top-0 bottom-0 p-16">
+                  <div className="grid grid-cols-1 gap-3 opacity-[0.15]">
+                    {Array(15).fill(0).map((_, i) => (
+                      <div key={`para-${i}`} className="space-y-2">
+                        <div className="h-3 bg-gray-800 rounded w-11/12"></div>
+                        <div className="h-3 bg-gray-800 rounded w-full"></div>
+                        <div className="h-3 bg-gray-800 rounded w-10/12"></div>
+                        <div className="h-3 bg-gray-800 rounded w-full"></div>
+                        <div className="h-3 bg-gray-800 rounded w-9/12"></div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            {/* Дополнительный слой для выделения "текста" */}
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-200 to-transparent opacity-40"></div>
           </div>
           
           {/* Контейнер для контента */}
