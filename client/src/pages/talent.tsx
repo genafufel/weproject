@@ -101,7 +101,7 @@ export default function Talent() {
   } = useQuery<Resume[]>({
     queryKey: ["/api/resumes/all"],
     queryFn: async () => {
-      const res = await fetch("/api/resumes");
+      const res = await fetch("/api/resumes?all=true");
       
       if (!res.ok) {
         if (res.status === 401) {

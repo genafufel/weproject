@@ -24,6 +24,7 @@ export interface IStorage {
   // Resume operations
   getResume(id: number): Promise<Resume | undefined>;
   getResumesByUserId(userId: number): Promise<Resume[]>;
+  getAllResumes(): Resume[]; // Добавляем новый метод
   createResume(resume: InsertResume): Promise<Resume>;
   updateResume(id: number, resume: Partial<Resume>): Promise<Resume | undefined>;
   deleteResume(id: number): Promise<boolean>;
@@ -390,6 +391,10 @@ export class MemStorage implements IStorage {
     return Array.from(this.resumes.values()).filter(
       (resume) => resume.userId === userId,
     );
+  }
+  
+  getAllResumes(): Resume[] {
+    return Array.from(this.resumes.values());
   }
   
   async createResume(insertResume: InsertResume): Promise<Resume> {

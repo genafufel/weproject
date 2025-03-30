@@ -40,12 +40,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     
     const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+    const all = req.query.all === "true";
     
-    if (userId) {
+    if (all) {
+      // Получение всех резюме для страницы талантов
+      const allResumes = Array.from(storage.getAllResumes());
+      res.json(allResumes);
+    } else if (userId) {
+      // Получение резюме конкретного пользователя
       const resumes = await storage.getResumesByUserId(userId);
       res.json(resumes);
     } else if (req.user) {
-      // If no userId is provided, return the current user's resumes
+      // Если userId не указан, возвращаем резюме текущего пользователя
       const resumes = await storage.getResumesByUserId(req.user.id);
       res.json(resumes);
     } else {
