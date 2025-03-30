@@ -343,7 +343,7 @@ export default function Talent() {
                     className="pl-9 bg-white text-gray-900 border-0"
                   />
                 </div>
-                <Button type="submit" variant="secondary">
+                <Button type="submit" variant="secondary" className="bg-white text-primary hover:bg-gray-100">
                   Поиск
                 </Button>
               </form>
@@ -479,12 +479,12 @@ export default function Talent() {
                     <CardContent className="pb-4">
                       <div className="flex flex-wrap gap-1 mb-4">
                         {skills.slice(0, 5).map((skill, index) => (
-                          <Badge key={index} variant="outline" className="bg-blue-50">
+                          <Badge key={index} variant="outline" className="bg-blue-50 text-primary border-primary">
                             {skill}
                           </Badge>
                         ))}
                         {skills.length > 5 && (
-                          <Badge variant="outline" className="bg-blue-50">
+                          <Badge variant="outline" className="bg-blue-50 text-primary border-primary">
                             +{skills.length - 5} ещё
                           </Badge>
                         )}

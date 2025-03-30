@@ -144,7 +144,7 @@ export default function Projects() {
                     className="pl-9 bg-white text-gray-900 border-0"
                   />
                 </div>
-                <Button type="submit" variant="secondary">
+                <Button type="submit" variant="secondary" className="bg-white text-primary hover:bg-gray-100">
                   Поиск
                 </Button>
               </form>
@@ -290,7 +290,7 @@ export default function Projects() {
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-2">
                         {(project.positions || []).map((position: any, index: number) => (
-                          <Badge key={index} variant="outline" className="bg-blue-50">
+                          <Badge key={index} variant="outline" className="bg-blue-50 text-primary border-primary">
                             {typeof position === 'string' ? position : position.title}
                           </Badge>
                         ))}
