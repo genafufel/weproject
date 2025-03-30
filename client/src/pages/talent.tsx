@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
@@ -7,18 +7,13 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Search, ChevronDown } from "lucide-react";
+import { Loader2, Search, ChevronDown, GraduationCap, Briefcase } from "lucide-react";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -34,6 +29,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Resume } from "@shared/schema";
 
 // Field directions for filtering
 const fieldDirections = [
@@ -80,75 +76,79 @@ export default function Talent() {
     setLocation(queryString ? `/talent?${queryString}` : "/talent", { replace: true });
   };
   
-  // Fetch resumes based on filters
-  // This is a mock example since we don't have a specific "browse resumes" endpoint in the API
+  // Fetch all resumes (we'll filter them locally)
   const {
     data: resumes,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: [`/api/resumes?${buildQueryString()}`],
-    enabled: false, // Disabled because we don't actually have this endpoint
+  } = useQuery<Resume[]>({
+    queryKey: ["/api/resumes/all"],
+    queryFn: async () => {
+      const res = await fetch("/api/resumes");
+      
+      if (!res.ok) {
+        if (res.status === 401) {
+          // Not authenticated - return empty array to avoid error display
+          return [];
+        }
+        throw new Error("Failed to fetch resumes");
+      }
+      
+      return res.json();
+    },
   });
   
-  // Mock resume data (in a real app, this would come from API)
-  const mockResumes = [
-    {
-      id: 1,
-      userId: 1,
-      user: { fullName: "Sarah Johnson", avatar: null },
-      title: "UX/UI Designer",
-      direction: "Graphic Design",
-      skills: ["Figma", "Adobe XD", "Prototyping", "User Research"],
-      education: [
-        { institution: "Design Institute", degree: "Bachelor's", fieldOfStudy: "UI/UX Design" }
-      ]
+  // Fetch user data for resumes
+  const { data: userData } = useQuery<Record<number, any>>({
+    queryKey: ["resumeUserData"],
+    queryFn: async () => {
+      if (!resumes || resumes.length === 0) return {};
+      
+      // Create a map of userId -> user data
+      const userMap: Record<number, any> = {};
+      
+      // Get unique user IDs without using Set to avoid compilation issues
+      const userIds: number[] = [];
+      resumes.forEach(resume => {
+        if (!userIds.includes(resume.userId)) {
+          userIds.push(resume.userId);
+        }
+      });
+      
+      await Promise.all(
+        userIds.map(async (userId) => {
+          try {
+            const res = await fetch(`/api/users/${userId}`);
+            if (res.ok) {
+              const userData = await res.json();
+              userMap[userId] = userData;
+            }
+          } catch (err) {
+            console.error(`Failed to fetch user data for user ${userId}:`, err);
+          }
+        })
+      );
+      
+      return userMap;
     },
-    {
-      id: 2,
-      userId: 2,
-      user: { fullName: "Jamal Thompson", avatar: null },
-      title: "Full Stack Developer",
-      direction: "Computer Science",
-      skills: ["React", "Node.js", "MongoDB", "Express", "JavaScript"],
-      education: [
-        { institution: "Tech University", degree: "Master's", fieldOfStudy: "Computer Science" }
-      ]
-    },
-    {
-      id: 3,
-      userId: 3,
-      user: { fullName: "Emma Chen", avatar: null },
-      title: "Marketing Specialist",
-      direction: "Marketing",
-      skills: ["Social Media", "SEO", "Analytics", "Content Strategy"],
-      education: [
-        { institution: "Business School", degree: "Bachelor's", fieldOfStudy: "Marketing" }
-      ]
-    },
-    {
-      id: 4,
-      userId: 4,
-      user: { fullName: "Marco Silva", avatar: null },
-      title: "Data Analyst",
-      direction: "Information Technology",
-      skills: ["Python", "SQL", "Tableau", "Data Visualization"],
-      education: [
-        { institution: "Analytics University", degree: "Bachelor's", fieldOfStudy: "Data Science" }
-      ]
-    }
-  ];
+    enabled: !!resumes && resumes.length > 0,
+  });
   
-  // Filter mock resumes based on search and field
-  const filteredResumes = mockResumes.filter(resume => {
+  // Filter resumes based on search and field
+  const filteredResumes = resumes?.filter(resume => {
     const matchesSearch = !searchTerm || 
       resume.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      resume.user.fullName.toLowerCase().includes(searchTerm.toLowerCase());
+      (typeof resume.skills === 'object' && 
+        Array.isArray(resume.skills) && 
+        resume.skills.some(skill => 
+          typeof skill === 'string' && 
+          skill.toLowerCase().includes(searchTerm.toLowerCase())
+        ));
     
     const matchesField = selectedField === "all" || resume.direction === selectedField;
     
     return matchesSearch && matchesField;
-  });
+  }) || [];
   
   // Handle search submit
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -162,6 +162,51 @@ export default function Talent() {
     setTimeout(updateUrlWithFilters, 0);
   };
 
+  // Add skills type guard
+  const getResumeSkills = (resume: Resume): string[] => {
+    if (!resume.skills) return [];
+    
+    try {
+      if (typeof resume.skills === 'string') {
+        return JSON.parse(resume.skills);
+      }
+      if (Array.isArray(resume.skills)) {
+        return resume.skills.filter(skill => typeof skill === 'string');
+      }
+    } catch (e) {
+      console.error("Failed to parse skills", e);
+    }
+    
+    return [];
+  };
+
+  // Helper to display education
+  const getEducationDisplay = (resume: Resume) => {
+    if (!resume.education) return null;
+    
+    let educationArray: any[] = [];
+    try {
+      if (typeof resume.education === 'string') {
+        educationArray = JSON.parse(resume.education);
+      } else if (Array.isArray(resume.education)) {
+        educationArray = resume.education;
+      }
+    } catch (e) {
+      console.error("Failed to parse education", e);
+      return null;
+    }
+    
+    if (!educationArray || educationArray.length === 0) return null;
+    
+    const latestEducation = educationArray[0];
+    return latestEducation?.institution ? (
+      <div className="flex items-center gap-1 text-xs text-gray-500">
+        <GraduationCap className="h-3 w-3" />
+        <span>{latestEducation.institution}</span>
+      </div>
+    ) : null;
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
@@ -171,7 +216,7 @@ export default function Talent() {
         <div className="bg-primary text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-3xl font-bold mb-4">Найти талантливых студентов</h1>
+              <h1 className="text-3xl font-bold mb-4">Найти талантливых сотрудников</h1>
               <p className="text-blue-100 text-lg mb-8">
                 Откройте для себя мотивированных студентов и молодых специалистов со свежими идеями и навыками.
               </p>
@@ -182,7 +227,7 @@ export default function Talent() {
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
                     type="text"
-                    placeholder="Поиск по имени, навыкам или направлению"
+                    placeholder="Поиск по названию, навыкам или направлению"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="pl-9 bg-white text-gray-900 border-0"
@@ -243,7 +288,7 @@ export default function Talent() {
           </div>
         </div>
         
-        {/* Talent list */}
+        {/* Resume list */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {isLoading ? (
             <div className="flex justify-center items-center py-12">
@@ -251,64 +296,74 @@ export default function Talent() {
             </div>
           ) : error ? (
             <div className="text-center py-12">
-              <p className="text-red-500">Не удалось загрузить таланты. Пожалуйста, попробуйте позже.</p>
+              <p className="text-red-500">Не удалось загрузить резюме. Пожалуйста, попробуйте позже.</p>
             </div>
           ) : !filteredResumes.length ? (
             <div className="text-center py-12">
               <h3 className="text-lg font-medium text-gray-900 mb-2">Результаты не найдены</h3>
               <p className="text-gray-500 mb-6">
-                Мы не смогли найти таланты, соответствующие критериям поиска.
+                Мы не смогли найти резюме, соответствующие критериям поиска.
               </p>
               <Button asChild variant="outline">
                 <Link href="/talent">Очистить все фильтры</Link>
               </Button>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-              {filteredResumes.map((resume) => (
-                <Card key={resume.id} className="overflow-hidden hover:shadow-md transition-all text-center">
-                  <CardHeader className="pb-3 pt-6">
-                    <div className="mx-auto h-20 w-20 rounded-full overflow-hidden">
-                      <Avatar className="h-20 w-20">
-                        <AvatarImage src={resume.user.avatar || undefined} alt={resume.user.fullName} />
-                        <AvatarFallback className="text-lg">
-                          {resume.user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                    </div>
-                    <h3 className="mt-4 text-lg font-medium text-gray-900">{resume.user.fullName}</h3>
-                    <p className="text-sm text-gray-500">{resume.title}</p>
-                  </CardHeader>
-                  
-                  <CardContent className="pb-4">
-                    <div className="flex flex-wrap justify-center gap-1 mb-4">
-                      {resume.skills.slice(0, 3).map((skill, index) => (
-                        <Badge key={index} variant="outline" className="bg-blue-50">
-                          {skill}
-                        </Badge>
-                      ))}
-                      {resume.skills.length > 3 && (
-                        <Badge variant="outline" className="bg-blue-50">
-                          +{resume.skills.length - 3} ещё
-                        </Badge>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {filteredResumes.map((resume) => {
+                const skills = getResumeSkills(resume);
+                const user = userData?.[resume.userId];
+                
+                return (
+                  <Card key={resume.id} className="overflow-hidden hover:shadow-md transition-all">
+                    <CardHeader className="pb-3">
+                      <h3 className="text-lg font-medium text-gray-900">{resume.title}</h3>
+                      {resume.direction && (
+                        <p className="text-sm text-gray-500 mb-2">{resume.direction}</p>
                       )}
-                    </div>
-                  </CardContent>
-                  
-                  <CardFooter className="pt-0 flex justify-center">
-                    <Link href={`/talent/${resume.id}`}>
-                      <Button className="w-full">
-                        Просмотр профиля
-                      </Button>
-                    </Link>
-                  </CardFooter>
-                </Card>
-              ))}
+                      
+                      {user && (
+                        <div className="flex items-center mt-2">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-primary truncate">
+                              {user.fullName}
+                            </p>
+                            {getEducationDisplay(resume)}
+                          </div>
+                        </div>
+                      )}
+                    </CardHeader>
+                    
+                    <CardContent className="pb-4">
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {skills.slice(0, 5).map((skill, index) => (
+                          <Badge key={index} variant="outline" className="bg-blue-50">
+                            {skill}
+                          </Badge>
+                        ))}
+                        {skills.length > 5 && (
+                          <Badge variant="outline" className="bg-blue-50">
+                            +{skills.length - 5} ещё
+                          </Badge>
+                        )}
+                      </div>
+                    </CardContent>
+                    
+                    <CardFooter className="pt-0 flex justify-end">
+                      <Link href={`/talent/${resume.id}`}>
+                        <Button>
+                          Просмотр резюме
+                        </Button>
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
             </div>
           )}
           
-          {/* Post a resume CTA for applicants */}
-          {user?.userType === "applicant" && (
+          {/* Create resume CTA for logged-in users */}
+          {user && (
             <div className="mt-12 bg-primary rounded-lg p-8 text-white text-center">
               <h2 className="text-2xl font-bold mb-2">Покажите свои навыки владельцам проектов</h2>
               <p className="mb-6 text-blue-100">
