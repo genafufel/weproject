@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ArrowLeft, Loader2, Mail, Calendar, Building, GraduationCap, Edit } from "lucide-react";
+import { ArrowLeft, Loader2, Mail, Calendar, Building, GraduationCap, Edit, Image } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Resume } from "@shared/schema";
 import {
@@ -296,6 +296,10 @@ export default function TalentDetail() {
   
   // Получаем опыт работы
   const experience = getExperience(resume);
+  
+  // Получаем фотографии резюме
+  const photos = Array.isArray(resume.photos) ? resume.photos : [];
+  console.log("Фотографии резюме:", photos);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -454,6 +458,31 @@ export default function TalentDetail() {
             
             {/* Main content */}
             <div className="lg:col-span-2 space-y-6">
+              {/* Portfolio photos section */}
+              {photos.length > 0 && (
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle className="flex items-center">
+                      <Image className="mr-2 h-5 w-5 text-primary" />
+                      Портфолио
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {photos.map((photo, index) => (
+                        <div key={index} className="overflow-hidden rounded-md aspect-video">
+                          <img 
+                            src={photo} 
+                            alt={`Портфолио ${index + 1}`} 
+                            className="object-cover w-full h-full transition-transform hover:scale-105"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+              
               {/* Education section */}
               <Card>
                 <CardHeader className="pb-3">

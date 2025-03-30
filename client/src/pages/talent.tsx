@@ -214,6 +214,24 @@ export default function Talent() {
     return [];
   };
 
+  // Helper to get resume photos
+  const getResumePhotos = (resume: Resume): string[] => {
+    if (!resume.photos) return [];
+    
+    try {
+      if (typeof resume.photos === 'string') {
+        return JSON.parse(resume.photos);
+      }
+      if (Array.isArray(resume.photos)) {
+        return resume.photos;
+      }
+    } catch (e) {
+      console.error("Failed to parse photos", e);
+    }
+    
+    return [];
+  };
+
   // Helper to display education
   const getEducationDisplay = (resume: Resume) => {
     if (!resume.education) return null;
@@ -405,8 +423,21 @@ export default function Talent() {
                 const resumeUser = userData?.[resume.userId];
                 const isOwnResume = user && resumeUser && user.id === resume.userId;
                 
+                const photos = getResumePhotos(resume);
+                const hasPhoto = photos.length > 0;
+                
                 return (
                   <Card key={resume.id} className="overflow-hidden hover:shadow-md transition-all">
+                    {hasPhoto && (
+                      <div className="aspect-[16/9] w-full overflow-hidden">
+                        <img 
+                          src={photos[0]} 
+                          alt={`Фото из портфолио ${resume.title}`} 
+                          className="w-full h-full object-cover transition-all hover:scale-105"
+                        />
+                      </div>
+                    )}
+                    
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
                         <h3 className="text-lg font-medium text-gray-900">{resume.title}</h3>
@@ -452,6 +483,11 @@ export default function Talent() {
                           </Badge>
                         )}
                       </div>
+                      {hasPhoto && photos.length > 1 && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          +{photos.length - 1} ещё {photos.length - 1 === 1 ? 'фото' : 'фото'} в портфолио
+                        </p>
+                      )}
                     </CardContent>
                     
                     <CardFooter className="pt-0 flex justify-between">
