@@ -27,120 +27,145 @@ export default function Messages() {
   const [activeContactId, setActiveContactId] = useState<number | null>(initialContactId);
   const [messageText, setMessageText] = useState("");
   
-  // Fetch user's contacts - in a real implementation, this would be an API call
-  // to get users the current user has messaged with
+  // Получаем все сообщения текущего пользователя
+  const {
+    data: userMessages,
+    isLoading: messagesDataLoading,
+    refetch: refetchMessages,
+  } = useQuery({
+    queryKey: ["/api/messages"],
+    queryFn: async () => {
+      const res = await fetch("/api/messages");
+      if (!res.ok) {
+        throw new Error("Failed to fetch messages");
+      }
+      return res.json();
+    },
+    enabled: !!user,
+  });
+  
+  // Получаем данные контактов, с которыми есть переписка
   const {
     data: contacts,
     isLoading: contactsLoading,
   } = useQuery({
     queryKey: ["/api/messages/contacts"],
-    enabled: false, // Disabled since we don't have this endpoint
+    queryFn: async () => {
+      // Если у нас есть все сообщения пользователя, мы можем сформировать список контактов
+      if (!userMessages) return [];
+      
+      // Получаем уникальные ID пользователей, с которыми общался текущий пользователь
+      const contactIdsSet = new Set<number>();
+      
+      userMessages.forEach((message: any) => {
+        if (message.senderId !== user?.id) {
+          contactIdsSet.add(message.senderId);
+        }
+        if (message.receiverId !== user?.id) {
+          contactIdsSet.add(message.receiverId);
+        }
+      });
+      
+      const contactsList = [];
+      const contactIds = Array.from(contactIdsSet);
+      
+      // Для каждого контакта получаем последнее сообщение
+      for (const contactId of contactIds) {
+        // Пропускаем самого себя (если такие сообщения есть)
+        if (contactId === user?.id) continue;
+        
+        try {
+          const userRes = await fetch(`/api/users/${contactId}`);
+          if (!userRes.ok) continue;
+          
+          const contactUser = await userRes.json();
+          
+          // Находим последнее сообщение в диалоге
+          const conversationMessages = userMessages.filter((msg: any) => 
+            (msg.senderId === user?.id && msg.receiverId === contactId) || 
+            (msg.senderId === contactId && msg.receiverId === user?.id)
+          );
+          
+          // Сортируем по времени создания (от нового к старому)
+          conversationMessages.sort((a: any, b: any) => 
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          );
+          
+          const lastMessage = conversationMessages[0];
+          
+          // Считаем количество непрочитанных сообщений
+          const unreadCount = conversationMessages.filter((msg: any) => 
+            msg.receiverId === user?.id && msg.senderId === contactId && !msg.read
+          ).length;
+          
+          contactsList.push({
+            id: contactId,
+            fullName: contactUser.fullName,
+            avatar: contactUser.avatar,
+            lastMessage: lastMessage.content,
+            lastMessageTime: new Date(lastMessage.createdAt),
+            unread: unreadCount,
+          });
+        } catch (error) {
+          console.error(`Failed to fetch contact ${contactId}:`, error);
+        }
+      }
+      
+      return contactsList;
+    },
+    enabled: !!user && !!userMessages,
   });
   
-  // Mock contacts data
-  const mockContacts = [
-    {
-      id: 101,
-      fullName: "Alex Johnson",
-      avatar: null,
-      lastMessage: "Thanks for your interest in my project!",
-      lastMessageTime: new Date(Date.now() - 1000 * 60 * 5), // 5 minutes ago
-      unread: 2,
-    },
-    {
-      id: 102,
-      fullName: "Maya Rodriguez",
-      avatar: null,
-      lastMessage: "When can you start working on this?",
-      lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-      unread: 0,
-    },
-    {
-      id: 103,
-      fullName: "Kai Zhang",
-      avatar: null,
-      lastMessage: "I'll send you the project details soon",
-      lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-      unread: 0,
-    },
-  ];
-  
-  // Fetch messages for the current conversation
+  // Получаем сообщения для текущего диалога
   const {
-    data: messages,
+    data: conversationMessages,
     isLoading: messagesLoading,
+    refetch: refetchConversation,
   } = useQuery({
     queryKey: [`/api/messages?userId=${activeContactId}`],
+    queryFn: async () => {
+      const res = await fetch(`/api/messages?userId=${activeContactId}`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch conversation messages");
+      }
+      return res.json();
+    },
     enabled: !!activeContactId && !!user,
   });
   
-  // Mock messages data
-  const mockMessages = activeContactId ? [
-    {
-      id: 1,
-      senderId: user?.id || 1,
-      receiverId: activeContactId,
-      content: "Hi there! I'm interested in your project.",
-      createdAt: new Date(Date.now() - 1000 * 60 * 60),
-      read: true,
-    },
-    {
-      id: 2,
-      senderId: activeContactId,
-      receiverId: user?.id || 1,
-      content: "Thanks for reaching out! What specific aspects of the project interest you?",
-      createdAt: new Date(Date.now() - 1000 * 60 * 30),
-      read: true,
-    },
-    {
-      id: 3,
-      senderId: user?.id || 1,
-      receiverId: activeContactId,
-      content: "I'm particularly interested in the UI/UX part of the project. I have experience in Figma and Adobe XD.",
-      createdAt: new Date(Date.now() - 1000 * 60 * 25),
-      read: true,
-    },
-    {
-      id: 4,
-      senderId: activeContactId,
-      receiverId: user?.id || 1,
-      content: "That's great! We're definitely looking for someone with those skills. Can you tell me a bit more about your previous experience?",
-      createdAt: new Date(Date.now() - 1000 * 60 * 10),
-      read: true,
-    },
-  ] : [];
-  
-  // Send message mutation
+  // Отправка сообщения
   const sendMessage = async () => {
     if (!messageText.trim() || !activeContactId) return;
     
     try {
-      // In a real implementation, this would be an API call
-      // await apiRequest("POST", "/api/messages", {
-      //   receiverId: activeContactId,
-      //   content: messageText,
-      // });
-      
-      // For now, we'll just add the message to our mock data
-      mockMessages.push({
-        id: Math.random(),
-        senderId: user?.id || 1,
-        receiverId: activeContactId,
-        content: messageText,
-        createdAt: new Date(),
-        read: false,
+      // Реальный API запрос
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          receiverId: activeContactId,
+          content: messageText.trim(),
+        }),
       });
       
-      // Clear the input
-      setMessageText("");
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
       
-      // Scroll to bottom
+      // Очищаем поле ввода и обновляем данные
+      setMessageText("");
+      refetchMessages();
+      refetchConversation();
+      
+      // Прокручиваем в конец списка сообщений
       scrollToBottom();
       
     } catch (error) {
       toast({
-        title: "Failed to send message",
-        description: "Please try again later.",
+        title: "Ошибка отправки",
+        description: "Не удалось отправить сообщение. Пожалуйста, попробуйте позже.",
         variant: "destructive",
       });
     }
@@ -208,7 +233,7 @@ export default function Messages() {
   // Scroll to bottom when messages change
   useEffect(() => {
     scrollToBottom();
-  }, [mockMessages]);
+  }, [conversationMessages]);
   
   // Handle send on Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -260,17 +285,17 @@ export default function Messages() {
                 </div>
                 
                 <ScrollArea className="h-[540px]">
-                  {contactsLoading ? (
+                  {contactsLoading || messagesDataLoading ? (
                     <div className="flex justify-center items-center h-full">
                       <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     </div>
-                  ) : mockContacts.length === 0 ? (
+                  ) : contacts && contacts.length === 0 ? (
                     <div className="text-center p-4 text-gray-500">
-                      No conversations yet
+                      У вас пока нет сообщений
                     </div>
                   ) : (
                     <div>
-                      {mockContacts.map((contact) => (
+                      {contacts && contacts.map((contact: any) => (
                         <div key={contact.id}>
                           <button
                             className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${
@@ -282,7 +307,7 @@ export default function Messages() {
                               <Avatar className="h-10 w-10 mr-3">
                                 <AvatarImage src={contact.avatar || undefined} alt={contact.fullName} />
                                 <AvatarFallback>
-                                  {contact.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                                  {contact.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
                                 </AvatarFallback>
                               </Avatar>
                               <div className="flex-1 min-w-0">
@@ -325,16 +350,16 @@ export default function Messages() {
                     <div className="p-4 border-b border-gray-200 flex items-center">
                       <Avatar className="h-10 w-10 mr-3">
                         <AvatarImage
-                          src={mockContacts.find(c => c.id === activeContactId)?.avatar || undefined}
-                          alt={mockContacts.find(c => c.id === activeContactId)?.fullName || "Contact"}
+                          src={contacts?.find((c: any) => c.id === activeContactId)?.avatar || undefined}
+                          alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
                         />
                         <AvatarFallback>
-                          {mockContacts.find(c => c.id === activeContactId)?.fullName.split(' ').map(n => n[0]).join('').toUpperCase() || "?"}
+                          {contacts?.find((c: any) => c.id === activeContactId)?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "?"}
                         </AvatarFallback>
                       </Avatar>
                       <div>
                         <h3 className="text-sm font-medium text-gray-900">
-                          {mockContacts.find(c => c.id === activeContactId)?.fullName || "Contact"}
+                          {contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
                         </h3>
                       </div>
                     </div>
@@ -345,22 +370,22 @@ export default function Messages() {
                         <div className="flex justify-center items-center h-full">
                           <Loader2 className="h-6 w-6 animate-spin text-primary" />
                         </div>
-                      ) : mockMessages.length === 0 ? (
+                      ) : !conversationMessages || conversationMessages.length === 0 ? (
                         <div className="text-center p-4 text-gray-500">
-                          No messages yet. Start the conversation!
+                          Сообщений пока нет. Начните диалог!
                         </div>
                       ) : (
                         <div className="space-y-4">
-                          {mockMessages.map((message) => (
+                          {conversationMessages.map((message: any) => (
                             <div
                               key={message.id}
                               className={`flex ${
-                                message.senderId === user.id ? "justify-end" : "justify-start"
+                                message.senderId === user?.id ? "justify-end" : "justify-start"
                               }`}
                             >
                               <div
                                 className={`max-w-[75%] rounded-lg px-4 py-2 ${
-                                  message.senderId === user.id
+                                  message.senderId === user?.id
                                     ? "bg-primary text-white"
                                     : "bg-gray-100 text-gray-900"
                                 }`}
@@ -368,7 +393,7 @@ export default function Messages() {
                                 <p className="break-words">{message.content}</p>
                                 <div
                                   className={`text-xs mt-1 ${
-                                    message.senderId === user.id ? "text-blue-100" : "text-gray-500"
+                                    message.senderId === user?.id ? "text-blue-100" : "text-gray-500"
                                   }`}
                                 >
                                   {formatMessageTime(new Date(message.createdAt))}

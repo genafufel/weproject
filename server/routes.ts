@@ -692,6 +692,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (otherUserId) {
       // Get conversation between current user and specified user
       const conversation = await storage.getConversation(req.user!.id, otherUserId);
+      
+      // Автоматически помечаем сообщения как прочитанные
+      for (const message of conversation) {
+        if (message.receiverId === req.user!.id && !message.read) {
+          await storage.markMessageAsRead(message.id);
+        }
+      }
+      
       res.json(conversation);
     } else {
       // Get all messages for the current user
@@ -748,6 +756,83 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } else {
       res.status(500).json({ message: "Failed to mark message as read" });
     }
+  });
+  
+  // Эндпоинт для получения списка контактов пользователя
+  app.get("/api/messages/contacts", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    // Получаем все сообщения текущего пользователя
+    const userMessages = await storage.getMessagesByUserId(req.user!.id);
+    
+    // Извлекаем уникальные ID контактов
+    const contactIdsSet = new Set<number>();
+    
+    userMessages.forEach(message => {
+      if (message.senderId !== req.user!.id) {
+        contactIdsSet.add(message.senderId);
+      }
+      if (message.receiverId !== req.user!.id) {
+        contactIdsSet.add(message.receiverId);
+      }
+    });
+    
+    // Убираем ID самого пользователя, если он есть в списке
+    contactIdsSet.delete(req.user!.id);
+    
+    // Преобразуем Set в массив
+    const contactIds = Array.from(contactIdsSet);
+    
+    // Список контактов с данными
+    const contactsList = [];
+    
+    // Для каждого ID получаем информацию о пользователе и последнем сообщении
+    for (const contactId of contactIds) {
+      const contactUser = await storage.getUser(contactId);
+      
+      if (!contactUser) continue;
+      
+      // Находим сообщения между текущим пользователем и контактом
+      const conversationMessages = userMessages.filter(msg => 
+        (msg.senderId === req.user!.id && msg.receiverId === contactId) || 
+        (msg.senderId === contactId && msg.receiverId === req.user!.id)
+      );
+      
+      // Если сообщений нет, пропускаем
+      if (conversationMessages.length === 0) continue;
+      
+      // Сортируем по времени создания (от нового к старому)
+      conversationMessages.sort((a, b) => 
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+      
+      // Берём последнее сообщение
+      const lastMessage = conversationMessages[0];
+      
+      // Считаем непрочитанные сообщения (только те, где пользователь - получатель)
+      const unreadCount = conversationMessages.filter(msg => 
+        msg.receiverId === req.user!.id && msg.senderId === contactId && !msg.read
+      ).length;
+      
+      // Формируем контакт
+      const contact = {
+        id: contactId,
+        fullName: contactUser.fullName,
+        avatar: contactUser.avatar,
+        lastMessage: lastMessage.content,
+        lastMessageTime: lastMessage.createdAt,
+        unread: unreadCount,
+      };
+      
+      contactsList.push(contact);
+    }
+    
+    // Сортируем контакты по времени последнего сообщения (от нового к старому)
+    contactsList.sort((a, b) => 
+      new Date(b.lastMessageTime).getTime() - new Date(a.lastMessageTime).getTime()
+    );
+    
+    res.json(contactsList);
   });
 
   // Маршруты для верификации пользователя
