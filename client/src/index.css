@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --secondary: 207 32% 67.5%;  /* Это #94B2C4 в формате HSL */
+    --secondary: 203 22% 79%;  /* Это #BFCED6 в формате HSL */
     --secondary-foreground: 222.2 47.4% 11.2%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -20,7 +20,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 207 32% 67.5%;
+    --ring: 203 22% 79%;
   }
   
   * {
@@ -44,57 +44,57 @@
   
   /* Фоны для бэкграундов */
   .bg-blue-500, .bg-blue-600, .bg-blue-700 {
-    background-color: #94B2C4 !important; /* Голубовато-серый */
+    background-color: #BFCED6 !important; /* Светлый голубовато-серый */
   }
   
   .bg-blue-800, .bg-blue-900 {
-    background-color: #94B2C4 !important; /* Голубовато-серый */
+    background-color: #BFCED6 !important; /* Светлый голубовато-серый */
   }
   
   /* Стили для кнопок */
   .btn-primary, 
   button[data-variant="primary"], 
   button[data-state="active"] {
-    background-color: #94B2C4 !important;
-    border-color: #7A98AA !important;  /* Немного темнее для границ */
+    background-color: #BFCED6 !important;
+    border-color: #A5B7C1 !important;  /* Немного темнее для границ */
   }
   
   /* Границы */
   .border-blue-500, .border-blue-600, .border-blue-700 {
-    border-color: #94B2C4 !important;
+    border-color: #BFCED6 !important;
   }
   
   /* Переопределение цвета в badges и тегах */
   .badge[data-variant="primary"] {
-    background-color: #94B2C4 !important;
+    background-color: #BFCED6 !important;
   }
   
   /* Дополнительные стили для цветных элементов */
   [class*="bg-blue"], [class*="bg-purple"], [class*="bg-indigo"] {
-    background-color: #94B2C4 !important;
+    background-color: #BFCED6 !important;
   }
   
   [class*="border-blue"], [class*="border-purple"], [class*="border-indigo"] {
-    border-color: #94B2C4 !important;
+    border-color: #BFCED6 !important;
   }
   
   [class*="text-blue"], [class*="text-purple"], [class*="text-indigo"] {
-    color: #94B2C4 !important;
+    color: #BFCED6 !important;
   }
   
   /* Стили для фонов секций */
   .bg-primary {
-    background-color: #94B2C4 !important;
+    background-color: #BFCED6 !important;
   }
   
   /* Стили для кнопок и интерактивных элементов */
   .btn, button:not([data-variant="outline"]):not([data-variant="ghost"]):not([data-variant="link"]) {
-    background-color: #94B2C4 !important;
-    border-color: #7A98AA !important;  /* Немного темнее для границ */
+    background-color: #BFCED6 !important;
+    border-color: #A5B7C1 !important;  /* Немного темнее для границ */
   }
   
   /* Стили для значков и иконок */
   .icon {
-    color: #94B2C4 !important;
+    color: #BFCED6 !important;
   }
 }
