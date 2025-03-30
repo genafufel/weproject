@@ -72,10 +72,10 @@ export default function HomePage() {
           <div className="absolute inset-0">
             <img
               className="h-full w-full object-cover"
-              src="https://images.unsplash.com/photo-1620476214170-1d8080f65cdb?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
-              alt="Текстура деревянных досок"
+              src="https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+              alt="Страницы открытой книги"
             />
-            <div className="absolute inset-0 bg-gray-900 bg-opacity-55"></div>
+            <div className="absolute inset-0 bg-gray-900 bg-opacity-60"></div>
           </div>
           
           {/* Контейнер для контента */}
