@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --secondary: 207 100% 55%;  /* Это #1899FF в формате HSL */
+    --secondary: 220 90% 80%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -20,7 +20,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 207 100% 55%;
+    --ring: 221.2 83.2% 53.3%;
   }
   
   * {
@@ -35,66 +35,5 @@
   textarea,
   select {
     @apply bg-white;
-  }
-  
-  /* Затемненные фоны, кнопки и фигуры */
-  .bg-primary {
-    background-color: var(--primary);
-  }
-  
-  /* Фоны для бэкграундов */
-  .bg-blue-500, .bg-blue-600, .bg-blue-700 {
-    background-color: #1899FF !important; /* Яркий голубой */
-  }
-  
-  .bg-blue-800, .bg-blue-900 {
-    background-color: #1899FF !important; /* Яркий голубой */
-  }
-  
-  /* Стили для кнопок */
-  .btn-primary, 
-  button[data-variant="primary"], 
-  button[data-state="active"] {
-    background-color: #1899FF !important;
-    border-color: #007FE6 !important;  /* Немного темнее для границ */
-  }
-  
-  /* Границы */
-  .border-blue-500, .border-blue-600, .border-blue-700 {
-    border-color: #1899FF !important;
-  }
-  
-  /* Переопределение цвета в badges и тегах */
-  .badge[data-variant="primary"] {
-    background-color: #1899FF !important;
-  }
-  
-  /* Дополнительные стили для цветных элементов */
-  [class*="bg-blue"], [class*="bg-purple"], [class*="bg-indigo"] {
-    background-color: #1899FF !important;
-  }
-  
-  [class*="border-blue"], [class*="border-purple"], [class*="border-indigo"] {
-    border-color: #1899FF !important;
-  }
-  
-  [class*="text-blue"], [class*="text-purple"], [class*="text-indigo"] {
-    color: #1899FF !important;
-  }
-  
-  /* Стили для фонов секций */
-  .bg-primary {
-    background-color: #1899FF !important;
-  }
-  
-  /* Стили для кнопок и интерактивных элементов */
-  .btn, button:not([data-variant="outline"]):not([data-variant="ghost"]):not([data-variant="link"]) {
-    background-color: #1899FF !important;
-    border-color: #007FE6 !important;  /* Немного темнее для границ */
-  }
-  
-  /* Стили для значков и иконок */
-  .icon {
-    color: #1899FF !important;
   }
 }
