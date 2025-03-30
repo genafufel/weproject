@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --secondary: 210.7 100% 31.0%;  /* Это #004e9f в формате HSL */
+    --secondary: 298.5 94.3% 16.3%;  /* Это #510353 в формате HSL */
     --secondary-foreground: 222.2 47.4% 11.2%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -20,7 +20,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 210.7 100% 31.0%;
+    --ring: 298.5 94.3% 16.3%;
   }
   
   * {
@@ -44,53 +44,57 @@
   
   /* Фоны для бэкграундов */
   .bg-blue-500, .bg-blue-600, .bg-blue-700 {
-    background-color: #004e9f !important; /* Темно-синий */
+    background-color: #510353 !important; /* Темно-фиолетовый */
   }
   
   .bg-blue-800, .bg-blue-900 {
-    background-color: #004e9f !important; /* Темно-синий */
+    background-color: #510353 !important; /* Темно-фиолетовый */
   }
   
   /* Стили для кнопок */
   .btn-primary, 
   button[data-variant="primary"], 
   button[data-state="active"] {
-    background-color: #004e9f !important;
-    border-color: #003f80 !important;  /* Немного темнее для границ */
+    background-color: #510353 !important;
+    border-color: #400242 !important;  /* Немного темнее для границ */
   }
   
   /* Границы */
   .border-blue-500, .border-blue-600, .border-blue-700 {
-    border-color: #004e9f !important;
+    border-color: #510353 !important;
   }
   
   /* Переопределение цвета в badges и тегах */
   .badge[data-variant="primary"] {
-    background-color: #004e9f !important;
+    background-color: #510353 !important;
   }
   
-  /* Дополнительные стили для синих элементов */
-  [class*="bg-blue"] {
-    background-color: #004e9f !important;
+  /* Дополнительные стили для цветных элементов */
+  [class*="bg-blue"], [class*="bg-purple"], [class*="bg-indigo"] {
+    background-color: #510353 !important;
   }
   
-  [class*="border-blue"] {
-    border-color: #004e9f !important;
+  [class*="border-blue"], [class*="border-purple"], [class*="border-indigo"] {
+    border-color: #510353 !important;
+  }
+  
+  [class*="text-blue"], [class*="text-purple"], [class*="text-indigo"] {
+    color: #510353 !important;
   }
   
   /* Стили для фонов секций */
   .bg-primary {
-    background-color: #004e9f !important;
+    background-color: #510353 !important;
   }
   
   /* Стили для кнопок и интерактивных элементов */
   .btn, button:not([data-variant="outline"]):not([data-variant="ghost"]):not([data-variant="link"]) {
-    background-color: #004e9f !important;
-    border-color: #003f80 !important;  /* Немного темнее для границ */
+    background-color: #510353 !important;
+    border-color: #400242 !important;  /* Немного темнее для границ */
   }
   
   /* Стили для значков и иконок */
-  .icon, svg[class*="text-blue"] {
-    color: #004e9f !important;
+  .icon {
+    color: #510353 !important;
   }
 }
