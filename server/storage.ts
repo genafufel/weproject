@@ -405,7 +405,8 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: now, 
       updatedAt: now,
-      talents: insertResume.talents || ({} as any)
+      talents: insertResume.talents || ({} as any),
+      photos: insertResume.photos || ({} as any)
     };
     this.resumes.set(id, resume);
     return resume;

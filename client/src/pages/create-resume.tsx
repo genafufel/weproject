@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation } from "wouter";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm, useFieldArray } from "react-hook-form";
@@ -29,7 +29,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { PlusIcon, X, Loader2, Trash2 } from "lucide-react";
+import { PlusIcon, X, Loader2, Trash2, ImageIcon, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 // Extend the education schema
@@ -59,6 +59,7 @@ const resumeFormSchema = insertResumeSchema.extend({
   experience: z.array(experienceSchema),
   skills: z.array(z.string()),
   talents: z.array(z.string()),
+  photos: z.array(z.string()),
 }).omit({ userId: true });
 
 type ResumeFormValues = z.infer<typeof resumeFormSchema>;
@@ -87,6 +88,8 @@ export default function CreateResume() {
   const [isAddingSkill, setIsAddingSkill] = useState(false);
   const [isAddingTalent, setIsAddingTalent] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Get resume ID from URL if it exists
   const searchParams = new URLSearchParams(location.split("?")[1]);
@@ -116,6 +119,7 @@ export default function CreateResume() {
       skills: [],
       direction: "",
       talents: [],
+      photos: [],
       newSkill: "",
       newTalent: "",
     },
@@ -150,6 +154,7 @@ export default function CreateResume() {
         const experienceData = processArrayOrJSON(typedData.experience);
         const skillsData = processArrayOrJSON(typedData.skills);
         const talentsData = processArrayOrJSON(typedData.talents);
+        const photosData = processArrayOrJSON(typedData.photos);
         
         // Reset form with values from loaded resume
         form.reset({
@@ -166,6 +171,7 @@ export default function CreateResume() {
           experience: experienceData.length > 0 ? experienceData : [],
           skills: skillsData,
           talents: talentsData,
+          photos: photosData,
           newSkill: "",
           newTalent: "",
         });
@@ -184,16 +190,19 @@ export default function CreateResume() {
   
   // Set up field arrays
   const { fields: skillFields, append: appendSkill, remove: removeSkill } = 
-    useFieldArray<ResumeFormValues, 'skills', 'id'>({ control: form.control, name: "skills" });
+    useFieldArray({ control: form.control, name: "skills" });
   
   const { fields: talentFields, append: appendTalent, remove: removeTalent } = 
-    useFieldArray<ResumeFormValues, 'talents', 'id'>({ control: form.control, name: "talents" });
+    useFieldArray({ control: form.control, name: "talents" });
     
   const { fields: educationFields, append: appendEducation, remove: removeEducation } = 
     useFieldArray({ control: form.control, name: "education" });
     
   const { fields: experienceFields, append: appendExperience, remove: removeExperience } = 
     useFieldArray({ control: form.control, name: "experience" });
+    
+  const { fields: photoFields, append: appendPhoto, remove: removePhoto } = 
+    useFieldArray({ control: form.control, name: "photos" });
   
   // Add a new skill
   const handleAddSkill = () => {
@@ -212,6 +221,52 @@ export default function CreateResume() {
       appendTalent(newTalent as any);
       form.setValue("newTalent", "");
       setIsAddingTalent(false);
+    }
+  };
+  
+  // Handle photo upload
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    
+    try {
+      setIsUploading(true);
+      
+      const formData = new FormData();
+      formData.append('photo', file);
+      
+      const response = await fetch('/api/upload/resume-photo', {
+        method: 'POST',
+        body: formData,
+      });
+      
+      if (!response.ok) {
+        throw new Error('Ошибка загрузки фотографии');
+      }
+      
+      const data = await response.json();
+      console.log('Upload successful:', data);
+      
+      if (data.fileUrl) {
+        appendPhoto(data.fileUrl as any);
+        toast({
+          title: 'Фотография загружена',
+          description: 'Фотография успешно добавлена к резюме.',
+        });
+      }
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      toast({
+        title: 'Ошибка загрузки',
+        description: 'Не удалось загрузить фотографию. Пожалуйста, попробуйте еще раз.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsUploading(false);
+      // Сбрасываем input, чтобы можно было загрузить тот же файл повторно
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
   
@@ -752,6 +807,62 @@ export default function CreateResume() {
                     <FormDescription>
                       Выделите свои особые способности, которые выделяют вас среди других.
                     </FormDescription>
+                  </div>
+                  
+                  {/* Photos Section */}
+                  <div>
+                    <FormLabel className="text-base font-medium">Фотографии резюме (необязательно)</FormLabel>
+                    <div className="mt-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mb-4">
+                        {photoFields.map((field, index) => {
+                          // Получаем значение поля из формы
+                          const value = form.getValues(`photos.${index}`);
+                          return (
+                            <div key={field.id} className="relative group">
+                              <img 
+                                src={value} 
+                                alt={`Фото резюме ${index + 1}`} 
+                                className="w-full h-32 object-cover rounded-md shadow-sm border border-gray-200"
+                              />
+                              <Button
+                                type="button"
+                                variant="destructive"
+                                size="sm"
+                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                                onClick={() => removePhoto(index)}
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          );
+                        })}
+                        
+                        <div className={`${photoFields.length === 0 ? 'col-span-full' : ''} flex flex-col items-center justify-center p-4 border border-dashed border-gray-300 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer h-32`} onClick={() => fileInputRef.current?.click()}>
+                          {isUploading ? (
+                            <Loader2 className="h-6 w-6 text-gray-400 animate-spin" />
+                          ) : (
+                            <>
+                              <Upload className="h-6 w-6 text-gray-400 mb-2" />
+                              <p className="text-sm text-gray-500 text-center">
+                                {photoFields.length === 0 ? 'Добавьте фотографии работ, портфолио или навыков' : 'Добавить еще'}
+                              </p>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                      />
+                      
+                      <FormDescription>
+                        Загрузите фотографии ваших работ, портфолио или примеры навыков, чтобы выделиться среди других кандидатов.
+                      </FormDescription>
+                    </div>
                   </div>
                   
                   <div className="flex justify-end gap-4">

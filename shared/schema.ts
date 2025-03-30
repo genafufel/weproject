@@ -30,6 +30,7 @@ export const resumes = pgTable("resumes", {
   skills: jsonb("skills").notNull(),        // Array of skills
   direction: text("direction").notNull(),   // Field/direction of study
   talents: jsonb("talents"),                // Special talents or abilities
+  photos: jsonb("photos"),                 // Array of photo urls
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
