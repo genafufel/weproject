@@ -68,14 +68,20 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Фоновое изображение секции */}
-          <div className="absolute inset-0">
-            <img
-              className="h-full w-full object-cover"
-              src="/images/book-page-text.jpg"
-              alt="Одна страница книги крупным планом"
-            />
-            <div className="absolute inset-0 bg-gray-900 bg-opacity-45"></div>
+          {/* Фоновое изображение секции - используем градиент с акцентом на лист бумаги */}
+          <div className="absolute inset-0 bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200">
+            {/* Имитация текста на странице с высоким контрастом */}
+            <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+              <div className="w-full h-full relative overflow-hidden">
+                <div className="absolute inset-0 p-12">
+                  <div className="grid grid-cols-1 gap-2 opacity-10">
+                    {Array(40).fill(0).map((_, i) => (
+                      <div key={i} className="h-2 bg-black rounded" style={{ width: `${Math.random() * 60 + 40}%` }}></div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           
           {/* Контейнер для контента */}
