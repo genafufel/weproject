@@ -557,7 +557,7 @@ export default function Talent() {
                 Создайте привлекательное резюме, чтобы привлечь внимание стартапов и создателей проектов.
               </p>
               <Link href="/create-resume">
-                <Button variant="secondary" size="lg">
+                <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-100">
                   Создать резюме
                 </Button>
               </Link>
