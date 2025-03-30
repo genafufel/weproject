@@ -42,6 +42,8 @@ export default function Messages() {
       return res.json();
     },
     enabled: !!user,
+    // Обновляем данные каждые 5 секунд
+    refetchInterval: 5000,
   });
   
   // Получаем данные контактов, с которыми есть переписка
@@ -131,6 +133,8 @@ export default function Messages() {
       return res.json();
     },
     enabled: !!activeContactId && !!user,
+    // Обновляем диалог каждые 3 секунды
+    refetchInterval: 3000,
   });
   
   // Отправка сообщения
@@ -151,21 +155,27 @@ export default function Messages() {
       });
       
       if (!res.ok) {
-        throw new Error("Failed to send message");
+        const errorData = await res.json().catch(() => ({ message: "Неизвестная ошибка" }));
+        throw new Error(errorData.message || "Failed to send message");
       }
       
       // Очищаем поле ввода и обновляем данные
       setMessageText("");
-      refetchMessages();
-      refetchConversation();
+      
+      // Немедленно запрашиваем обновленные данные
+      await Promise.all([
+        refetchMessages(),
+        refetchConversation()
+      ]);
       
       // Прокручиваем в конец списка сообщений
       scrollToBottom();
       
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Ошибка отправки сообщения:", error);
       toast({
         title: "Ошибка отправки",
-        description: "Не удалось отправить сообщение. Пожалуйста, попробуйте позже.",
+        description: error.message || "Не удалось отправить сообщение. Пожалуйста, попробуйте позже.",
         variant: "destructive",
       });
     }
