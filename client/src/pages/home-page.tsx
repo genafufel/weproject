@@ -72,7 +72,7 @@ export default function HomePage() {
           <div className="absolute inset-0">
             <img
               className="h-full w-full object-cover"
-              src="https://images.unsplash.com/photo-1490632577164-8b666de7c0b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"
+              src="https://images.pexels.com/photos/276205/pexels-photo-276205.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
               alt="Одна страница книги крупным планом"
             />
             <div className="absolute inset-0 bg-gray-900 bg-opacity-50"></div>
