@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --secondary: 220 80% 45%;
+    --secondary: 218.5 82.0% 66.1%;  /* Это #6495ED в формате HSL */
     --secondary-foreground: 222.2 47.4% 11.2%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -20,7 +20,7 @@
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 33.3%;
+    --ring: 218.5 82.0% 66.1%;
   }
   
   * {
@@ -44,53 +44,53 @@
   
   /* Фоны для бэкграундов */
   .bg-blue-500, .bg-blue-600, .bg-blue-700 {
-    background-color: hsl(222, 80%, 50%) !important; /* Светло-синий */
+    background-color: #6495ED !important; /* Cornflower Blue */
   }
   
   .bg-blue-800, .bg-blue-900 {
-    background-color: hsl(222, 80%, 45%) !important; /* Средне-синий */
+    background-color: #6495ED !important; /* Cornflower Blue */
   }
   
   /* Стили для кнопок */
   .btn-primary, 
   button[data-variant="primary"], 
   button[data-state="active"] {
-    background-color: hsl(222, 80%, 45%) !important;
-    border-color: hsl(222, 80%, 40%) !important;
+    background-color: #6495ED !important;
+    border-color: #5285e3 !important;  /* Немного темнее для границ */
   }
   
   /* Границы */
   .border-blue-500, .border-blue-600, .border-blue-700 {
-    border-color: hsl(222, 80%, 45%) !important;
+    border-color: #6495ED !important;
   }
   
   /* Переопределение цвета в badges и тегах */
   .badge[data-variant="primary"] {
-    background-color: hsl(222, 80%, 45%) !important;
+    background-color: #6495ED !important;
   }
   
   /* Дополнительные стили для синих элементов */
   [class*="bg-blue"] {
-    background-color: hsl(222, 80%, 45%) !important;
+    background-color: #6495ED !important;
   }
   
   [class*="border-blue"] {
-    border-color: hsl(222, 80%, 45%) !important;
+    border-color: #6495ED !important;
   }
   
   /* Стили для фонов секций */
   .bg-primary {
-    background-color: hsl(222, 80%, 45%) !important;
+    background-color: #6495ED !important;
   }
   
   /* Стили для кнопок и интерактивных элементов */
   .btn, button:not([data-variant="outline"]):not([data-variant="ghost"]):not([data-variant="link"]) {
-    background-color: hsl(222, 80%, 45%) !important;
-    border-color: hsl(222, 80%, 40%) !important;
+    background-color: #6495ED !important;
+    border-color: #5285e3 !important;  /* Немного темнее для границ */
   }
   
   /* Стили для значков и иконок */
   .icon, svg[class*="text-blue"] {
-    color: hsl(222, 80%, 45%) !important;
+    color: #6495ED !important;
   }
 }
