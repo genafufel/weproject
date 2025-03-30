@@ -67,27 +67,37 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <div className="relative bg-white overflow-hidden">
-          <div className="max-w-7xl mx-auto">
-            <div className="relative z-10 pb-8 bg-white sm:pb-16 md:pb-20 lg:max-w-2xl lg:w-full lg:pb-28 xl:pb-32">
-              <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-                <div className="sm:text-center lg:text-left">
-                  <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-                    <span className="block">Вместе. Творите.</span>
-                    <span className="block text-primary">Реализуйте идеи.</span>
-                  </h1>
-                  <p className="mt-3 text-base text-gray-600 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto md:mt-5 md:text-xl lg:mx-0">
-                    Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
-                  </p>
-                  <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-                    <div className="rounded-md shadow">
+        <div className="relative overflow-hidden bg-gray-50">
+          {/* Фоновое изображение секции */}
+          <div className="absolute inset-0">
+            <img
+              className="h-full w-full object-cover"
+              src="https://images.unsplash.com/photo-1497215842964-222b430dc094?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+              alt="Нейтральный рабочий фон"
+            />
+            <div className="absolute inset-0 bg-gray-900 bg-opacity-30"></div>
+          </div>
+          
+          {/* Контейнер для контента */}
+          <div className="relative max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 z-10 lg:py-24">
+            <div className="bg-white rounded-lg shadow-xl overflow-hidden">
+              <div className="lg:grid lg:grid-cols-2">
+                {/* Левая колонка с текстом */}
+                <div className="px-6 py-12 sm:p-16">
+                  <div>
+                    <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
+                      <span className="block">Вместе. Творите.</span>
+                      <span className="block text-primary">Реализуйте идеи.</span>
+                    </h1>
+                    <p className="mt-6 text-lg text-gray-600 max-w-2xl">
+                      Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
+                    </p>
+                    <div className="mt-8 flex flex-col sm:flex-row gap-4">
                       <Link href="/projects">
                         <Button size="lg" className="w-full">
                           Проекты
                         </Button>
                       </Link>
-                    </div>
-                    <div className="mt-3 sm:mt-0 sm:ml-3">
                       <Link href={user ? "/create-project" : "/auth"}>
                         <Button size="lg" variant="outline" className="w-full bg-white hover:bg-gray-50 text-gray-800 border-gray-300">
                           Разместить проект
@@ -96,15 +106,17 @@ export default function HomePage() {
                     </div>
                   </div>
                 </div>
-              </main>
+                
+                {/* Правая колонка с изображением */}
+                <div className="hidden lg:block relative">
+                  <img
+                    className="absolute inset-0 h-full w-full object-cover"
+                    src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+                    alt="Современное рабочее пространство"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-          <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
-            <img
-              className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop"
-              alt="Students collaborating on a project"
-            />
           </div>
         </div>
         
