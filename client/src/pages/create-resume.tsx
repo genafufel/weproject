@@ -146,15 +146,21 @@ export default function CreateResume() {
               return [];
             }
           }
+          // Если это объект (например, пустой объект {}), возвращаем пустой массив
+          if (typeof data === 'object' && Object.keys(data).length === 0) {
+            return [];
+          }
           return [];
         };
+        
+        console.log("Полученные данные резюме:", typedData);
         
         // Обработка данных резюме
         const educationData = processArrayOrJSON(typedData.education);
         const experienceData = processArrayOrJSON(typedData.experience);
-        const skillsData = processArrayOrJSON(typedData.skills);
-        const talentsData = processArrayOrJSON(typedData.talents);
-        const photosData = processArrayOrJSON(typedData.photos);
+        const skillsData = Array.isArray(typedData.skills) ? typedData.skills : [];
+        const talentsData = Array.isArray(typedData.talents) ? typedData.talents : [];
+        const photosData = Array.isArray(typedData.photos) ? typedData.photos : [];
         
         // Reset form with values from loaded resume
         form.reset({
