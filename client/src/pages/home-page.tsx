@@ -11,25 +11,25 @@ const fields = [
   {
     title: "IT и технологии",
     description: "Веб-разработка, мобильные приложения, программная инженерия и многое другое.",
-    image: "https://images.unsplash.com/photo-1571171637578-41bc2dd41cd2?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 287,
   },
   {
     title: "Искусство и дизайн",
     description: "Графический дизайн, UX/UI, анимация, иллюстрация и визуальное искусство.",
-    image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1526289034009-0240ddb68ce3?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 145,
   },
   {
     title: "Организация мероприятий",
     description: "Планирование мероприятий, координация, маркетинг и продюсирование.",
-    image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 89,
   },
   {
     title: "Финансы и бизнес",
     description: "Бизнес-анализ, финансовое планирование, бухгалтерский учет и консалтинг.",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?ixlib=rb-1.2.1&auto=format&fit=crop",
     count: 124,
   },
 ];
@@ -102,8 +102,8 @@ export default function HomePage() {
           <div className="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
             <img
               className="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full"
-              src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-1.2.1&auto=format&fit=crop"
-              alt="Professional workspace with laptop and notebook"
+              src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&auto=format&fit=crop"
+              alt="Students collaborating on a project"
             />
           </div>
         </div>
