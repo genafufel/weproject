@@ -304,10 +304,92 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     if (userId) {
       const projects = await storage.getProjectsByUserId(userId);
-      res.json(projects);
+      
+      // Форматируем проекты перед отправкой
+      const formattedProjects = projects.map(project => {
+        const formatted = { ...project };
+        
+        // Форматируем photos
+        if (!formatted.photos) {
+          formatted.photos = [];
+        } else if (!Array.isArray(formatted.photos)) {
+          try {
+            formatted.photos = JSON.parse(formatted.photos as any);
+          } catch {
+            formatted.photos = [];
+          }
+        }
+        
+        // Форматируем positions
+        if (!formatted.positions) {
+          formatted.positions = [];
+        } else if (!Array.isArray(formatted.positions)) {
+          try {
+            formatted.positions = JSON.parse(formatted.positions as any);
+          } catch {
+            formatted.positions = [];
+          }
+        }
+        
+        // Форматируем requirements
+        if (!formatted.requirements) {
+          formatted.requirements = [];
+        } else if (!Array.isArray(formatted.requirements)) {
+          try {
+            formatted.requirements = JSON.parse(formatted.requirements as any);
+          } catch {
+            formatted.requirements = [];
+          }
+        }
+        
+        return formatted;
+      });
+      
+      res.json(formattedProjects);
     } else {
       const projects = await storage.getProjects({ field, remote, search, dateFrom, dateTo });
-      res.json(projects);
+      
+      // Форматируем проекты перед отправкой
+      const formattedProjects = projects.map(project => {
+        const formatted = { ...project };
+        
+        // Форматируем photos
+        if (!formatted.photos) {
+          formatted.photos = [];
+        } else if (!Array.isArray(formatted.photos)) {
+          try {
+            formatted.photos = JSON.parse(formatted.photos as any);
+          } catch {
+            formatted.photos = [];
+          }
+        }
+        
+        // Форматируем positions
+        if (!formatted.positions) {
+          formatted.positions = [];
+        } else if (!Array.isArray(formatted.positions)) {
+          try {
+            formatted.positions = JSON.parse(formatted.positions as any);
+          } catch {
+            formatted.positions = [];
+          }
+        }
+        
+        // Форматируем requirements
+        if (!formatted.requirements) {
+          formatted.requirements = [];
+        } else if (!Array.isArray(formatted.requirements)) {
+          try {
+            formatted.requirements = JSON.parse(formatted.requirements as any);
+          } catch {
+            formatted.requirements = [];
+          }
+        }
+        
+        return formatted;
+      });
+      
+      res.json(formattedProjects);
     }
   });
 
@@ -319,7 +401,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Project not found" });
     }
     
-    res.json(project);
+    // Форматируем проект перед отправкой
+    const formattedProject = { ...project };
+    
+    // Проверяем и преобразуем photos
+    if (!formattedProject.photos) {
+      formattedProject.photos = [];
+    } else if (!Array.isArray(formattedProject.photos)) {
+      try {
+        formattedProject.photos = JSON.parse(formattedProject.photos as any);
+      } catch {
+        formattedProject.photos = [];
+      }
+    }
+    
+    // Проверяем и преобразуем positions
+    if (!formattedProject.positions) {
+      formattedProject.positions = [];
+    } else if (!Array.isArray(formattedProject.positions)) {
+      try {
+        formattedProject.positions = JSON.parse(formattedProject.positions as any);
+      } catch {
+        formattedProject.positions = [];
+      }
+    }
+    
+    // Проверяем и преобразуем requirements
+    if (!formattedProject.requirements) {
+      formattedProject.requirements = [];
+    } else if (!Array.isArray(formattedProject.requirements)) {
+      try {
+        formattedProject.requirements = JSON.parse(formattedProject.requirements as any);
+      } catch {
+        formattedProject.requirements = [];
+      }
+    }
+    
+    res.json(formattedProject);
   });
 
   app.post("/api/projects", async (req, res) => {

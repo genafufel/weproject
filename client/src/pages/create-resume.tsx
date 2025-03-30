@@ -8,6 +8,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/hooks/use-auth";
 import { apiRequest, queryClient, getQueryFn } from "@/lib/queryClient";
+import { useCacheInvalidation } from "@/hooks/use-cache-invalidation";
 import { insertResumeSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -85,6 +86,7 @@ export default function CreateResume() {
   const { user } = useAuth();
   const [location, navigate] = useLocation();
   const { toast } = useToast();
+  const { invalidateResumes } = useCacheInvalidation();
   const [isAddingSkill, setIsAddingSkill] = useState(false);
   const [isAddingTalent, setIsAddingTalent] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -341,7 +343,8 @@ export default function CreateResume() {
       return await res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/resumes?userId=${user?.id}`] });
+      // Используем хук для инвалидации кеша резюме
+      invalidateResumes();
       toast({
         title: "Резюме успешно создано",
         description: "Ваше резюме создано и теперь доступно владельцам проектов.",
@@ -369,8 +372,8 @@ export default function CreateResume() {
       return await res.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/resumes/${resumeId}`] });
-      queryClient.invalidateQueries({ queryKey: [`/api/resumes?userId=${user?.id}`] });
+      // Используем хук для инвалидации кеша резюме, с указанием конкретного ID
+      invalidateResumes(Number(resumeId));
       toast({
         title: "Резюме успешно обновлено",
         description: "Ваше резюме обновлено и изменения видны владельцам проектов.",
