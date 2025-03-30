@@ -68,39 +68,19 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Фон страницы с градиентом */}
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-            {/* Статичный фон с текстовыми строками */}
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="w-full h-full p-10">
-                <div className="grid grid-cols-1 gap-3 opacity-[0.2]">
-                  {Array(25).fill(0).map((_, i) => (
-                    <div key={`para-${i}`} className="space-y-2">
-                      <div className="h-3 bg-gray-800 rounded w-11/12"></div>
-                      <div className="h-3 bg-gray-800 rounded w-full"></div>
-                      <div className="h-3 bg-gray-800 rounded w-10/12"></div>
-                      <div className="h-3 bg-gray-800 rounded w-full"></div>
-                      <div className="h-3 bg-gray-800 rounded w-9/12"></div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            {/* Динамический слой для создания эффекта подсветки */}
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-200 to-transparent opacity-50"></div>
-            
-            {/* Добавляем "блестящий" эффект, двигающийся справа налево */}
-            <div 
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-10" 
-              style={{ 
-                animation: 'shimmer 5s infinite linear',
-                backgroundSize: '200% 100%',
-              }}
-            ></div>
-            
-            {/* Добавляем декоративную "полосу переплета" */}
-            <div className="absolute left-0 top-0 bottom-0 w-[30px] bg-gradient-to-r from-gray-300 to-transparent"></div>
+          {/* Видео фон */}
+          <div className="absolute inset-0 overflow-hidden">
+            <video 
+              autoPlay 
+              muted 
+              loop 
+              playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src="/videos/istockphoto-2204356820-640_adpp_is.mp4" type="video/mp4" />
+            </video>
+            {/* Затемнение поверх видео для лучшей читаемости текста */}
+            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
           </div>
           
           {/* Контейнер для контента */}
