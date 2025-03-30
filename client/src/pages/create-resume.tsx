@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { useAuth } from "@/hooks/use-auth";
-import { apiRequest, queryClient } from "@/lib/queryClient";
+import { apiRequest, queryClient, getQueryFn } from "@/lib/queryClient";
 import { insertResumeSchema } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -82,10 +82,22 @@ const studyDirections = [
 
 export default function CreateResume() {
   const { user } = useAuth();
-  const [_, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const { toast } = useToast();
   const [isAddingSkill, setIsAddingSkill] = useState(false);
   const [isAddingTalent, setIsAddingTalent] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  
+  // Get resume ID from URL if it exists
+  const searchParams = new URLSearchParams(location.split("?")[1]);
+  const resumeId = searchParams.get("id");
+  
+  // Fetch resume data if we're editing an existing one
+  const { data: resumeData, isLoading: isLoadingResume } = useQuery({
+    queryKey: [resumeId ? `/api/resumes/${resumeId}` : null],
+    queryFn: getQueryFn({ on401: "throw" }),
+    enabled: !!resumeId,
+  });
   
   // Initialize form with default values
   const form = useForm<ResumeFormValues>({
@@ -109,12 +121,73 @@ export default function CreateResume() {
     },
   });
   
+  // Update form when resume data is loaded
+  useEffect(() => {
+    if (resumeData) {
+      setIsEditMode(true);
+      
+      try {
+        // Типизируем resumeData как any, чтобы избежать ошибок типизации
+        const typedData = resumeData as any;
+        
+        // Обработка данных из API - определяем тип данных и обрабатываем соответственно
+        const processArrayOrJSON = (data: any): any[] => {
+          if (!data) return [];
+          if (Array.isArray(data)) return data;
+          if (typeof data === 'string') {
+            try {
+              return JSON.parse(data);
+            } catch (e) {
+              console.error('Error parsing JSON string:', e);
+              return [];
+            }
+          }
+          return [];
+        };
+        
+        // Обработка данных резюме
+        const educationData = processArrayOrJSON(typedData.education);
+        const experienceData = processArrayOrJSON(typedData.experience);
+        const skillsData = processArrayOrJSON(typedData.skills);
+        const talentsData = processArrayOrJSON(typedData.talents);
+        
+        // Reset form with values from loaded resume
+        form.reset({
+          title: typedData.title || "",
+          direction: typedData.direction || "",
+          education: educationData.length > 0 ? educationData : [{
+            institution: "", 
+            degree: "", 
+            fieldOfStudy: "", 
+            startDate: "", 
+            endDate: "",
+            description: ""
+          }],
+          experience: experienceData.length > 0 ? experienceData : [],
+          skills: skillsData,
+          talents: talentsData,
+          newSkill: "",
+          newTalent: "",
+        });
+        
+        console.log("Resume data loaded successfully:", typedData);
+      } catch (error) {
+        console.error("Error processing resume data:", error);
+        toast({
+          title: "Ошибка загрузки резюме",
+          description: "Не удалось загрузить данные резюме. Пожалуйста, попробуйте снова.",
+          variant: "destructive",
+        });
+      }
+    }
+  }, [resumeData, form, toast]);
+  
   // Set up field arrays
   const { fields: skillFields, append: appendSkill, remove: removeSkill } = 
-    useFieldArray({ control: form.control, name: "skills" });
+    useFieldArray<ResumeFormValues, 'skills', 'id'>({ control: form.control, name: "skills" });
   
   const { fields: talentFields, append: appendTalent, remove: removeTalent } = 
-    useFieldArray({ control: form.control, name: "talents" });
+    useFieldArray<ResumeFormValues, 'talents', 'id'>({ control: form.control, name: "talents" });
     
   const { fields: educationFields, append: appendEducation, remove: removeEducation } = 
     useFieldArray({ control: form.control, name: "education" });
@@ -126,7 +199,7 @@ export default function CreateResume() {
   const handleAddSkill = () => {
     const newSkill = form.getValues("newSkill");
     if (newSkill) {
-      appendSkill(newSkill);
+      appendSkill(newSkill as any);
       form.setValue("newSkill", "");
       setIsAddingSkill(false);
     }
@@ -136,7 +209,7 @@ export default function CreateResume() {
   const handleAddTalent = () => {
     const newTalent = form.getValues("newTalent");
     if (newTalent) {
-      appendTalent(newTalent);
+      appendTalent(newTalent as any);
       form.setValue("newTalent", "");
       setIsAddingTalent(false);
     }
@@ -156,14 +229,43 @@ export default function CreateResume() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [`/api/resumes?userId=${user?.id}`] });
       toast({
-        title: "Resume created successfully",
-        description: "Your resume has been created and is now visible to project owners.",
+        title: "Резюме успешно создано",
+        description: "Ваше резюме создано и теперь доступно владельцам проектов.",
       });
       navigate("/dashboard");
     },
     onError: (error: Error) => {
       toast({
-        title: "Failed to create resume",
+        title: "Не удалось создать резюме",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+  
+  // Update resume mutation
+  const updateResumeMutation = useMutation({
+    mutationFn: async (data: Omit<ResumeFormValues, "newSkill" | "newTalent">) => {
+      // Add user ID to the data
+      const updateData = {
+        ...data,
+        userId: user!.id,
+      };
+      const res = await apiRequest("PATCH", `/api/resumes/${resumeId}`, updateData);
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [`/api/resumes/${resumeId}`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/resumes?userId=${user?.id}`] });
+      toast({
+        title: "Резюме успешно обновлено",
+        description: "Ваше резюме обновлено и изменения видны владельцам проектов.",
+      });
+      navigate("/dashboard");
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Не удалось обновить резюме",
         description: error.message,
         variant: "destructive",
       });
@@ -174,7 +276,13 @@ export default function CreateResume() {
   const onSubmit = (values: ResumeFormValues) => {
     // Remove the temporary fields used for adding new items
     const { newSkill, newTalent, ...resumeData } = values;
-    createResumeMutation.mutate(resumeData);
+    
+    // Decide whether to create a new resume or update an existing one
+    if (isEditMode && resumeId) {
+      updateResumeMutation.mutate(resumeData);
+    } else {
+      createResumeMutation.mutate(resumeData);
+    }
   };
 
   return (
@@ -184,9 +292,14 @@ export default function CreateResume() {
       <main className="flex-1 bg-gray-50 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Создать резюме</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {isEditMode ? "Редактирование резюме" : "Создать резюме"}
+            </h1>
             <p className="mt-1 text-gray-600">
-              Создайте подробное резюме, чтобы продемонстрировать свои навыки и опыт владельцам проектов.
+              {isEditMode 
+                ? "Обновите своё резюме, чтобы отразить актуальные навыки и опыт."
+                : "Создайте подробное резюме, чтобы продемонстрировать свои навыки и опыт владельцам проектов."
+              }
             </p>
           </div>
           
@@ -501,20 +614,24 @@ export default function CreateResume() {
                   <div>
                     <FormLabel className="text-base font-medium">Навыки</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {skillFields.map((field, index) => (
-                        <Badge key={field.id} className="py-1 px-3 gap-2">
-                          {field.value}
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-5 w-5 p-0"
-                            onClick={() => removeSkill(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </Badge>
-                      ))}
+                      {skillFields.map((field, index) => {
+                        // Получаем значение поля из формы
+                        const value = form.getValues(`skills.${index}`);
+                        return (
+                          <Badge key={field.id} className="py-1 px-3 gap-2">
+                            {typeof value === 'string' ? value : ''}
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-5 w-5 p-0"
+                              onClick={() => removeSkill(index)}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </Badge>
+                        );
+                      })}
                       
                       {!isAddingSkill && (
                         <Button
@@ -569,20 +686,24 @@ export default function CreateResume() {
                   <div>
                     <FormLabel className="text-base font-medium">Особые таланты (необязательно)</FormLabel>
                     <div className="mt-2 mb-4 flex flex-wrap gap-2">
-                      {talentFields.map((field, index) => (
-                        <Badge key={field.id} variant="secondary" className="py-1 px-3 gap-2">
-                          {field.value}
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            className="h-5 w-5 p-0"
-                            onClick={() => removeTalent(index)}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </Badge>
-                      ))}
+                      {talentFields.map((field, index) => {
+                        // Получаем значение поля из формы
+                        const value = form.getValues(`talents.${index}`);
+                        return (
+                          <Badge key={field.id} variant="secondary" className="py-1 px-3 gap-2">
+                            {typeof value === 'string' ? value : ''}
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="h-5 w-5 p-0"
+                              onClick={() => removeTalent(index)}
+                            >
+                              <X className="h-3 w-3" />
+                            </Button>
+                          </Badge>
+                        );
+                      })}
                       
                       {!isAddingTalent && (
                         <Button
@@ -643,15 +764,22 @@ export default function CreateResume() {
                     </Button>
                     <Button
                       type="submit"
-                      disabled={createResumeMutation.isPending}
+                      disabled={isEditMode ? updateResumeMutation.isPending : createResumeMutation.isPending}
                     >
-                      {createResumeMutation.isPending ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                          Создание...
-                        </>
+                      {isEditMode ? (
+                        updateResumeMutation.isPending ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Обновление...
+                          </>
+                        ) : "Сохранить изменения"
                       ) : (
-                        "Создать резюме"
+                        createResumeMutation.isPending ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Создание...
+                          </>
+                        ) : "Создать резюме"
                       )}
                     </Button>
                   </div>
