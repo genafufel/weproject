@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --secondary: 220 90% 60%;
+    --secondary: 220 90% 30%;
     --secondary-foreground: 222.2 47.4% 11.2%;
     --background: 0 0% 100%;
     --foreground: 222.2 47.4% 11.2%;
@@ -44,28 +44,53 @@
   
   /* Темные фоны для бэкграундов */
   .bg-blue-500, .bg-blue-600, .bg-blue-700 {
-    background-color: hsl(222, 80%, 40%) !important; /* Темнее стандартного */
+    background-color: hsl(222, 90%, 25%) !important; /* Очень темный синий */
   }
   
   .bg-blue-800, .bg-blue-900 {
-    background-color: hsl(222, 80%, 30%) !important; /* Темнее стандартного */
+    background-color: hsl(222, 90%, 20%) !important; /* Очень темный синий */
   }
   
   /* Стили для кнопок */
   .btn-primary, 
   button[data-variant="primary"], 
   button[data-state="active"] {
-    background-color: hsl(222, 80%, 35%) !important;
-    border-color: hsl(222, 80%, 30%) !important;
+    background-color: hsl(222, 90%, 20%) !important;
+    border-color: hsl(222, 90%, 15%) !important;
   }
   
   /* Более темные границы */
   .border-blue-500, .border-blue-600, .border-blue-700 {
-    border-color: hsl(222, 80%, 40%) !important;
+    border-color: hsl(222, 90%, 25%) !important;
   }
   
   /* Переопределение цвета в badges и тегах */
   .badge[data-variant="primary"] {
-    background-color: hsl(222, 80%, 35%) !important;
+    background-color: hsl(222, 90%, 20%) !important;
+  }
+  
+  /* Дополнительные стили для затемнения любых синих элементов */
+  [class*="bg-blue"] {
+    background-color: hsl(222, 90%, 20%) !important;
+  }
+  
+  [class*="border-blue"] {
+    border-color: hsl(222, 90%, 20%) !important;
+  }
+  
+  /* Затемнение фонов секций */
+  .bg-primary {
+    background-color: hsl(222, 90%, 15%) !important;
+  }
+  
+  /* Затемнение кнопок и интерактивных элементов */
+  .btn, button:not([data-variant="outline"]):not([data-variant="ghost"]):not([data-variant="link"]) {
+    background-color: hsl(222, 90%, 15%) !important;
+    border-color: hsl(222, 90%, 10%) !important;
+  }
+  
+  /* Затемнение значков и иконок */
+  .icon, svg[class*="text-blue"] {
+    color: hsl(222, 90%, 20%) !important;
   }
 }
