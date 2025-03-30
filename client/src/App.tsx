@@ -57,6 +57,7 @@ function Router() {
       <VerifiedRoute path="/simple-create-project" component={SimpleCreateProject} />
       
       <VerifiedRoute path="/create-resume" component={CreateResume} />
+      <VerifiedRoute path="/resumes/:id/edit" component={CreateResume} />
       <VerifiedRoute path="/messages" component={Messages} />
       
       {/* Fallback to 404 */}

@@ -91,9 +91,16 @@ export default function CreateResume() {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  // Get resume ID from URL if it exists
-  const searchParams = new URLSearchParams(location.split("?")[1]);
-  const resumeId = searchParams.get("id");
+  // Get resume ID from URL path (for edit mode - /resumes/:id/edit)
+  const pathMatch = location.match(/\/resumes\/(\d+)\/edit/);
+  const resumeId = pathMatch ? pathMatch[1] : null;
+  
+  useEffect(() => {
+    console.log("Редактирование резюме с ID:", resumeId, "Путь:", location);
+    if (resumeId) {
+      setIsEditMode(true);
+    }
+  }, [resumeId, location]);
   
   // Fetch resume data if we're editing an existing one
   const { data: resumeData, isLoading: isLoadingResume } = useQuery({
@@ -196,10 +203,10 @@ export default function CreateResume() {
   
   // Set up field arrays
   const { fields: skillFields, append: appendSkill, remove: removeSkill } = 
-    useFieldArray({ control: form.control, name: "skills" });
+    useFieldArray({ control: form.control, name: "skills" as any });
   
   const { fields: talentFields, append: appendTalent, remove: removeTalent } = 
-    useFieldArray({ control: form.control, name: "talents" });
+    useFieldArray({ control: form.control, name: "talents" as any });
     
   const { fields: educationFields, append: appendEducation, remove: removeEducation } = 
     useFieldArray({ control: form.control, name: "education" });
@@ -208,7 +215,7 @@ export default function CreateResume() {
     useFieldArray({ control: form.control, name: "experience" });
     
   const { fields: photoFields, append: appendPhoto, remove: removePhoto } = 
-    useFieldArray({ control: form.control, name: "photos" });
+    useFieldArray({ control: form.control, name: "photos" as any });
   
   // Add a new skill
   const handleAddSkill = () => {
