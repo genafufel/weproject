@@ -254,6 +254,17 @@ export default function Projects() {
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project: any) => (
                 <Card key={project.id} className="overflow-hidden hover:shadow-md transition-all">
+                  {project.photos && project.photos.length > 0 && (
+                    <Link href={`/projects/${project.id}`}>
+                      <div className="relative h-48 w-full overflow-hidden">
+                        <img 
+                          src={project.photos[0]} 
+                          alt={project.title} 
+                          className="w-full h-full object-cover transition-transform hover:scale-105"
+                        />
+                      </div>
+                    </Link>
+                  )}
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
                       <div>

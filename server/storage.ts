@@ -150,9 +150,9 @@ export class MemStorage implements IStorage {
         ],
         talents: ["Быстрое обучение", "Работа в команде", "Аналитическое мышление"],
         photos: [
-          "/uploads/developer_profile1.jpg",
-          "/uploads/developer_code.jpg",
-          "/uploads/developer_workspace.jpg"
+          "/uploads/1743276601069-411472408.jpg",
+          "/uploads/1743276682526-89808290.jpg",
+          "/uploads/1743276867066-38007089.jpg"
         ]
       };
       
@@ -170,11 +170,11 @@ export class MemStorage implements IStorage {
         location: "Москва (удаленно)",
         remote: true,
         photos: [
-          "/uploads/marketplace_mockup.jpg",
-          "/uploads/marketplace_team.jpg", 
-          "/uploads/marketplace_wireframes.jpg",
-          "/uploads/marketplace_code.jpg",
-          "/uploads/marketplace_demo.jpg"
+          "/uploads/1743277298100-741379550.jpg",
+          "/uploads/1743277736075-995932721.jpg", 
+          "/uploads/1743278401529-839292048.jpg",
+          "/uploads/1743335315183-472036694.jpg",
+          "/uploads/1743335489304-511313737.jpg"
         ],
         startDate: new Date("2023-04-01"),
         endDate: new Date("2023-08-31")
@@ -225,10 +225,10 @@ export class MemStorage implements IStorage {
         ],
         talents: ["Креативное мышление", "Работа с цветами", "Внимание к деталям", "Дизайн-мышление"],
         photos: [
-          "/uploads/designer_portfolio1.jpg",
-          "/uploads/designer_portfolio2.jpg",
-          "/uploads/designer_workspace.jpg",
-          "/uploads/designer_mockup.jpg"
+          "/uploads/1743335643036-94458471.jpg",
+          "/uploads/1743336582653-939041250.jpg",
+          "/uploads/1743336662209-133811945.jpg",
+          "/uploads/1743336875409-62038655.jpg"
         ]
       };
       
@@ -282,10 +282,10 @@ export class MemStorage implements IStorage {
         ],
         talents: ["Стратегическое мышление", "Анализ данных", "Копирайтинг", "Управление проектами", "Нетворкинг"],
         photos: [
-          "/uploads/marketer_analytics.jpg",
-          "/uploads/marketer_presentation.jpg",
-          "/uploads/marketer_event.jpg",
-          "/uploads/marketer_office.jpg"
+          "/uploads/1743337246140-920637777.jpg",
+          "/uploads/1743337438110-528023281.jpg",
+          "/uploads/1743337454655-181220038.jpg",
+          "/uploads/1743337706975-787806863.jpg"
         ]
       };
       
