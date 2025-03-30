@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
 import { Bell, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { saveReturnUrl } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +15,15 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export function Navbar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { user, logoutMutation } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  
+  // Функция для навигации и сохранения текущего URL перед авторизацией
+  const navigateToAuth = () => {
+    saveReturnUrl(location);
+    setLocation("/auth");
+  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -166,12 +173,19 @@ export function Navbar() {
               </>
             ) : (
               <>
-                <Link href="/auth">
-                  <Button variant="default">Войти</Button>
-                </Link>
-                <Link href="/auth">
-                  <Button variant="outline" className="bg-white hover:bg-gray-50 text-gray-800 border-gray-300">Регистрация</Button>
-                </Link>
+                <Button 
+                  variant="default" 
+                  onClick={() => navigateToAuth()}
+                >
+                  Войти
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="bg-white hover:bg-gray-50 text-gray-800 border-gray-300"
+                  onClick={() => navigateToAuth()}
+                >
+                  Регистрация
+                </Button>
               </>
             )}
           </div>
@@ -324,20 +338,24 @@ export function Navbar() {
               </>
             ) : (
               <div className="space-y-1 px-4">
-                <Link 
-                  href="/auth" 
-                  className="block text-left py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
+                <button 
+                  className="block w-full text-left py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigateToAuth();
+                  }}
                 >
                   Войти
-                </Link>
-                <Link 
-                  href="/auth" 
-                  className="block text-left py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                  onClick={() => setMobileMenuOpen(false)}
+                </button>
+                <button 
+                  className="block w-full text-left py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    navigateToAuth();
+                  }}
                 >
                   Регистрация
-                </Link>
+                </button>
               </div>
             )}
           </div>
