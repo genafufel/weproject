@@ -502,7 +502,7 @@ export default function ProjectDetail() {
                 <Card>
                   <CardContent className="pt-6">
                     <Button className="w-full" variant="outline" asChild>
-                      <Link href={`/edit-project/${project?.id || ''}`}>
+                      <Link href={`/projects/${project?.id}/edit`}>
                         <EditIcon className="h-4 w-4 mr-2" />
                         Редактировать проект
                       </Link>

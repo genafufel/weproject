@@ -77,7 +77,7 @@ export default function EditProject() {
   const [location, navigate] = useLocation();
   const { toast } = useToast();
   
-  // Extract project ID from URL
+  // Extract project ID from URL (/projects/:id/edit)
   const projectId = parseInt(location.split("/")[2]);
   
   // Fetch project data
