@@ -68,39 +68,48 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Анимированный фон страницы с книжным текстом */}
+          {/* Фон страницы с градиентом */}
           <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-            {/* Имитация текста на странице с анимацией */}
-            <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
-              <div className="w-full h-full relative overflow-hidden">
-                <div className="absolute inset-x-0 top-0 bottom-0 p-16">
-                  {/* Анимированные параграфы текста */}
-                  <div className="grid grid-cols-1 gap-3 opacity-[0.15]">
-                    {Array(20).fill(0).map((_, i) => (
-                      <div 
-                        key={`para-${i}`} 
-                        className="space-y-2 animate-pulse" 
-                        style={{ 
-                          animationDelay: `${i * 0.1}s`, 
-                          animationDuration: '3s'
-                        }}
-                      >
-                        <div className="h-3 bg-gray-800 rounded w-11/12"></div>
-                        <div className="h-3 bg-gray-800 rounded w-full"></div>
-                        <div className="h-3 bg-gray-800 rounded w-10/12"></div>
-                        <div className="h-3 bg-gray-800 rounded w-full"></div>
-                        <div className="h-3 bg-gray-800 rounded w-9/12"></div>
-                      </div>
-                    ))}
-                  </div>
+            {/* Статичный фон с текстовыми строками */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="w-full h-full p-10">
+                <div className="grid grid-cols-1 gap-3 opacity-[0.2]">
+                  {Array(25).fill(0).map((_, i) => (
+                    <div key={`para-${i}`} className="space-y-2">
+                      <div className="h-3 bg-gray-800 rounded w-11/12"></div>
+                      <div className="h-3 bg-gray-800 rounded w-full"></div>
+                      <div className="h-3 bg-gray-800 rounded w-10/12"></div>
+                      <div className="h-3 bg-gray-800 rounded w-full"></div>
+                      <div className="h-3 bg-gray-800 rounded w-9/12"></div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-            {/* Динамическое освещение страницы */}
-            <div className="absolute inset-0 bg-gradient-to-t from-gray-200 to-transparent opacity-40"></div>
-            {/* Имитация перелистывания страницы - анимированная тень */}
-            <div className="absolute inset-y-0 right-0 w-1/6 bg-gradient-to-l from-gray-300 to-transparent opacity-30 animate-pulse"></div>
+            
+            {/* Динамический слой для создания эффекта подсветки */}
+            <div className="absolute inset-0 bg-gradient-to-t from-gray-200 to-transparent opacity-50"></div>
+            
+            {/* Добавляем "блестящий" эффект, двигающийся справа налево */}
+            <div 
+              className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-10" 
+              style={{ 
+                animation: 'shimmer 5s infinite linear',
+                backgroundSize: '200% 100%',
+              }}
+            ></div>
+            
+            {/* Добавляем декоративную "полосу переплета" */}
+            <div className="absolute left-0 top-0 bottom-0 w-[30px] bg-gradient-to-r from-gray-300 to-transparent"></div>
           </div>
+          
+          {/* Добавляем стиль анимации */}
+          <style jsx>{`
+            @keyframes shimmer {
+              0% { background-position: 100% 0; }
+              100% { background-position: -100% 0; }
+            }
+          `}</style>
           
           {/* Контейнер для контента */}
           <div className="relative flex items-center h-full z-10">
