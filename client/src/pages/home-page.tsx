@@ -73,7 +73,7 @@ export default function HomePage() {
             <img 
               src="/images/hero-background.jpeg" 
               alt="Фоновое изображение" 
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain"
             />
             {/* Легкое затемнение для лучшей читаемости текста */}
             <div className="absolute inset-0 bg-black bg-opacity-20"></div>
