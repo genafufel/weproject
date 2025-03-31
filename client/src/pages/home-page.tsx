@@ -68,7 +68,7 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Видео фон */}
+          {/* Видео фон с волнистыми линиями */}
           <div className="absolute inset-0 overflow-hidden">
             <video 
               autoPlay 
@@ -77,10 +77,10 @@ export default function HomePage() {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source src="/videos/istockphoto-2204356820-640_adpp_is.mp4" type="video/mp4" />
+              <source src="/videos/wavy-lines-bg.mp4" type="video/mp4" />
             </video>
-            {/* Затемнение поверх видео для лучшей читаемости текста */}
-            <div className="absolute inset-0 bg-black bg-opacity-40"></div>
+            {/* Поскольку видео светлое, добавляем лёгкую тень для контраста */}
+            <div className="absolute inset-0 bg-black bg-opacity-10"></div>
           </div>
           
           {/* Контейнер для контента */}
