@@ -68,7 +68,7 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Видео фон с волнистыми линиями */}
+          {/* Видео фон с топографическими волнами */}
           <div className="absolute inset-0 overflow-hidden">
             <video 
               autoPlay 
@@ -77,10 +77,10 @@ export default function HomePage() {
               playsInline
               className="w-full h-full object-cover"
             >
-              <source src="/videos/wavy-lines-bg.mp4" type="video/mp4" />
+              <source src="/videos/topographic-waves.mp4" type="video/mp4" />
             </video>
-            {/* Поскольку видео светлое, добавляем лёгкую тень для контраста */}
-            <div className="absolute inset-0 bg-black bg-opacity-10"></div>
+            {/* Минимальное затемнение для создания контраста с белым текстовым блоком */}
+            <div className="absolute inset-0 bg-black bg-opacity-5"></div>
           </div>
           
           {/* Контейнер для контента */}
