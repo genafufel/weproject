@@ -76,6 +76,11 @@ export default function HomePage() {
               loop 
               playsInline
               className="w-full h-full object-cover"
+              ref={(videoElement) => {
+                if (videoElement) {
+                  videoElement.playbackRate = 0.5; // Замедление в 2 раза
+                }
+              }}
             >
               <source src="/videos/topographic-texture.mp4" type="video/mp4" />
             </video>
