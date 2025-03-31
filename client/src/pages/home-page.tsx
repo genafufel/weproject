@@ -68,11 +68,11 @@ export default function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-gray-50 h-[600px]">
-          {/* Статичный фон с бетонной текстурой */}
+          {/* Статичный фон */}
           <div className="absolute inset-0 overflow-hidden">
             <img 
-              src="/images/concrete-texture.jpg" 
-              alt="Бетонная текстура" 
+              src="/images/hero-background.jpeg" 
+              alt="Фоновое изображение" 
               className="w-full h-full object-cover"
             />
             {/* Легкое затемнение для лучшей читаемости текста */}
