@@ -71,7 +71,7 @@ export default function HomePage() {
           {/* Статичный фон */}
           <div className="absolute inset-0 overflow-hidden">
             <img 
-              src="/images/hero-background.jpeg" 
+              src="/images/hero-background-new.jpeg" 
               alt="Фоновое изображение" 
               className="w-full h-full object-cover"
             />
