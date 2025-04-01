@@ -309,7 +309,9 @@ export function setupAdminRoutes(app: Express) {
   app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
       // Используем SQL-запросы напрямую, чтобы избежать проблем с группировкой
-      const client = await db.$pool.connect();
+      // Импортируем пул подключений из серверного модуля db.ts
+      const { pool } = await import('./db');
+      const client = await pool.connect();
       
       try {
         // Получаем количество записей
