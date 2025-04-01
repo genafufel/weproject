@@ -338,9 +338,18 @@ export default function EditProject() {
       return;
     }
     
-    // Prepare position data for server
+    // Подготовка данных позиций для сервера в безопасном формате
     const positionTitles = positions.map(p => p.title);
     const allRequirements = positions.flatMap(p => p.requirements);
+    
+    // Необходимо глубоко клонировать объекты позиций для отправки на сервер
+    // чтобы избежать циклических ссылок при JSON.stringify
+    const positionsWithRequirementsCopy = positions.map(pos => ({
+      id: pos.id,
+      title: pos.title,
+      description: pos.description,
+      requirements: [...pos.requirements]
+    }));
     
     // Prepare project data
     const projectData = {
@@ -354,7 +363,7 @@ export default function EditProject() {
       remote,
       startDate: startDate ? new Date(startDate) : undefined,
       endDate: endDate ? new Date(endDate) : undefined,
-      positionsWithRequirements: positions
+      positionsWithRequirements: positionsWithRequirementsCopy
     };
     
     console.log("Отправляю обновленные данные проекта:", projectData);
