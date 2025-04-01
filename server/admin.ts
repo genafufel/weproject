@@ -308,51 +308,67 @@ export function setupAdminRoutes(app: Express) {
   // Получение статистики по платформе
   app.get("/api/admin/stats", requireAdmin, async (req, res) => {
     try {
-      const usersCount = await db.select({ count: users.id }).from(users);
-      const projectsCount = await db.select({ count: projects.id }).from(projects);
-      const resumesCount = await db.select({ count: resumes.id }).from(resumes);
-      const applicationsCount = await db.select({ count: applications.id }).from(applications);
-      const messagesCount = await db.select({ count: messages.id }).from(messages);
+      // Используем SQL-запросы напрямую, чтобы избежать проблем с группировкой
+      const client = await db.$pool.connect();
       
-      // Пользователи по типу аутентификации
-      const usersByAuthType = await db
-        .select({ 
-          authType: users.authType,
-          count: users.id
-        })
-        .from(users)
-        .groupBy(users.authType);
-      
-      // Проекты по области
-      const projectsByField = await db
-        .select({ 
-          field: projects.field,
-          count: projects.id
-        })
-        .from(projects)
-        .groupBy(projects.field);
-      
-      // Заявки по статусу
-      const applicationsByStatus = await db
-        .select({ 
-          status: applications.status,
-          count: applications.id
-        })
-        .from(applications)
-        .groupBy(applications.status);
-      
-      res.json({
-        counts: {
-          users: usersCount[0]?.count || 0,
-          projects: projectsCount[0]?.count || 0,
-          resumes: resumesCount[0]?.count || 0,
-          applications: applicationsCount[0]?.count || 0,
-          messages: messagesCount[0]?.count || 0
-        },
-        usersByAuthType,
-        projectsByField,
-        applicationsByStatus
-      });
+      try {
+        // Получаем количество записей
+        const countResult = await client.query(`
+          SELECT 
+            (SELECT COUNT(*) FROM users) as users_count,
+            (SELECT COUNT(*) FROM projects) as projects_count,
+            (SELECT COUNT(*) FROM resumes) as resumes_count,
+            (SELECT COUNT(*) FROM applications) as applications_count,
+            (SELECT COUNT(*) FROM messages) as messages_count
+        `);
+        
+        // Пользователи по типу аутентификации
+        const usersByAuthTypeResult = await client.query(`
+          SELECT "authType", COUNT(*) as count
+          FROM users
+          GROUP BY "authType"
+        `);
+        
+        // Проекты по области
+        const projectsByFieldResult = await client.query(`
+          SELECT field, COUNT(*) as count
+          FROM projects
+          GROUP BY field
+        `);
+        
+        // Заявки по статусу
+        const applicationsByStatusResult = await client.query(`
+          SELECT status, COUNT(*) as count
+          FROM applications
+          GROUP BY status
+        `);
+        
+        const counts = countResult.rows[0];
+        
+        res.json({
+          counts: {
+            users: Number(counts.users_count) || 0,
+            projects: Number(counts.projects_count) || 0,
+            resumes: Number(counts.resumes_count) || 0,
+            applications: Number(counts.applications_count) || 0,
+            messages: Number(counts.messages_count) || 0
+          },
+          usersByAuthType: usersByAuthTypeResult.rows.map(item => ({
+            authType: item.authtype,  // Важно: PostgreSQL приводит имена полей к нижнему регистру
+            count: Number(item.count)
+          })),
+          projectsByField: projectsByFieldResult.rows.map(item => ({
+            field: item.field,
+            count: Number(item.count)
+          })),
+          applicationsByStatus: applicationsByStatusResult.rows.map(item => ({
+            status: item.status,
+            count: Number(item.count)
+          }))
+        });
+      } finally {
+        client.release();
+      }
     } catch (error) {
       console.error("Error getting stats:", error);
       res.status(500).json({ message: "Internal server error" });
