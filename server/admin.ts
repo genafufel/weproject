@@ -326,9 +326,9 @@ export function setupAdminRoutes(app: Express) {
         
         // Пользователи по типу аутентификации
         const usersByAuthTypeResult = await client.query(`
-          SELECT "authType", COUNT(*) as count
+          SELECT auth_type, COUNT(*) as count
           FROM users
-          GROUP BY "authType"
+          GROUP BY auth_type
         `);
         
         // Проекты по области
@@ -356,7 +356,7 @@ export function setupAdminRoutes(app: Express) {
             messages: Number(counts.messages_count) || 0
           },
           usersByAuthType: usersByAuthTypeResult.rows.map(item => ({
-            authType: item.authtype,  // Важно: PostgreSQL приводит имена полей к нижнему регистру
+            authType: item.auth_type,  // Используем snake_case как в базе данных
             count: Number(item.count)
           })),
           projectsByField: projectsByFieldResult.rows.map(item => ({
