@@ -2,6 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { setupUploads } from "./uploads";
+import { storage } from "./storage";
+import { migrate } from "drizzle-orm/neon-serverless/migrator";
 
 const app = express();
 app.use(express.json());
@@ -38,6 +40,28 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // Запускаем миграции базы данных, если используется PostgreSQL
+  if (process.env.DATABASE_URL) {
+    try {
+      console.log("Инициализация базы данных...");
+      
+      // Для NeonDB используем импортированные функции из db.ts
+      const { db } = await import("./db");
+      
+      // Выполняем миграции
+      await migrate(db, { migrationsFolder: 'migrations' });
+      console.log("Миграции выполнены успешно");
+      
+      // Вызываем метод createTestUserData в DatabaseStorage напрямую
+      if (typeof storage === 'object' && 'createTestUserData' in storage) {
+        // @ts-ignore
+        await storage.createTestUserData();
+      }
+    } catch (error) {
+      console.error("Ошибка при инициализации базы данных:", error);
+    }
+  }
+  
   // Настраиваем обработку загрузок файлов
   setupUploads(app);
   
