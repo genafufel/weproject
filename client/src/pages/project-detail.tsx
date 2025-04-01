@@ -578,9 +578,10 @@ export default function ProjectDetail() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>
-              {selectedPosition 
-                ? `Отклик на позицию "${typeof selectedPosition === 'string' ? selectedPosition : 
-                    (typeof selectedPosition === 'object' && selectedPosition?.title) ? selectedPosition.title : 'Позиция'}"` 
+              {selectedPosition
+                ? (typeof selectedPosition === 'string'
+                    ? `Отклик на позицию "${selectedPosition}"`
+                    : `Отклик на позицию "${selectedPosition?.title || 'Позиция'}"`)
                 : `Отклик на проект "${project?.title || 'Проект'}"`}
             </DialogTitle>
             <DialogDescription>
