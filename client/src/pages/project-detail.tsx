@@ -271,7 +271,8 @@ export default function ProjectDetail() {
                             <div className="p-1">
                               <div className="overflow-hidden rounded-lg">
                                 <img 
-                                  src={photo.startsWith('/uploads') ? photo : `/uploads/${photo.split('/').pop()}`} 
+                                  src={photo ? (photo.startsWith('http') ? photo : 
+                                    (photo.startsWith('/uploads') ? photo : `/uploads/${photo.split('/').pop()}`)) : '/uploads/default.jpg'} 
                                   alt={`Фото проекта ${index + 1}`} 
                                   className="h-52 w-full object-cover transition-all hover:scale-105"
                                   onError={(e) => {

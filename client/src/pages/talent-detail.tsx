@@ -69,7 +69,7 @@ interface User {
 
 export default function TalentDetail() {
   const { user } = useAuth();
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
   const { toast } = useToast();
   
   // State для контактной формы
@@ -401,7 +401,7 @@ export default function TalentDetail() {
                           className="w-full"
                           onClick={() => {
                             saveReturnUrl(location);
-                            window.location.href = "/auth";
+                            navigate("/auth");
                           }}
                         >
                           <Mail className="mr-2 h-4 w-4" />
@@ -477,7 +477,8 @@ export default function TalentDetail() {
                       {photos.map((photo, index) => (
                         <div key={index} className="overflow-hidden rounded-md aspect-video">
                           <img 
-                            src={photo.startsWith('/uploads') ? photo : `/uploads/${photo.split('/').pop()}`}
+                            src={photo ? (photo.startsWith('http') ? photo : 
+                              (photo.startsWith('/uploads') ? photo : `/uploads/${photo.split('/').pop()}`)) : '/uploads/default.jpg'}
                             alt={`Портфолио ${index + 1}`} 
                             className="object-cover w-full h-full transition-transform hover:scale-105"
                             onError={(e) => {
