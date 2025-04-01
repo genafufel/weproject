@@ -180,8 +180,8 @@ export default function ProjectDetail() {
   };
   
   // Обработчик для клика на позицию
-  const handlePositionClick = (position: string) => {
-    setSelectedPosition(position);
+  const handlePositionClick = (position: any) => {
+    setSelectedPosition(typeof position === 'string' ? position : position.title);
     setApplyDialogOpen(true);
   };
 
@@ -326,7 +326,7 @@ export default function ProjectDetail() {
                                 project?.userId !== user.id && (
                                   <Button 
                                     size="sm" 
-                                    onClick={() => handlePositionClick(position.title)}
+                                    onClick={() => handlePositionClick(position)}
                                     variant="outline"
                                   >
                                     Откликнуться
