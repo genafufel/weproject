@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
+import { setupAdminRoutes } from "./admin";
 import { z } from "zod";
 import { insertProjectSchema, insertResumeSchema, insertApplicationSchema, insertMessageSchema } from "@shared/schema";
 import { askForSMSAPIKey, sendSMS } from "./sms"; // Сервис для отправки SMS
@@ -1005,6 +1006,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(userData);
   });
 
+  // Подключаем административные маршруты
+  setupAdminRoutes(app);
+  
   const httpServer = createServer(app);
   return httpServer;
 }

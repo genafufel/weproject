@@ -17,6 +17,7 @@ export const users = pgTable("users", {
   verified: boolean("verified").default(false).notNull(), // Статус верификации
   verificationCode: text("verification_code"), // Код верификации
   verificationCodeExpires: timestamp("verification_code_expires"), // Время истечения кода
+  isAdmin: boolean("is_admin").default(false).notNull(), // Флаг администратора
   createdAt: timestamp("created_at").defaultNow(),
 });
 

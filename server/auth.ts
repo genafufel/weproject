@@ -199,6 +199,15 @@ export function setupAuth(app: Express) {
     res.json(userWithoutPassword);
   });
   
+  // Проверка, является ли пользователь администратором
+  app.get("/api/check-admin", (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+    
+    // Проверяем флаг администратора
+    const isAdmin = req.user.isAdmin === true;
+    res.json({ isAdmin });
+  });
+  
   // Получение пользователя по ID
   app.get("/api/users/:id", async (req, res) => {
     const userId = parseInt(req.params.id);

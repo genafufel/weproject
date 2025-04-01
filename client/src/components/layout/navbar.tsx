@@ -162,6 +162,11 @@ export function Navbar() {
                       <Link href="/simple-create-project" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Создать проект (простая форма)
                       </Link>
+                      {user?.isAdmin && (
+                        <Link href="/admin" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          Админ-панель
+                        </Link>
+                      )}
                       <div className="border-t border-gray-100 my-1"></div>
                       <button
                         className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -333,6 +338,15 @@ export function Navbar() {
                   >
                     Сообщения
                   </Link>
+                  {user?.isAdmin && (
+                    <Link 
+                      href="/admin"
+                      className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      Админ-панель
+                    </Link>
+                  )}
                   <button
                     onClick={handleLogout}
                     disabled={logoutMutation.isPending}

@@ -17,6 +17,7 @@ import CreateResume from "@/pages/create-resume";
 import Messages from "@/pages/messages";
 import VerificationPage from "@/pages/verification-page";
 import EditProfile from "@/pages/edit-profile";
+import AdminPanel from "@/pages/admin-panel";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 
@@ -59,6 +60,9 @@ function Router() {
       <VerifiedRoute path="/create-resume" component={CreateResume} />
       <VerifiedRoute path="/resumes/:id/edit" component={CreateResume} />
       <VerifiedRoute path="/messages" component={Messages} />
+      
+      {/* Административная панель */}
+      <VerifiedRoute path="/admin" component={AdminPanel} />
       
       {/* Fallback to 404 */}
       <Route component={NotFound} />
