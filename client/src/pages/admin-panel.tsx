@@ -69,6 +69,8 @@ interface Project {
   positions: any[];
   requirements: any[];
   createdAt: string;
+  moderationStatus: string;
+  moderationComment: string | null;
 }
 
 interface Resume {
@@ -84,6 +86,8 @@ interface Resume {
   about: string;
   isPublic: boolean;
   createdAt: string;
+  moderationStatus: string;
+  moderationComment: string | null;
 }
 
 interface Application {
@@ -151,6 +155,10 @@ export default function AdminPanel() {
     checkAdminStatus();
   }, []);
   
+  // Состояния для хранения данных для модерации
+  const [pendingProjects, setPendingProjects] = useState<Project[]>([]);
+  const [pendingResumes, setPendingResumes] = useState<Resume[]>([]);
+    
   // Загрузка данных в зависимости от активной вкладки
   useEffect(() => {
     if (!isAdmin) return;
@@ -189,6 +197,22 @@ export default function AdminPanel() {
             if (resumesResponse.ok) {
               const resumesData = await resumesResponse.json();
               setResumes(resumesData);
+            }
+            break;
+            
+          case "moderation":
+            // Загружаем проекты, ожидающие модерации
+            const pendingProjectsResponse = await fetch("/api/admin/moderation/projects");
+            if (pendingProjectsResponse.ok) {
+              const pendingProjectsData = await pendingProjectsResponse.json();
+              setPendingProjects(pendingProjectsData);
+            }
+            
+            // Загружаем резюме, ожидающие модерации
+            const pendingResumesResponse = await fetch("/api/admin/moderation/resumes");
+            if (pendingResumesResponse.ok) {
+              const pendingResumesData = await pendingResumesResponse.json();
+              setPendingResumes(pendingResumesData);
             }
             break;
             
@@ -449,6 +473,87 @@ export default function AdminPanel() {
   };
   
   // Обработчик изменения прав администратора пользователя
+  // Обработчики для модерации проектов и резюме
+  const handleModerateProject = async (projectId: number, status: string, comment: string = "") => {
+    try {
+      const response = await fetch(`/api/admin/projects/${projectId}/moderate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status, comment })
+      });
+      
+      if (response.ok) {
+        const updatedProject = await response.json();
+        
+        toast({
+          title: "Проект обработан",
+          description: status === "approved" 
+            ? "Проект опубликован успешно" 
+            : "Проект отклонен"
+        });
+        
+        // Обновляем список проектов на модерацию
+        setPendingProjects(pendingProjects.filter(project => project.id !== projectId));
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Ошибка при модерации",
+          description: errorData.message || "Не удалось обработать проект",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error moderating project:", error);
+      toast({
+        title: "Ошибка сервера",
+        description: "Произошла ошибка при обработке проекта",
+        variant: "destructive"
+      });
+    }
+  };
+  
+  const handleModerateResume = async (resumeId: number, status: string, comment: string = "") => {
+    try {
+      const response = await fetch(`/api/admin/resumes/${resumeId}/moderate`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ status, comment })
+      });
+      
+      if (response.ok) {
+        const updatedResume = await response.json();
+        
+        toast({
+          title: "Резюме обработано",
+          description: status === "approved" 
+            ? "Резюме опубликовано успешно" 
+            : "Резюме отклонено"
+        });
+        
+        // Обновляем список резюме на модерацию
+        setPendingResumes(pendingResumes.filter(resume => resume.id !== resumeId));
+      } else {
+        const errorData = await response.json();
+        toast({
+          title: "Ошибка при модерации",
+          description: errorData.message || "Не удалось обработать резюме",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error("Error moderating resume:", error);
+      toast({
+        title: "Ошибка сервера",
+        description: "Произошла ошибка при обработке резюме",
+        variant: "destructive"
+      });
+    }
+  };
+  
   const handleToggleAdminStatus = async (userId: number, currentStatus: boolean) => {
     try {
       const response = await fetch(`/api/admin/users/${userId}`, {
@@ -547,6 +652,10 @@ export default function AdminPanel() {
           <TabsTrigger value="messages" className="flex items-center gap-2">
             <MessageSquare className="h-4 w-4" />
             <span>Сообщения</span>
+          </TabsTrigger>
+          <TabsTrigger value="moderation" className="flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
+            <span>Модерация</span>
           </TabsTrigger>
         </TabsList>
         
@@ -1019,6 +1128,176 @@ export default function AdminPanel() {
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+        
+        <TabsContent value="moderation">
+          <div className="grid grid-cols-1 gap-8">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex justify-between items-center">
+                  <span>Проекты на модерацию</span>
+                  <Badge className="ml-2" variant="outline">
+                    {pendingProjects.length}
+                  </Badge>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setActiveTab("moderation")}
+                    title="Обновить"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {pendingProjects.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Название</TableHead>
+                        <TableHead>Автор</TableHead>
+                        <TableHead>Создан</TableHead>
+                        <TableHead>Статус</TableHead>
+                        <TableHead>Действия</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {pendingProjects.map((project) => (
+                        <TableRow key={project.id}>
+                          <TableCell>{project.id}</TableCell>
+                          <TableCell>{project.title}</TableCell>
+                          <TableCell>ID: {project.userId}</TableCell>
+                          <TableCell>{new Date(project.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                              {project.moderationStatus}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => window.open(`/projects/${project.id}`, "_blank")}
+                                title="Просмотреть проект"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                variant="default" 
+                                size="sm" 
+                                onClick={() => handleModerateProject(project.id, "approved")}
+                                className="bg-green-600 hover:bg-green-700"
+                                title="Одобрить"
+                              >
+                                <Check className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                variant="destructive" 
+                                size="sm" 
+                                onClick={() => handleModerateProject(project.id, "rejected")}
+                                title="Отклонить"
+                              >
+                                <Ban className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="text-center p-8 text-muted-foreground">
+                    Нет проектов на модерацию
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex justify-between items-center">
+                  <span>Резюме на модерацию</span>
+                  <Badge className="ml-2" variant="outline">
+                    {pendingResumes.length}
+                  </Badge>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={() => setActiveTab("moderation")}
+                    title="Обновить"
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {pendingResumes.length > 0 ? (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>ID</TableHead>
+                        <TableHead>Заголовок</TableHead>
+                        <TableHead>Автор</TableHead>
+                        <TableHead>Создано</TableHead>
+                        <TableHead>Статус</TableHead>
+                        <TableHead>Действия</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {pendingResumes.map((resume) => (
+                        <TableRow key={resume.id}>
+                          <TableCell>{resume.id}</TableCell>
+                          <TableCell>{resume.title}</TableCell>
+                          <TableCell>ID: {resume.userId}</TableCell>
+                          <TableCell>{new Date(resume.createdAt).toLocaleDateString()}</TableCell>
+                          <TableCell>
+                            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                              {resume.moderationStatus}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => window.open(`/talent/${resume.id}`, "_blank")}
+                                title="Просмотреть резюме"
+                              >
+                                <Eye className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                variant="default" 
+                                size="sm" 
+                                onClick={() => handleModerateResume(resume.id, "approved")}
+                                className="bg-green-600 hover:bg-green-700"
+                                title="Одобрить"
+                              >
+                                <Check className="h-4 w-4" />
+                              </Button>
+                              <Button 
+                                variant="destructive" 
+                                size="sm" 
+                                onClick={() => handleModerateResume(resume.id, "rejected")}
+                                title="Отклонить"
+                              >
+                                <Ban className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                ) : (
+                  <div className="text-center p-8 text-muted-foreground">
+                    Нет резюме на модерацию
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
         
         <TabsContent value="messages">
