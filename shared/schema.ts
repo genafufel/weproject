@@ -31,6 +31,7 @@ export const resumes = pgTable("resumes", {
   direction: text("direction").notNull(),   // Field/direction of study
   talents: jsonb("talents"),                // Special talents or abilities
   photos: jsonb("photos"),                 // Array of photo urls
+  about: text("about"),                    // О себе и интересующих проектах
   isPublic: boolean("is_public").default(true), // Флаг видимости резюме в поиске
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),

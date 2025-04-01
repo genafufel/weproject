@@ -56,6 +56,7 @@ const experienceSchema = z.object({
 const resumeFormSchema = insertResumeSchema.extend({
   newSkill: z.string().optional(),
   newTalent: z.string().optional(),
+  about: z.string().optional(),
   education: z.array(educationSchema),
   experience: z.array(experienceSchema),
   skills: z.array(z.string()),
@@ -143,6 +144,7 @@ export default function CreateResume() {
       direction: "",
       talents: [],
       photos: [],
+      about: "",
       newSkill: "",
       newTalent: "",
     },
@@ -221,6 +223,7 @@ export default function CreateResume() {
         form.reset({
           title: typedData.title || "",
           direction: typedData.direction || "",
+          about: typedData.about || "",
           education: educationData.length > 0 ? educationData : [{
             institution: "", 
             degree: "", 
@@ -469,6 +472,27 @@ export default function CreateResume() {
                         </datalist>
                         <FormDescription>
                           Ваша основная область обучения или специализации.
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="about"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>О себе</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Расскажите о себе и о проектах, в которых вы заинтересованы"
+                            className="resize-y min-h-[120px]"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          Опишите, в каких проектах вы хотели бы участвовать, ваши интересы и цели.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

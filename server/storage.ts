@@ -131,6 +131,7 @@ export class MemStorage implements IStorage {
         title: "Full Stack Разработчик",
         direction: "Computer Science",
         skills: ["JavaScript", "TypeScript", "React", "Node.js", "Express"],
+        about: "Интересуюсь проектами в сфере веб-разработки и мобильных приложений. Готов участвовать в стартапах и инновационных проектах. Могу работать в команде как в роли фронтенд, так и бэкенд разработчика. Особенно интересны проекты с социальной значимостью или образовательной направленностью.",
         experience: [
           {
             position: "Junior Developer",
@@ -433,6 +434,7 @@ export class MemStorage implements IStorage {
       updatedAt: now,
       talents: insertResume.talents || ([] as any),
       photos: insertResume.photos || ([] as any),
+      about: insertResume.about ?? null,
       isPublic: true // По умолчанию резюме публичное
     };
     this.resumes.set(id, resume);

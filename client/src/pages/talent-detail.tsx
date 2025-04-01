@@ -463,6 +463,18 @@ export default function TalentDetail() {
             
             {/* Main content */}
             <div className="lg:col-span-2 space-y-6">
+              {/* About me section */}
+              {resume.about && (
+                <Card>
+                  <CardHeader className="pb-3">
+                    <CardTitle>О себе</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-700 whitespace-pre-wrap">{resume.about}</p>
+                  </CardContent>
+                </Card>
+              )}
+              
               {/* Portfolio photos section */}
               {photos.length > 0 && (
                 <Card>
