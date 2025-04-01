@@ -167,7 +167,32 @@ export class MemStorage implements IStorage {
         title: "Маркетплейс услуг",
         description: "Платформа для поиска и предложения услуг фрилансеров",
         field: "Information Technology",
-        positions: ["UX/UI Дизайнер", "Frontend Разработчик", "Backend Разработчик", "Менеджер проекта"],
+        positions: [
+          { 
+            id: "1", 
+            title: "UX/UI Дизайнер", 
+            description: "Разработка пользовательского интерфейса и опыта взаимодействия", 
+            requirements: ["Adobe XD", "Figma", "UI/UX Design"]
+          },
+          { 
+            id: "2", 
+            title: "Frontend Разработчик", 
+            description: "Создание клиентской части приложения", 
+            requirements: ["HTML", "CSS", "JavaScript", "React"]
+          },
+          { 
+            id: "3", 
+            title: "Backend Разработчик", 
+            description: "Разработка серверной части приложения и API", 
+            requirements: ["Node.js", "Express", "PostgreSQL"]
+          },
+          { 
+            id: "4", 
+            title: "Менеджер проекта", 
+            description: "Координация работы команды, управление сроками и бюджетом", 
+            requirements: ["Agile", "Scrum", "Project Management"]
+          }
+        ],
         requirements: ["Опыт работы с веб-технологиями", "Ответственность", "Работа в команде", "Креативное мышление", "Проактивность"],
         location: "Москва (удаленно)",
         remote: true,
@@ -521,6 +546,7 @@ export class MemStorage implements IStorage {
       location: insertProject.location ?? null,
       remote: insertProject.remote ?? null,
       photos: insertProject.photos || ([] as any),
+      requirements: insertProject.requirements || ([] as any),
       startDate: insertProject.startDate ?? null,
       endDate: insertProject.endDate ?? null
     };

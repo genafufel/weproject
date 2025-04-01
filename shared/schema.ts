@@ -44,8 +44,8 @@ export const projects = pgTable("projects", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   field: text("field").notNull(), // IT, Art, Event Management, etc.
-  positions: jsonb("positions").notNull(), // Array of required positions
-  requirements: jsonb("requirements").notNull(), // Array of requirements
+  positions: jsonb("positions").notNull(), // Array of positions with titles, descriptions and requirements
+  requirements: jsonb("requirements"), // Array of general project requirements
   location: text("location"),
   remote: boolean("remote").default(false),
   photos: jsonb("photos"), // Array of photo URLs
@@ -92,6 +92,9 @@ export const insertProjectSchema = createInsertSchema(projects).omit({
   id: true, 
   createdAt: true, 
   updatedAt: true 
+}).extend({
+  // Делаем requirements обязательным полем с значением по умолчанию
+  requirements: z.any().default([])
 });
 
 export const insertApplicationSchema = createInsertSchema(applications).omit({ 

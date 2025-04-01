@@ -30,6 +30,7 @@ import {
 interface ProjectPosition {
   id: string;
   title: string;
+  description: string;
   requirements: string[];
 }
 
@@ -91,6 +92,7 @@ export default function EditProject() {
   const [field, setField] = useState<string>("");
   const [positions, setPositions] = useState<ProjectPosition[]>([]);
   const [newPosition, setNewPosition] = useState("");
+  const [newPositionDescription, setNewPositionDescription] = useState("");
   const [isAddingPosition, setIsAddingPosition] = useState(false);
   const [editingPositionId, setEditingPositionId] = useState<string | null>(null);
   const [newRequirement, setNewRequirement] = useState("");
@@ -122,6 +124,7 @@ export default function EditProject() {
         setPositions(project.positionsWithRequirements.map((pos: any, index: number) => ({
           id: String(index),
           title: pos.title,
+          description: pos.description || "Без описания",
           requirements: pos.requirements || []
         })));
       } else if (project.positions) {
@@ -129,6 +132,7 @@ export default function EditProject() {
         setPositions(project.positions.map((pos: string, index: number) => ({
           id: String(index),
           title: pos,
+          description: "Без описания",
           requirements: []
         })));
       }
@@ -146,10 +150,12 @@ export default function EditProject() {
       const newPos: ProjectPosition = {
         id: generateId(),
         title: newPosition.trim(),
+        description: newPositionDescription.trim() || "Без описания",
         requirements: []
       };
       setPositions([...positions, newPos]);
       setNewPosition("");
+      setNewPositionDescription("");
       setIsAddingPosition(false);
     }
   };
@@ -504,6 +510,11 @@ export default function EditProject() {
                         </Button>
                       </div>
                       
+                      <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md">
+                        <p className="font-medium mb-1">Описание должности:</p>
+                        <p>{position.description}</p>
+                      </div>
+                      
                       <div className="space-y-3">
                         <Label>Требования для должности "{position.title}"</Label>
                         <div className="flex flex-wrap gap-2">
@@ -573,23 +584,28 @@ export default function EditProject() {
                   ) : (
                     <div className="rounded-md border p-4 space-y-3">
                       <Label>Новая должность</Label>
+                      <Input
+                        placeholder="например, React-разработчик, UX/UI дизайнер"
+                        value={newPosition}
+                        onChange={(e) => setNewPosition(e.target.value)}
+                        className="mb-3"
+                      />
+                      <Label>Описание должности</Label>
+                      <Textarea
+                        placeholder="Опишите обязанности, которые будет выполнять специалист"
+                        value={newPositionDescription}
+                        onChange={(e) => setNewPositionDescription(e.target.value)}
+                        className="min-h-24 resize-y mb-3"
+                      />
                       <div className="flex gap-2">
-                        <Input
-                          placeholder="например, React-разработчик, UX/UI дизайнер"
-                          value={newPosition}
-                          onChange={(e) => setNewPosition(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter") {
-                              e.preventDefault();
-                              handleAddPosition();
-                            }
-                          }}
-                          className="flex-1"
-                        />
-                        <Button type="button" onClick={handleAddPosition}>
+                        <Button type="button" onClick={handleAddPosition} className="flex-1">
                           Добавить
                         </Button>
-                        <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
+                        <Button type="button" variant="ghost" onClick={() => {
+                          setIsAddingPosition(false);
+                          setNewPosition("");
+                          setNewPositionDescription("");
+                        }}>
                           Отмена
                         </Button>
                       </div>
