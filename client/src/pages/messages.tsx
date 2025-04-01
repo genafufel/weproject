@@ -315,7 +315,14 @@ export default function Messages() {
                           >
                             <div className="flex items-center">
                               <Avatar className="h-10 w-10 mr-3">
-                                <AvatarImage src={contact.avatar || undefined} alt={contact.fullName} />
+                                <AvatarImage 
+                                  src={contact.avatar?.startsWith('/uploads') ? contact.avatar : (contact.avatar ? `/uploads/${contact.avatar.split('/').pop()}` : undefined)} 
+                                  alt={contact.fullName}
+                                  onError={(e) => {
+                                    console.log("Ошибка загрузки аватара:", contact.avatar);
+                                    e.currentTarget.src = '/uploads/default.jpg';
+                                  }}
+                                />
                                 <AvatarFallback>
                                   {contact.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
                                 </AvatarFallback>
@@ -360,8 +367,17 @@ export default function Messages() {
                     <div className="p-4 border-b border-gray-200 flex items-center">
                       <Avatar className="h-10 w-10 mr-3">
                         <AvatarImage
-                          src={contacts?.find((c: any) => c.id === activeContactId)?.avatar || undefined}
+                          src={(() => {
+                            const contact = contacts?.find((c: any) => c.id === activeContactId);
+                            const avatar = contact?.avatar;
+                            if (!avatar) return undefined;
+                            return avatar.startsWith('/uploads') ? avatar : `/uploads/${avatar.split('/').pop()}`;
+                          })()}
                           alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
+                          onError={(e) => {
+                            console.log("Ошибка загрузки аватара активного контакта");
+                            e.currentTarget.src = '/uploads/default.jpg';
+                          }}
                         />
                         <AvatarFallback>
                           {contacts?.find((c: any) => c.id === activeContactId)?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "?"}

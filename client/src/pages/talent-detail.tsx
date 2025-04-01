@@ -477,9 +477,13 @@ export default function TalentDetail() {
                       {photos.map((photo, index) => (
                         <div key={index} className="overflow-hidden rounded-md aspect-video">
                           <img 
-                            src={photo} 
+                            src={photo.startsWith('/uploads') ? photo : `/uploads/${photo.split('/').pop()}`}
                             alt={`Портфолио ${index + 1}`} 
                             className="object-cover w-full h-full transition-transform hover:scale-105"
+                            onError={(e) => {
+                              console.log("Ошибка загрузки изображения:", photo);
+                              e.currentTarget.src = '/uploads/default.jpg';
+                            }}
                           />
                         </div>
                       ))}

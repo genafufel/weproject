@@ -271,9 +271,13 @@ export default function ProjectDetail() {
                             <div className="p-1">
                               <div className="overflow-hidden rounded-lg">
                                 <img 
-                                  src={photo} 
+                                  src={photo.startsWith('/uploads') ? photo : `/uploads/${photo.split('/').pop()}`} 
                                   alt={`Фото проекта ${index + 1}`} 
                                   className="h-52 w-full object-cover transition-all hover:scale-105"
+                                  onError={(e) => {
+                                    console.log("Ошибка загрузки изображения:", photo);
+                                    e.currentTarget.src = '/uploads/default.jpg';
+                                  }}
                                 />
                               </div>
                             </div>

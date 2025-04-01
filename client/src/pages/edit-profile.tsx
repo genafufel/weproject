@@ -187,8 +187,14 @@ export default function EditProfile() {
                   <div>
                     <Avatar className="h-24 w-24">
                       <AvatarImage 
-                        src={avatarPreview || user.avatar || undefined} 
+                        src={avatarPreview || 
+                          (user.avatar?.startsWith('/uploads') ? user.avatar : 
+                          (user.avatar ? `/uploads/${user.avatar.split('/').pop()}` : undefined))} 
                         alt={user.fullName || "Аватар"} 
+                        onError={(e) => {
+                          console.log("Ошибка загрузки аватара:", user.avatar);
+                          e.currentTarget.src = '/uploads/default.jpg';
+                        }}
                       />
                       <AvatarFallback>
                         <User className="h-12 w-12 text-gray-400" />

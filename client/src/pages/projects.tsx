@@ -258,9 +258,13 @@ export default function Projects() {
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-48 w-full overflow-hidden">
                         <img 
-                          src={project.photos[0]} 
+                          src={project.photos[0].startsWith('/uploads') ? project.photos[0] : `/uploads/${project.photos[0].split('/').pop()}`}
                           alt={project.title} 
                           className="w-full h-full object-cover transition-transform hover:scale-105"
+                          onError={(e) => {
+                            console.log("Ошибка загрузки изображения:", project.photos[0]);
+                            e.currentTarget.src = '/uploads/default.jpg';
+                          }}
                         />
                       </div>
                     </Link>
