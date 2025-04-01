@@ -3,6 +3,7 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { setupUploads } from "./uploads";
 import { storage } from "./storage";
+import { setupStaticFiles } from "./static";
 import { migrate } from "drizzle-orm/neon-serverless/migrator";
 
 const app = express();
@@ -64,6 +65,9 @@ app.use((req, res, next) => {
   
   // Настраиваем обработку загрузок файлов
   setupUploads(app);
+  
+  // Настраиваем обслуживание статических файлов
+  setupStaticFiles(app);
   
   const server = await registerRoutes(app);
 
