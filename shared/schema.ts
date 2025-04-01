@@ -34,6 +34,8 @@ export const resumes = pgTable("resumes", {
   photos: jsonb("photos"),                 // Array of photo urls
   about: text("about"),                    // О себе и интересующих проектах
   isPublic: boolean("is_public").default(true), // Флаг видимости резюме в поиске
+  moderationStatus: text("moderation_status").default("pending").notNull(), // pending, approved, rejected
+  moderationComment: text("moderation_comment"), // Комментарий модератора при отклонении
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -52,6 +54,8 @@ export const projects = pgTable("projects", {
   photos: jsonb("photos"), // Array of photo URLs
   startDate: timestamp("start_date"), // Project start date
   endDate: timestamp("end_date"), // Project end date
+  moderationStatus: text("moderation_status").default("pending").notNull(), // pending, approved, rejected
+  moderationComment: text("moderation_comment"), // Комментарий модератора при отклонении
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

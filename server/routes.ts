@@ -39,54 +39,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Resume Routes
   // Публичный маршрут для получения всех резюме (для поиска талантов)
   app.get("/api/public/resumes", async (req, res) => {
-    // Получение всех резюме для страницы талантов
-    const allResumes = storage.getAllResumes();
-    
-    // Убедимся, что photos и talents всегда массивы
-    const formattedResumes = allResumes.map(resume => {
-      // Создаем копию резюме для безопасного изменения
-      const formattedResume = { ...resume };
+    try {
+      // Получение всех резюме для страницы талантов, фильтруем только одобренные
+      const allResumes = await storage.getAllResumes();
       
-      // Проверяем и преобразуем photos
-      if (!formattedResume.photos) {
-        formattedResume.photos = [];
-      } else if (!Array.isArray(formattedResume.photos)) {
-        try {
-          formattedResume.photos = JSON.parse(formattedResume.photos as any);
-        } catch {
-          formattedResume.photos = [];
-        }
-      }
-      
-      // Проверяем и преобразуем talents
-      if (!formattedResume.talents) {
-        formattedResume.talents = [];
-      } else if (!Array.isArray(formattedResume.talents)) {
-        try {
-          formattedResume.talents = JSON.parse(formattedResume.talents as any);
-        } catch {
-          formattedResume.talents = [];
-        }
-      }
-      
-      return formattedResume;
-    });
+      // Фильтрация резюме по статусу модерации (только одобренные для публичного доступа)
+      const approvedResumes = allResumes.filter(resume => 
+        resume.isPublic && resume.moderationStatus === 'approved'
+      );
     
-    res.json(formattedResumes);
-  });
-
-  app.get("/api/resumes", async (req, res) => {
-    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
-    
-    const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
-    const all = req.query.all === "true";
-    
-    if (all) {
-      // Получение всех резюме для страницы талантов
-      const allResumes = storage.getAllResumes();
-      
       // Убедимся, что photos и talents всегда массивы
-      const formattedResumes = allResumes.map(resume => {
+      const formattedResumes = approvedResumes.map(resume => {
         // Создаем копию резюме для безопасного изменения
         const formattedResume = { ...resume };
         
@@ -116,6 +79,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       res.json(formattedResumes);
+    } catch (error) {
+      console.error("Error fetching public resumes:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+
+  app.get("/api/resumes", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+    const all = req.query.all === "true";
+    
+    if (all) {
+      try {
+        // Получение всех резюме для страницы талантов
+        const allResumes = await storage.getAllResumes();
+        
+        // Фильтрация: администраторы видят все, обычные пользователи - только одобренные
+        let filteredResumes = allResumes;
+        if (!req.user.isAdmin) {
+          filteredResumes = allResumes.filter(resume => 
+            resume.isPublic && resume.moderationStatus === 'approved'
+          );
+        }
+      
+        // Убедимся, что photos и talents всегда массивы
+        const formattedResumes = filteredResumes.map(resume => {
+          // Создаем копию резюме для безопасного изменения
+          const formattedResume = { ...resume };
+        
+        // Проверяем и преобразуем photos
+        if (!formattedResume.photos) {
+          formattedResume.photos = [];
+        } else if (!Array.isArray(formattedResume.photos)) {
+          try {
+            formattedResume.photos = JSON.parse(formattedResume.photos as any);
+          } catch {
+            formattedResume.photos = [];
+          }
+        }
+        
+        // Проверяем и преобразуем talents
+        if (!formattedResume.talents) {
+          formattedResume.talents = [];
+        } else if (!Array.isArray(formattedResume.talents)) {
+          try {
+            formattedResume.talents = JSON.parse(formattedResume.talents as any);
+          } catch {
+            formattedResume.talents = [];
+          }
+        }
+        
+        return formattedResume;
+      });
+      
+      res.json(formattedResumes);
+      } catch (error) {
+        console.error("Error fetching all resumes:", error);
+        res.status(500).json({ message: "Internal server error" });
+      }
     } else if (userId) {
       // Получение резюме конкретного пользователя
       const resumes = await storage.getResumesByUserId(userId);
@@ -196,6 +219,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     if (!resume) {
       return res.status(404).json({ message: "Resume not found" });
+    }
+    
+    // Проверяем, доступно ли резюме для публичного просмотра
+    if (!resume.isPublic || resume.moderationStatus !== 'approved') {
+      return res.status(403).json({ 
+        message: "This resume is private, under moderation, or has been rejected."
+      });
     }
     
     // Форматируем resume перед отправкой
@@ -398,6 +428,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Project Routes
   app.get("/api/projects", async (req, res) => {
+    // Добавляем фильтрацию по статусу модерации
     const field = req.query.field as string | undefined;
     const remote = req.query.remote !== undefined ? req.query.remote === "true" : undefined;
     const search = req.query.search as string | undefined;
@@ -405,11 +436,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom as string) : undefined;
     const dateTo = req.query.dateTo ? new Date(req.query.dateTo as string) : undefined;
     
-    if (userId) {
-      const projects = await storage.getProjectsByUserId(userId);
+    try {
+      if (userId) {
+        const projects = await storage.getProjectsByUserId(userId);
+        
+        // Фильтрация проектов для обычных пользователей (не владельцев и не админов)
+        let filteredProjects = projects;
+        if (req.isAuthenticated()) {
+          if (!req.user.isAdmin && userId !== req.user.id) {
+            // Если не админ и не владелец, показываем только одобренные
+            filteredProjects = projects.filter(project => project.moderationStatus === 'approved');
+          }
+        } else {
+          // Неавторизованным пользователям только одобренные проекты
+          filteredProjects = projects.filter(project => project.moderationStatus === 'approved');
+        }
       
-      // Форматируем проекты перед отправкой
-      const formattedProjects = projects.map(project => {
+        // Форматируем проекты перед отправкой
+        const formattedProjects = filteredProjects.map(project => {
         const formatted = { ...project };
         
         // Форматируем photos
@@ -452,8 +496,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } else {
       const projects = await storage.getProjects({ field, remote, search, dateFrom, dateTo });
       
+      // Фильтрация для неадминов - только одобренные проекты
+      let filteredProjects = projects;
+      if (req.isAuthenticated()) {
+        if (!req.user.isAdmin) {
+          // Не админам показываем только одобренные проекты других пользователей
+          // и все свои проекты (в любом статусе модерации)
+          filteredProjects = projects.filter(project => 
+            project.moderationStatus === 'approved' || project.userId === req.user.id
+          );
+        }
+      } else {
+        // Неавторизованным пользователям только одобренные проекты
+        filteredProjects = projects.filter(project => project.moderationStatus === 'approved');
+      }
+      
       // Форматируем проекты перед отправкой
-      const formattedProjects = projects.map(project => {
+      const formattedProjects = filteredProjects.map(project => {
         const formatted = { ...project };
         
         // Форматируем photos
@@ -494,6 +553,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(formattedProjects);
     }
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   });
 
   app.get("/api/projects/:id", async (req, res) => {
@@ -502,6 +565,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     if (!project) {
       return res.status(404).json({ message: "Project not found" });
+    }
+    
+    // Проверяем, доступен ли проект для просмотра
+    const isOwner = req.isAuthenticated() && req.user.id === project.userId;
+    const isAdmin = req.isAuthenticated() && req.user.isAdmin;
+    
+    // Если это не владелец и не админ, проверяем модерацию
+    if (!isOwner && !isAdmin && project.moderationStatus !== 'approved') {
+      return res.status(403).json({ 
+        message: "This project is under moderation or has been rejected."
+      });
     }
     
     // Форматируем проект перед отправкой

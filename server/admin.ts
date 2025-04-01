@@ -4,6 +4,13 @@ import { eq } from "drizzle-orm";
 import { applications, messages, projects, resumes, users } from "@shared/schema";
 import { db } from "./db";
 
+// Константы для статусов модерации
+export const MODERATION_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected'
+};
+
 // Middleware для проверки прав админа
 export function requireAdmin(req: Request, res: Response, next: NextFunction) {
   if (!req.isAuthenticated()) {
@@ -301,6 +308,114 @@ export function setupAdminRoutes(app: Express) {
       res.status(200).json({ message: "Message deleted successfully" });
     } catch (error) {
       console.error("Error deleting message:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Модерация проекта
+  app.put("/api/admin/projects/:id/moderate", requireAdmin, async (req, res) => {
+    const projectId = parseInt(req.params.id);
+    
+    if (isNaN(projectId)) {
+      return res.status(400).json({ message: "Invalid project ID" });
+    }
+    
+    try {
+      const { status, comment } = req.body;
+      
+      if (!status || !Object.values(MODERATION_STATUS).includes(status)) {
+        return res.status(400).json({ 
+          message: `Status must be one of: ${Object.values(MODERATION_STATUS).join(', ')}` 
+        });
+      }
+      
+      // Обновляем проект со статусом модерации
+      const [updatedProject] = await db
+        .update(projects)
+        .set({ 
+          moderationStatus: status,
+          moderationComment: comment || null,
+          updatedAt: new Date()
+        })
+        .where(eq(projects.id, projectId))
+        .returning();
+      
+      if (!updatedProject) {
+        return res.status(404).json({ message: "Project not found" });
+      }
+      
+      res.json(updatedProject);
+    } catch (error) {
+      console.error("Error moderating project:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Получение проектов для модерации
+  app.get("/api/admin/moderation/projects", requireAdmin, async (req, res) => {
+    try {
+      const pendingProjects = await db
+        .select()
+        .from(projects)
+        .where(eq(projects.moderationStatus, MODERATION_STATUS.PENDING));
+        
+      res.json(pendingProjects);
+    } catch (error) {
+      console.error("Error fetching projects for moderation:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Модерация резюме
+  app.put("/api/admin/resumes/:id/moderate", requireAdmin, async (req, res) => {
+    const resumeId = parseInt(req.params.id);
+    
+    if (isNaN(resumeId)) {
+      return res.status(400).json({ message: "Invalid resume ID" });
+    }
+    
+    try {
+      const { status, comment } = req.body;
+      
+      if (!status || !Object.values(MODERATION_STATUS).includes(status)) {
+        return res.status(400).json({ 
+          message: `Status must be one of: ${Object.values(MODERATION_STATUS).join(', ')}` 
+        });
+      }
+      
+      // Обновляем резюме со статусом модерации
+      const [updatedResume] = await db
+        .update(resumes)
+        .set({ 
+          moderationStatus: status,
+          moderationComment: comment || null,
+          updatedAt: new Date()
+        })
+        .where(eq(resumes.id, resumeId))
+        .returning();
+      
+      if (!updatedResume) {
+        return res.status(404).json({ message: "Resume not found" });
+      }
+      
+      res.json(updatedResume);
+    } catch (error) {
+      console.error("Error moderating resume:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // Получение резюме для модерации
+  app.get("/api/admin/moderation/resumes", requireAdmin, async (req, res) => {
+    try {
+      const pendingResumes = await db
+        .select()
+        .from(resumes)
+        .where(eq(resumes.moderationStatus, MODERATION_STATUS.PENDING));
+        
+      res.json(pendingResumes);
+    } catch (error) {
+      console.error("Error fetching resumes for moderation:", error);
       res.status(500).json({ message: "Internal server error" });
     }
   });
