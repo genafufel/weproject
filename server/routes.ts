@@ -904,9 +904,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (conversationMessages.length === 0) continue;
       
       // Сортируем по времени создания (от нового к старому)
-      conversationMessages.sort((a, b) => 
-        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
+      conversationMessages.sort((a, b) => {
+        const dateA = a.createdAt ? new Date(a.createdAt) : new Date();
+        const dateB = b.createdAt ? new Date(b.createdAt) : new Date();
+        return dateB.getTime() - dateA.getTime();
+      });
       
       // Берём последнее сообщение
       const lastMessage = conversationMessages[0];
@@ -930,9 +932,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     // Сортируем контакты по времени последнего сообщения (от нового к старому)
-    contactsList.sort((a, b) => 
-      new Date(b.lastMessageTime).getTime() - new Date(a.lastMessageTime).getTime()
-    );
+    contactsList.sort((a, b) => {
+      const dateA = a.lastMessageTime ? new Date(a.lastMessageTime) : new Date();
+      const dateB = b.lastMessageTime ? new Date(b.lastMessageTime) : new Date();
+      return dateB.getTime() - dateA.getTime();
+    });
     
     res.json(contactsList);
   });

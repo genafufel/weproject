@@ -1013,7 +1013,9 @@ export class DatabaseStorage implements IStorage {
       talents: insertResume.talents || [],
       photos: insertResume.photos || [],
       about: insertResume.about ?? null,
-      isPublic: true // По умолчанию резюме публичное
+      isPublic: true, // По умолчанию резюме публичное
+      moderationStatus: 'pending', // Отправляем на модерацию
+      moderationComment: null
     };
     
     const result = await this.db.insert(resumes).values(resume).returning();
@@ -1098,7 +1100,9 @@ export class DatabaseStorage implements IStorage {
     const project = {
       ...insertProject,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      moderationStatus: 'pending', // Отправляем на модерацию
+      moderationComment: null
     };
     
     const result = await this.db.insert(projects).values(project).returning();
