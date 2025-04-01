@@ -54,7 +54,7 @@ export default function ProjectDetail() {
   const [applyDialogOpen, setApplyDialogOpen] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
   const [applicationMessage, setApplicationMessage] = useState("");
-  const [selectedPosition, setSelectedPosition] = useState<string | any | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
   
   // Extract project ID from the URL
   const projectId = parseInt(location.split("/")[2]);
@@ -180,15 +180,8 @@ export default function ProjectDetail() {
   };
   
   // Обработчик для клика на позицию
-  const handlePositionClick = (position: any) => {
-    // Убедимся, что position это корректный объект или строка
-    const safePosition = typeof position === 'string' 
-      ? position 
-      : (position && typeof position === 'object' && position.title)
-        ? { ...position }
-        : null;
-    
-    setSelectedPosition(safePosition);
+  const handlePositionClick = (position: string) => {
+    setSelectedPosition(position);
     setApplyDialogOpen(true);
   };
 
@@ -315,100 +308,43 @@ export default function ProjectDetail() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-6">
-                    {project?.positionsWithRequirements 
-                      ? project.positionsWithRequirements.map((position: any, index: number) => (
-                        <li key={index} className="border rounded-lg overflow-hidden">
-                          <div className="bg-gray-50 p-4 flex items-center justify-between">
-                            <div className="flex items-center">
-                              <Briefcase className="h-5 w-5 text-primary mr-2" />
-                              <h3 className="font-medium">{position.title}</h3>
-                            </div>
-                            {user ? (
-                              hasApplied ? (
-                                <Badge variant="outline" className="bg-green-50 text-green-700">
-                                  Вы откликнулись
-                                </Badge>
-                              ) : (
-                                project?.userId !== user.id && (
-                                  <Button 
-                                    size="sm" 
-                                    onClick={() => handlePositionClick(position)}
-                                    variant="outline"
-                                  >
-                                    Откликнуться
-                                  </Button>
-                                )
-                              )
-                            ) : (
+                  <ul className="space-y-3">
+                    {(project?.positions || []).map((position: string, index: number) => (
+                      <li key={index} className="flex items-start justify-between border-b pb-2">
+                        <div className="flex items-start">
+                          <Briefcase className="h-5 w-5 text-primary mr-2 mt-0.5" />
+                          <span>{position}</span>
+                        </div>
+                        {user ? (
+                          hasApplied ? (
+                            <Badge variant="outline" className="bg-green-50 text-green-700">
+                              Вы откликнулись
+                            </Badge>
+                          ) : (
+                            project?.userId !== user.id && (
                               <Button 
                                 size="sm" 
-                                onClick={() => {
-                                  saveReturnUrl(location);
-                                  navigate("/auth");
-                                }}
+                                onClick={() => handlePositionClick(position)}
                                 variant="outline"
                               >
-                                Войти
+                                Откликнуться
                               </Button>
-                            )}
-                          </div>
-                          <div className="p-4">
-                            {position.description && (
-                              <div className="mb-4">
-                                <p className="text-gray-700">{position.description}</p>
-                              </div>
-                            )}
-                            {position.requirements && position.requirements.length > 0 && (
-                              <div>
-                                <h4 className="text-sm font-medium mb-2">Требования:</h4>
-                                <div className="flex flex-wrap gap-2">
-                                  {position.requirements.map((req: string, reqIndex: number) => (
-                                    <Badge key={reqIndex} variant="secondary">{req}</Badge>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        </li>
-                      ))
-                      : (project?.positions || []).map((position: any, index: number) => (
-                        <li key={index} className="flex items-start justify-between border-b pb-2">
-                          <div className="flex items-start">
-                            <Briefcase className="h-5 w-5 text-primary mr-2 mt-0.5" />
-                            <span>{typeof position === 'string' ? position : 
-                              (position && typeof position === 'object' && position.title) ? position.title : 'Позиция'}</span>
-                          </div>
-                          {user ? (
-                            hasApplied ? (
-                              <Badge variant="outline" className="bg-green-50 text-green-700">
-                                Вы откликнулись
-                              </Badge>
-                            ) : (
-                              project?.userId !== user.id && (
-                                <Button 
-                                  size="sm" 
-                                  onClick={() => handlePositionClick(position)}
-                                  variant="outline"
-                                >
-                                  Откликнуться
-                                </Button>
-                              )
                             )
-                          ) : (
-                            <Button 
-                              size="sm" 
-                              onClick={() => {
-                                saveReturnUrl(location);
-                                navigate("/auth");
-                              }}
-                              variant="outline"
-                            >
-                              Войти
-                            </Button>
-                          )}
-                        </li>
-                      ))}
+                          )
+                        ) : (
+                          <Button 
+                            size="sm" 
+                            onClick={() => {
+                              saveReturnUrl(location);
+                              navigate("/auth");
+                            }}
+                            variant="outline"
+                          >
+                            Войти
+                          </Button>
+                        )}
+                      </li>
+                    ))}
                   </ul>
                 </CardContent>
               </Card>
@@ -586,10 +522,8 @@ export default function ProjectDetail() {
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>
-              {selectedPosition
-                ? (typeof selectedPosition === 'string'
-                    ? `Отклик на позицию "${selectedPosition}"`
-                    : `Отклик на позицию "${selectedPosition?.title || 'Позиция'}"`)
+              {selectedPosition 
+                ? `Отклик на позицию "${selectedPosition}"` 
                 : `Отклик на проект "${project?.title || 'Проект'}"`}
             </DialogTitle>
             <DialogDescription>

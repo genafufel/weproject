@@ -48,7 +48,6 @@ export default function CreateProject() {
   type Position = {
     id: string;
     title: string;
-    description: string;
     requirements: string[];
   };
 
@@ -59,7 +58,6 @@ export default function CreateProject() {
   const [positions, setPositions] = useState<Position[]>([{
     id: Date.now().toString(),
     title: "Разработчик",
-    description: "Разработка клиентской части приложения",
     requirements: ["JavaScript"]
   }]);
   const [location, setLocation] = useState("");
@@ -79,21 +77,16 @@ export default function CreateProject() {
   const [editingPositionId, setEditingPositionId] = useState<string | null>(null);
   const [newRequirement, setNewRequirement] = useState("");
   
-  // Состояние для описания новой должности
-  const [newPositionDescription, setNewPositionDescription] = useState("");
-  
   // Добавление позиции
   const handleAddPosition = () => {
     if (newPosition.trim()) {
       const newPos: Position = {
         id: Date.now().toString(),
         title: newPosition.trim(),
-        description: newPositionDescription.trim() || "Без описания",
         requirements: []
       };
       setPositions([...positions, newPos]);
       setNewPosition("");
-      setNewPositionDescription("");
       setIsAddingPosition(false);
     }
   };
@@ -262,13 +255,7 @@ export default function CreateProject() {
       remote,
       startDate: startDate ? new Date(startDate) : undefined,
       endDate: endDate ? new Date(endDate) : undefined,
-      // Глубоко клонируем объекты позиций для избежания циклических ссылок
-      positionsWithRequirements: positions.map(pos => ({
-        id: pos.id, 
-        title: pos.title,
-        description: pos.description,
-        requirements: [...pos.requirements]
-      }))
+      positionsWithRequirements: positions // Добавляем оригинальную структуру для будущего использования
     };
     
     console.log("Отправляю данные проекта через прямой fetch:", projectData);
@@ -412,11 +399,6 @@ export default function CreateProject() {
                           <X className="h-4 w-4 text-muted-foreground" />
                         </Button>
                       </div>
-
-                      <div className="text-sm text-gray-700 bg-gray-50 p-3 rounded-md">
-                        <p className="font-medium mb-1">Описание должности:</p>
-                        <p>{position.description}</p>
-                      </div>
                       
                       <div className="space-y-3">
                         <Label>Требования для должности "{position.title}"</Label>
@@ -487,7 +469,7 @@ export default function CreateProject() {
                   ) : (
                     <div className="rounded-md border p-4 space-y-3">
                       <Label>Новая должность</Label>
-                      <div className="space-y-3">
+                      <div className="flex gap-2">
                         <Input
                           placeholder="например, React-разработчик, UX/UI дизайнер"
                           value={newPosition}
@@ -495,24 +477,17 @@ export default function CreateProject() {
                           onKeyDown={(e) => {
                             if (e.key === "Enter") {
                               e.preventDefault();
-                              // Не добавляем должность по Enter, чтобы можно было заполнить описание
+                              handleAddPosition();
                             }
                           }}
+                          className="flex-1"
                         />
-                        <Textarea
-                          placeholder="Опишите обязанности и задачи для данной должности"
-                          value={newPositionDescription}
-                          onChange={(e) => setNewPositionDescription(e.target.value)}
-                          className="min-h-[80px] resize-y"
-                        />
-                        <div className="flex justify-end gap-2 mt-2">
-                          <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
-                            Отмена
-                          </Button>
-                          <Button type="button" onClick={handleAddPosition}>
-                            Добавить
-                          </Button>
-                        </div>
+                        <Button type="button" onClick={handleAddPosition}>
+                          Добавить
+                        </Button>
+                        <Button type="button" variant="ghost" onClick={() => setIsAddingPosition(false)}>
+                          Отмена
+                        </Button>
                       </div>
                     </div>
                   )}

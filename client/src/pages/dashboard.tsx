@@ -52,7 +52,7 @@ export default function Dashboard() {
     isLoading: projectApplicationsLoading,
   } = useQuery({
     queryKey: ["/api/applications"],
-    enabled: !!user?.id && Array.isArray(projects) && projects.length > 0,
+    enabled: !!user?.id && projects?.length > 0,
   });
   
   // Устанавливаем tab из URL при монтировании и слушаем события изменения таба
@@ -170,19 +170,19 @@ export default function Dashboard() {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Активные проекты</span>
-                        <span className="text-lg font-medium">{projectsLoading ? "-" : Array.isArray(projects) ? projects.length : 0}</span>
+                        <span className="text-lg font-medium">{projectsLoading ? "-" : projects?.length || 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Полученные заявки</span>
-                        <span className="text-lg font-medium">{projectApplicationsLoading ? "-" : Array.isArray(projectApplications) ? projectApplications.length : 0}</span>
+                        <span className="text-lg font-medium">{projectApplicationsLoading ? "-" : projectApplications?.length || 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Резюме</span>
-                        <span className="text-lg font-medium">{resumesLoading ? "-" : Array.isArray(resumes) ? resumes.length : 0}</span>
+                        <span className="text-lg font-medium">{resumesLoading ? "-" : resumes?.length || 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Отправленные заявки</span>
-                        <span className="text-lg font-medium">{applicationsLoading ? "-" : Array.isArray(applications) ? applications.length : 0}</span>
+                        <span className="text-lg font-medium">{applicationsLoading ? "-" : applications?.length || 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Непрочитанные сообщения</span>
@@ -292,7 +292,7 @@ export default function Dashboard() {
                 <div className="flex justify-center p-12">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
-              ) : !Array.isArray(resumes) || resumes.length === 0 ? (
+              ) : !resumes?.length ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-12">
                     <FileText className="h-12 w-12 text-gray-400 mb-4" />
@@ -380,7 +380,7 @@ export default function Dashboard() {
                 <div className="flex justify-center p-12">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
-              ) : !Array.isArray(projects) || projects.length === 0 ? (
+              ) : !projects?.length ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-12">
                     <Briefcase className="h-12 w-12 text-gray-400 mb-4" />
@@ -409,11 +409,9 @@ export default function Dashboard() {
                       <CardContent>
                         <p className="text-gray-600 line-clamp-2 mb-4">{project.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {Array.isArray(project.positions) && project.positions.map((position: any, index: number) => (
-                            <Badge key={index} variant="outline">
-                              {typeof position === 'string' ? position : (position && typeof position === 'object' && position.title) ? position.title : 'Позиция'}
-                            </Badge>
-                          ))}
+                          {Array.isArray(project.positions) ? project.positions.map((position: any, index: number) => (
+                            <Badge key={index} variant="outline">{position.title}</Badge>
+                          )) : null}
                         </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <span className="mr-4">
@@ -453,7 +451,7 @@ export default function Dashboard() {
                     <div className="flex justify-center p-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
-                  ) : !Array.isArray(projectApplications) || projectApplications.length === 0 ? (
+                  ) : !projectApplications?.length ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
                         <Inbox className="h-12 w-12 text-gray-400 mb-4" />
@@ -480,7 +478,7 @@ export default function Dashboard() {
                     <div className="flex justify-center p-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
-                  ) : !Array.isArray(applications) || applications.length === 0 ? (
+                  ) : !applications?.length ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
                         <Inbox className="h-12 w-12 text-gray-400 mb-4" />

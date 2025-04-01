@@ -289,15 +289,9 @@ export default function Projects() {
                     <div className="mb-4">
                       <h4 className="text-sm font-medium text-gray-900 mb-2">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-2">
-                        {Array.isArray(project.positions) && project.positions.map((position: any, index: number) => (
+                        {(project.positions || []).map((position: any, index: number) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
-                            {typeof position === 'string' ? position : 
-                              (position && typeof position === 'object' && position.title) ? position.title : 'Позиция'}
-                          </Badge>
-                        ))}
-                        {Array.isArray(project.positionsWithRequirements) && project.positionsWithRequirements.map((position: any, index: number) => (
-                          <Badge key={`posReq-${index}`} className="bg-primary text-white hover:bg-primary/90">
-                            {position?.title || 'Позиция'}
+                            {typeof position === 'string' ? position : position.title}
                           </Badge>
                         ))}
                       </div>
