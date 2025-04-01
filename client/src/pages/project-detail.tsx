@@ -181,7 +181,14 @@ export default function ProjectDetail() {
   
   // Обработчик для клика на позицию
   const handlePositionClick = (position: any) => {
-    setSelectedPosition(position);
+    // Убедимся, что position это корректный объект или строка
+    const safePosition = typeof position === 'string' 
+      ? position 
+      : (position && typeof position === 'object' && position.title)
+        ? { ...position }
+        : null;
+    
+    setSelectedPosition(safePosition);
     setApplyDialogOpen(true);
   };
 
