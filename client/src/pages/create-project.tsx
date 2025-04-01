@@ -262,7 +262,13 @@ export default function CreateProject() {
       remote,
       startDate: startDate ? new Date(startDate) : undefined,
       endDate: endDate ? new Date(endDate) : undefined,
-      positionsWithRequirements: positions // Добавляем оригинальную структуру для будущего использования
+      // Глубоко клонируем объекты позиций для избежания циклических ссылок
+      positionsWithRequirements: positions.map(pos => ({
+        id: pos.id, 
+        title: pos.title,
+        description: pos.description,
+        requirements: [...pos.requirements]
+      }))
     };
     
     console.log("Отправляю данные проекта через прямой fetch:", projectData);
