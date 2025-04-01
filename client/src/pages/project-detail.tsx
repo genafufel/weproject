@@ -372,11 +372,12 @@ export default function ProjectDetail() {
                           </div>
                         </li>
                       ))
-                      : (project?.positions || []).map((position: string, index: number) => (
+                      : (project?.positions || []).map((position: any, index: number) => (
                         <li key={index} className="flex items-start justify-between border-b pb-2">
                           <div className="flex items-start">
                             <Briefcase className="h-5 w-5 text-primary mr-2 mt-0.5" />
-                            <span>{position}</span>
+                            <span>{typeof position === 'string' ? position : 
+                              (position && typeof position === 'object' && position.title) ? position.title : 'Позиция'}</span>
                           </div>
                           {user ? (
                             hasApplied ? (

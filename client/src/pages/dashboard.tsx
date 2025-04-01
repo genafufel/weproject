@@ -409,11 +409,11 @@ export default function Dashboard() {
                       <CardContent>
                         <p className="text-gray-600 line-clamp-2 mb-4">{project.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {Array.isArray(project.positions) ? project.positions.map((position: any, index: number) => (
+                          {Array.isArray(project.positions) && project.positions.map((position: any, index: number) => (
                             <Badge key={index} variant="outline">
-                              {typeof position === 'string' ? position : position.title}
+                              {typeof position === 'string' ? position : (position && typeof position === 'object' && position.title) ? position.title : 'Позиция'}
                             </Badge>
-                          )) : null}
+                          ))}
                         </div>
                         <div className="flex items-center text-sm text-gray-500">
                           <span className="mr-4">
