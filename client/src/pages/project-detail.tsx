@@ -54,7 +54,7 @@ export default function ProjectDetail() {
   const [applyDialogOpen, setApplyDialogOpen] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState<number | null>(null);
   const [applicationMessage, setApplicationMessage] = useState("");
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
+  const [selectedPosition, setSelectedPosition] = useState<string | any | null>(null);
   
   // Extract project ID from the URL
   const projectId = parseInt(location.split("/")[2]);
@@ -181,7 +181,7 @@ export default function ProjectDetail() {
   
   // Обработчик для клика на позицию
   const handlePositionClick = (position: any) => {
-    setSelectedPosition(typeof position === 'string' ? position : position.title);
+    setSelectedPosition(position);
     setApplyDialogOpen(true);
   };
 
@@ -579,7 +579,8 @@ export default function ProjectDetail() {
           <DialogHeader>
             <DialogTitle>
               {selectedPosition 
-                ? `Отклик на позицию "${selectedPosition}"` 
+                ? `Отклик на позицию "${typeof selectedPosition === 'string' ? selectedPosition : 
+                    (typeof selectedPosition === 'object' && selectedPosition?.title) ? selectedPosition.title : 'Позиция'}"` 
                 : `Отклик на проект "${project?.title || 'Проект'}"`}
             </DialogTitle>
             <DialogDescription>
