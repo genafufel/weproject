@@ -253,7 +253,7 @@ export default function Projects() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project: any) => (
-                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col'}`}>
+                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col h-auto max-h-[250px]'}`}>
                   {project.photos && project.photos.length > 0 && (
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-48 w-full overflow-hidden">
@@ -269,7 +269,7 @@ export default function Projects() {
                       </div>
                     </Link>
                   )}
-                  <CardHeader className="pb-3">
+                  <CardHeader className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'pt-4' : ''}`}>
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle className="text-xl">
@@ -287,22 +287,27 @@ export default function Projects() {
                     </div>
                   </CardHeader>
                   
-                  <CardContent className={`${!(project.photos && project.photos.length > 0) ? 'flex-grow' : ''}`}>
-                    <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">{project.description}</p>
+                  <CardContent className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'py-1' : ''}`}>
+                    <p className={`text-gray-600 dark:text-gray-300 ${!(project.photos && project.photos.length > 0) ? 'line-clamp-2' : 'line-clamp-3'} mb-2`}>{project.description}</p>
                     
-                    <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Требуемые позиции:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {(project.positions || []).map((position: any, index: number) => (
+                    <div className="mb-2">
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Требуемые позиции:</h4>
+                      <div className="flex flex-wrap gap-1">
+                        {(project.positions || []).slice(0, !(project.photos && project.photos.length > 0) ? 2 : 3).map((position: any, index: number) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
                             {typeof position === 'string' ? position : position.title}
                           </Badge>
                         ))}
+                        {(project.positions || []).length > (!(project.photos && project.photos.length > 0) ? 2 : 3) && (
+                          <Badge className="bg-primary text-white hover:bg-primary/90">
+                            +{(project.positions || []).length - (!(project.photos && project.photos.length > 0) ? 2 : 3)} ещё
+                          </Badge>
+                        )}
                       </div>
                     </div>
                   </CardContent>
                   
-                  <CardFooter className="flex justify-between items-center pt-0 mt-auto">
+                  <CardFooter className={`flex justify-between items-center pt-0 ${!(project.photos && project.photos.length > 0) ? 'pb-3 mt-1' : 'mt-auto'}`}>
                     <div className="flex flex-col space-y-1">
                       <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                         <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
