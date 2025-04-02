@@ -1223,9 +1223,8 @@ export class DatabaseStorage implements IStorage {
   async createMessage(insertMessage: InsertMessage): Promise<Message> {
     const messageData = {
       ...insertMessage,
-      isRead: false,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      read: false,
+      createdAt: new Date()
     };
     
     const result = await this.db.insert(messages).values(messageData).returning();
@@ -1240,8 +1239,7 @@ export class DatabaseStorage implements IStorage {
   async markMessageAsRead(id: number): Promise<boolean> {
     const result = await this.db.update(messages)
       .set({ 
-        isRead: true,
-        updatedAt: new Date()
+        read: true
       })
       .where(eq(messages.id, id))
       .returning();

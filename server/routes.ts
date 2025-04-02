@@ -1002,7 +1002,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         id: contactId,
         fullName: contactUser.fullName,
         avatar: contactUser.avatar,
-        lastMessage: lastMessage.content,
+        lastMessage: lastMessage.content || "",
         lastMessageTime: lastMessage.createdAt,
         unread: unreadCount,
       };

@@ -104,7 +104,7 @@ export default function Messages() {
             id: contactId,
             fullName: contactUser.fullName,
             avatar: contactUser.avatar,
-            lastMessage: lastMessage.content,
+            lastMessage: lastMessage.content || "",
             lastMessageTime: new Date(lastMessage.createdAt),
             unread: unreadCount,
           });
