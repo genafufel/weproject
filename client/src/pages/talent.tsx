@@ -419,7 +419,7 @@ export default function Talent() {
               </Button>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" style={{ gridAutoFlow: 'dense' }}>
               {filteredResumes.map((resume) => {
                 const skills = getResumeSkills(resume);
                 const resumeUser = userData?.[resume.userId];
@@ -429,7 +429,7 @@ export default function Talent() {
                 const hasPhoto = photos.length > 0;
                 
                 return (
-                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all ${hasPhoto ? '' : 'flex flex-col h-auto max-h-[250px]'}`}>
+                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all ${hasPhoto ? '' : 'flex flex-col h-auto max-h-[250px]'}`} style={{ gridColumn: hasPhoto ? 'auto' : 'span 1', gridRow: hasPhoto ? 'auto' : 'span 1' }}>
                     {hasPhoto && (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] w-full overflow-hidden">
