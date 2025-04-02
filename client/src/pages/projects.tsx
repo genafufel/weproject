@@ -252,79 +252,96 @@ export default function Projects() {
             </div>
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {projects.map((project: any) => (
-                <Card key={project.id} className="overflow-hidden hover:shadow-md transition-all">
-                  {project.photos && project.photos.length > 0 && (
-                    <Link href={`/projects/${project.id}`}>
-                      <div className="relative h-48 w-full overflow-hidden">
-                        <img 
-                          src={project.photos[0].startsWith('/uploads') ? project.photos[0] : `/uploads/${project.photos[0].split('/').pop()}`}
-                          alt={project.title} 
-                          className="w-full h-full object-cover transition-transform hover:scale-105"
-                          onError={(e) => {
-                            console.log("Ошибка загрузки изображения:", project.photos[0]);
-                            e.currentTarget.src = '/uploads/default.jpg';
-                          }}
-                        />
-                      </div>
-                    </Link>
-                  )}
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-xl">
-                          <Link href={`/projects/${project.id}`} className="hover:text-primary">
-                            {project.title}
-                          </Link>
-                        </CardTitle>
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          Опубликовано: <span className="text-primary">{project.ownerName || "Владелец проекта"}</span>
-                        </p>
-                      </div>
-                      <Badge>{typeof project.field === 'object' ? 
-                        (project.field?.label || project.field?.title || JSON.stringify(project.field)) : 
-                        project.field}</Badge>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent>
-                    <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">{project.description}</p>
-                    
-                    <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Требуемые позиции:</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {(project.positions || []).map((position: any, index: number) => (
-                          <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
-                            {typeof position === 'string' ? position : position.title}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                  
-                  <CardFooter className="flex justify-between items-center pt-0">
-                    <div className="flex flex-col space-y-1">
-                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
-                        <span>{project.remote ? "Удаленно" : project.location || "Местоположение не указано"}</span>
-                      </div>
-                      {(project.startDate || project.endDate) && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {project.startDate && new Date(project.startDate).toLocaleDateString('ru-RU')}
-                          {project.startDate && project.endDate && " - "}
-                          {project.endDate && new Date(project.endDate).toLocaleDateString('ru-RU')}
+              {projects.map((project: any) => {
+                const hasPhotos = project.photos && project.photos.length > 0;
+                
+                return (
+                  <Card 
+                    key={project.id} 
+                    className={`overflow-hidden hover:shadow-md transition-all ${!hasPhotos ? 'flex flex-col' : ''}`}
+                  >
+                    {hasPhotos && (
+                      <Link href={`/projects/${project.id}`}>
+                        <div className="relative h-48 w-full overflow-hidden">
+                          <img 
+                            src={project.photos[0].startsWith('/uploads') ? project.photos[0] : `/uploads/${project.photos[0].split('/').pop()}`}
+                            alt={project.title} 
+                            className="w-full h-full object-cover transition-transform hover:scale-105"
+                            onError={(e) => {
+                              console.log("Ошибка загрузки изображения:", project.photos[0]);
+                              e.currentTarget.src = '/uploads/default.jpg';
+                            }}
+                          />
                         </div>
-                      )}
-                    </div>
+                      </Link>
+                    )}
                     
-                    <Link href={`/projects/${project.id}`}>
-                      <Button variant="default" size="sm">
-                        Откликнуться
-                      </Button>
-                    </Link>
-                  </CardFooter>
-                </Card>
-              ))}
+                    <CardHeader className="pb-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <CardTitle className="text-xl">
+                            <Link href={`/projects/${project.id}`} className="hover:text-primary">
+                              {project.title}
+                            </Link>
+                          </CardTitle>
+                          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                            Опубликовано: <span className="text-primary">{project.ownerName || "Владелец проекта"}</span>
+                          </p>
+                        </div>
+                        <Badge>
+                          {typeof project.field === 'object' 
+                            ? (project.field?.label || project.field?.title || JSON.stringify(project.field))
+                            : project.field}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    
+                    <CardContent className={`pb-4 ${!hasPhotos ? 'flex-grow' : ''}`}>
+                      <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
+                        {project.description}
+                      </p>
+                      
+                      <div className="mb-4">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                          Требуемые позиции:
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {(project.positions || []).map((position: any, index: number) => (
+                            <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
+                              {typeof position === 'string' ? position : position.title}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </CardContent>
+                    
+                    <CardFooter className={`flex justify-between items-center pt-0 ${!hasPhotos ? 'mt-auto' : ''}`}>
+                      <div className="flex flex-col space-y-1">
+                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                          <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
+                          <span>
+                            {project.remote ? "Удаленно" : project.location || "Местоположение не указано"}
+                          </span>
+                        </div>
+                        
+                        {(project.startDate || project.endDate) && (
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {project.startDate && new Date(project.startDate).toLocaleDateString('ru-RU')}
+                            {project.startDate && project.endDate && " - "}
+                            {project.endDate && new Date(project.endDate).toLocaleDateString('ru-RU')}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <Link href={`/projects/${project.id}`}>
+                        <Button variant="default" size="sm">
+                          Откликнуться
+                        </Button>
+                      </Link>
+                    </CardFooter>
+                  </Card>
+                );
+              })}
             </div>
           )}
           
