@@ -110,14 +110,14 @@ export default function HomePage() {
         </div>
         
         {/* Categories Section */}
-        <div className="bg-white py-12">
+        <div className="bg-white dark:bg-gray-800 py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:text-center">
               <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
-              <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 sm:text-4xl">
+              <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
                 Откройте мир возможностей
               </p>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
                 Исследуйте разнообразные проекты и найдите именно то, что соответствует вашим интересам.
               </p>
             </div>
@@ -125,7 +125,7 @@ export default function HomePage() {
             <div className="mt-10">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {fields.map((field) => (
-                  <div key={field.title} className="group relative bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all">
+                  <div key={field.title} className="group relative bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-all">
                     <div className="aspect-w-3 aspect-h-2">
                       <img 
                         src={field.image} 
@@ -134,12 +134,12 @@ export default function HomePage() {
                       />
                     </div>
                     <div className="p-6">
-                      <h3 className="text-lg font-medium text-gray-900">
+                      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
                         <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none">
                           {field.title}
                         </Link>
                       </h3>
-                      <p className="mt-2 text-sm text-gray-500">
+                      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                         {field.description}
                       </p>
                       <div className="mt-4 flex justify-between items-center">
@@ -162,14 +162,14 @@ export default function HomePage() {
         </div>
         
         {/* How It Works Section */}
-        <div className="bg-gray-50 py-16">
+        <div className="bg-gray-50 dark:bg-gray-900 py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="lg:text-center">
               <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
-              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
                 Четыре простых шага к достижению цели
               </p>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
                 Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
               </p>
             </div>
@@ -182,8 +182,8 @@ export default function HomePage() {
                       <span className="text-xl font-bold">{step.number}</span>
                     </div>
                     <div className="ml-16">
-                      <h3 className="text-lg leading-6 font-medium text-gray-900">{step.title}</h3>
-                      <p className="mt-2 text-base text-gray-600">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">{step.title}</h3>
+                      <p className="mt-2 text-base text-gray-600 dark:text-gray-400">
                         {step.description}
                       </p>
                     </div>
