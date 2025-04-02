@@ -296,24 +296,30 @@ export default function Projects() {
                       </div>
                     </CardHeader>
                     
-                    <CardContent className={`${hasPhotos ? 'pb-3' : 'p-3 pt-0 pb-1'} ${!hasPhotos ? 'flex-grow' : ''}`}>
-                      <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-2">
-                        {project.description}
-                      </p>
-                      
-                      <div className="mb-1">
-                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
-                          Требуемые позиции:
-                        </h4>
-                        <div className="flex flex-wrap gap-1">
-                          {(project.positions || []).map((position: any, index: number) => (
-                            <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
-                              {typeof position === 'string' ? position : position.title}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </CardContent>
+                    {(project.description || (project.positions && project.positions.length > 0)) && (
+                      <CardContent className={`${hasPhotos ? 'pb-3' : 'p-3 pt-0 pb-1'} ${!hasPhotos ? 'flex-grow' : ''}`}>
+                        {project.description && (
+                          <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-2">
+                            {project.description}
+                          </p>
+                        )}
+                        
+                        {project.positions && project.positions.length > 0 && (
+                          <div className="mb-1">
+                            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
+                              Требуемые позиции:
+                            </h4>
+                            <div className="flex flex-wrap gap-1">
+                              {(project.positions || []).map((position: any, index: number) => (
+                                <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
+                                  {typeof position === 'string' ? position : position.title}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                    )}
                     
                     <CardFooter className={`${hasPhotos ? 'pt-0' : 'p-3 pt-0'} flex justify-between items-center ${!hasPhotos ? 'mt-auto' : ''}`}>
                       <div className="flex flex-col space-y-1">

@@ -476,25 +476,29 @@ export default function Talent() {
                       )}
                     </CardHeader>
                     
-                    <CardContent className={`${hasPhoto ? 'pb-4' : 'p-3 pt-0 pb-2'} ${!hasPhoto ? 'flex-grow' : ''}`}>
-                      <div className="flex flex-wrap gap-1 mb-1">
-                        {skills.slice(0, 5).map((skill, index) => (
-                          <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
-                            {skill}
-                          </Badge>
-                        ))}
-                        {skills.length > 5 && (
-                          <Badge className="bg-primary text-white hover:bg-primary/90">
-                            +{skills.length - 5} ещё
-                          </Badge>
+                    {(skills.length > 0 || (hasPhoto && photos.length > 1)) && (
+                      <CardContent className={`${hasPhoto ? 'pb-4' : 'p-3 pt-0 pb-2'} ${!hasPhoto ? 'flex-grow' : ''}`}>
+                        {skills.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-1">
+                            {skills.slice(0, 5).map((skill, index) => (
+                              <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
+                                {skill}
+                              </Badge>
+                            ))}
+                            {skills.length > 5 && (
+                              <Badge className="bg-primary text-white hover:bg-primary/90">
+                                +{skills.length - 5} ещё
+                              </Badge>
+                            )}
+                          </div>
                         )}
-                      </div>
-                      {hasPhoto && photos.length > 1 && (
-                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                          +{photos.length - 1} ещё {photos.length - 1 === 1 ? 'фото' : 'фото'} в портфолио
-                        </p>
-                      )}
-                    </CardContent>
+                        {hasPhoto && photos.length > 1 && (
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            +{photos.length - 1} ещё {photos.length - 1 === 1 ? 'фото' : 'фото'} в портфолио
+                          </p>
+                        )}
+                      </CardContent>
+                    )}
                     
                     <CardFooter className={`${hasPhoto ? 'pt-0' : 'p-3 pt-0'} flex justify-between ${!hasPhoto ? 'mt-auto' : ''}`}>
                       {!isOwnResume && resumeUser && user && (
