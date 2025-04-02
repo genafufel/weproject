@@ -236,7 +236,7 @@ export default function Dashboard() {
             onValueChange={onTabChange}
             className="w-full"
           >
-            <TabsList className="mb-8">
+            <TabsList className="mb-8 flex justify-center">
               <TabsTrigger value="overview">Обзор</TabsTrigger>
               <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
               <TabsTrigger value="projects">Мои проекты</TabsTrigger>
@@ -543,7 +543,7 @@ export default function Dashboard() {
               
               {/* Вкладки для переключения между полученными и отправленными заявками */}
               <Tabs defaultValue="received" className="mb-6">
-                <TabsList>
+                <TabsList className="flex justify-center">
                   <TabsTrigger value="received">Полученные заявки</TabsTrigger>
                   <TabsTrigger value="sent">Отправленные заявки</TabsTrigger>
                 </TabsList>
@@ -722,9 +722,9 @@ export default function Dashboard() {
                   ) : !Array.isArray(sentApplications) || sentApplications.length === 0 ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
-                        <Inbox className="h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">Нет отправленных заявок</h3>
-                        <p className="text-gray-500 mb-6 text-center max-w-md">
+                        <Inbox className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет отправленных заявок</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
                           Вы еще не отправили заявки на проекты. Просмотрите доступные проекты и найдите подходящие.
                         </p>
                         <Link href="/projects">
@@ -847,13 +847,13 @@ export default function Dashboard() {
             
             {/* Вкладка сообщений */}
             <TabsContent value="messages">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Сообщения</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Сообщения</h2>
               
               <Card>
                 <CardContent className="flex flex-col items-center justify-center p-12">
-                  <Inbox className="h-12 w-12 text-gray-400 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">Нет сообщений</h3>
-                  <p className="text-gray-500 mb-6 text-center max-w-md">
+                  <Inbox className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет сообщений</h3>
+                  <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
                     У вас пока нет сообщений. Свяжитесь с владельцами проектов или соискателями, чтобы начать общение.
                   </p>
                   <Link href="/projects">
