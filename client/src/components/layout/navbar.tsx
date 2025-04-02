@@ -91,7 +91,6 @@ export function Navbar() {
                     variant="ghost" 
                     className="text-gray-700 dark:text-gray-300"
                   >
-                    <Inbox className="mr-2 h-4 w-4" />
                     Сообщения
                   </Button>
                 </Link>
@@ -166,10 +165,7 @@ export function Navbar() {
                         Личный кабинет
                       </Link>
                       <Link href="/messages" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <div className="flex items-center">
-                          <Inbox className="mr-2 h-4 w-4" />
-                          Сообщения
-                        </div>
+                        Сообщения
                       </Link>
                       <div className="theme-switcher-container">
                         <ThemeSwitcher isMenuItem={true} />
@@ -345,10 +341,7 @@ export function Navbar() {
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    <div className="flex items-center">
-                      <Inbox className="mr-2 h-4 w-4" />
-                      Сообщения
-                    </div>
+                    Сообщения
                   </Link>
 
                   {user?.isAdmin && (
