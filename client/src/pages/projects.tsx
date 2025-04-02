@@ -258,7 +258,7 @@ export default function Projects() {
                 return (
                   <Card 
                     key={project.id} 
-                    className={`overflow-hidden hover:shadow-md transition-all h-full ${!hasPhotos ? 'flex flex-col' : ''}`}
+                    className={`overflow-hidden hover:shadow-md transition-all h-full ${!hasPhotos ? 'flex flex-col p-0' : ''}`}
                   >
                     {hasPhotos && (
                       <Link href={`/projects/${project.id}`}>
@@ -276,7 +276,7 @@ export default function Projects() {
                       </Link>
                     )}
                     
-                    <CardHeader className={`pb-3 ${!hasPhotos ? 'pt-4' : ''}`}>
+                    <CardHeader className={`${hasPhotos ? 'pb-3' : 'p-3 pb-2'}`}>
                       <div className="flex justify-between items-start">
                         <div>
                           <CardTitle className="text-xl">
@@ -296,16 +296,16 @@ export default function Projects() {
                       </div>
                     </CardHeader>
                     
-                    <CardContent className={`${!hasPhotos ? 'py-0 flex-grow' : 'pb-4'}`}>
+                    <CardContent className={`${hasPhotos ? 'pb-3' : 'p-3 pt-0 pb-1'} ${!hasPhotos ? 'flex-grow' : ''}`}>
                       <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-2">
                         {project.description}
                       </p>
                       
-                      <div className={!hasPhotos ? 'mb-2' : 'mb-4'}>
-                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">
+                      <div className="mb-1">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">
                           Требуемые позиции:
                         </h4>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-1">
                           {(project.positions || []).map((position: any, index: number) => (
                             <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
                               {typeof position === 'string' ? position : position.title}
@@ -315,7 +315,7 @@ export default function Projects() {
                       </div>
                     </CardContent>
                     
-                    <CardFooter className={`flex justify-between items-center pt-0 ${!hasPhotos ? 'pb-4 mt-2' : ''}`}>
+                    <CardFooter className={`${hasPhotos ? 'pt-0' : 'p-3 pt-0'} flex justify-between items-center ${!hasPhotos ? 'mt-auto' : ''}`}>
                       <div className="flex flex-col space-y-1">
                         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                           <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
