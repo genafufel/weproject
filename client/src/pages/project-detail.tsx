@@ -205,8 +205,8 @@ export default function ProjectDetail() {
         <Navbar />
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-4">Проект не найден</h1>
-            <p className="text-gray-600 mb-8">Проект, который вы ищете, не существует или был удален.</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">Проект не найден</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">Проект, который вы ищете, не существует или был удален.</p>
             <Button asChild>
               <Link href="/projects">Просмотреть все проекты</Link>
             </Button>
@@ -221,7 +221,7 @@ export default function ProjectDetail() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back button */}
           <div className="mb-6">
@@ -237,11 +237,11 @@ export default function ProjectDetail() {
             {/* Main content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Project header */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
                 <div className="flex justify-between items-start flex-wrap gap-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">{project?.title || 'Проект'}</h1>
-                    <div className="flex items-center mt-2 text-gray-500">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{project?.title || 'Проект'}</h1>
+                    <div className="flex items-center mt-2 text-gray-500 dark:text-gray-400">
                       <Calendar className="h-4 w-4 mr-1" />
                       <span className="text-sm">Опубликовано {project?.createdAt ? formatDate(project.createdAt) : ''}</span>
                     </div>
@@ -250,8 +250,8 @@ export default function ProjectDetail() {
                 </div>
                 
                 <div className="flex items-center mt-4">
-                  <MapPin className="h-5 w-5 text-gray-400 mr-1" />
-                  <span className="text-gray-700">
+                  <MapPin className="h-5 w-5 text-gray-400 dark:text-gray-500 mr-1" />
+                  <span className="text-gray-700 dark:text-gray-300">
                     {project?.remote ? "Удаленно" : project?.location || "Место не указано"}
                   </span>
                 </div>
@@ -385,12 +385,12 @@ export default function ProjectDetail() {
                 <CardContent>
                   {user ? (
                     project?.userId === user.id ? (
-                      <div className="text-center p-4 bg-gray-50 text-gray-700 rounded-lg">
+                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg">
                         Это ваш проект
                       </div>
                     ) : (
                       hasApplied ? (
-                        <div className="text-center p-4 bg-green-50 text-green-700 rounded-lg">
+                        <div className="text-center p-4 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-lg">
                           Вы уже подали заявку на этот проект.
                         </div>
                       ) : (
@@ -418,7 +418,7 @@ export default function ProjectDetail() {
                 {!hasApplied && user && project?.userId !== user.id && !resumes?.length && (
                   <CardFooter className="border-t pt-4">
                     <div className="w-full text-center text-sm">
-                      <p className="text-gray-500 mb-2">Сначала создайте резюме.</p>
+                      <p className="text-gray-500 dark:text-gray-400 mb-2">Сначала создайте резюме.</p>
                       <Button asChild variant="outline" size="sm" className="w-full">
                         <Link href="/create-resume">Создать резюме</Link>
                       </Button>
@@ -443,8 +443,8 @@ export default function ProjectDetail() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <h3 className="font-medium text-gray-900">{projectOwner?.fullName || "Владелец проекта"}</h3>
-                      <p className="text-sm text-gray-500">{projectOwner?.bio || "Информация отсутствует"}</p>
+                      <h3 className="font-medium text-gray-900 dark:text-gray-100">{projectOwner?.fullName || "Владелец проекта"}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{projectOwner?.bio || "Информация отсутствует"}</p>
                     </div>
                   </div>
                   
@@ -538,14 +538,14 @@ export default function ProjectDetail() {
           
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label htmlFor="resume" className="text-sm font-medium text-gray-700">
+              <label htmlFor="resume" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Выберите резюме
               </label>
               
               {resumesLoading ? (
                 <div className="flex items-center space-x-2">
                   <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                  <span className="text-sm text-gray-500">Загрузка ваших резюме...</span>
+                  <span className="text-sm text-gray-500 dark:text-gray-400">Загрузка ваших резюме...</span>
                 </div>
               ) : !resumes?.length ? (
                 <div className="text-sm text-red-500">
@@ -571,7 +571,7 @@ export default function ProjectDetail() {
             </div>
             
             <div className="space-y-2">
-              <label htmlFor="message" className="text-sm font-medium text-gray-700">
+              <label htmlFor="message" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Сопроводительное сообщение (необязательно)
               </label>
               <Textarea
