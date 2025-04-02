@@ -429,7 +429,7 @@ export default function Talent() {
                 const hasPhoto = photos.length > 0;
                 
                 return (
-                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all h-full ${!hasPhoto ? 'flex flex-col p-0' : ''}`}>
+                  <Card key={resume.id} className="overflow-hidden hover:shadow-md transition-all">
                     {hasPhoto && (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] w-full overflow-hidden">
@@ -442,7 +442,7 @@ export default function Talent() {
                       </Link>
                     )}
                     
-                    <CardHeader className={`${hasPhoto ? 'pb-3' : 'py-2 px-3'}`}>
+                    <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
                         <Link href={`/talent/${resume.id}`} className="hover:underline">
                           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{resume.title}</h3>
@@ -450,7 +450,7 @@ export default function Talent() {
                         
                         {isOwnResume && (
                           <Link href={`/edit-resume/${resume.id}`}>
-                            <Button variant="ghost" size="icon" className="h-7 w-7 -mt-1 -mr-1">
+                            <Button variant="ghost" size="icon" className="h-8 w-8">
                               <Edit className="h-4 w-4" />
                               <span className="sr-only">Редактировать резюме</span>
                             </Button>
@@ -458,51 +458,45 @@ export default function Talent() {
                         )}
                       </div>
                       
-                      <div className="flex flex-wrap gap-x-3 items-center">
-                        {resume.direction && (
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {directionTranslations[resume.direction] || resume.direction}
-                          </p>
-                        )}
-                        
-                        {resumeUser && (
-                          <div className="flex items-center">
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium text-primary dark:text-primary truncate">
-                                {resumeUser.fullName}
-                              </p>
-                            </div>
-                          </div>
-                        )}
-                        
-                        {getEducationDisplay(resume)}
-                      </div>
+                      {resume.direction && (
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                          {directionTranslations[resume.direction] || resume.direction}
+                        </p>
+                      )}
                       
-                      {skills.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {skills.slice(0, 5).map((skill, index) => (
-                            <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
-                              {skill}
-                            </Badge>
-                          ))}
-                          {skills.length > 5 && (
-                            <Badge className="bg-primary text-white hover:bg-primary/90">
-                              +{skills.length - 5} ещё
-                            </Badge>
-                          )}
+                      {resumeUser && (
+                        <div className="flex items-center mt-2">
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-primary dark:text-primary truncate">
+                              {resumeUser.fullName}
+                            </p>
+                            {getEducationDisplay(resume)}
+                          </div>
                         </div>
                       )}
                     </CardHeader>
                     
-                    {hasPhoto && photos.length > 1 && (
-                      <CardContent className="py-0 pb-2">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                    <CardContent className="pb-4">
+                      <div className="flex flex-wrap gap-1 mb-4">
+                        {skills.slice(0, 5).map((skill, index) => (
+                          <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
+                            {skill}
+                          </Badge>
+                        ))}
+                        {skills.length > 5 && (
+                          <Badge className="bg-primary text-white hover:bg-primary/90">
+                            +{skills.length - 5} ещё
+                          </Badge>
+                        )}
+                      </div>
+                      {hasPhoto && photos.length > 1 && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           +{photos.length - 1} ещё {photos.length - 1 === 1 ? 'фото' : 'фото'} в портфолио
                         </p>
-                      </CardContent>
-                    )}
+                      )}
+                    </CardContent>
                     
-                    <CardFooter className={`${hasPhoto ? 'pt-0' : 'py-2 px-3'} flex justify-between ${!hasPhoto ? 'mt-auto' : ''}`}>
+                    <CardFooter className="pt-0 flex justify-between">
                       {!isOwnResume && resumeUser && user && (
                         <Dialog>
                           <DialogTrigger asChild>
