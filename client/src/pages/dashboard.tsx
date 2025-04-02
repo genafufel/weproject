@@ -222,11 +222,11 @@ export default function Dashboard() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Личный кабинет</h1>
-            <p className="mt-1 text-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Личный кабинет</h1>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
               Добро пожаловать, {user?.fullName}! Управляйте своими резюме и проектами.
             </p>
           </div>
@@ -274,20 +274,20 @@ export default function Dashboard() {
                   <CardContent>
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Активные проекты</span>
-                        <span className="text-lg font-medium">{projectsLoading ? "-" : Array.isArray(projects) ? projects.length : 0}</span>
+                        <span className="text-gray-600 dark:text-gray-400">Активные проекты</span>
+                        <span className="text-lg font-medium dark:text-gray-100">{projectsLoading ? "-" : Array.isArray(projects) ? projects.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Полученные заявки</span>
-                        <span className="text-lg font-medium">{receivedApplicationsLoading ? "-" : Array.isArray(receivedApplications) ? receivedApplications.length : 0}</span>
+                        <span className="text-gray-600 dark:text-gray-400">Полученные заявки</span>
+                        <span className="text-lg font-medium dark:text-gray-100">{receivedApplicationsLoading ? "-" : Array.isArray(receivedApplications) ? receivedApplications.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Резюме</span>
-                        <span className="text-lg font-medium">{resumesLoading ? "-" : Array.isArray(resumes) ? resumes.length : 0}</span>
+                        <span className="text-gray-600 dark:text-gray-400">Резюме</span>
+                        <span className="text-lg font-medium dark:text-gray-100">{resumesLoading ? "-" : Array.isArray(resumes) ? resumes.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Отправленные заявки</span>
-                        <span className="text-lg font-medium">{sentApplicationsLoading ? "-" : Array.isArray(sentApplications) ? sentApplications.length : 0}</span>
+                        <span className="text-gray-600 dark:text-gray-400">Отправленные заявки</span>
+                        <span className="text-lg font-medium dark:text-gray-100">{sentApplicationsLoading ? "-" : Array.isArray(sentApplications) ? sentApplications.length : 0}</span>
                       </div>
 
                     </div>
@@ -344,24 +344,24 @@ export default function Dashboard() {
                   <CardContent>
                     <div className="space-y-4">
                       <div>
-                        <div className="text-sm text-gray-500">ФИО</div>
-                        <div className="font-medium">{user?.fullName}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">ФИО</div>
+                        <div className="font-medium dark:text-gray-200">{user?.fullName}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">Логин</div>
-                        <div className="font-medium">{user?.username}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">Логин</div>
+                        <div className="font-medium dark:text-gray-200">{user?.username}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">Email</div>
-                        <div className="font-medium">{user?.email}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">Email</div>
+                        <div className="font-medium dark:text-gray-200">{user?.email}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">Телефон</div>
-                        <div className="font-medium">{user?.phone}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">Телефон</div>
+                        <div className="font-medium dark:text-gray-200">{user?.phone}</div>
                       </div>
                       <div>
-                        <div className="text-sm text-gray-500">Статус верификации</div>
-                        <div className="font-medium">{user?.verified ? "Подтвержден" : "Не подтвержден"}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">Статус верификации</div>
+                        <div className="font-medium dark:text-gray-200">{user?.verified ? "Подтвержден" : "Не подтвержден"}</div>
                       </div>
                     </div>
                   </CardContent>
@@ -382,7 +382,7 @@ export default function Dashboard() {
             {/* Вкладка резюме */}
             <TabsContent value="resumes">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Мои резюме</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Мои резюме</h2>
                 <Link href="/create-resume">
                   <Button>
                     <PlusIcon className="mr-2 h-4 w-4" />
@@ -398,9 +398,9 @@ export default function Dashboard() {
               ) : !Array.isArray(resumes) || resumes.length === 0 ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-12">
-                    <FileText className="h-12 w-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">Нет резюме</h3>
-                    <p className="text-gray-500 mb-6 text-center max-w-md">
+                    <FileText className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет резюме</h3>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
                       У вас еще нет резюме. Создайте ваше первое резюме, чтобы откликаться на проекты!
                     </p>
                     <Link href="/create-resume">
@@ -470,7 +470,7 @@ export default function Dashboard() {
             {/* Вкладка проектов */}
             <TabsContent value="projects">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900">Мои проекты</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Мои проекты</h2>
                 <Link href="/create-project">
                   <Button>
                     <PlusIcon className="mr-2 h-4 w-4" />
@@ -486,9 +486,9 @@ export default function Dashboard() {
               ) : !Array.isArray(projects) || projects.length === 0 ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-12">
-                    <Briefcase className="h-12 w-12 text-gray-400 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">Нет проектов</h3>
-                    <p className="text-gray-500 mb-6 text-center max-w-md">
+                    <Briefcase className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет проектов</h3>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
                       У вас еще нет проектов. Создайте ваш первый проект, чтобы найти талантливых людей!
                     </p>
                     <Link href="/create-project">
@@ -539,7 +539,7 @@ export default function Dashboard() {
             
             {/* Вкладка заявок */}
             <TabsContent value="applications">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Заявки</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Заявки</h2>
               
               {/* Вкладки для переключения между полученными и отправленными заявками */}
               <Tabs defaultValue="received" className="mb-6">
@@ -557,9 +557,9 @@ export default function Dashboard() {
                   ) : !Array.isArray(receivedApplications) || receivedApplications.length === 0 ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
-                        <Inbox className="h-12 w-12 text-gray-400 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">Нет полученных заявок</h3>
-                        <p className="text-gray-500 mb-6 text-center max-w-md">
+                        <Inbox className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет полученных заявок</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
                           Вы еще не получили заявок на ваши проекты. Убедитесь, что ваши проекты видны в поиске.
                         </p>
                         <Link href="/projects">
