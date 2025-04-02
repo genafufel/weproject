@@ -13,6 +13,45 @@ import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 
+// Типы для данных
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
+  userId: number;
+  [key: string]: any;
+}
+
+interface Resume {
+  id: number;
+  title: string;
+  direction: string;
+  skills: string[];
+  education: any[];
+  createdAt: string;
+  updatedAt: string;
+  isPublic: boolean;
+  userId: number;
+  [key: string]: any;
+}
+
+interface Application {
+  id: number;
+  projectId: number;
+  userId: number;
+  resumeId: number;
+  message: string;
+  status: string;
+  createdAt: string;
+  project?: Project;
+  user?: any;
+  resume?: Resume;
+  [key: string]: any;
+}
+
 export default function Dashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
@@ -23,7 +62,7 @@ export default function Dashboard() {
   const {
     data: projects,
     isLoading: projectsLoading,
-  } = useQuery({
+  } = useQuery<Project[]>({
     queryKey: [`/api/projects?userId=${user?.id}`],
     enabled: !!user?.id,
   });
@@ -32,27 +71,27 @@ export default function Dashboard() {
   const {
     data: resumes,
     isLoading: resumesLoading,
-  } = useQuery({
+  } = useQuery<Resume[]>({
     queryKey: [`/api/resumes?userId=${user?.id}`],
     enabled: !!user?.id,
   });
 
-  // Получаем заявки пользователя
+  // Получаем заявки пользователя (отправленные)
   const {
     data: applications,
     isLoading: applicationsLoading,
-  } = useQuery({
-    queryKey: ["/api/applications"],
+  } = useQuery<Application[]>({
+    queryKey: ["/api/applications?mode=sent"],
     enabled: !!user?.id,
   });
 
-  // Получаем заявки на проекты пользователя
+  // Получаем заявки на проекты пользователя (полученные)
   const {
     data: projectApplications,
     isLoading: projectApplicationsLoading,
-  } = useQuery({
-    queryKey: ["/api/applications"],
-    enabled: !!user?.id && projects?.length > 0,
+  } = useQuery<Application[]>({
+    queryKey: ["/api/applications?mode=received"],
+    enabled: !!user?.id && Array.isArray(projects) && projects.length > 0,
   });
   
   // Устанавливаем tab из URL при монтировании и слушаем события изменения таба
@@ -170,19 +209,19 @@ export default function Dashboard() {
                     <div className="space-y-4">
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Активные проекты</span>
-                        <span className="text-lg font-medium">{projectsLoading ? "-" : projects?.length || 0}</span>
+                        <span className="text-lg font-medium">{projectsLoading ? "-" : Array.isArray(projects) ? projects.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Полученные заявки</span>
-                        <span className="text-lg font-medium">{projectApplicationsLoading ? "-" : projectApplications?.length || 0}</span>
+                        <span className="text-lg font-medium">{projectApplicationsLoading ? "-" : Array.isArray(projectApplications) ? projectApplications.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Резюме</span>
-                        <span className="text-lg font-medium">{resumesLoading ? "-" : resumes?.length || 0}</span>
+                        <span className="text-lg font-medium">{resumesLoading ? "-" : Array.isArray(resumes) ? resumes.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Отправленные заявки</span>
-                        <span className="text-lg font-medium">{applicationsLoading ? "-" : applications?.length || 0}</span>
+                        <span className="text-lg font-medium">{applicationsLoading ? "-" : Array.isArray(applications) ? applications.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Непрочитанные сообщения</span>
@@ -292,7 +331,7 @@ export default function Dashboard() {
                 <div className="flex justify-center p-12">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
-              ) : !resumes?.length ? (
+              ) : !Array.isArray(resumes) || resumes.length === 0 ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-12">
                     <FileText className="h-12 w-12 text-gray-400 mb-4" />
@@ -380,7 +419,7 @@ export default function Dashboard() {
                 <div className="flex justify-center p-12">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
-              ) : !projects?.length ? (
+              ) : !Array.isArray(projects) || projects.length === 0 ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-12">
                     <Briefcase className="h-12 w-12 text-gray-400 mb-4" />
@@ -451,7 +490,7 @@ export default function Dashboard() {
                     <div className="flex justify-center p-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
-                  ) : !projectApplications?.length ? (
+                  ) : !Array.isArray(projectApplications) || projectApplications.length === 0 ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
                         <Inbox className="h-12 w-12 text-gray-400 mb-4" />
@@ -478,7 +517,7 @@ export default function Dashboard() {
                     <div className="flex justify-center p-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
-                  ) : !applications?.length ? (
+                  ) : !Array.isArray(applications) || applications.length === 0 ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
                         <Inbox className="h-12 w-12 text-gray-400 mb-4" />

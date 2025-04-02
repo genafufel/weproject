@@ -692,6 +692,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     const projectId = req.query.projectId ? parseInt(req.query.projectId as string) : undefined;
     const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+    const mode = req.query.mode as string | undefined;
     
     if (projectId && userId) {
       // Checking if user has applied to a specific project
@@ -722,6 +723,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const applications = await storage.getApplicationsByProjectId(projectId);
+      res.json(applications);
+    } else if (mode === 'received') {
+      // Проверяем авторизацию 
+      if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+      
+      // Get applications for projects owned by current user (user is the project owner)
+      const userProjects = await storage.getProjectsByUserId(req.user!.id);
+      const projectIds = userProjects.map(project => project.id);
+      
+      let receivedApplications: any[] = [];
+      for (const id of projectIds) {
+        const projectApplications = await storage.getApplicationsByProjectId(id);
+        receivedApplications = [...receivedApplications, ...projectApplications];
+      }
+      
+      res.json(receivedApplications);
+    } else if (mode === 'sent') {
+      // Проверяем авторизацию
+      if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+      
+      // Return the current user's applications (applications they've sent)
+      const applications = await storage.getApplicationsByUserId(req.user!.id);
       res.json(applications);
     } else {
       // Проверяем авторизацию для других запросов
