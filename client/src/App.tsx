@@ -18,8 +18,10 @@ import Messages from "@/pages/messages";
 import VerificationPage from "@/pages/verification-page";
 import EditProfile from "@/pages/edit-profile";
 import AdminPanel from "@/pages/admin-panel";
+import Notifications from "@/pages/notifications";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
+import { HelmetProvider } from "react-helmet-async";
 
 // Компонент для маршрутов, требующих верификации (временно отключена проверка верификации)
 function VerifiedRoute({ component: Component, ...rest }: { component: React.ComponentType, path: string }) {
@@ -61,6 +63,9 @@ function Router() {
       <VerifiedRoute path="/resumes/:id/edit" component={CreateResume} />
       <VerifiedRoute path="/messages" component={Messages} />
       
+      {/* Страница уведомлений */}
+      <VerifiedRoute path="/notifications" component={Notifications} />
+      
       {/* Административная панель */}
       <VerifiedRoute path="/admin" component={AdminPanel} />
       
@@ -74,8 +79,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
-        <Toaster />
+        <HelmetProvider>
+          <Router />
+          <Toaster />
+        </HelmetProvider>
       </AuthProvider>
     </QueryClientProvider>
   );

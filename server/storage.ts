@@ -1,10 +1,10 @@
-import { users, type User, type InsertUser, resumes, type Resume, type InsertResume, projects, type Project, type InsertProject, applications, type Application, type InsertApplication, messages, type Message, type InsertMessage } from "@shared/schema";
+import { users, type User, type InsertUser, resumes, type Resume, type InsertResume, projects, type Project, type InsertProject, applications, type Application, type InsertApplication, messages, type Message, type InsertMessage, notifications, type Notification, type InsertNotification } from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import connectPg from "connect-pg-simple";
 import { hashPassword } from "./auth";
 import { drizzle } from "drizzle-orm/neon-serverless";
-import { eq, and, or, like, gte, lte, desc } from "drizzle-orm";
+import { eq, and, or, like, gte, lte, desc, sql } from "drizzle-orm";
 import { Pool } from "@neondatabase/serverless";
 
 const MemoryStore = createMemoryStore(session);
@@ -60,6 +60,14 @@ export interface IStorage {
   createMessage(message: InsertMessage): Promise<Message>;
   markMessageAsRead(id: number): Promise<boolean>;
   
+  // Notification operations
+  getNotification(id: number): Promise<Notification | undefined>;
+  getNotificationsByUserId(userId: number): Promise<Notification[]>;
+  getUnreadNotificationsCount(userId: number): Promise<number>;
+  createNotification(notification: InsertNotification): Promise<Notification>;
+  markNotificationAsRead(id: number): Promise<boolean>;
+  markAllNotificationsAsRead(userId: number): Promise<boolean>;
+  
   // Session store
   sessionStore: any;
   
@@ -73,6 +81,7 @@ export class MemStorage implements IStorage {
   private projects: Map<number, Project>;
   private applications: Map<number, Application>;
   private messages: Map<number, Message>;
+  private notifications: Map<number, Notification>;
   
   sessionStore: any;
   
@@ -81,6 +90,7 @@ export class MemStorage implements IStorage {
   currentProjectId: number;
   currentApplicationId: number;
   currentMessageId: number;
+  currentNotificationId: number;
 
   constructor() {
     this.users = new Map();
@@ -88,12 +98,14 @@ export class MemStorage implements IStorage {
     this.projects = new Map();
     this.applications = new Map();
     this.messages = new Map();
+    this.notifications = new Map();
     
     this.currentUserId = 1;
     this.currentResumeId = 1;
     this.currentProjectId = 1;
     this.currentApplicationId = 1;
     this.currentMessageId = 1;
+    this.currentNotificationId = 1;
     
     this.sessionStore = new MemoryStore({
       checkPeriod: 86400000, // prune expired entries every 24h
@@ -399,7 +411,8 @@ export class MemStorage implements IStorage {
       phone: insertUser.phone ?? null,
       verified: true, // Временно устанавливаем verified = true, чтобы не требовалась верификация
       verificationCode: null,
-      verificationCodeExpires: null
+      verificationCodeExpires: null,
+      isAdmin: insertUser.isAdmin || false // Устанавливаем значение по умолчанию для isAdmin
     };
     this.users.set(id, user);
     return user;
@@ -443,7 +456,9 @@ export class MemStorage implements IStorage {
       talents: insertResume.talents || ([] as any),
       photos: insertResume.photos || ([] as any),
       about: insertResume.about ?? null,
-      isPublic: true // По умолчанию резюме публичное
+      isPublic: true, // По умолчанию резюме публичное
+      moderationStatus: 'pending', // По умолчанию статус модерации - pending
+      moderationComment: null
     };
     this.resumes.set(id, resume);
     return resume;
@@ -530,7 +545,9 @@ export class MemStorage implements IStorage {
       remote: insertProject.remote ?? null,
       photos: insertProject.photos || ([] as any),
       startDate: insertProject.startDate ?? null,
-      endDate: insertProject.endDate ?? null
+      endDate: insertProject.endDate ?? null,
+      moderationStatus: 'pending', // По умолчанию статус модерации - pending
+      moderationComment: null
     };
     this.projects.set(id, project);
     return project;
@@ -632,6 +649,57 @@ export class MemStorage implements IStorage {
     
     message.read = true;
     this.messages.set(id, message);
+    return true;
+  }
+  
+  // Notification operations
+  async getNotification(id: number): Promise<Notification | undefined> {
+    return this.notifications.get(id);
+  }
+  
+  async getNotificationsByUserId(userId: number): Promise<Notification[]> {
+    return Array.from(this.notifications.values()).filter(
+      (notification) => notification.userId === userId,
+    );
+  }
+  
+  async getUnreadNotificationsCount(userId: number): Promise<number> {
+    return Array.from(this.notifications.values()).filter(
+      (notification) => notification.userId === userId && !notification.read
+    ).length;
+  }
+  
+  async createNotification(insertNotification: InsertNotification): Promise<Notification> {
+    const id = this.currentNotificationId++;
+    const now = new Date();
+    const notification: Notification = {
+      ...insertNotification,
+      id,
+      createdAt: now,
+      read: false,
+    };
+    this.notifications.set(id, notification);
+    return notification;
+  }
+  
+  async markNotificationAsRead(id: number): Promise<boolean> {
+    const notification = await this.getNotification(id);
+    if (!notification) return false;
+    
+    notification.read = true;
+    this.notifications.set(id, notification);
+    return true;
+  }
+  
+  async markAllNotificationsAsRead(userId: number): Promise<boolean> {
+    const notifications = await this.getNotificationsByUserId(userId);
+    if (notifications.length === 0) return false;
+    
+    for (const notification of notifications) {
+      if (!notification.read) {
+        await this.markNotificationAsRead(notification.id);
+      }
+    }
     return true;
   }
 }
@@ -1242,6 +1310,73 @@ export class DatabaseStorage implements IStorage {
         read: true
       })
       .where(eq(messages.id, id))
+      .returning();
+    
+    return result.length > 0;
+  }
+  
+  // Notification operations
+  async getNotification(id: number): Promise<Notification | undefined> {
+    const result = await this.db.select().from(notifications).where(eq(notifications.id, id));
+    return result.length > 0 ? result[0] : undefined;
+  }
+  
+  async getNotificationsByUserId(userId: number): Promise<Notification[]> {
+    return await this.db.select()
+      .from(notifications)
+      .where(eq(notifications.userId, userId))
+      .orderBy(desc(notifications.createdAt));
+  }
+  
+  async getUnreadNotificationsCount(userId: number): Promise<number> {
+    const result = await this.db.select({ count: sql`count(*)` })
+      .from(notifications)
+      .where(
+        and(
+          eq(notifications.userId, userId),
+          eq(notifications.read, false)
+        )
+      );
+    
+    return Number(result[0]?.count || 0);
+  }
+  
+  async createNotification(insertNotification: InsertNotification): Promise<Notification> {
+    const notification = {
+      ...insertNotification,
+      createdAt: new Date(),
+      read: false
+    };
+    
+    const result = await this.db.insert(notifications)
+      .values(notification)
+      .returning();
+    
+    if (!result || result.length === 0) {
+      throw new Error('Failed to create notification');
+    }
+    
+    return result[0];
+  }
+  
+  async markNotificationAsRead(id: number): Promise<boolean> {
+    const result = await this.db.update(notifications)
+      .set({ read: true })
+      .where(eq(notifications.id, id))
+      .returning();
+    
+    return result.length > 0;
+  }
+  
+  async markAllNotificationsAsRead(userId: number): Promise<boolean> {
+    const result = await this.db.update(notifications)
+      .set({ read: true })
+      .where(
+        and(
+          eq(notifications.userId, userId),
+          eq(notifications.read, false)
+        )
+      )
       .returning();
     
     return result.length > 0;

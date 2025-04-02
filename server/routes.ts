@@ -4,7 +4,7 @@ import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { setupAdminRoutes } from "./admin";
 import { z } from "zod";
-import { insertProjectSchema, insertResumeSchema, insertApplicationSchema, insertMessageSchema } from "@shared/schema";
+import { insertProjectSchema, insertResumeSchema, insertApplicationSchema, insertMessageSchema, insertNotificationSchema } from "@shared/schema";
 import { askForSMSAPIKey, sendSMS } from "./sms"; // Сервис для отправки SMS
 import { askForEmailAPIKey, sendEmail } from "./email"; // Сервис для отправки email
 
@@ -1166,6 +1166,94 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const { password, verificationCode, ...userData } = user;
     
     res.json(userData);
+  });
+
+  // Notifications Routes
+  app.get("/api/notifications", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    try {
+      const notifications = await storage.getNotificationsByUserId(req.user.id);
+      res.json(notifications);
+    } catch (error) {
+      console.error("Error fetching notifications:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  app.get("/api/notifications/unread/count", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    try {
+      const count = await storage.getUnreadNotificationsCount(req.user.id);
+      res.json({ count });
+    } catch (error) {
+      console.error("Error fetching unread notifications count:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  app.post("/api/notifications", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    try {
+      const validatedData = insertNotificationSchema.parse(req.body);
+      const notification = await storage.createNotification(validatedData);
+      res.status(201).json(notification);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        res.status(400).json({ errors: error.errors });
+      } else {
+        console.error("Error creating notification:", error);
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  });
+  
+  app.patch("/api/notifications/:id/read", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    const notificationId = parseInt(req.params.id);
+    
+    try {
+      const notification = await storage.getNotification(notificationId);
+      
+      if (!notification) {
+        return res.status(404).json({ message: "Notification not found" });
+      }
+      
+      if (notification.userId !== req.user.id) {
+        return res.status(403).json({ message: "Forbidden: You don't have permission to mark this notification as read" });
+      }
+      
+      const success = await storage.markNotificationAsRead(notificationId);
+      
+      if (success) {
+        res.json({ success: true });
+      } else {
+        res.status(500).json({ message: "Failed to mark notification as read" });
+      }
+    } catch (error) {
+      console.error("Error marking notification as read:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  app.patch("/api/notifications/read-all", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    try {
+      const success = await storage.markAllNotificationsAsRead(req.user.id);
+      
+      if (success) {
+        res.json({ success: true });
+      } else {
+        res.json({ success: false, message: "No unread notifications found" });
+      }
+    } catch (error) {
+      console.error("Error marking all notifications as read:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
   });
 
   // Подключаем административные маршруты
