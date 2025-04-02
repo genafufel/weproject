@@ -869,6 +869,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     
     const otherUserId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
+    const requestType = req.query.type || 'all'; // Добавляем дополнительный параметр для стабильности запросов
     
     if (otherUserId) {
       // Get conversation between current user and specified user
@@ -882,6 +883,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       res.json(conversation);
+    } else if (requestType === 'contacts') {
+      // Возвращаем только список контактов
+      const messages = await storage.getMessagesByUserId(req.user!.id);
+      res.json(messages);
     } else {
       // Get all messages for the current user
       const messages = await storage.getMessagesByUserId(req.user!.id);

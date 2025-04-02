@@ -33,9 +33,9 @@ export default function Messages() {
     isLoading: messagesDataLoading,
     refetch: refetchMessages,
   } = useQuery({
-    queryKey: ["/api/messages"],
+    queryKey: ["/api/messages", "all"],
     queryFn: async () => {
-      const res = await fetch("/api/messages");
+      const res = await fetch("/api/messages?type=all");
       if (!res.ok) {
         throw new Error("Failed to fetch messages");
       }
@@ -124,7 +124,7 @@ export default function Messages() {
     isLoading: messagesLoading,
     refetch: refetchConversation,
   } = useQuery({
-    queryKey: [`/api/messages?userId=${activeContactId}`],
+    queryKey: ['/api/messages', activeContactId],
     queryFn: async () => {
       const res = await fetch(`/api/messages?userId=${activeContactId}`);
       if (!res.ok) {
@@ -161,6 +161,11 @@ export default function Messages() {
       
       // Очищаем поле ввода и обновляем данные
       setMessageText("");
+      
+      // Инвалидируем кэш запросов сообщений
+      queryClient.invalidateQueries({ queryKey: ['/api/messages', 'all'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/messages', activeContactId] });
+      queryClient.invalidateQueries({ queryKey: ['/api/messages/contacts'] });
       
       // Немедленно запрашиваем обновленные данные
       await Promise.all([
