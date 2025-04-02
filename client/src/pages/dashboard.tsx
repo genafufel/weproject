@@ -241,7 +241,7 @@ export default function Dashboard() {
               <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
               <TabsTrigger value="projects">Мои проекты</TabsTrigger>
               <TabsTrigger value="applications" className="relative">
-                Заявки
+                Мои заявки
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
                     {unreadCount}
@@ -539,7 +539,7 @@ export default function Dashboard() {
             
             {/* Вкладка заявок */}
             <TabsContent value="applications">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Заявки</h2>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Мои заявки</h2>
               
               {/* Вкладки для переключения между полученными и отправленными заявками */}
               <Tabs defaultValue="received" className="mb-6">
