@@ -30,7 +30,23 @@ interface Resume {
   title: string;
   direction: string;
   skills: string[];
-  education: any[];
+  education: {
+    institution: string;
+    degree: string;
+    fieldOfStudy: string;
+    startDate: string;
+    endDate?: string;
+    description?: string;
+    [key: string]: any;
+  }[];
+  experience: {
+    company: string;
+    position: string;
+    startDate: string;
+    endDate?: string;
+    description?: string;
+    [key: string]: any;
+  }[];
   createdAt: string;
   updatedAt: string;
   isPublic: boolean;
@@ -583,6 +599,28 @@ export default function Dashboard() {
                                     <div className="text-sm text-gray-600 mt-1">
                                       <span className="font-medium">Направление:</span> {application.resume.direction}
                                     </div>
+                                    
+                                    {/* Образование */}
+                                    {Array.isArray(application.resume.education) && application.resume.education.length > 0 && (
+                                      <div className="text-sm text-gray-600 mt-1">
+                                        <span className="font-medium">Образование:</span> {application.resume.education[0].institution}
+                                        {application.resume.education.length > 1 && (
+                                          <span className="text-xs text-gray-400 ml-1">+{application.resume.education.length - 1} ещё</span>
+                                        )}
+                                      </div>
+                                    )}
+                                    
+                                    {/* Опыт работы */}
+                                    {Array.isArray(application.resume.experience) && application.resume.experience.length > 0 && (
+                                      <div className="text-sm text-gray-600 mt-1">
+                                        <span className="font-medium">Опыт:</span> {application.resume.experience[0].position} в {application.resume.experience[0].company}
+                                        {application.resume.experience.length > 1 && (
+                                          <span className="text-xs text-gray-400 ml-1">+{application.resume.experience.length - 1} ещё</span>
+                                        )}
+                                      </div>
+                                    )}
+                                    
+                                    {/* Навыки */}
                                     {Array.isArray(application.resume.skills) && application.resume.skills.length > 0 && (
                                       <div className="flex flex-wrap gap-1 mt-2">
                                         {application.resume.skills.slice(0, 3).map((skill, idx) => (
@@ -715,6 +753,28 @@ export default function Dashboard() {
                                         <div className="text-sm text-gray-600 mt-1">
                                           <span className="font-medium">Направление:</span> {resume.direction}
                                         </div>
+                                        
+                                        {/* Образование */}
+                                        {Array.isArray(resume.education) && resume.education.length > 0 && (
+                                          <div className="text-sm text-gray-600 mt-1">
+                                            <span className="font-medium">Образование:</span> {resume.education[0].institution}
+                                            {resume.education.length > 1 && (
+                                              <span className="text-xs text-gray-400 ml-1">+{resume.education.length - 1} ещё</span>
+                                            )}
+                                          </div>
+                                        )}
+                                        
+                                        {/* Опыт работы */}
+                                        {Array.isArray(resume.experience) && resume.experience.length > 0 && (
+                                          <div className="text-sm text-gray-600 mt-1">
+                                            <span className="font-medium">Опыт:</span> {resume.experience[0].position} в {resume.experience[0].company}
+                                            {resume.experience.length > 1 && (
+                                              <span className="text-xs text-gray-400 ml-1">+{resume.experience.length - 1} ещё</span>
+                                            )}
+                                          </div>
+                                        )}
+                                        
+                                        {/* Навыки */}
                                         {Array.isArray(resume.skills) && resume.skills.length > 0 && (
                                           <div className="flex flex-wrap gap-1 mt-2">
                                             {resume.skills.slice(0, 3).map((skill, idx) => (
