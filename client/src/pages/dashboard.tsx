@@ -241,20 +241,20 @@ export default function Dashboard() {
               <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
               <TabsTrigger value="projects">Мои проекты</TabsTrigger>
               <TabsTrigger value="applications" className="relative">
+                Заявки
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-[calc(100%-10px)] flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                  <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
                     {unreadCount}
                   </span>
                 )}
-                Заявки
               </TabsTrigger>
               <TabsTrigger value="messages" className="relative">
+                Сообщения
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-[calc(100%-10px)] flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                  <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
                     {unreadCount}
                   </span>
                 )}
-                Сообщения
               </TabsTrigger>
             </TabsList>
             
