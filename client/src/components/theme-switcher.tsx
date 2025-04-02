@@ -1,4 +1,4 @@
-import { useTheme } from "@/hooks/use-theme";
+import { useState, useEffect } from "react";
 import { SunIcon, MoonIcon, MonitorIcon } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,8 +13,40 @@ interface ThemeSwitcherProps {
   isMenuItem?: boolean;
 }
 
+// Простая функция переключения темы без зависимости от ThemeProvider
+function useSimpleTheme() {
+  const [theme, setThemeState] = useState<"light" | "dark" | "system">(
+    () => (localStorage.getItem("ui-theme") as any) || "light"
+  );
+
+  const setTheme = (newTheme: "light" | "dark" | "system") => {
+    const root = window.document.documentElement;
+    root.classList.remove("light", "dark");
+    
+    localStorage.setItem("ui-theme", newTheme);
+    
+    if (newTheme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(newTheme);
+    }
+    
+    setThemeState(newTheme);
+  };
+
+  // Применяем тему при монтировании компонента
+  useEffect(() => {
+    setTheme(theme);
+  }, []);
+
+  return { theme, setTheme };
+}
+
 export function ThemeSwitcher({ variant = "outline", isMenuItem = false }: ThemeSwitcherProps) {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme } = useSimpleTheme();
 
   if (isMenuItem) {
     return (

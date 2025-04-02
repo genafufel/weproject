@@ -80,8 +80,10 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <HelmetProvider>
-          <Router />
-          <Toaster />
+          <div className="app-container">
+            <Router />
+            <Toaster />
+          </div>
         </HelmetProvider>
       </AuthProvider>
     </QueryClientProvider>
