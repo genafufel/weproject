@@ -43,8 +43,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Получение всех резюме для страницы талантов
       const allResumes = await storage.getAllResumes();
       
-      // Отображаем все резюме без фильтрации (по запросу пользователя)
-      const approvedResumes = allResumes;
+      // Фильтруем резюме - показываем только те, что прошли модерацию
+      // Если пользователь - администратор, он видит все
+      let approvedResumes;
+      if (req.isAuthenticated() && req.user.isAdmin) {
+        approvedResumes = allResumes;
+      } else {
+        approvedResumes = allResumes.filter(resume => 
+          resume.isPublic && resume.moderationStatus === 'approved'
+        );
+      }
     
       // Убедимся, что photos и talents всегда массивы
       const formattedResumes = approvedResumes.map(resume => {
@@ -219,7 +227,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Resume not found" });
     }
     
-    // Отображаем все резюме без ограничений (по запросу пользователя)
+    // Проверяем, доступно ли резюме для просмотра
+    const isOwner = req.isAuthenticated() && req.user.id === resume.userId;
+    const isAdmin = req.isAuthenticated() && req.user.isAdmin;
+    
+    // Если это не владелец и не админ, проверяем модерацию и публичность
+    if (!isOwner && !isAdmin && (resume.moderationStatus !== 'approved' || !resume.isPublic)) {
+      return res.status(403).json({ 
+        message: "Это резюме находится на модерации или было отклонено"
+      });
+    }
     
     // Форматируем resume перед отправкой
     const formattedResume = { ...resume };
