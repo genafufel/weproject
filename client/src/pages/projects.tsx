@@ -253,7 +253,7 @@ export default function Projects() {
           ) : (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {projects.map((project: any) => (
-                <Card key={project.id} className="overflow-hidden hover:shadow-md transition-all">
+                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col'}`}>
                   {project.photos && project.photos.length > 0 && (
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-48 w-full overflow-hidden">
@@ -287,7 +287,7 @@ export default function Projects() {
                     </div>
                   </CardHeader>
                   
-                  <CardContent>
+                  <CardContent className={`${!(project.photos && project.photos.length > 0) ? 'flex-grow' : ''}`}>
                     <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">{project.description}</p>
                     
                     <div className="mb-4">
@@ -302,7 +302,7 @@ export default function Projects() {
                     </div>
                   </CardContent>
                   
-                  <CardFooter className="flex justify-between items-center pt-0">
+                  <CardFooter className="flex justify-between items-center pt-0 mt-auto">
                     <div className="flex flex-col space-y-1">
                       <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                         <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />

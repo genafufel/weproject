@@ -429,7 +429,7 @@ export default function Talent() {
                 const hasPhoto = photos.length > 0;
                 
                 return (
-                  <Card key={resume.id} className="overflow-hidden hover:shadow-md transition-all">
+                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all ${hasPhoto ? '' : 'flex flex-col'}`}>
                     {hasPhoto && (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] w-full overflow-hidden">
@@ -476,7 +476,7 @@ export default function Talent() {
                       )}
                     </CardHeader>
                     
-                    <CardContent className="pb-4">
+                    <CardContent className={`pb-4 ${!hasPhoto ? 'flex-grow' : ''}`}>
                       <div className="flex flex-wrap gap-1 mb-4">
                         {skills.slice(0, 5).map((skill, index) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
@@ -496,7 +496,7 @@ export default function Talent() {
                       )}
                     </CardContent>
                     
-                    <CardFooter className="pt-0 flex justify-between">
+                    <CardFooter className="pt-0 flex justify-between mt-auto">
                       {!isOwnResume && resumeUser && user && (
                         <Dialog>
                           <DialogTrigger asChild>
