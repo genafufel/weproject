@@ -582,20 +582,28 @@ export default function Dashboard() {
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Проект</div>
                                 <div className="font-medium">
-                                  {projects?.find(p => p.id === application.projectId)?.title || `Проект #${application.projectId}`}
+                                  <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
+                                    {projects?.find(p => p.id === application.projectId)?.title || `Проект #${application.projectId}`}
+                                  </Link>
                                 </div>
                               </div>
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Кандидат</div>
                                 <div className="font-medium">
-                                  {application.user?.fullName || application.user?.username || `Пользователь #${application.userId}`}
+                                  <Link href={`/talent/${application.resume?.id}`} className="hover:text-primary hover:underline">
+                                    {application.user?.fullName || application.user?.username || `Пользователь #${application.userId}`}
+                                  </Link>
                                 </div>
                               </div>
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Резюме кандидата</div>
                                 {application.resume ? (
                                   <div>
-                                    <div className="font-medium">{application.resume.title}</div>
+                                    <div className="font-medium">
+                                      <Link href={`/talent/${application.resume.id}`} className="hover:text-primary hover:underline">
+                                        {application.resume.title}
+                                      </Link>
+                                    </div>
                                     <div className="text-sm text-gray-600 mt-1">
                                       <span className="font-medium">Направление:</span> {application.resume.direction}
                                     </div>
@@ -739,7 +747,9 @@ export default function Dashboard() {
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Проект</div>
                                 <div className="font-medium">
-                                  {application.project?.title || `Проект #${application.projectId}`}
+                                  <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
+                                    {application.project?.title || `Проект #${application.projectId}`}
+                                  </Link>
                                 </div>
                               </div>
                               <div>
@@ -749,7 +759,11 @@ export default function Dashboard() {
                                   if (resume) {
                                     return (
                                       <div>
-                                        <div className="font-medium">{resume.title}</div>
+                                        <div className="font-medium">
+                                          <Link href={`/talent/${resume.id}`} className="hover:text-primary hover:underline">
+                                            {resume.title}
+                                          </Link>
+                                        </div>
                                         <div className="text-sm text-gray-600 mt-1">
                                           <span className="font-medium">Направление:</span> {resume.direction}
                                         </div>
