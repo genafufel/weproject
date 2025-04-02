@@ -11,6 +11,7 @@ import { PlusIcon, Briefcase, FileText, Inbox, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { useNotifications } from "@/hooks/use-notifications";
 import { apiRequest } from "@/lib/queryClient";
 
 // Типы для данных
@@ -79,6 +80,7 @@ interface Application {
 export default function Dashboard() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { unreadCount } = useNotifications();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("overview");
   
@@ -272,8 +274,8 @@ export default function Dashboard() {
                         <span className="text-lg font-medium">{sentApplicationsLoading ? "-" : Array.isArray(sentApplications) ? sentApplications.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Непрочитанные сообщения</span>
-                        <span className="text-lg font-medium">0</span>
+                        <span className="text-gray-600">Непрочитанные уведомления</span>
+                        <span className="text-lg font-medium">{unreadCount}</span>
                       </div>
                     </div>
                   </CardContent>

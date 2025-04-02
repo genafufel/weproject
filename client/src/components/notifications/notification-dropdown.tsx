@@ -111,7 +111,7 @@ export function NotificationDropdown() {
               {notifications.map((notification) => (
                 <div key={notification.id}>
                   <DropdownMenuItem 
-                    className={`flex flex-col items-start cursor-pointer p-3 ${!notification.read ? 'bg-accent/50' : ''}`}
+                    className={`flex flex-col items-start cursor-pointer p-3 ${notification.read === false ? 'bg-accent/50' : ''}`}
                     asChild
                   >
                     <Link 
@@ -122,7 +122,7 @@ export function NotificationDropdown() {
                         <div className="flex justify-between items-start mb-1">
                           <div className="font-medium">
                             {getNotificationTitle(notification)}
-                            {!notification.read && (
+                            {notification.read === false && (
                               <span className="ml-2 text-xs px-1 py-0.5 bg-primary text-primary-foreground rounded">
                                 Новое
                               </span>
