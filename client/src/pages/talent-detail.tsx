@@ -306,7 +306,7 @@ export default function TalentDetail() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back button */}
           <div className="mb-6">
@@ -332,9 +332,9 @@ export default function TalentDetail() {
                       </AvatarFallback>
                     </Avatar>
                     
-                    <h1 className="text-2xl font-bold text-gray-900">{resumeUser?.fullName}</h1>
-                    <p className="text-primary font-medium">{resume.title}</p>
-                    <p className="text-gray-500 mt-1">
+                    <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{resumeUser?.fullName}</h1>
+                    <p className="text-primary dark:text-primary font-medium">{resume.title}</p>
+                    <p className="text-gray-500 dark:text-gray-400 mt-1">
                       {directionTranslations[resume.direction] || resume.direction}
                     </p>
                     
@@ -450,12 +450,12 @@ export default function TalentDetail() {
                 </CardHeader>
                 <CardContent className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Создано</span>
-                    <span>{resume.createdAt ? formatDate(resume.createdAt) : ""}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Создано</span>
+                    <span className="dark:text-gray-200">{resume.createdAt ? formatDate(resume.createdAt) : ""}</span>
                   </div>
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-500">Направление</span>
-                    <span>{directionTranslations[resume.direction] || resume.direction}</span>
+                    <span className="text-gray-500 dark:text-gray-400">Направление</span>
+                    <span className="dark:text-gray-200">{directionTranslations[resume.direction] || resume.direction}</span>
                   </div>
                 </CardContent>
               </Card>
@@ -500,7 +500,7 @@ export default function TalentDetail() {
                     <CardTitle>О себе</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 whitespace-pre-wrap">{resume.about}</p>
+                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{resume.about}</p>
                   </CardContent>
                 </Card>
               )}
@@ -516,23 +516,23 @@ export default function TalentDetail() {
                 <CardContent>
                   {education.length > 0 ? (
                     education.map((edu, index) => (
-                      <div key={index} className={index > 0 ? "mt-6 pt-6 border-t border-gray-200" : ""}>
+                      <div key={index} className={index > 0 ? "mt-6 pt-6 border-t border-gray-200 dark:border-gray-700" : ""}>
                         <div className="flex justify-between">
-                          <h3 className="text-lg font-medium text-gray-900">{edu.institution}</h3>
-                          <span className="text-gray-500 text-sm">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{edu.institution}</h3>
+                          <span className="text-gray-500 dark:text-gray-400 text-sm">
                             {edu.startDate} - {edu.endDate || "Настоящее время"}
                           </span>
                         </div>
-                        <p className="text-primary">
+                        <p className="text-primary dark:text-primary">
                           {edu.degree} по направлению {edu.fieldOfStudy}
                         </p>
                         {edu.description && (
-                          <p className="mt-2 text-gray-600">{edu.description}</p>
+                          <p className="mt-2 text-gray-600 dark:text-gray-400">{edu.description}</p>
                         )}
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500">Информация об образовании не указана</p>
+                    <p className="text-gray-500 dark:text-gray-400">Информация об образовании не указана</p>
                   )}
                 </CardContent>
               </Card>
@@ -548,21 +548,21 @@ export default function TalentDetail() {
                 <CardContent>
                   {experience.length > 0 ? (
                     experience.map((exp, index) => (
-                      <div key={index} className={index > 0 ? "mt-6 pt-6 border-t border-gray-200" : ""}>
+                      <div key={index} className={index > 0 ? "mt-6 pt-6 border-t border-gray-200 dark:border-gray-700" : ""}>
                         <div className="flex justify-between">
-                          <h3 className="text-lg font-medium text-gray-900">{exp.company}</h3>
-                          <span className="text-gray-500 text-sm">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{exp.company}</h3>
+                          <span className="text-gray-500 dark:text-gray-400 text-sm">
                             {exp.startDate} - {exp.endDate || "Настоящее время"}
                           </span>
                         </div>
-                        <p className="text-primary">{exp.position}</p>
+                        <p className="text-primary dark:text-primary">{exp.position}</p>
                         {exp.description && (
-                          <p className="mt-2 text-gray-600">{exp.description}</p>
+                          <p className="mt-2 text-gray-600 dark:text-gray-400">{exp.description}</p>
                         )}
                       </div>
                     ))
                   ) : (
-                    <p className="text-gray-500">Информация об опыте работы не указана</p>
+                    <p className="text-gray-500 dark:text-gray-400">Информация об опыте работы не указана</p>
                   )}
                 </CardContent>
               </Card>
