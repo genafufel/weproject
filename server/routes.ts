@@ -320,7 +320,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      const updatedResume = await storage.updateResume(resumeId, req.body);
+      // Устанавливаем статус модерации на "pending" при обновлении
+      const updateData = {
+        ...req.body,
+        moderationStatus: 'pending',
+        moderationComment: null // Сбрасываем комментарий модератора
+      };
+      
+      const updatedResume = await storage.updateResume(resumeId, updateData);
       res.json(updatedResume);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -358,7 +365,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log("PATCH resume data:", req.body);
       
-      const updatedResume = await storage.updateResume(resumeId, req.body);
+      // Устанавливаем статус модерации на "pending" при обновлении
+      const updateData = {
+        ...req.body,
+        moderationStatus: 'pending', // Возвращаем на модерацию при обновлении
+        moderationComment: null // Сбрасываем комментарий модератора
+      };
+      
+      const updatedResume = await storage.updateResume(resumeId, updateData);
       res.json(updatedResume);
     } catch (error) {
       console.error("Error updating resume:", error);
@@ -657,7 +671,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const projectData = {
         ...req.body,
         startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
-        endDate: req.body.endDate ? new Date(req.body.endDate) : undefined
+        endDate: req.body.endDate ? new Date(req.body.endDate) : undefined,
+        moderationStatus: 'pending', // Возвращаем на модерацию при обновлении
+        moderationComment: null // Сбрасываем комментарий модератора
       };
       
       const updatedProject = await storage.updateProject(projectId, projectData);
