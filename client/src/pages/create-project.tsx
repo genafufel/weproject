@@ -346,10 +346,10 @@ export default function CreateProject() {
                     value={field} 
                     onValueChange={setField}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700">
                       <SelectValue placeholder="Выберите область вашего проекта" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700">
                       {projectFields.map((projectField) => (
                         <SelectItem key={projectField.value} value={projectField.value}>
                           {projectField.label}
