@@ -102,8 +102,8 @@ export default function Dashboard() {
 
   // Получаем заявки пользователя (отправленные)
   const {
-    data: applications,
-    isLoading: applicationsLoading,
+    data: sentApplications,
+    isLoading: sentApplicationsLoading,
   } = useQuery<Application[]>({
     queryKey: ["/api/applications?mode=sent"],
     enabled: !!user?.id,
@@ -111,8 +111,8 @@ export default function Dashboard() {
 
   // Получаем заявки на проекты пользователя (полученные)
   const {
-    data: projectApplications,
-    isLoading: projectApplicationsLoading,
+    data: receivedApplications,
+    isLoading: receivedApplicationsLoading,
   } = useQuery<Application[]>({
     queryKey: ["/api/applications?mode=received"],
     enabled: !!user?.id && Array.isArray(projects) && projects.length > 0,
@@ -261,7 +261,7 @@ export default function Dashboard() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Полученные заявки</span>
-                        <span className="text-lg font-medium">{projectApplicationsLoading ? "-" : Array.isArray(projectApplications) ? projectApplications.length : 0}</span>
+                        <span className="text-lg font-medium">{receivedApplicationsLoading ? "-" : Array.isArray(receivedApplications) ? receivedApplications.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Резюме</span>
@@ -269,7 +269,7 @@ export default function Dashboard() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Отправленные заявки</span>
-                        <span className="text-lg font-medium">{applicationsLoading ? "-" : Array.isArray(applications) ? applications.length : 0}</span>
+                        <span className="text-lg font-medium">{sentApplicationsLoading ? "-" : Array.isArray(sentApplications) ? sentApplications.length : 0}</span>
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Непрочитанные сообщения</span>
@@ -534,11 +534,11 @@ export default function Dashboard() {
                 
                 {/* Полученные заявки */}
                 <TabsContent value="received">
-                  {projectApplicationsLoading ? (
+                  {receivedApplicationsLoading ? (
                     <div className="flex justify-center p-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
-                  ) : !Array.isArray(projectApplications) || projectApplications.length === 0 ? (
+                  ) : !Array.isArray(receivedApplications) || receivedApplications.length === 0 ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
                         <Inbox className="h-12 w-12 text-gray-400 mb-4" />
@@ -553,7 +553,7 @@ export default function Dashboard() {
                     </Card>
                   ) : (
                     <div className="grid gap-6">
-                      {Array.isArray(projectApplications) && projectApplications.map((application: Application) => (
+                      {Array.isArray(receivedApplications) && receivedApplications.map((application: Application) => (
                         <Card key={application.id}>
                           <CardHeader>
                             <div className="flex items-center justify-between">
@@ -699,11 +699,11 @@ export default function Dashboard() {
                 
                 {/* Отправленные заявки */}
                 <TabsContent value="sent">
-                  {applicationsLoading ? (
+                  {sentApplicationsLoading ? (
                     <div className="flex justify-center p-12">
                       <Loader2 className="h-8 w-8 animate-spin text-primary" />
                     </div>
-                  ) : !Array.isArray(applications) || applications.length === 0 ? (
+                  ) : !Array.isArray(sentApplications) || sentApplications.length === 0 ? (
                     <Card>
                       <CardContent className="flex flex-col items-center justify-center p-12">
                         <Inbox className="h-12 w-12 text-gray-400 mb-4" />
@@ -718,7 +718,7 @@ export default function Dashboard() {
                     </Card>
                   ) : (
                     <div className="grid gap-6">
-                      {Array.isArray(applications) && applications.map((application: Application) => (
+                      {Array.isArray(sentApplications) && sentApplications.map((application: Application) => (
                         <Card key={application.id}>
                           <CardHeader>
                             <div className="flex items-center justify-between">
