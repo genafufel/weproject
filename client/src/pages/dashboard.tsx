@@ -47,7 +47,15 @@ interface Application {
   status: string;
   createdAt: string;
   project?: Project;
-  user?: any;
+  user?: {
+    id: number;
+    username: string;
+    fullName?: string;
+    email?: string;
+    phone?: string;
+    avatar?: string;
+    [key: string]: any;
+  };
   resume?: Resume;
   [key: string]: any;
 }
@@ -564,8 +572,33 @@ export default function Dashboard() {
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Кандидат</div>
                                 <div className="font-medium">
-                                  {application.user?.username || `Пользователь #${application.userId}`}
+                                  {application.user?.fullName || application.user?.username || `Пользователь #${application.userId}`}
                                 </div>
+                              </div>
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">Резюме кандидата</div>
+                                {application.resume ? (
+                                  <div>
+                                    <div className="font-medium">{application.resume.title}</div>
+                                    <div className="text-sm text-gray-600 mt-1">
+                                      <span className="font-medium">Направление:</span> {application.resume.direction}
+                                    </div>
+                                    {Array.isArray(application.resume.skills) && application.resume.skills.length > 0 && (
+                                      <div className="flex flex-wrap gap-1 mt-2">
+                                        {application.resume.skills.slice(0, 3).map((skill, idx) => (
+                                          <Badge key={idx} variant="outline" className="text-xs">{skill}</Badge>
+                                        ))}
+                                        {application.resume.skills.length > 3 && (
+                                          <span className="text-xs text-gray-400">+{application.resume.skills.length - 3} ещё</span>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                ) : (
+                                  <div className="text-gray-600">
+                                    Резюме #{application.resumeId} (информация недоступна)
+                                  </div>
+                                )}
                               </div>
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Сообщение</div>
@@ -673,9 +706,35 @@ export default function Dashboard() {
                               </div>
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Резюме</div>
-                                <div className="font-medium">
-                                  {resumes?.find(r => r.id === application.resumeId)?.title || `Резюме #${application.resumeId}`}
-                                </div>
+                                {(() => {
+                                  const resume = resumes?.find(r => r.id === application.resumeId) || application.resume;
+                                  if (resume) {
+                                    return (
+                                      <div>
+                                        <div className="font-medium">{resume.title}</div>
+                                        <div className="text-sm text-gray-600 mt-1">
+                                          <span className="font-medium">Направление:</span> {resume.direction}
+                                        </div>
+                                        {Array.isArray(resume.skills) && resume.skills.length > 0 && (
+                                          <div className="flex flex-wrap gap-1 mt-2">
+                                            {resume.skills.slice(0, 3).map((skill, idx) => (
+                                              <Badge key={idx} variant="outline" className="text-xs">{skill}</Badge>
+                                            ))}
+                                            {resume.skills.length > 3 && (
+                                              <span className="text-xs text-gray-400">+{resume.skills.length - 3} ещё</span>
+                                            )}
+                                          </div>
+                                        )}
+                                      </div>
+                                    );
+                                  } else {
+                                    return (
+                                      <div className="text-gray-600">
+                                        Резюме #{application.resumeId} (информация недоступна)
+                                      </div>
+                                    );
+                                  }
+                                })()}
                               </div>
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Сообщение</div>

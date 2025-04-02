@@ -738,21 +738,77 @@ export async function registerRoutes(app: Express): Promise<Server> {
         receivedApplications = [...receivedApplications, ...projectApplications];
       }
       
-      res.json(receivedApplications);
+      // Обогащаем данные заявок информацией о пользователях и их резюме
+      const enrichedApplications = await Promise.all(receivedApplications.map(async (app) => {
+        // Получаем данные пользователя
+        const user = await storage.getUser(app.userId);
+        
+        // Получаем данные резюме
+        const resume = await storage.getResume(app.resumeId);
+        
+        // Возвращаем обогащенную заявку
+        return {
+          ...app,
+          user: user ? {
+            id: user.id,
+            username: user.username,
+            fullName: user.fullName,
+            email: user.email,
+            phone: user.phone
+          } : null,
+          resume: resume || null
+        };
+      }));
+      
+      res.json(enrichedApplications);
     } else if (mode === 'sent') {
       // Проверяем авторизацию
       if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
       
       // Return the current user's applications (applications they've sent)
       const applications = await storage.getApplicationsByUserId(req.user!.id);
-      res.json(applications);
+      
+      // Обогащаем данные заявок информацией о проектах и резюме
+      const enrichedApplications = await Promise.all(applications.map(async (app) => {
+        // Получаем данные проекта
+        const project = await storage.getProject(app.projectId);
+        
+        // Получаем данные резюме
+        const resume = await storage.getResume(app.resumeId);
+        
+        // Возвращаем обогащенную заявку
+        return {
+          ...app,
+          project: project || null,
+          resume: resume || null
+        };
+      }));
+      
+      res.json(enrichedApplications);
     } else {
       // Проверяем авторизацию для других запросов
       if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
       
       // Return the current user's applications
       const applications = await storage.getApplicationsByUserId(req.user!.id);
-      res.json(applications);
+      
+      // Обогащаем данные заявок информацией о проектах и резюме
+      const enrichedApplications = await Promise.all(applications.map(async (app) => {
+        // Получаем данные проекта
+        const project = await storage.getProject(app.projectId);
+        
+        // Получаем данные резюме
+        const resume = await storage.getResume(app.resumeId);
+        
+        // Возвращаем обогащенную заявку
+        return {
+          ...app,
+          project: project || null,
+          resume: resume || null
+        };
+      }));
+      
+      res.json(enrichedApplications);
     }
   });
 
