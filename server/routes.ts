@@ -40,13 +40,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Публичный маршрут для получения всех резюме (для поиска талантов)
   app.get("/api/public/resumes", async (req, res) => {
     try {
-      // Получение всех резюме для страницы талантов, фильтруем только одобренные
+      // Получение всех резюме для страницы талантов
       const allResumes = await storage.getAllResumes();
       
-      // Фильтрация резюме по статусу модерации (только одобренные для публичного доступа)
-      const approvedResumes = allResumes.filter(resume => 
-        resume.isPublic && resume.moderationStatus === 'approved'
-      );
+      // Отображаем все резюме без фильтрации (по запросу пользователя)
+      const approvedResumes = allResumes;
     
       // Убедимся, что photos и talents всегда массивы
       const formattedResumes = approvedResumes.map(resume => {
@@ -221,12 +219,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(404).json({ message: "Resume not found" });
     }
     
-    // Проверяем, доступно ли резюме для публичного просмотра
-    if (!resume.isPublic || resume.moderationStatus !== 'approved') {
-      return res.status(403).json({ 
-        message: "This resume is private, under moderation, or has been rejected."
-      });
-    }
+    // Отображаем все резюме без ограничений (по запросу пользователя)
     
     // Форматируем resume перед отправкой
     const formattedResume = { ...resume };
