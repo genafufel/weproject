@@ -251,9 +251,9 @@ export default function Projects() {
               </Button>
             </div>
           ) : (
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3" style={{ gridAutoFlow: 'dense' }}>
+            <div className="masonry-grid gap-6">
               {projects.map((project: any) => (
-                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col h-auto max-h-[250px]'}`} style={{ gridColumn: project.photos && project.photos.length > 0 ? 'auto' : 'span 1', gridRow: project.photos && project.photos.length > 0 ? 'auto' : 'span 1' }}>
+                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col h-auto max-h-[200px]'}`}>
                   {project.photos && project.photos.length > 0 && (
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-48 w-full overflow-hidden">
