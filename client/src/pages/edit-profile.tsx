@@ -164,11 +164,11 @@ export default function EditProfile() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Редактирование профиля</h1>
-            <p className="mt-1 text-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Редактирование профиля</h1>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
               Обновите свою информацию для лучшей видимости в поиске.
             </p>
           </div>
@@ -197,14 +197,14 @@ export default function EditProfile() {
                         }}
                       />
                       <AvatarFallback>
-                        <User className="h-12 w-12 text-gray-400" />
+                        <User className="h-12 w-12 text-gray-400 dark:text-gray-600" />
                       </AvatarFallback>
                     </Avatar>
                   </div>
                   
                   <div className="flex flex-col gap-2">
-                    <h3 className="text-lg font-medium">Фото профиля</h3>
-                    <p className="text-sm text-gray-500">
+                    <h3 className="text-lg font-medium dark:text-gray-100">Фото профиля</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       Это изображение будет отображаться в вашем профиле
                     </p>
                     <div className="flex gap-2 mt-2">
