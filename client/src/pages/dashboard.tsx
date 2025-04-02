@@ -243,7 +243,7 @@ export default function Dashboard() {
               <TabsTrigger value="applications" className="relative">
                 Заявки
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                  <span className="absolute -top-1 -right-4 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
                     {unreadCount}
                   </span>
                 )}
@@ -251,7 +251,7 @@ export default function Dashboard() {
               <TabsTrigger value="messages" className="relative">
                 Сообщения
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                  <span className="absolute -top-1 -right-4 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
                     {unreadCount}
                   </span>
                 )}
