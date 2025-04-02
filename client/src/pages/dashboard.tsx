@@ -248,14 +248,16 @@ export default function Dashboard() {
                 )}
                 Заявки
               </TabsTrigger>
-              <TabsTrigger value="messages" className="relative">
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 right-[calc(100%-15px)] flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
-                    {unreadCount}
-                  </span>
-                )}
-                Сообщения
-              </TabsTrigger>
+              <Link href="/messages">
+                <Button variant="ghost" className="relative p-0 h-auto text-base font-medium">
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 right-[calc(100%-15px)] flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                      {unreadCount}
+                    </span>
+                  )}
+                  Сообщения
+                </Button>
+              </Link>
             </TabsList>
             
             {/* Вкладка обзора */}
