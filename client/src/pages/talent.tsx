@@ -442,7 +442,7 @@ export default function Talent() {
                       </Link>
                     )}
                     
-                    <CardHeader className={`${hasPhoto ? 'pb-3' : 'p-3 pb-2'}`}>
+                    <CardHeader className={`${hasPhoto ? 'pb-3' : 'py-2 px-3'}`}>
                       <div className="flex justify-between items-start">
                         <Link href={`/talent/${resume.id}`} className="hover:underline">
                           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{resume.title}</h3>
@@ -450,7 +450,7 @@ export default function Talent() {
                         
                         {isOwnResume && (
                           <Link href={`/edit-resume/${resume.id}`}>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <Button variant="ghost" size="icon" className="h-7 w-7 -mt-1 -mr-1">
                               <Edit className="h-4 w-4" />
                               <span className="sr-only">Редактировать резюме</span>
                             </Button>
@@ -458,49 +458,51 @@ export default function Talent() {
                         )}
                       </div>
                       
-                      {resume.direction && (
-                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-                          {directionTranslations[resume.direction] || resume.direction}
-                        </p>
-                      )}
-                      
-                      {resumeUser && (
-                        <div className="flex items-center mt-1">
-                          <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-primary dark:text-primary truncate">
-                              {resumeUser.fullName}
-                            </p>
-                            {getEducationDisplay(resume)}
+                      <div className="flex flex-wrap gap-x-3 items-center">
+                        {resume.direction && (
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
+                            {directionTranslations[resume.direction] || resume.direction}
+                          </p>
+                        )}
+                        
+                        {resumeUser && (
+                          <div className="flex items-center">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-primary dark:text-primary truncate">
+                                {resumeUser.fullName}
+                              </p>
+                            </div>
                           </div>
+                        )}
+                        
+                        {getEducationDisplay(resume)}
+                      </div>
+                      
+                      {skills.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {skills.slice(0, 5).map((skill, index) => (
+                            <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
+                              {skill}
+                            </Badge>
+                          ))}
+                          {skills.length > 5 && (
+                            <Badge className="bg-primary text-white hover:bg-primary/90">
+                              +{skills.length - 5} ещё
+                            </Badge>
+                          )}
                         </div>
                       )}
                     </CardHeader>
                     
-                    {(skills.length > 0 || (hasPhoto && photos.length > 1)) && (
-                      <CardContent className={`${hasPhoto ? 'pb-4' : 'p-3 pt-0 pb-2'} ${!hasPhoto ? 'flex-grow' : ''}`}>
-                        {skills.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mb-1">
-                            {skills.slice(0, 5).map((skill, index) => (
-                              <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
-                                {skill}
-                              </Badge>
-                            ))}
-                            {skills.length > 5 && (
-                              <Badge className="bg-primary text-white hover:bg-primary/90">
-                                +{skills.length - 5} ещё
-                              </Badge>
-                            )}
-                          </div>
-                        )}
-                        {hasPhoto && photos.length > 1 && (
-                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                            +{photos.length - 1} ещё {photos.length - 1 === 1 ? 'фото' : 'фото'} в портфолио
-                          </p>
-                        )}
+                    {hasPhoto && photos.length > 1 && (
+                      <CardContent className="py-0 pb-2">
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          +{photos.length - 1} ещё {photos.length - 1 === 1 ? 'фото' : 'фото'} в портфолио
+                        </p>
                       </CardContent>
                     )}
                     
-                    <CardFooter className={`${hasPhoto ? 'pt-0' : 'p-3 pt-0'} flex justify-between ${!hasPhoto ? 'mt-auto' : ''}`}>
+                    <CardFooter className={`${hasPhoto ? 'pt-0' : 'py-2 px-3'} flex justify-between ${!hasPhoto ? 'mt-auto' : ''}`}>
                       {!isOwnResume && resumeUser && user && (
                         <Dialog>
                           <DialogTrigger asChild>
