@@ -173,8 +173,8 @@ export default function Messages() {
         refetchConversation()
       ]);
       
-      // Прокручиваем в конец списка сообщений
-      scrollToBottom();
+      // Убираем автоматическую прокрутку после отправки сообщения
+      // scrollToBottom();
       
     } catch (error: any) {
       console.error("Ошибка отправки сообщения:", error);
@@ -245,10 +245,10 @@ export default function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   
-  // Scroll to bottom when messages change
-  useEffect(() => {
-    scrollToBottom();
-  }, [conversationMessages]);
+  // Уже не автопрокручиваем при изменении сообщений
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [conversationMessages]);
   
   // Handle send on Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
