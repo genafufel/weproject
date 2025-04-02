@@ -306,11 +306,11 @@ export default function CreateProject() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Создать новый проект</h1>
-            <p className="mt-1 text-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Создать новый проект</h1>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
               Опубликуйте свой проект и найдите талантливых студентов, которые помогут воплотить его в жизнь.
             </p>
           </div>
@@ -386,9 +386,9 @@ export default function CreateProject() {
                   </div>
                   
                   {positions.map((position) => (
-                    <div key={position.id} className="rounded-md border p-4 space-y-3">
+                    <div key={position.id} className="rounded-md border border-gray-200 dark:border-gray-700 p-4 space-y-3 bg-white dark:bg-gray-800">
                       <div className="flex items-center justify-between">
-                        <h3 className="font-medium text-lg">{position.title}</h3>
+                        <h3 className="font-medium text-lg text-gray-900 dark:text-gray-100">{position.title}</h3>
                         <Button
                           type="button"
                           variant="ghost"
@@ -467,7 +467,7 @@ export default function CreateProject() {
                       Добавить новую должность
                     </Button>
                   ) : (
-                    <div className="rounded-md border p-4 space-y-3">
+                    <div className="rounded-md border border-gray-200 dark:border-gray-700 p-4 space-y-3 bg-white dark:bg-gray-800">
                       <Label>Новая должность</Label>
                       <div className="flex gap-2">
                         <Input
@@ -531,9 +531,9 @@ export default function CreateProject() {
                   </div>
                   
                   {isAddingPhoto && (
-                    <div className="flex flex-col gap-4 mb-4 p-4 border rounded-md">
+                    <div className="flex flex-col gap-4 mb-4 p-4 border border-gray-200 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800">
                       <div>
-                        <h3 className="text-lg font-medium mb-2">Загрузить фото проекта</h3>
+                        <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">Загрузить фото проекта</h3>
                         <p className="text-sm text-muted-foreground mb-4">
                           Выберите изображение с вашего устройства
                         </p>

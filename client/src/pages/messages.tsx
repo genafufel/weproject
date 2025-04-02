@@ -263,10 +263,10 @@ export default function Messages() {
     return (
       <div className="flex flex-col min-h-screen">
         <Navbar />
-        <main className="flex-1 flex items-center justify-center bg-gray-50">
+        <main className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
           <div className="text-center max-w-md px-4">
-            <h1 className="text-2xl font-bold text-gray-900 mb-4">Sign in to access Messages</h1>
-            <p className="text-gray-600 mb-6">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Sign in to access Messages</h1>
+            <p className="text-gray-600 dark:text-gray-400 mb-6">
               You need to be signed in to view and send messages to project owners and applicants.
             </p>
             <Button asChild>
@@ -283,19 +283,19 @@ export default function Messages() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8 min-h-screen">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Messages</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Messages</h1>
           
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
             <div className="grid grid-cols-1 md:grid-cols-3 h-[650px]">
               {/* Contacts sidebar */}
-              <div className="border-r border-gray-200">
-                <div className="p-4 border-b border-gray-200">
+              <div className="border-r border-gray-200 dark:border-gray-700">
+                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
                   <Input
                     type="text"
                     placeholder="Search conversations..."
-                    className="bg-gray-50"
+                    className="bg-gray-50 dark:bg-gray-700 dark:placeholder-gray-400"
                   />
                 </div>
                 
@@ -305,7 +305,7 @@ export default function Messages() {
                       <Loader2 className="h-6 w-6 animate-spin text-primary" />
                     </div>
                   ) : contacts && contacts.length === 0 ? (
-                    <div className="text-center p-4 text-gray-500">
+                    <div className="text-center p-4 text-gray-500 dark:text-gray-400">
                       У вас пока нет сообщений
                     </div>
                   ) : (
@@ -313,8 +313,8 @@ export default function Messages() {
                       {contacts && contacts.map((contact: any) => (
                         <div key={contact.id}>
                           <button
-                            className={`w-full text-left p-4 hover:bg-gray-50 transition-colors ${
-                              activeContactId === contact.id ? "bg-blue-50" : ""
+                            className={`w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${
+                              activeContactId === contact.id ? "bg-blue-50 dark:bg-gray-600" : ""
                             }`}
                             onClick={() => setActiveContactId(contact.id)}
                           >
@@ -334,14 +334,14 @@ export default function Messages() {
                               </Avatar>
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-center">
-                                  <h3 className="text-sm font-medium text-gray-900 truncate">
+                                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
                                     {contact.fullName}
                                   </h3>
-                                  <span className="text-xs text-gray-500">
+                                  <span className="text-xs text-gray-500 dark:text-gray-400">
                                     {formatConversationTime(contact.lastMessageTime)}
                                   </span>
                                 </div>
-                                <p className="text-sm text-gray-500 truncate">
+                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
                                   {contact.lastMessage}
                                 </p>
                               </div>
@@ -352,7 +352,7 @@ export default function Messages() {
                               )}
                             </div>
                           </button>
-                          <Separator />
+                          <Separator className="dark:bg-gray-700" />
                         </div>
                       ))}
                     </div>
@@ -363,13 +363,13 @@ export default function Messages() {
               {/* Messages area */}
               <div className="col-span-2 flex flex-col">
                 {!activeContactId ? (
-                  <div className="flex-1 flex items-center justify-center p-4 text-gray-500">
+                  <div className="flex-1 flex items-center justify-center p-4 text-gray-500 dark:text-gray-400">
                     Select a conversation to start messaging
                   </div>
                 ) : (
                   <>
                     {/* Conversation header */}
-                    <div className="p-4 border-b border-gray-200 flex items-center">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
                       <Avatar className="h-10 w-10 mr-3">
                         <AvatarImage
                           src={(() => {
@@ -389,7 +389,7 @@ export default function Messages() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="text-sm font-medium text-gray-900">
+                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                           {contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
                         </h3>
                       </div>
@@ -402,7 +402,7 @@ export default function Messages() {
                           <Loader2 className="h-6 w-6 animate-spin text-primary" />
                         </div>
                       ) : !conversationMessages || conversationMessages.length === 0 ? (
-                        <div className="text-center p-4 text-gray-500">
+                        <div className="text-center p-4 text-gray-500 dark:text-gray-400">
                           Сообщений пока нет. Начните диалог!
                         </div>
                       ) : (
@@ -418,13 +418,13 @@ export default function Messages() {
                                 className={`max-w-[75%] rounded-lg px-4 py-2 ${
                                   message.senderId === user?.id
                                     ? "bg-primary text-white"
-                                    : "bg-gray-100 text-gray-900"
+                                    : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                 }`}
                               >
                                 <p className="break-words">{message.content}</p>
                                 <div
                                   className={`text-xs mt-1 ${
-                                    message.senderId === user?.id ? "text-blue-100" : "text-gray-500"
+                                    message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
                                   }`}
                                 >
                                   {formatMessageTime(new Date(message.createdAt))}
@@ -438,7 +438,7 @@ export default function Messages() {
                     </ScrollArea>
                     
                     {/* Message input */}
-                    <div className="p-4 border-t border-gray-200">
+                    <div className="p-4 border-t border-gray-200 dark:border-gray-700">
                       <div className="flex">
                         <Input
                           type="text"

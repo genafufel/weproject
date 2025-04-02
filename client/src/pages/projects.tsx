@@ -122,7 +122,7 @@ export default function Projects() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900">
         {/* Hero section */}
         <div className="bg-primary text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -153,11 +153,11 @@ export default function Projects() {
         </div>
         
         {/* Filters section */}
-        <div className="border-b border-gray-200 bg-white">
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium text-gray-500">Фильтры:</span>
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Фильтры:</span>
                 
                 <Select value={selectedField} onValueChange={handleFieldChange}>
                   <SelectTrigger className="w-[180px]">
@@ -204,7 +204,7 @@ export default function Projects() {
                 </div>
               </div>
               
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                 <span>{isLoading ? "Загрузка..." : `${projects?.length || 0} результатов`}</span>
                 
                 <DropdownMenu>
@@ -242,8 +242,8 @@ export default function Projects() {
             </div>
           ) : !projects?.length ? (
             <div className="text-center py-12">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Проекты не найдены</h3>
-              <p className="text-gray-500 mb-6">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Проекты не найдены</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
                 Мы не смогли найти проекты, соответствующие вашим критериям поиска.
               </p>
               <Button asChild variant="outline">
@@ -277,7 +277,7 @@ export default function Projects() {
                             {project.title}
                           </Link>
                         </CardTitle>
-                        <p className="text-sm text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                           Опубликовано: <span className="text-primary">{project.ownerName || "Владелец проекта"}</span>
                         </p>
                       </div>
@@ -288,10 +288,10 @@ export default function Projects() {
                   </CardHeader>
                   
                   <CardContent>
-                    <p className="text-gray-600 line-clamp-3 mb-4">{project.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">{project.description}</p>
                     
                     <div className="mb-4">
-                      <h4 className="text-sm font-medium text-gray-900 mb-2">Требуемые позиции:</h4>
+                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-2">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-2">
                         {(project.positions || []).map((position: any, index: number) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
@@ -304,12 +304,12 @@ export default function Projects() {
                   
                   <CardFooter className="flex justify-between items-center pt-0">
                     <div className="flex flex-col space-y-1">
-                      <div className="flex items-center text-sm text-gray-500">
-                        <MapPin className="h-4 w-4 mr-1 text-gray-400" />
+                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
                         <span>{project.remote ? "Удаленно" : project.location || "Местоположение не указано"}</span>
                       </div>
                       {(project.startDate || project.endDate) && (
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-gray-500 dark:text-gray-400">
                           {project.startDate && new Date(project.startDate).toLocaleDateString('ru-RU')}
                           {project.startDate && project.endDate && " - "}
                           {project.endDate && new Date(project.endDate).toLocaleDateString('ru-RU')}

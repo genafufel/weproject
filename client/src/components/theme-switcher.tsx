@@ -50,7 +50,7 @@ export function ThemeSwitcher({ variant = "outline", isMenuItem = false }: Theme
 
   if (isMenuItem) {
     return (
-      <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer">
+      <div className="flex items-center justify-between px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
         <span>Переключить тему</span>
         <div className="flex space-x-1">
           <Button
@@ -60,7 +60,7 @@ export function ThemeSwitcher({ variant = "outline", isMenuItem = false }: Theme
             onClick={() => setTheme("light")}
             title="Светлая тема"
           >
-            <SunIcon className={`h-4 w-4 ${theme === 'light' ? 'text-primary' : 'text-gray-500'}`} />
+            <SunIcon className={`h-4 w-4 ${theme === 'light' ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
             <span className="sr-only">Светлая тема</span>
           </Button>
           <Button
@@ -70,7 +70,7 @@ export function ThemeSwitcher({ variant = "outline", isMenuItem = false }: Theme
             onClick={() => setTheme("dark")}
             title="Тёмная тема"
           >
-            <MoonIcon className={`h-4 w-4 ${theme === 'dark' ? 'text-primary' : 'text-gray-500'}`} />
+            <MoonIcon className={`h-4 w-4 ${theme === 'dark' ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
             <span className="sr-only">Тёмная тема</span>
           </Button>
           <Button
@@ -80,7 +80,7 @@ export function ThemeSwitcher({ variant = "outline", isMenuItem = false }: Theme
             onClick={() => setTheme("system")}
             title="Системная тема"
           >
-            <MonitorIcon className={`h-4 w-4 ${theme === 'system' ? 'text-primary' : 'text-gray-500'}`} />
+            <MonitorIcon className={`h-4 w-4 ${theme === 'system' ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
             <span className="sr-only">Системная тема</span>
           </Button>
         </div>
