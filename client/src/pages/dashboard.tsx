@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
-import { PlusIcon, Briefcase, FileText, Inbox, Loader2 } from "lucide-react";
+import { PlusIcon, Briefcase, FileText, Inbox, Loader2, Bell } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
@@ -240,8 +240,22 @@ export default function Dashboard() {
               <TabsTrigger value="overview">Обзор</TabsTrigger>
               <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
               <TabsTrigger value="projects">Мои проекты</TabsTrigger>
-              <TabsTrigger value="applications">Заявки</TabsTrigger>
-              <TabsTrigger value="messages">Сообщения</TabsTrigger>
+              <TabsTrigger value="applications" className="relative">
+                Заявки
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                    {unreadCount}
+                  </span>
+                )}
+              </TabsTrigger>
+              <TabsTrigger value="messages" className="relative">
+                Сообщения
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                    {unreadCount}
+                  </span>
+                )}
+              </TabsTrigger>
             </TabsList>
             
             {/* Вкладка обзора */}
@@ -275,7 +289,16 @@ export default function Dashboard() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span className="text-gray-600">Непрочитанные уведомления</span>
-                        <span className="text-lg font-medium">{unreadCount}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-medium">{unreadCount}</span>
+                          {unreadCount > 0 && (
+                            <Link href="/notifications">
+                              <Button variant="outline" size="sm" className="h-7 text-xs">
+                                Просмотреть
+                              </Button>
+                            </Link>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </CardContent>
@@ -313,6 +336,17 @@ export default function Dashboard() {
                         <Button className="w-full justify-start" variant="outline">
                           <Inbox className="mr-2 h-4 w-4" />
                           Проверить сообщения
+                        </Button>
+                      </Link>
+                      <Link href="/notifications">
+                        <Button className="w-full justify-start" variant="outline">
+                          <Bell className="mr-2 h-4 w-4" />
+                          Просмотреть уведомления
+                          {unreadCount > 0 && (
+                            <Badge variant="destructive" className="ml-2">
+                              {unreadCount}
+                            </Badge>
+                          )}
                         </Button>
                       </Link>
                     </div>

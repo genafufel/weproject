@@ -85,7 +85,7 @@ export function NotificationDropdown() {
           )}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-80" align="end">
+      <DropdownMenuContent className="w-80 p-0" align="end">
         <DropdownMenuLabel className="flex justify-between items-center">
           <span>Уведомления</span>
           {unreadCount > 0 && (
@@ -106,9 +106,9 @@ export function NotificationDropdown() {
         ) : notifications.length === 0 ? (
           <div className="p-4 text-center text-muted-foreground">У вас нет уведомлений</div>
         ) : (
-          <ScrollArea className="h-[300px]">
-            <DropdownMenuGroup>
-              {notifications.map((notification) => (
+          <ScrollArea className="max-h-[300px]">
+            <DropdownMenuGroup className="max-h-[300px]">
+              {notifications.map((notification, index) => (
                 <div key={notification.id}>
                   <DropdownMenuItem 
                     className={`flex flex-col items-start cursor-pointer p-3 ${notification.read === false ? 'bg-accent/50' : ''}`}
@@ -138,11 +138,21 @@ export function NotificationDropdown() {
                       </div>
                     </Link>
                   </DropdownMenuItem>
-                  <Separator />
+                  {index < notifications.length - 1 && <Separator />}
                 </div>
               ))}
             </DropdownMenuGroup>
           </ScrollArea>
+        )}
+        {notifications.length > 0 && (
+          <>
+            <DropdownMenuSeparator />
+            <Link to="/notifications" onClick={() => setOpen(false)}>
+              <Button variant="ghost" size="sm" className="w-full justify-center">
+                Посмотреть все уведомления
+              </Button>
+            </Link>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
