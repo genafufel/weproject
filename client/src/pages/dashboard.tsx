@@ -287,19 +287,7 @@ export default function Dashboard() {
                         <span className="text-gray-600">Отправленные заявки</span>
                         <span className="text-lg font-medium">{sentApplicationsLoading ? "-" : Array.isArray(sentApplications) ? sentApplications.length : 0}</span>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Непрочитанные уведомления</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg font-medium">{unreadCount}</span>
-                          {unreadCount > 0 && (
-                            <Link href="/notifications">
-                              <Button variant="outline" size="sm" className="h-7 text-xs">
-                                Просмотреть
-                              </Button>
-                            </Link>
-                          )}
-                        </div>
-                      </div>
+
                     </div>
                   </CardContent>
                 </Card>
@@ -338,17 +326,7 @@ export default function Dashboard() {
                           Проверить сообщения
                         </Button>
                       </Link>
-                      <Link href="/notifications">
-                        <Button className="w-full justify-start" variant="outline">
-                          <Bell className="mr-2 h-4 w-4" />
-                          Просмотреть уведомления
-                          {unreadCount > 0 && (
-                            <Badge variant="destructive" className="ml-2">
-                              {unreadCount}
-                            </Badge>
-                          )}
-                        </Button>
-                      </Link>
+
                     </div>
                   </CardContent>
                 </Card>

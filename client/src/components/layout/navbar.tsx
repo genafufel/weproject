@@ -158,9 +158,6 @@ export function Navbar() {
                       <Link href="/messages" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Сообщения
                       </Link>
-                      <Link href="/notifications" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                        Центр уведомлений
-                      </Link>
                       <Link href="/simple-create-project" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                         Создать проект (простая форма)
                       </Link>
@@ -340,13 +337,7 @@ export function Navbar() {
                   >
                     Сообщения
                   </Link>
-                  <Link 
-                    href="/notifications"
-                    className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Центр уведомлений
-                  </Link>
+
                   {user?.isAdmin && (
                     <Link 
                       href="/admin"

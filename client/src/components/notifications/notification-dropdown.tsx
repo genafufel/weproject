@@ -144,16 +144,7 @@ export function NotificationDropdown() {
             </DropdownMenuGroup>
           </ScrollArea>
         )}
-        {notifications.length > 0 && (
-          <>
-            <DropdownMenuSeparator />
-            <Link to="/notifications" onClick={() => setOpen(false)}>
-              <Button variant="ghost" size="sm" className="w-full justify-center">
-                Посмотреть все уведомления
-              </Button>
-            </Link>
-          </>
-        )}
+
       </DropdownMenuContent>
     </DropdownMenu>
   );
