@@ -224,11 +224,24 @@ export default function Dashboard() {
       
       <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Личный кабинет</h1>
-            <p className="mt-1 text-gray-600 dark:text-gray-400">
-              Добро пожаловать, {user?.fullName}! Управляйте своими резюме и проектами.
-            </p>
+          <div className="mb-8 flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Личный кабинет</h1>
+              <p className="mt-1 text-gray-600 dark:text-gray-400">
+                Добро пожаловать, {user?.fullName}! Управляйте своими резюме и проектами.
+              </p>
+            </div>
+            <Link href="/messages">
+              <Button variant="outline" className="relative">
+                <Inbox className="mr-2 h-4 w-4" />
+                Сообщения
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
+                    {unreadCount}
+                  </span>
+                )}
+              </Button>
+            </Link>
           </div>
           
           <Tabs
@@ -248,16 +261,6 @@ export default function Dashboard() {
                   </span>
                 )}
               </TabsTrigger>
-              <Link href="/messages">
-                <Button variant="ghost" className="relative p-0 h-auto text-base font-medium">
-                  Сообщения
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
-                      {unreadCount}
-                    </span>
-                  )}
-                </Button>
-              </Link>
             </TabsList>
             
             {/* Вкладка обзора */}
