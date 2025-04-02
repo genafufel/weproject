@@ -332,6 +332,7 @@ export default function CreateProject() {
                     placeholder="Введите четкое, описательное название" 
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                    className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
                   />
                   <p className="text-sm text-muted-foreground">
                     Сделайте название конкретным и привлекающим внимание.
@@ -367,7 +368,7 @@ export default function CreateProject() {
                   <Textarea
                     id="description"
                     placeholder="Опишите ваш проект подробно"
-                    className="min-h-32 resize-y"
+                    className="min-h-32 resize-y dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
@@ -431,7 +432,7 @@ export default function CreateProject() {
                                   handleAddRequirement(position.id);
                                 }
                               }}
-                              className="flex-1"
+                              className="flex-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
                             />
                             <Button type="button" onClick={() => handleAddRequirement(position.id)}>
                               Добавить
@@ -480,7 +481,7 @@ export default function CreateProject() {
                               handleAddPosition();
                             }
                           }}
-                          className="flex-1"
+                          className="flex-1 dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
                         />
                         <Button type="button" onClick={handleAddPosition}>
                           Добавить
@@ -585,6 +586,7 @@ export default function CreateProject() {
                       type="date" 
                       value={startDate}
                       onChange={(e) => setStartDate(e.target.value)}
+                      className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
                     />
                     <p className="text-sm text-muted-foreground">
                       Оставьте пустым, если проект не имеет конкретной даты начала.
@@ -598,6 +600,7 @@ export default function CreateProject() {
                       type="date" 
                       value={endDate}
                       onChange={(e) => setEndDate(e.target.value)}
+                      className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700"
                     />
                     <p className="text-sm text-muted-foreground">
                       Оставьте пустым, если проект не имеет конкретной даты окончания.
@@ -614,6 +617,7 @@ export default function CreateProject() {
                       placeholder="Например, Москва, Санкт-Петербург" 
                       value={location}
                       onChange={(e) => setLocation(e.target.value)}
+                      className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
                     />
                     <p className="text-sm text-muted-foreground">
                       Где физически находится ваш проект.
