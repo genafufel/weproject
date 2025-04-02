@@ -253,8 +253,8 @@ export default function CreateProject() {
       photos,
       location,
       remote,
-      startDate: startDate ? new Date(startDate) : undefined,
-      endDate: endDate ? new Date(endDate) : undefined,
+      startDate: startDate ? startDate : undefined,  // Оставляем как строку в формате YYYY-MM-DD
+      endDate: endDate ? endDate : undefined,        // Оставляем как строку в формате YYYY-MM-DD
       positionsWithRequirements: positions // Добавляем оригинальную структуру для будущего использования
     };
     
