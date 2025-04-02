@@ -614,14 +614,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     
     try {
-      const validatedData = insertProjectSchema.parse({
+      // Предварительно обрабатываем даты, преобразуя строки в объекты Date
+      const projectData = {
         ...req.body,
-        userId: req.user.id
-      });
+        userId: req.user.id,
+        startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
+        endDate: req.body.endDate ? new Date(req.body.endDate) : undefined
+      };
       
+      // Валидируем данные с помощью Zod схемы
+      const validatedData = insertProjectSchema.parse(projectData);
+      
+      // Создаем проект через хранилище
       const project = await storage.createProject(validatedData);
       res.status(201).json(project);
     } catch (error) {
+      console.error("Error creating project:", error);
       if (error instanceof z.ZodError) {
         res.status(400).json({ errors: error.errors });
       } else {
@@ -645,9 +653,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
     
     try {
-      const updatedProject = await storage.updateProject(projectId, req.body);
+      // Предварительно обрабатываем даты, преобразуя строки в объекты Date
+      const projectData = {
+        ...req.body,
+        startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
+        endDate: req.body.endDate ? new Date(req.body.endDate) : undefined
+      };
+      
+      const updatedProject = await storage.updateProject(projectId, projectData);
       res.json(updatedProject);
     } catch (error) {
+      console.error("Error updating project:", error);
       if (error instanceof z.ZodError) {
         res.status(400).json({ errors: error.errors });
       } else {
