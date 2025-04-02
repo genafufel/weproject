@@ -173,10 +173,10 @@ export default function EditProfile() {
             </p>
           </div>
           
-          <Card>
+          <Card className="dark:bg-gray-900 dark:border-gray-800">
             <CardHeader>
-              <CardTitle>Информация профиля</CardTitle>
-              <CardDescription>
+              <CardTitle className="dark:text-gray-100">Информация профиля</CardTitle>
+              <CardDescription className="dark:text-gray-400">
                 Эта информация будет отображаться в вашем публичном профиле
               </CardDescription>
             </CardHeader>
@@ -245,14 +245,18 @@ export default function EditProfile() {
                     name="fullName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ФИО</FormLabel>
+                        <FormLabel className="dark:text-gray-100">ФИО</FormLabel>
                         <FormControl>
-                          <Input placeholder="Иванов Иван Иванович" {...field} />
+                          <Input 
+                            placeholder="Иванов Иван Иванович" 
+                            className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
+                            {...field} 
+                          />
                         </FormControl>
-                        <FormDescription>
+                        <FormDescription className="dark:text-gray-400">
                           Ваше полное имя, как оно будет отображаться на сайте
                         </FormDescription>
-                        <FormMessage />
+                        <FormMessage className="dark:text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -262,14 +266,18 @@ export default function EditProfile() {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Электронная почта</FormLabel>
+                        <FormLabel className="dark:text-gray-100">Электронная почта</FormLabel>
                         <FormControl>
-                          <Input placeholder="example@mail.ru" {...field} />
+                          <Input 
+                            placeholder="example@mail.ru" 
+                            className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
+                            {...field} 
+                          />
                         </FormControl>
-                        <FormDescription>
+                        <FormDescription className="dark:text-gray-400">
                           Email для связи и уведомлений
                         </FormDescription>
-                        <FormMessage />
+                        <FormMessage className="dark:text-red-400" />
                       </FormItem>
                     )}
                   />
@@ -279,14 +287,18 @@ export default function EditProfile() {
                     name="phone"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Телефон</FormLabel>
+                        <FormLabel className="dark:text-gray-100">Телефон</FormLabel>
                         <FormControl>
-                          <Input placeholder="+7 (000) 000-00-00" {...field} />
+                          <Input 
+                            placeholder="+7 (000) 000-00-00" 
+                            className="dark:bg-gray-800 dark:text-gray-100 dark:border-gray-700 dark:placeholder:text-gray-500"
+                            {...field} 
+                          />
                         </FormControl>
-                        <FormDescription>
+                        <FormDescription className="dark:text-gray-400">
                           Номер телефона для связи
                         </FormDescription>
-                        <FormMessage />
+                        <FormMessage className="dark:text-red-400" />
                       </FormItem>
                     )}
                   />
