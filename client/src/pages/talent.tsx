@@ -254,7 +254,7 @@ export default function Talent() {
     
     const latestEducation = educationArray[0];
     return latestEducation?.institution ? (
-      <div className="flex items-center gap-1 text-xs text-gray-500">
+      <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
         <GraduationCap className="h-3 w-3" />
         <span>{latestEducation.institution}</span>
       </div>
@@ -321,7 +321,7 @@ export default function Talent() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900">
         {/* Hero section */}
         <div className="bg-primary text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -340,7 +340,7 @@ export default function Talent() {
                     placeholder="Поиск по названию, навыкам или направлению"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 bg-white text-gray-900 border-0"
+                    className="pl-9 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-0"
                   />
                 </div>
                 <Button type="submit" variant="secondary" className="bg-white text-primary hover:bg-gray-100">
@@ -352,11 +352,11 @@ export default function Talent() {
         </div>
         
         {/* Filters section */}
-        <div className="border-b border-gray-200 bg-white">
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
-                <span className="text-sm font-medium text-gray-500">Фильтры:</span>
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Фильтры:</span>
                 
                 <Select value={selectedField} onValueChange={handleFieldChange}>
                   <SelectTrigger className="w-[200px]">
@@ -372,7 +372,7 @@ export default function Talent() {
                 </Select>
               </div>
               
-              <div className="flex items-center space-x-2 text-sm text-gray-500">
+              <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
                 <span>{`${filteredResumes.length} результатов`}</span>
                 
                 <DropdownMenu>
@@ -410,8 +410,8 @@ export default function Talent() {
             </div>
           ) : !filteredResumes.length ? (
             <div className="text-center py-12">
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Результаты не найдены</h3>
-              <p className="text-gray-500 mb-6">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Результаты не найдены</h3>
+              <p className="text-gray-500 dark:text-gray-400 mb-6">
                 Мы не смогли найти резюме, соответствующие критериям поиска.
               </p>
               <Button asChild variant="outline">
@@ -445,7 +445,7 @@ export default function Talent() {
                     <CardHeader className="pb-3">
                       <div className="flex justify-between items-start">
                         <Link href={`/talent/${resume.id}`} className="hover:underline">
-                          <h3 className="text-lg font-medium text-gray-900">{resume.title}</h3>
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{resume.title}</h3>
                         </Link>
                         
                         {isOwnResume && (
@@ -459,7 +459,7 @@ export default function Talent() {
                       </div>
                       
                       {resume.direction && (
-                        <p className="text-sm text-gray-500 mb-2">
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                           {directionTranslations[resume.direction] || resume.direction}
                         </p>
                       )}
@@ -467,7 +467,7 @@ export default function Talent() {
                       {resumeUser && (
                         <div className="flex items-center mt-2">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-primary truncate">
+                            <p className="text-sm font-medium text-primary dark:text-primary truncate">
                               {resumeUser.fullName}
                             </p>
                             {getEducationDisplay(resume)}
@@ -490,7 +490,7 @@ export default function Talent() {
                         )}
                       </div>
                       {hasPhoto && photos.length > 1 && (
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                           +{photos.length - 1} ещё {photos.length - 1 === 1 ? 'фото' : 'фото'} в портфолио
                         </p>
                       )}
