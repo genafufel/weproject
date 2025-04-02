@@ -94,6 +94,30 @@ export default function Dashboard() {
     enabled: !!user?.id && Array.isArray(projects) && projects.length > 0,
   });
   
+  // Мутация для обновления статуса заявки
+  const updateApplicationStatusMutation = useMutation({
+    mutationFn: async ({ id, status }: { id: number, status: string }) => {
+      const response = await apiRequest("PATCH", `/api/applications/${id}/status`, { status });
+      return await response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/applications"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/applications?mode=received"] });
+      queryClient.invalidateQueries({ queryKey: ["/api/applications?mode=sent"] });
+      toast({
+        title: "Статус заявки обновлен",
+        description: "Статус заявки был успешно обновлен",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Ошибка",
+        description: `Не удалось обновить статус заявки: ${error.message}`,
+        variant: "destructive",
+      });
+    },
+  });
+  
   // Устанавливаем tab из URL при монтировании и слушаем события изменения таба
   useEffect(() => {
     const updateTabFromUrl = () => {
@@ -505,8 +529,91 @@ export default function Dashboard() {
                     </Card>
                   ) : (
                     <div className="grid gap-6">
-                      {/* Здесь будет отображение полученных заявок */}
-                      <p>Отображение полученных заявок</p>
+                      {Array.isArray(projectApplications) && projectApplications.map((application: Application) => (
+                        <Card key={application.id}>
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <CardTitle>Заявка от {application.user?.username || `пользователя #${application.userId}`}</CardTitle>
+                                <CardDescription>
+                                  Создана: {new Date(application.createdAt).toLocaleDateString('ru-RU')}
+                                </CardDescription>
+                              </div>
+                              <Badge 
+                                variant={
+                                  application.status === "accepted" ? "default" : 
+                                  application.status === "rejected" ? "destructive" : 
+                                  "outline"
+                                }
+                              >
+                                {application.status === "pending" ? "На рассмотрении" : 
+                                 application.status === "accepted" ? "Принята" : 
+                                 application.status === "rejected" ? "Отклонена" : 
+                                 application.status}
+                              </Badge>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">Проект</div>
+                                <div className="font-medium">
+                                  {projects?.find(p => p.id === application.projectId)?.title || `Проект #${application.projectId}`}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">Кандидат</div>
+                                <div className="font-medium">
+                                  {application.user?.username || `Пользователь #${application.userId}`}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
+                                <div className="text-gray-600">{application.message}</div>
+                              </div>
+                            </div>
+                          </CardContent>
+                          <CardFooter className="flex justify-between">
+                            <div className="flex gap-2">
+                              {application.status === "pending" && (
+                                <>
+                                  <Button 
+                                    variant="default" 
+                                    onClick={() => {
+                                      updateApplicationStatusMutation.mutate({ 
+                                        id: application.id, 
+                                        status: "accepted" 
+                                      });
+                                    }}
+                                  >
+                                    Принять
+                                  </Button>
+                                  <Button 
+                                    variant="destructive"
+                                    onClick={() => {
+                                      updateApplicationStatusMutation.mutate({ 
+                                        id: application.id, 
+                                        status: "rejected" 
+                                      });
+                                    }}
+                                  >
+                                    Отклонить
+                                  </Button>
+                                </>
+                              )}
+                            </div>
+                            <Button 
+                              variant="outline"
+                              onClick={() => {
+                                // Здесь будет логика отправки сообщения
+                                console.log("Отправить сообщение", application.userId);
+                              }}
+                            >
+                              Написать сообщение
+                            </Button>
+                          </CardFooter>
+                        </Card>
+                      ))}
                     </div>
                   )}
                 </TabsContent>
@@ -532,8 +639,57 @@ export default function Dashboard() {
                     </Card>
                   ) : (
                     <div className="grid gap-6">
-                      {/* Здесь будет отображение отправленных заявок */}
-                      <p>Отображение отправленных заявок</p>
+                      {Array.isArray(applications) && applications.map((application: Application) => (
+                        <Card key={application.id}>
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <CardTitle>Заявка на проект {application.project?.title || `#${application.projectId}`}</CardTitle>
+                                <CardDescription>
+                                  Отправлена: {new Date(application.createdAt).toLocaleDateString('ru-RU')}
+                                </CardDescription>
+                              </div>
+                              <Badge 
+                                variant={
+                                  application.status === "accepted" ? "default" : 
+                                  application.status === "rejected" ? "destructive" : 
+                                  "outline"
+                                }
+                              >
+                                {application.status === "pending" ? "На рассмотрении" : 
+                                 application.status === "accepted" ? "Принята" : 
+                                 application.status === "rejected" ? "Отклонена" : 
+                                 application.status}
+                              </Badge>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">Проект</div>
+                                <div className="font-medium">
+                                  {application.project?.title || `Проект #${application.projectId}`}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">Резюме</div>
+                                <div className="font-medium">
+                                  {resumes?.find(r => r.id === application.resumeId)?.title || `Резюме #${application.resumeId}`}
+                                </div>
+                              </div>
+                              <div>
+                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
+                                <div className="text-gray-600">{application.message}</div>
+                              </div>
+                            </div>
+                          </CardContent>
+                          <CardFooter className="flex justify-end">
+                            <Link href={`/projects/${application.projectId}`}>
+                              <Button variant="outline">Просмотреть проект</Button>
+                            </Link>
+                          </CardFooter>
+                        </Card>
+                      ))}
                     </div>
                   )}
                 </TabsContent>
