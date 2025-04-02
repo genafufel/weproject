@@ -524,14 +524,14 @@ export default function ProjectDetail() {
       
       {/* Apply Dialog */}
       <Dialog open={applyDialogOpen} onOpenChange={setApplyDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] dark:text-gray-200">
           <DialogHeader>
-            <DialogTitle>
+            <DialogTitle className="dark:text-gray-100">
               {selectedPosition 
                 ? `Отклик на позицию "${selectedPosition}"` 
                 : `Отклик на проект "${project?.title || 'Проект'}"`}
             </DialogTitle>
-            <DialogDescription>
+            <DialogDescription className="dark:text-gray-300">
               Отправьте заявку, чтобы принять участие в проекте. Выберите резюме и добавьте сопроводительное сообщение.
             </DialogDescription>
           </DialogHeader>
@@ -548,7 +548,7 @@ export default function ProjectDetail() {
                   <span className="text-sm text-gray-500 dark:text-gray-400">Загрузка ваших резюме...</span>
                 </div>
               ) : !resumes?.length ? (
-                <div className="text-sm text-red-500">
+                <div className="text-sm text-red-500 dark:text-red-400">
                   У вас нет резюме. Пожалуйста, создайте его сначала.
                 </div>
               ) : (
