@@ -368,7 +368,7 @@ export default function Messages() {
   // If user is not logged in, show message to login
   if (!user) {
     return (
-      <div className="flex flex-col min-h-screen">
+      <div className="flex flex-col h-screen">
         <Navbar />
         <main className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
           <div className="text-center max-w-md px-4">
@@ -381,21 +381,20 @@ export default function Messages() {
             </Button>
           </div>
         </main>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Messages</h1>
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden">
+        <div className="h-full flex flex-col max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">Messages</h1>
           
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div className="grid grid-cols-1 md:grid-cols-3 h-[650px]">
+          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
+            <div className="grid grid-cols-1 md:grid-cols-3 h-full">
               {/* Contacts sidebar */}
               <div className="border-r border-gray-200 dark:border-gray-700">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -406,7 +405,7 @@ export default function Messages() {
                   />
                 </div>
                 
-                <ScrollArea className="h-[590px]">
+                <ScrollArea className="flex-1">
                   {contactsLoading || messagesDataLoading ? (
                     <div className="flex justify-center items-center h-full">
                       <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -502,8 +501,8 @@ export default function Messages() {
                       </div>
                     </div>
                     
-                    {/* Messages container with fixed height - увеличиваем высоту максимально */}
-                    <div className="flex flex-col h-[540px]">
+                    {/* Messages container with flex to fill available space */}
+                    <div className="flex flex-col flex-1">
                       {/* Messages list with scrolling */}
                       <ScrollArea className="flex-1 p-4 messages-scroll-area">
                         {messagesLoading ? (
@@ -695,8 +694,6 @@ export default function Messages() {
         </div>
       </main>
       
-      <Footer />
-
       {/* Модальное окно для просмотра изображений */}
       <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
         <DialogContent className="sm:max-w-[900px] max-h-[80vh] p-0 overflow-hidden">
