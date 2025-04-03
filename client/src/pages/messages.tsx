@@ -616,7 +616,7 @@ export default function Messages() {
                     {/* Messages container with flex to fill available space */}
                     <div className="flex flex-col flex-1">
                       {/* Messages list with scrolling */}
-                      <ScrollArea className="flex-1 p-4 messages-scroll-area">
+                      <ScrollArea className="h-[calc(100vh-280px)] p-4 messages-scroll-area">
                         {messagesLoading ? (
                           <div className="flex justify-center items-center h-full">
                             <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -714,7 +714,7 @@ export default function Messages() {
                       </ScrollArea>
                       
                       {/* Message input - немного приподнимаем от низа */}
-                      <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
+                      <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mt-auto sticky bottom-0">
                         {/* Предпросмотр прикрепленных файлов */}
                         {attachmentPreviews.length > 0 && (
                           <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex flex-wrap items-center">
