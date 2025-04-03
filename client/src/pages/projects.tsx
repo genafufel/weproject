@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, FormEvent, ChangeEvent } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
@@ -95,8 +95,35 @@ export default function Projects() {
     queryKey: [`/api/projects?${buildQueryString()}`],
   });
   
+  // Получаем список уникальных userId из проектов
+  const userIds = useMemo(() => {
+    if (!projects || !projects.length) return [];
+    return Array.from(new Set(projects.map(project => project.userId)));
+  }, [projects]);
+  
+  // Получаем информацию о пользователях
+  const userQueries = useQuery({
+    queryKey: ['/api/users/batch'],
+    enabled: userIds.length > 0,
+    queryFn: async () => {
+      const users: Record<number, any> = {};
+      await Promise.all(userIds.map(async (userId) => {
+        try {
+          const response = await fetch(`/api/users/${userId}`);
+          if (response.ok) {
+            const userData = await response.json();
+            users[userId] = userData;
+          }
+        } catch (err) {
+          console.error(`Error fetching user ${userId}:`, err);
+        }
+      }));
+      return users;
+    }
+  });
+  
   // Handle search submit
-  const handleSearchSubmit = (e: React.FormEvent) => {
+  const handleSearchSubmit = (e: FormEvent) => {
     e.preventDefault();
     updateUrlWithFilters();
   };
@@ -114,12 +141,12 @@ export default function Projects() {
   };
   
   // Handle date change
-  const handleDateFromChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateFromChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDateFrom(e.target.value);
     setTimeout(updateUrlWithFilters, 0);
   };
   
-  const handleDateToChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleDateToChange = (e: ChangeEvent<HTMLInputElement>) => {
     setDateTo(e.target.value);
     setTimeout(updateUrlWithFilters, 0);
   };
@@ -296,7 +323,11 @@ export default function Projects() {
                           </Link>
                         </CardTitle>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          Опубликовано: <span className="text-primary">{project.ownerName || "Владелец проекта"}</span>
+                          Опубликовано: <span className="text-primary">
+                            {userQueries.data && userQueries.data[project.userId]
+                              ? userQueries.data[project.userId].name || userQueries.data[project.userId].username
+                              : "Загрузка..."}
+                          </span>
                         </p>
                       </div>
                       <Badge>{(() => {
