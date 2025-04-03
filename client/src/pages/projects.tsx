@@ -253,7 +253,7 @@ export default function Projects() {
           ) : (
             <div className="masonry-grid gap-6">
               {projects.map((project: any) => (
-                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? 'h-[585px] flex flex-col' : 'flex flex-col h-[280px]'}`}>
+                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? 'h-[583px] flex flex-col' : 'flex flex-col h-[280px]'}`}>
                   {project.photos && project.photos.length > 0 && (
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-60 max-h-[320px] w-full overflow-hidden">
