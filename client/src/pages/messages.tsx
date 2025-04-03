@@ -236,7 +236,7 @@ export default function Messages() {
         },
         body: JSON.stringify({
           receiverId: activeContactId,
-          content: messageText.trim() || (attachmentFile ? attachmentFile.name : ""),
+          content: messageText.trim() || "",
           attachment: attachmentData?.fileUrl || null,
           attachmentType: attachmentData?.fileType || null,
           attachmentName: attachmentData?.fileName || null,
@@ -621,9 +621,7 @@ export default function Messages() {
                                   </svg>
                                 </div>
                               )}
-                              <span className="text-sm truncate max-w-[200px]">
-                                {attachmentFile.name}
-                              </span>
+
                             </div>
                             <Button
                               variant="ghost"
