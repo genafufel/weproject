@@ -37,13 +37,18 @@ import { Label } from "@/components/ui/label";
 // Project fields for filtering
 const projectFields = [
   { value: "all", label: "Все направления" },
-  { value: "IT", label: "IT и технологии" },
-  { value: "Design", label: "Искусство и дизайн" },
-  { value: "Events", label: "Организация мероприятий" },
-  { value: "Finance", label: "Финансы и бизнес" },
-  { value: "Marketing", label: "Маркетинг и PR" },
-  { value: "Education", label: "Образование и обучение" },
-  { value: "Research", label: "Исследования и наука" },
+  { value: "Computer Science", label: "Компьютерные науки" },
+  { value: "Information Technology", label: "Информационные технологии" },
+  { value: "Graphic Design", label: "Графический дизайн" },
+  { value: "UX/UI Design", label: "UX/UI дизайн" },
+  { value: "Business Administration", label: "Бизнес-администрирование" },
+  { value: "Marketing", label: "Маркетинг" },
+  { value: "Finance", label: "Финансы" },
+  { value: "Education", label: "Образование" },
+  { value: "Engineering", label: "Инженерия" },
+  { value: "Arts", label: "Искусство" },
+  { value: "Event Management", label: "Организация мероприятий" },
+  { value: "Health Sciences", label: "Медицинские науки" },
   { value: "Writing", label: "Копирайтинг и контент" },
   { value: "Other", label: "Другое" },
 ];
@@ -284,9 +289,16 @@ export default function Projects() {
                           Опубликовано: <span className="text-primary">{project.ownerName || "Владелец проекта"}</span>
                         </p>
                       </div>
-                      <Badge>{typeof project.field === 'object' ? 
-                        (project.field?.label || project.field?.title || JSON.stringify(project.field)) : 
-                        project.field}</Badge>
+                      <Badge>{(() => {
+                        // Определяем и форматируем field для отображения
+                        if (typeof project.field === 'object' && project.field !== null) {
+                          return project.field?.label || project.field?.title || '';
+                        } else {
+                          // Находим соответствующее название поля в projectFields
+                          const fieldItem = projectFields.find(f => f.value === project.field);
+                          return fieldItem ? fieldItem.label : project.field;
+                        }
+                      })()}</Badge>
                     </div>
                   </CardHeader>
                   

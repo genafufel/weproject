@@ -494,7 +494,17 @@ export class MemStorage implements IStorage {
     
     if (filters) {
       if (filters.field) {
-        projects = projects.filter(project => project.field === filters.field);
+        projects = projects.filter(project => {
+          // Проверка равенства полей с учетом различных форматов хранения
+          if (typeof project.field === 'object' && project.field !== null) {
+            // Если поле хранится как объект (например, {value: "IT", label: "IT и технологии"})
+            const fieldValue = project.field.value || project.field.id || project.field;
+            return fieldValue === filters.field;
+          } else {
+            // Если поле хранится как строка
+            return project.field === filters.field;
+          }
+        });
       }
       
       if (filters.remote !== undefined) {
@@ -503,10 +513,36 @@ export class MemStorage implements IStorage {
       
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
-        projects = projects.filter(project => 
-          project.title.toLowerCase().includes(searchLower) || 
-          project.description.toLowerCase().includes(searchLower)
-        );
+        const searchTerms = searchLower.split(/\s+/).filter(term => term.length > 0);
+        
+        projects = projects.filter(project => {
+          const titleLower = project.title.toLowerCase();
+          const descriptionLower = project.description.toLowerCase();
+          
+          // Поиск по всем словам в поисковом запросе
+          return searchTerms.some(term => 
+            titleLower.includes(term) || 
+            descriptionLower.includes(term) ||
+            // Проверка на совпадение в позициях
+            (Array.isArray(project.positions) && project.positions.some(pos => {
+              if (typeof pos === 'string') {
+                return pos.toLowerCase().includes(term);
+              } else if (typeof pos === 'object' && pos !== null) {
+                return (pos.title || '').toLowerCase().includes(term);
+              }
+              return false;
+            })) ||
+            // Проверка на совпадение в требованиях
+            (Array.isArray(project.requirements) && project.requirements.some(req => {
+              if (typeof req === 'string') {
+                return req.toLowerCase().includes(term);
+              } else if (typeof req === 'object' && req !== null) {
+                return (req.title || '').toLowerCase().includes(term);
+              }
+              return false;
+            }))
+          );
+        });
       }
       
       // Фильтрация по дате начала проекта

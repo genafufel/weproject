@@ -111,15 +111,16 @@ export default function Talent() {
     setLocation(queryString ? `/talent?${queryString}` : "/talent", { replace: true });
   };
   
-  // Fetch all resumes from public API (we'll filter them locally)
+  // Fetch filtered resumes from public API
   const {
     data: resumes,
     isLoading,
     error,
   } = useQuery<Resume[]>({
-    queryKey: ["/api/public/resumes"],
+    queryKey: [`/api/public/resumes${buildQueryString() ? `?${buildQueryString()}` : ''}`],
     queryFn: async () => {
-      const res = await fetch("/api/public/resumes");
+      const url = `/api/public/resumes${buildQueryString() ? `?${buildQueryString()}` : ''}`;
+      const res = await fetch(url);
       
       if (!res.ok) {
         throw new Error("Failed to fetch resumes");
@@ -167,21 +168,8 @@ export default function Talent() {
     enabled: !!resumes && resumes.length > 0,
   });
   
-  // Filter resumes based on search and field
-  const filteredResumes = resumes?.filter(resume => {
-    const matchesSearch = !searchTerm || 
-      resume.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (typeof resume.skills === 'object' && 
-        Array.isArray(resume.skills) && 
-        resume.skills.some(skill => 
-          typeof skill === 'string' && 
-          skill.toLowerCase().includes(searchTerm.toLowerCase())
-        ));
-    
-    const matchesField = selectedField === "all" || resume.direction === selectedField;
-    
-    return matchesSearch && matchesField;
-  }) || [];
+  // Теперь фильтрация происходит на сервере, мы просто используем полученные резюме
+  const filteredResumes = resumes || [];
   
   // Handle search submit
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -372,7 +360,7 @@ export default function Talent() {
               </div>
               
               <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                <span>{`${filteredResumes.length} результатов`}</span>
+                <span>{`${resumes?.length || 0} результатов`}</span>
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -463,7 +451,16 @@ export default function Talent() {
                       
                       {resume.direction && (
                         <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
-                          {directionTranslations[resume.direction] || resume.direction}
+                          {(() => {
+                            // Определяем и форматируем direction для отображения
+                            if (typeof resume.direction === 'object' && resume.direction !== null) {
+                              return resume.direction?.label || resume.direction?.title || '';
+                            } else {
+                              // Находим соответствующее название поля в fieldDirections
+                              const fieldItem = fieldDirections.find(f => f.value === resume.direction);
+                              return fieldItem ? fieldItem.label : (directionTranslations[resume.direction] || resume.direction);
+                            }
+                          })()}
                         </p>
                       )}
                       

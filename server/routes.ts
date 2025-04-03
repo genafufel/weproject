@@ -40,6 +40,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Публичный маршрут для получения всех резюме (для поиска талантов)
   app.get("/api/public/resumes", async (req, res) => {
     try {
+      // Получаем параметры запроса для фильтрации
+      const field = req.query.field as string | undefined;
+      const search = req.query.search as string | undefined;
+      
       // Получение всех резюме для страницы талантов
       const allResumes = await storage.getAllResumes();
       
@@ -53,9 +57,79 @@ export async function registerRoutes(app: Express): Promise<Server> {
           resume.isPublic && resume.moderationStatus === 'approved'
         );
       }
+      
+      // Дополнительная фильтрация по запросу
+      let filteredResumes = approvedResumes;
+      
+      // Фильтрация по направлению (field/direction)
+      if (field && field !== 'all') {
+        filteredResumes = filteredResumes.filter(resume => {
+          // Проверка равенства полей с учетом различных форматов хранения
+          if (typeof resume.direction === 'object' && resume.direction !== null) {
+            // Если хранится как объект (например, {value: "IT", label: "IT и технологии"})
+            const directionValue = resume.direction.value || resume.direction.id || resume.direction;
+            return directionValue === field;
+          } else {
+            // Если хранится как строка
+            return resume.direction === field;
+          }
+        });
+      }
+      
+      // Фильтрация по поисковому запросу
+      if (search) {
+        const searchLower = search.toLowerCase();
+        const searchTerms = searchLower.split(/\s+/).filter(term => term.length > 0);
+        
+        filteredResumes = filteredResumes.filter(resume => {
+          const titleLower = resume.title.toLowerCase();
+          const aboutLower = resume.about ? resume.about.toLowerCase() : '';
+          
+          // Поиск по всем словам в поисковом запросе
+          return searchTerms.some(term => {
+            if (titleLower.includes(term) || aboutLower.includes(term)) {
+              return true;
+            }
+            
+            // Проверка навыков
+            let skills: string[] = [];
+            if (typeof resume.skills === 'string') {
+              try {
+                skills = JSON.parse(resume.skills);
+              } catch {
+                skills = [];
+              }
+            } else if (Array.isArray(resume.skills)) {
+              skills = resume.skills.filter(skill => typeof skill === 'string');
+            }
+            
+            if (skills.some(skill => skill.toLowerCase().includes(term))) {
+              return true;
+            }
+            
+            // Проверка талантов
+            let talents: string[] = [];
+            if (typeof resume.talents === 'string') {
+              try {
+                talents = JSON.parse(resume.talents);
+              } catch {
+                talents = [];
+              }
+            } else if (Array.isArray(resume.talents)) {
+              talents = resume.talents.filter(talent => typeof talent === 'string');
+            }
+            
+            if (talents.some(talent => talent.toLowerCase().includes(term))) {
+              return true;
+            }
+            
+            return false;
+          });
+        });
+      }
     
       // Убедимся, что photos и talents всегда массивы
-      const formattedResumes = approvedResumes.map(resume => {
+      const formattedResumes = filteredResumes.map(resume => {
         // Создаем копию резюме для безопасного изменения
         const formattedResume = { ...resume };
         
@@ -78,6 +152,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
             formattedResume.talents = JSON.parse(formattedResume.talents as any);
           } catch {
             formattedResume.talents = [];
+          }
+        }
+        
+        // Проверяем и преобразуем skills
+        if (!formattedResume.skills) {
+          formattedResume.skills = [];
+        } else if (!Array.isArray(formattedResume.skills)) {
+          try {
+            formattedResume.skills = JSON.parse(formattedResume.skills as any);
+          } catch {
+            formattedResume.skills = [];
           }
         }
         
