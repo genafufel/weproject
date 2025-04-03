@@ -389,8 +389,8 @@ export default function Messages() {
     <div className="flex flex-col h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden">
-        <div className="h-full flex flex-col max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden pb-4">
+        <div className="h-full flex flex-col max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">Messages</h1>
           
           <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
