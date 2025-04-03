@@ -290,8 +290,10 @@ export default function Projects() {
                   
                   <CardContent className="pb-2 flex-grow">
                     <p className="text-gray-600 dark:text-gray-300 mb-2 line-clamp-3">{project.description}</p>
-                    
-                    <div className="mb-2">
+                  </CardContent>
+                  
+                  <CardFooter className="flex flex-col pt-0 mt-auto">
+                    <div className="w-full mb-3">
                       <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-1">
                         {(project.positions || []).map((position: any, index: number) => (
@@ -301,28 +303,28 @@ export default function Projects() {
                         ))}
                       </div>
                     </div>
-                  </CardContent>
-                  
-                  <CardFooter className="flex justify-between items-center pt-0 mt-auto">
-                    <div className="flex flex-col space-y-1">
-                      <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                        <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
-                        <span>{project.remote ? "Удаленно" : project.location || "Местоположение не указано"}</span>
-                      </div>
-                      {(project.startDate || project.endDate) && (
-                        <div className="text-xs text-gray-500 dark:text-gray-400">
-                          {project.startDate && new Date(project.startDate).toLocaleDateString('ru-RU')}
-                          {project.startDate && project.endDate && " - "}
-                          {project.endDate && new Date(project.endDate).toLocaleDateString('ru-RU')}
-                        </div>
-                      )}
-                    </div>
                     
-                    <Link href={`/projects/${project.id}`}>
-                      <Button variant="default" size="sm">
-                        Откликнуться
-                      </Button>
-                    </Link>
+                    <div className="flex justify-between items-center w-full">
+                      <div className="flex flex-col space-y-1">
+                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                          <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
+                          <span>{project.remote ? "Удаленно" : project.location || "Местоположение не указано"}</span>
+                        </div>
+                        {(project.startDate || project.endDate) && (
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            {project.startDate && new Date(project.startDate).toLocaleDateString('ru-RU')}
+                            {project.startDate && project.endDate && " - "}
+                            {project.endDate && new Date(project.endDate).toLocaleDateString('ru-RU')}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <Link href={`/projects/${project.id}`}>
+                        <Button variant="default" size="sm">
+                          Откликнуться
+                        </Button>
+                      </Link>
+                    </div>
                   </CardFooter>
                 </Card>
               ))}
