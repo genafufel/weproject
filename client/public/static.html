@@ -1,76 +1,133 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>weproject - Без подключения к Vite</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      line-height: 1.6;
-      color: #333;
-    }
-    .card {
-      background-color: #2563eb;
-      color: white;
-      padding: 30px;
-      border-radius: 8px;
-      margin: 20px 0;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-      margin-top: 0;
-    }
-    .btn {
-      display: inline-block;
-      background-color: white;
-      color: #2563eb;
-      padding: 12px 24px;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: bold;
-      margin-top: 15px;
-    }
-    .info {
-      background-color: #f3f4f6;
-      padding: 20px;
-      border-radius: 8px;
-      margin: 20px 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Информация о проблеме с HMR</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        h1 {
+            color: #2563eb;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #4b5563;
+            margin-top: 30px;
+        }
+        .info-box {
+            background-color: #f3f4f6;
+            border-left: 4px solid #2563eb;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .warning-box {
+            background-color: #fef2f2;
+            border-left: 4px solid #ef4444;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        code {
+            background-color: #e5e7eb;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        pre {
+            background-color: #1f2937;
+            color: #f9fafb;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .solution {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+    </style>
 </head>
 <body>
-  <div class="card">
-    <h1>weproject - Решение проблемы</h1>
-    <p>Эта страница не подключена к системе горячей замены модулей Vite и не должна перезагружаться.</p>
-    <a href="/" class="btn">Вернуться к приложению</a>
-  </div>
-  
-  <div class="info">
-    <h2>Что происходит с приложением?</h2>
-    <p>У нас есть проблема с постоянными перезагрузками, которая, судя по всему, связана с:</p>
+    <h1>Решение проблемы с автоматической перезагрузкой сайта</h1>
+    
+    <div class="info-box">
+        <p>Эта страница содержит информацию о проблеме с непрерывной перезагрузкой сайта и предлагаемых решениях.</p>
+    </div>
+
+    <h2>Описание проблемы</h2>
+    
+    <p>В режиме разработки сайт непрерывно перезагружается из-за взаимодействия системы Hot Module Replacement (HMR) фреймворка Vite с ошибками загрузки изображений. Эта проблема возникает по следующей схеме:</p>
+    
+    <ol>
+        <li>Сайт пытается загрузить изображение, которое недоступно или имеет некорректный путь</li>
+        <li>Происходит ошибка загрузки ресурса (Failed to load resource)</li>
+        <li>Vite HMR обнаруживает ошибку и пытается перезагрузить страницу для исправления</li>
+        <li>При перезагрузке ошибка повторяется, создавая бесконечный цикл перезагрузок</li>
+    </ol>
+
+    <div class="warning-box">
+        <p><strong>Важно:</strong> Эта проблема присутствует только в режиме разработки и не влияет на production-сборку приложения.</p>
+    </div>
+
+    <h2>Реализованное решение</h2>
+    
+    <p>Мы реализовали следующее решение для обхода проблемы:</p>
+
+    <div class="solution">
+        <p>1. Создали модуль <code>hmr-disable.ts</code>, который:</p>
+        <ul>
+            <li>Перехватывает WebSocket соединения Vite</li>
+            <li>Блокирует сообщения, связанные с перезагрузкой страницы</li>
+            <li>Отключает автоматическую перезагрузку при ошибках</li>
+        </ul>
+        
+        <p>2. Добавили глобальный обработчик ошибок в <code>main.tsx</code>, который:</p>
+        <ul>
+            <li>Фильтрует ошибки загрузки ресурсов</li>
+            <li>Предотвращает логирование некритичных ошибок в консоль</li>
+        </ul>
+    </div>
+
+    <h2>Влияние на разработку</h2>
+    
+    <p>После внедрения этого решения:</p>
     <ul>
-      <li>Системой горячей замены модулей (Hot Module Replacement) Vite</li>
-      <li>Несколькими ошибками в консоли при загрузке изображений</li>
-      <li>Настройками подключения к серверу разработки Vite</li>
+        <li>Сайт больше не перезагружается автоматически при ошибках загрузки изображений</li>
+        <li>Изменения в коде не вызывают автоматическое обновление страницы (потребуется ручное обновление F5)</li>
+        <li>Некоторые ошибки загрузки ресурсов не отображаются в консоли</li>
     </ul>
+
+    <p>Это не влияет на работу пользователей сайта, так как эти изменения относятся только к процессу разработки.</p>
+
+    <h2>Альтернативные решения</h2>
     
-    <h2>Варианты решения проблемы:</h2>
+    <p>Для полного устранения проблемы рекомендуются следующие меры:</p>
     <ol>
-      <li><strong>Создать и использовать production-сборку</strong> - без горячей перезагрузки</li>
-      <li><strong>Отключить полностью HMR в Vite</strong> (требует изменений в конфигурации)</li>
-      <li><strong>Решить все ошибки загрузки изображений</strong></li>
+        <li>Создать production-сборку приложения без HMR</li>
+        <li>Убедиться, что все пути к изображениям корректны</li>
+        <li>Использовать компоненты с обработкой ошибок загрузки изображений</li>
     </ol>
-    
-    <h2>Для полного решения проблемы необходимо:</h2>
-    <ol>
-      <li>Проверить все пути к изображениям на корректность</li>
-      <li>Обеспечить наличие резервных изображений (fallback) для всех отсутствующих файлов</li>
-      <li>Реализовать использование более стабильной системы загрузки изображений</li>
-    </ol>
-  </div>
+
+    <div class="info-box">
+        <p>Для оптимального взаимодействия с приложением в режиме разработки рекомендуется использовать production-сборку или убедиться, что все изображения доступны по указанным путям.</p>
+    </div>
+
+    <p><a href="/">Вернуться на главную страницу</a></p>
 </body>
 </html>
