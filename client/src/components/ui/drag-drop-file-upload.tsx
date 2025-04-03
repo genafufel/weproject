@@ -8,6 +8,7 @@ interface DragDropFileUploadProps {
   className?: string;
   children?: React.ReactNode;
   disabled?: boolean;
+  clickToUpload?: boolean;
 }
 
 export function DragDropFileUpload({
@@ -17,6 +18,7 @@ export function DragDropFileUpload({
   className,
   children,
   disabled = false,
+  clickToUpload = false,
 }: DragDropFileUploadProps) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -67,9 +69,9 @@ export function DragDropFileUpload({
     }
   };
 
-  // Обработка клика по области
+  // Обработка клика по области - только если clickToUpload = true
   const handleClick = () => {
-    if (!disabled && fileInputRef.current) {
+    if (clickToUpload && !disabled && fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
@@ -116,7 +118,8 @@ export function DragDropFileUpload({
     <div
       ref={dropAreaRef}
       className={cn(
-        "relative cursor-pointer", 
+        "relative", 
+        clickToUpload ? "cursor-pointer" : "",
         isDragging ? "border-primary" : "border-dashed", 
         disabled ? "opacity-50 cursor-not-allowed" : "",
         className

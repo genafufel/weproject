@@ -711,6 +711,7 @@ export default function Messages() {
                           multiple={true}
                           disabled={attachmentLoading}
                           className="min-h-full w-full"
+                          clickToUpload={false}
                         >
                           {messagesLoading ? (
                             <div className="flex justify-center items-center h-full">
@@ -847,22 +848,17 @@ export default function Messages() {
                             )}
                           </Button>
                           
-                          {/* Drag-and-drop область для сообщения */}
-                          <DragDropFileUpload
-                            onFilesSelected={handleFilesSelected}
-                            multiple={true}
-                            disabled={attachmentLoading}
-                            className="flex-1 mr-2"
-                          >
+                          {/* Поле ввода сообщения без drag-and-drop */}
+                          <div className="flex-1 mr-2">
                             <Input
                               type="text"
-                              placeholder="Type your message... или перетащите файлы сюда"
+                              placeholder="Type your message..."
                               value={messageText}
                               onChange={(e) => setMessageText(e.target.value)}
                               onKeyDown={handleKeyDown}
                               className="w-full h-full"
                             />
-                          </DragDropFileUpload>
+                          </div>
                           <Button
                             type="button"
                             onClick={sendMessage}
