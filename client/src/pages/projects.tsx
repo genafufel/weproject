@@ -253,8 +253,8 @@ export default function Projects() {
           ) : (
             <div className="masonry-grid gap-6">
               {projects.map((project: any) => (
-                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col'}`}>
-                  {project.photos && project.photos.length > 0 ? (
+                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col h-auto max-h-[200px]'}`}>
+                  {project.photos && project.photos.length > 0 && (
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-48 w-full overflow-hidden">
                         <img 
@@ -268,8 +268,6 @@ export default function Projects() {
                         />
                       </div>
                     </Link>
-                  ) : (
-                    <div className="h-0"></div>
                   )}
                   <CardHeader className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'pt-4' : ''}`}>
                     <div className="flex justify-between items-start">
@@ -290,19 +288,19 @@ export default function Projects() {
                   </CardHeader>
                   
                   <CardContent className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'py-1' : ''}`}>
-                    <p className="text-gray-600 dark:text-gray-300 line-clamp-3 mb-2">{project.description}</p>
+                    <p className={`text-gray-600 dark:text-gray-300 ${!(project.photos && project.photos.length > 0) ? 'line-clamp-2' : 'line-clamp-3'} mb-2`}>{project.description}</p>
                     
                     <div className="mb-2">
                       <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Требуемые позиции:</h4>
                       <div className="flex flex-wrap gap-1">
-                        {(project.positions || []).slice(0, 3).map((position: any, index: number) => (
+                        {(project.positions || []).slice(0, !(project.photos && project.photos.length > 0) ? 2 : 3).map((position: any, index: number) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
                             {typeof position === 'string' ? position : position.title}
                           </Badge>
                         ))}
-                        {(project.positions || []).length > 3 && (
+                        {(project.positions || []).length > (!(project.photos && project.photos.length > 0) ? 2 : 3) && (
                           <Badge className="bg-primary text-white hover:bg-primary/90">
-                            +{(project.positions || []).length - 3} ещё
+                            +{(project.positions || []).length - (!(project.photos && project.photos.length > 0) ? 2 : 3)} ещё
                           </Badge>
                         )}
                       </div>

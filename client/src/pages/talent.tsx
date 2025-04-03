@@ -429,8 +429,8 @@ export default function Talent() {
                 const hasPhoto = photos.length > 0;
                 
                 return (
-                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full ${hasPhoto ? '' : 'flex flex-col'}`}>
-                    {hasPhoto ? (
+                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${hasPhoto ? '' : 'flex flex-col h-auto max-h-[200px]'}`}>
+                    {hasPhoto && (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] w-full overflow-hidden">
                           <img 
@@ -440,8 +440,6 @@ export default function Talent() {
                           />
                         </div>
                       </Link>
-                    ) : (
-                      <div className="h-0"></div>
                     )}
                     
                     <CardHeader className={`pb-2 ${!hasPhoto ? 'pt-4' : ''}`}>
@@ -480,14 +478,14 @@ export default function Talent() {
                     
                     <CardContent className={`pb-2 ${!hasPhoto ? 'py-1' : ''}`}>
                       <div className="flex flex-wrap gap-1 mb-2">
-                        {skills.slice(0, 5).map((skill, index) => (
+                        {skills.slice(0, !hasPhoto ? 3 : 5).map((skill, index) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
                             {skill}
                           </Badge>
                         ))}
-                        {skills.length > 5 && (
+                        {skills.length > (!hasPhoto ? 3 : 5) && (
                           <Badge className="bg-primary text-white hover:bg-primary/90">
-                            +{skills.length - 5} ещё
+                            +{skills.length - (!hasPhoto ? 3 : 5)} ещё
                           </Badge>
                         )}
                       </div>
