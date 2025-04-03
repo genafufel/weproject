@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тестовая страница</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .container {
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    h1 {
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Тестовая страница без React</h1>
+    <p>Эта страница не использует React, Vite или другие сложные библиотеки.</p>
+    <p>Текущее время: <span id="time"></span></p>
+    <button id="refresh">Обновить время</button>
+  </div>
+
+  <script>
+    // Простой скрипт для отображения времени
+    function updateTime() {
+      document.getElementById('time').textContent = new Date().toLocaleTimeString();
+    }
+    
+    // Обновляем время при загрузке страницы
+    updateTime();
+    
+    // Обновляем время при нажатии на кнопку
+    document.getElementById('refresh').addEventListener('click', updateTime);
+  </script>
+</body>
+</html>
