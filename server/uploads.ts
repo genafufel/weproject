@@ -162,7 +162,7 @@ export function setupUploads(app: Express) {
     }
   });
 
-  // Маршрут для загрузки прикрепляемых к сообщениям файлов
+  // Маршрут для загрузки прикрепляемых к сообщениям файлов (одиночных)
   app.post('/api/upload/message-attachment', upload.single('attachment'), async (req, res) => {
     try {
       if (!req.file) {
@@ -196,6 +196,49 @@ export function setupUploads(app: Express) {
     } catch (error) {
       console.error('Ошибка при загрузке файла сообщения:', error);
       res.status(500).json({ message: 'Не удалось обработать загрузку файла', error: String(error) });
+    }
+  });
+  
+  // Маршрут для загрузки нескольких файлов для сообщений
+  app.post('/api/upload/message-attachments', upload.array('attachments', 10), async (req, res) => {
+    try {
+      if (!req.files || req.files.length === 0) {
+        console.log('Ошибка: файлы не были загружены');
+        return res.status(400).json({ message: 'Не удалось загрузить файлы' });
+      }
+
+      console.log(`Успешно загружено ${req.files.length} файлов`);
+      
+      // Обрабатываем каждый загруженный файл
+      const filesInfo = Array.isArray(req.files) ? req.files.map(file => {
+        // Создаем URL для доступа к файлу
+        const fileUrl = `/uploads/${file.filename}`;
+        
+        // Определяем тип файла
+        const fileType = file.mimetype.startsWith('image/') 
+          ? 'image' 
+          : file.mimetype.includes('pdf') 
+            ? 'pdf' 
+            : file.mimetype.includes('word') 
+              ? 'document' 
+              : file.mimetype.includes('excel') 
+                ? 'spreadsheet' 
+                : 'file';
+                
+        return {
+          url: fileUrl,
+          name: file.originalname,
+          type: fileType
+        };
+      }) : [];
+
+      res.json({
+        success: true,
+        files: filesInfo
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке файлов:', error);
+      res.status(500).json({ message: 'Не удалось обработать загрузку файлов', error: String(error) });
     }
   });
 

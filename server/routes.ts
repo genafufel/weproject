@@ -1344,23 +1344,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     
     try {
+      // Проверяем наличие множественных вложений
+      const hasMultipleAttachments = req.body.attachments && Array.isArray(req.body.attachments) && req.body.attachments.length > 0;
+      
       // Расширяем схему для поддержки прикрепленных файлов
       const validatedData = insertMessageSchema.parse({
         ...req.body,
         senderId: req.user!.id,
         read: false,
-        attachment: req.body.attachment || null,
-        attachmentType: req.body.attachmentType || null,
-        attachmentName: req.body.attachmentName || null
+        // Поддержка обратной совместимости для одного вложения
+        attachment: req.body.attachment || (hasMultipleAttachments ? req.body.attachments[0].url : null),
+        attachmentType: req.body.attachmentType || (hasMultipleAttachments ? req.body.attachments[0].type : null),
+        attachmentName: req.body.attachmentName || (hasMultipleAttachments ? req.body.attachments[0].name : null)
       });
       
-      // Verify receiver exists
+      // Проверяем существование получателя
       const receiver = await storage.getUser(validatedData.receiverId);
       if (!receiver) {
         return res.status(404).json({ message: "Receiver not found" });
       }
       
+      // Создаем первое сообщение (основное или с первым вложением)
       const message = await storage.createMessage(validatedData);
+      
+      // Если есть дополнительные вложения (кроме первого)
+      if (hasMultipleAttachments && req.body.attachments.length > 1) {
+        // Создаем дополнительные сообщения для каждого вложения, начиная со второго
+        for (let i = 1; i < req.body.attachments.length; i++) {
+          const attachment = req.body.attachments[i];
+          await storage.createMessage({
+            senderId: req.user!.id,
+            receiverId: validatedData.receiverId,
+            content: "",
+            read: false,
+            attachment: attachment.url,
+            attachmentType: attachment.type,
+            attachmentName: attachment.name
+          });
+        }
+      }
       
       // Создаем уведомление о новом сообщении
       if (receiver.id !== req.user!.id) {
@@ -1474,6 +1496,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         lastMessage: lastMessage.content || "",
         lastMessageTime: lastMessage.createdAt,
         unread: unreadCount,
+        lastMessageAttachmentType: lastMessage.attachmentType || null,
+        lastMessageAttachmentName: lastMessage.attachmentName || null,
       };
       
       contactsList.push(contact);

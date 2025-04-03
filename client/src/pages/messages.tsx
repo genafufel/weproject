@@ -152,9 +152,9 @@ export default function Messages() {
     refetchInterval: 3000,
   });
   
-  // Состояние для прикрепленного файла
-  const [attachmentFile, setAttachmentFile] = useState<File | null>(null);
-  const [attachmentPreview, setAttachmentPreview] = useState<string | null>(null);
+  // Состояние для прикрепленных файлов
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
+  const [attachmentPreviews, setAttachmentPreviews] = useState<{file: File, preview: string | null}[]>([]);
   const [attachmentLoading, setAttachmentLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -163,43 +163,66 @@ export default function Messages() {
     fileInputRef.current?.click();
   };
 
-  // Обработка выбора файла
+  // Обработка выбора файлов
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setAttachmentLoading(true);
 
     try {
-      // Если это изображение, создаем превью
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setAttachmentPreview(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        // Для других типов файлов показываем только имя
-        setAttachmentPreview(null);
+      // Преобразуем FileList в массив для обработки
+      const fileArray = Array.from(files);
+      
+      // Добавляем новые файлы к существующим
+      setAttachmentFiles(prev => [...prev, ...fileArray]);
+      
+      // Обрабатываем каждый файл для создания превью
+      for (const file of fileArray) {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setAttachmentPreviews(prev => [
+              ...prev, 
+              { file, preview: reader.result as string }
+            ]);
+          };
+          reader.readAsDataURL(file);
+        } else {
+          // Для других типов файлов добавляем без превью
+          setAttachmentPreviews(prev => [
+            ...prev, 
+            { file, preview: null }
+          ]);
+        }
       }
-
-      setAttachmentFile(file);
     } catch (error) {
-      console.error('Ошибка при обработке файла:', error);
+      console.error('Ошибка при обработке файлов:', error);
       toast({
-        title: "Ошибка при обработке файла",
-        description: "Не удалось обработать выбранный файл",
+        title: "Ошибка при обработке файлов",
+        description: "Не удалось обработать выбранные файлы",
         variant: "destructive",
       });
     } finally {
       setAttachmentLoading(false);
+      
+      // Сбрасываем значение input, чтобы можно было выбрать те же файлы снова
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
   // Удаление прикрепленного файла
-  const handleRemoveAttachment = () => {
-    setAttachmentFile(null);
-    setAttachmentPreview(null);
+  const handleRemoveAttachment = (file: File) => {
+    setAttachmentFiles(prev => prev.filter(f => f !== file));
+    setAttachmentPreviews(prev => prev.filter(p => p.file !== file));
+  };
+  
+  // Удаление всех прикрепленных файлов
+  const handleRemoveAllAttachments = () => {
+    setAttachmentFiles([]);
+    setAttachmentPreviews([]);
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -207,29 +230,57 @@ export default function Messages() {
 
   // Отправка сообщения
   const sendMessage = async () => {
-    if ((!messageText.trim() && !attachmentFile) || !activeContactId) return;
+    if ((!messageText.trim() && attachmentFiles.length === 0) || !activeContactId) return;
     
     try {
-      let attachmentData = null;
+      let attachmentsData = [];
 
-      // Если есть прикрепленный файл, загружаем его сначала
-      if (attachmentFile) {
-        const formData = new FormData();
-        formData.append('attachment', attachmentFile);
+      // Если есть прикрепленные файлы, загружаем их сначала
+      if (attachmentFiles.length > 0) {
+        setAttachmentLoading(true);
+        
+        if (attachmentFiles.length === 1) {
+          // Для совместимости со старым кодом, если файл один - используем старый API
+          const formData = new FormData();
+          formData.append('attachment', attachmentFiles[0]);
 
-        const uploadRes = await fetch('/api/upload/message-attachment', {
-          method: 'POST',
-          body: formData,
-        });
+          const uploadRes = await fetch('/api/upload/message-attachment', {
+            method: 'POST',
+            body: formData,
+          });
 
-        if (!uploadRes.ok) {
-          throw new Error("Не удалось загрузить файл");
+          if (!uploadRes.ok) {
+            throw new Error("Не удалось загрузить файл");
+          }
+
+          const data = await uploadRes.json();
+          attachmentsData.push({
+            url: data.fileUrl,
+            type: data.fileType,
+            name: data.fileName
+          });
+        } else {
+          // Если файлов несколько, используем новый API для загрузки нескольких файлов
+          const formData = new FormData();
+          attachmentFiles.forEach(file => {
+            formData.append('attachments', file);
+          });
+
+          const uploadRes = await fetch('/api/upload/message-attachments', {
+            method: 'POST',
+            body: formData,
+          });
+
+          if (!uploadRes.ok) {
+            throw new Error("Не удалось загрузить файлы");
+          }
+
+          const data = await uploadRes.json();
+          attachmentsData = data.files;
         }
-
-        attachmentData = await uploadRes.json();
       }
 
-      // Отправляем сообщение с прикрепленным файлом (если есть)
+      // Отправляем сообщение с прикрепленными файлами
       const res = await fetch("/api/messages", {
         method: "POST",
         headers: {
@@ -238,9 +289,12 @@ export default function Messages() {
         body: JSON.stringify({
           receiverId: activeContactId,
           content: messageText.trim() || "",
-          attachment: attachmentData?.fileUrl || null,
-          attachmentType: attachmentData?.fileType || null,
-          attachmentName: attachmentData?.fileName || null,
+          // Поддержка для старой версии API
+          attachment: attachmentsData.length > 0 ? attachmentsData[0].url : null,
+          attachmentType: attachmentsData.length > 0 ? attachmentsData[0].type : null,
+          attachmentName: attachmentsData.length > 0 ? attachmentsData[0].name : null,
+          // Новое поле для множественных вложений
+          attachments: attachmentsData.length > 0 ? attachmentsData : null,
         }),
       });
       
@@ -249,9 +303,9 @@ export default function Messages() {
         throw new Error(errorData.message || "Failed to send message");
       }
       
-      // Очищаем поле ввода, убираем прикрепленный файл и обновляем данные
+      // Очищаем поле ввода, убираем прикрепленные файлы и обновляем данные
       setMessageText("");
-      handleRemoveAttachment();
+      handleRemoveAllAttachments();
       
       // Инвалидируем кэш запросов сообщений
       queryClient.invalidateQueries({ queryKey: ['/api/messages', 'all'] });
@@ -264,8 +318,10 @@ export default function Messages() {
         refetchConversation()
       ]);
       
-      // Убираем автоматическую прокрутку после отправки сообщения
-      // scrollToBottom();
+      // Прокручиваем вниз чтобы увидеть отправленное сообщение
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
       
     } catch (error: any) {
       console.error("Ошибка отправки сообщения:", error);
@@ -274,6 +330,8 @@ export default function Messages() {
         description: error.message || "Не удалось отправить сообщение. Пожалуйста, попробуйте позже.",
         variant: "destructive",
       });
+    } finally {
+      setAttachmentLoading(false);
     }
   };
   
@@ -365,7 +423,49 @@ export default function Messages() {
       sendMessage();
     }
   };
-  
+
+  // Отображение прикрепленных файлов
+  const renderAttachmentPreviews = () => {
+    return attachmentPreviews.map((item, index) => (
+      <div key={index} className="flex items-center mr-2 bg-gray-100 dark:bg-gray-700 rounded p-1">
+        {item.preview ? (
+          <img 
+            src={item.preview} 
+            alt={`Preview ${index}`} 
+            className="h-10 w-10 rounded object-cover" 
+          />
+        ) : (
+          <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center">
+            {item.file.type.includes('pdf') ? (
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                <polyline points="14 2 14 8 20 8"/>
+              </svg>
+            ) : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                <polyline points="13 2 13 9 20 9"/>
+              </svg>
+            )}
+          </div>
+        )}
+        <div className="mx-2 text-xs truncate max-w-[100px]">
+          {item.file.name}
+        </div>
+        <button
+          type="button"
+          onClick={() => handleRemoveAttachment(item.file)}
+          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    ));
+  };
+
   // If user is not logged in, show message to login
   if (!user) {
     return (
@@ -611,47 +711,21 @@ export default function Messages() {
                       
                       {/* Message input - немного приподнимаем от низа */}
                       <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
-                        {/* Предпросмотр прикрепленного файла */}
-                        {attachmentFile && (
-                          <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
-                            <div className="flex items-center overflow-hidden">
-                              {attachmentPreview ? (
-                                <img 
-                                  src={attachmentPreview} 
-                                  alt="Preview" 
-                                  className="h-10 w-10 rounded object-cover mr-2" 
-                                />
-                              ) : (
-                                <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center mr-2">
-                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-gray-500 dark:text-gray-400">
-                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                    <polyline points="14 2 14 8 20 8"/>
-                                  </svg>
-                                </div>
-                              )}
-
-                            </div>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={handleRemoveAttachment}
-                              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                              </svg>
-                            </Button>
+                        {/* Предпросмотр прикрепленных файлов */}
+                        {attachmentPreviews.length > 0 && (
+                          <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex flex-wrap items-center">
+                            {renderAttachmentPreviews()}
                           </div>
                         )}
                         
                         <div className="flex">
-                          {/* Скрытый input для файла */}
+                          {/* Скрытый input для файлов */}
                           <input
                             type="file"
                             ref={fileInputRef}
                             className="hidden"
                             onChange={handleFileChange}
+                            multiple
                           />
                           
                           {/* Кнопка прикрепления файла */}
@@ -683,7 +757,7 @@ export default function Messages() {
                           <Button
                             type="button"
                             onClick={sendMessage}
-                            disabled={(!messageText.trim() && !attachmentFile) || attachmentLoading}
+                            disabled={(!messageText.trim() && attachmentFiles.length === 0) || attachmentLoading}
                           >
                             <Send className="h-4 w-4" />
                           </Button>
