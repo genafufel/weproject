@@ -236,7 +236,7 @@ export default function Messages() {
         },
         body: JSON.stringify({
           receiverId: activeContactId,
-          content: messageText.trim() || (attachmentFile ? `Прикрепленный файл: ${attachmentFile.name}` : ""),
+          content: messageText.trim() || (attachmentFile ? attachmentFile.name : ""),
           attachment: attachmentData?.fileUrl || null,
           attachmentType: attachmentData?.fileType || null,
           attachmentName: attachmentData?.fileName || null,
