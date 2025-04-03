@@ -215,8 +215,7 @@ export default function Talent() {
 
   // Helper to get resume photos
   const getResumePhotos = (resume: Resume): string[] => {
-    console.log("Получение фотографий для резюме:", resume.id, "photos =", resume.photos);
-    
+    // Убираем логирование, чтобы избежать частых перезагрузок
     if (!resume.photos) return [];
     
     try {
@@ -225,11 +224,10 @@ export default function Talent() {
       }
       if (Array.isArray(resume.photos)) {
         const result = resume.photos;
-        console.log("Возвращаем массив фотографий:", result);
         return result;
       }
     } catch (e) {
-      console.error("Failed to parse photos", e);
+      // Убираем вывод ошибки в консоль
     }
     
     return [];
@@ -438,6 +436,10 @@ export default function Talent() {
                             src={photos[0]} 
                             alt={`Фото из портфолио ${resume.title}`} 
                             className="w-full h-full object-cover transition-all hover:scale-105"
+                            onError={(e) => {
+                              e.currentTarget.src = '/uploads/default.jpg';
+                              e.stopPropagation();
+                            }}
                           />
                         </div>
                       </Link>

@@ -263,8 +263,10 @@ export default function Projects() {
                           alt={project.title} 
                           className="w-full h-full object-cover transition-transform hover:scale-105"
                           onError={(e) => {
-                            console.log("Ошибка загрузки изображения:", project.photos[0]);
+                            // Не выводим ошибку в консоль, чтобы избежать перезагрузок
                             e.currentTarget.src = '/uploads/default.jpg';
+                            // Предотвращаем дальнейшее распространение события
+                            e.stopPropagation();
                           }}
                         />
                       </div>
