@@ -15,24 +15,25 @@ interface ThemeSwitcherProps {
 
 // Простая функция переключения темы без зависимости от ThemeProvider
 function useSimpleTheme() {
-  const [theme, setThemeState] = useState<"light" | "dark" | "system">(
-    () => (localStorage.getItem("ui-theme") as any) || "light"
+  const [theme, setThemeState] = useState<"light" | "dark">(
+    () => {
+      // Получаем текущую тему из локального хранилища
+      const savedTheme = localStorage.getItem("ui-theme");
+      
+      // Если значение 'system' или некорректное, используем 'light' по умолчанию
+      if (!savedTheme || savedTheme === "system" || (savedTheme !== "light" && savedTheme !== "dark")) {
+        return "light";
+      }
+      return savedTheme as "light" | "dark";
+    }
   );
 
-  const setTheme = (newTheme: "light" | "dark" | "system") => {
+  const setTheme = (newTheme: "light" | "dark") => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
     
     localStorage.setItem("ui-theme", newTheme);
-    
-    if (newTheme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-      root.classList.add(systemTheme);
-    } else {
-      root.classList.add(newTheme);
-    }
+    root.classList.add(newTheme);
     
     setThemeState(newTheme);
   };
@@ -73,16 +74,6 @@ export function ThemeSwitcher({ variant = "outline", isMenuItem = false }: Theme
             <MoonIcon className={`h-4 w-4 ${theme === 'dark' ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
             <span className="sr-only">Тёмная тема</span>
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-full"
-            onClick={() => setTheme("system")}
-            title="Системная тема"
-          >
-            <MonitorIcon className={`h-4 w-4 ${theme === 'system' ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
-            <span className="sr-only">Системная тема</span>
-          </Button>
         </div>
       </div>
     );
@@ -105,10 +96,6 @@ export function ThemeSwitcher({ variant = "outline", isMenuItem = false }: Theme
         <DropdownMenuItem onClick={() => setTheme("dark")}>
           <MoonIcon className="mr-2 h-4 w-4" />
           <span>Тёмная</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")}>
-          <MonitorIcon className="mr-2 h-4 w-4" />
-          <span>Системная</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
