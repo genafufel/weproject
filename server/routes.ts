@@ -42,7 +42,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       // Получаем параметры запроса для фильтрации
       const field = req.query.field as string | undefined;
-      const search = req.query.search as string | undefined;
+      
+      // Преобразуем поисковую строку для корректной работы с кириллицей
+      let search = req.query.search as string | undefined;
+      if (search) {
+        try {
+          // Проверка, является ли строка уже в UTF-8 или это URL-encoded строка
+          const hasEncodedChars = /%[0-9A-F]{2}/i.test(search);
+          if (hasEncodedChars) {
+            search = decodeURIComponent(search);
+          }
+          console.log('Поисковый запрос по резюме после декодирования:', search);
+        } catch (e) {
+          console.error('Ошибка при декодировании поискового запроса резюме:', e);
+        }
+      }
       
       // Получение всех резюме для страницы талантов
       const allResumes = await storage.getAllResumes();
@@ -619,12 +633,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     // Добавляем фильтрацию по статусу модерации
     const field = req.query.field as string | undefined;
     const remote = req.query.remote !== undefined ? req.query.remote === "true" : undefined;
-    const search = req.query.search as string | undefined;
+    
+    // Преобразуем поисковую строку для корректной работы с кириллицей
+    let search = req.query.search as string | undefined;
+    if (search) {
+      try {
+        // Проверка, является ли строка уже в UTF-8 или это URL-encoded строка
+        const hasEncodedChars = /%[0-9A-F]{2}/i.test(search);
+        if (hasEncodedChars) {
+          search = decodeURIComponent(search);
+        }
+        console.log('Поисковый запрос после декодирования:', search);
+      } catch (e) {
+        console.error('Ошибка при декодировании поискового запроса:', e);
+      }
+    }
+    
     const userId = req.query.userId ? parseInt(req.query.userId as string) : undefined;
     const dateFrom = req.query.dateFrom ? new Date(req.query.dateFrom as string) : undefined;
     const dateTo = req.query.dateTo ? new Date(req.query.dateTo as string) : undefined;
     
     try {
+      console.log('API запрос /api/projects с параметрами:', {
+        field,
+        remote,
+        search,
+        userId,
+        dateFrom,
+        dateTo
+      });
+      
       if (userId) {
         const projects = await storage.getProjectsByUserId(userId);
         
@@ -684,6 +722,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } else {
       // Получаем базовые проекты из БД
       const projects = await storage.getProjects({ field, remote, search, dateFrom, dateTo });
+      
+      console.log(`Найдено ${projects.length} проектов из базы данных`);
+      if (projects.length > 0) {
+        console.log('Заголовки найденных проектов:', projects.map(p => p.title))
+      }
       
       // Дополнительный поиск по массивам (positions, requirements), если указан поисковый запрос
       let filteredBySearch = projects;

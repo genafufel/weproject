@@ -1188,14 +1188,24 @@ export class DatabaseStorage implements IStorage {
       
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
-        conditions.push(
-          or(
-            like(projects.title, `%${filters.search}%`),
-            like(projects.description, `%${filters.search}%`)
-            // Не используем поиск по requirements, так как это поле jsonb
-            // Мы будем выполнять дополнительную фильтрацию после получения результатов
-          )
-        );
+        // Разбиваем поисковый запрос на отдельные слова для более гибкого поиска
+        const searchTerms = searchLower.split(/\s+/).filter(term => term.length > 0);
+        
+        if (searchTerms.length > 0) {
+          // Если есть слова для поиска, создаем условия для каждого слова
+          const searchConditions = searchTerms.map(term => 
+            or(
+              // Преобразуем строки к нижнему регистру для поиска без учета регистра
+              sql`LOWER(${projects.title}) LIKE ${'%' + term + '%'}`,
+              sql`LOWER(${projects.description}) LIKE ${'%' + term + '%'}`
+            )
+          );
+          
+          // Добавляем условия поиска (любое из слов может присутствовать)
+          conditions.push(or(...searchConditions));
+        }
+        
+        // Дополнительная фильтрация по массивам requirements и positions будет выполняться на уровне JavaScript
       }
       
       if (conditions.length > 0) {
