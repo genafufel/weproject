@@ -495,14 +495,26 @@ export class MemStorage implements IStorage {
     if (filters) {
       if (filters.field) {
         projects = projects.filter(project => {
-          // Проверка равенства полей с учетом различных форматов хранения
-          if (typeof project.field === 'object' && project.field !== null) {
-            // Если поле хранится как объект (например, {value: "IT", label: "IT и технологии"})
-            const fieldValue = project.field.value || project.field.id || project.field;
-            return fieldValue === filters.field;
-          } else {
-            // Если поле хранится как строка
-            return project.field === filters.field;
+          try {
+            // Проверка равенства полей с учетом различных форматов хранения
+            if (typeof project.field === 'object' && project.field !== null) {
+              // Если поле хранится как объект (например, {value: "IT", label: "IT и технологии"})
+              const fieldObj = project.field as Record<string, any>;
+              if (fieldObj.value) {
+                return fieldObj.value === filters.field;
+              } else if (fieldObj.id) {
+                return fieldObj.id === filters.field;
+              } else {
+                // Если у объекта нет value или id, сравниваем сам объект
+                return project.field === filters.field;
+              }
+            } else {
+              // Если поле хранится как строка
+              return project.field === filters.field;
+            }
+          } catch (e) {
+            console.error("Error filtering projects by field:", e);
+            return false;
           }
         });
       }
@@ -1175,11 +1187,13 @@ export class DatabaseStorage implements IStorage {
       }
       
       if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
         conditions.push(
           or(
             like(projects.title, `%${filters.search}%`),
-            like(projects.description, `%${filters.search}%`),
-            like(projects.requirements as any, `%${filters.search}%`)
+            like(projects.description, `%${filters.search}%`)
+            // Не используем поиск по requirements, так как это поле jsonb
+            // Мы будем выполнять дополнительную фильтрацию после получения результатов
           )
         );
       }

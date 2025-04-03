@@ -454,11 +454,13 @@ export default function Talent() {
                           {(() => {
                             // Определяем и форматируем direction для отображения
                             if (typeof resume.direction === 'object' && resume.direction !== null) {
-                              return resume.direction?.label || resume.direction?.title || '';
+                              // Безопасно извлекаем label или title
+                              const dirObj = resume.direction as Record<string, any>;
+                              return dirObj.label || dirObj.title || dirObj.value || dirObj.id || '';
                             } else {
                               // Находим соответствующее название поля в fieldDirections
                               const fieldItem = fieldDirections.find(f => f.value === resume.direction);
-                              return fieldItem ? fieldItem.label : (directionTranslations[resume.direction] || resume.direction);
+                              return fieldItem ? fieldItem.label : (directionTranslations[resume.direction as string] || resume.direction);
                             }
                           })()}
                         </p>

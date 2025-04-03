@@ -64,14 +64,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Фильтрация по направлению (field/direction)
       if (field && field !== 'all') {
         filteredResumes = filteredResumes.filter(resume => {
-          // Проверка равенства полей с учетом различных форматов хранения
-          if (typeof resume.direction === 'object' && resume.direction !== null) {
-            // Если хранится как объект (например, {value: "IT", label: "IT и технологии"})
-            const directionValue = resume.direction.value || resume.direction.id || resume.direction;
-            return directionValue === field;
-          } else {
-            // Если хранится как строка
-            return resume.direction === field;
+          try {
+            // Проверка равенства полей с учетом различных форматов хранения
+            if (typeof resume.direction === 'object' && resume.direction !== null) {
+              // Если хранится как объект (например, {value: "IT", label: "IT и технологии"})
+              const dirObj = resume.direction as Record<string, any>;
+              if (dirObj.value) {
+                return dirObj.value === field;
+              } else if (dirObj.id) {
+                return dirObj.id === field;
+              } else {
+                // Прямое сравнение, если нет value или id
+                return resume.direction === field;
+              }
+            } else if (typeof resume.direction === 'string') {
+              // Если хранится как строка
+              return resume.direction === field;
+            } else {
+              // Для безопасности - пропускаем, если не можем определить формат
+              return true;
+            }
+          } catch (e) {
+            console.error("Error filtering resume by direction:", e, resume.direction);
+            // В случае ошибки, включаем резюме в результаты
+            return true;
           }
         });
       }
@@ -82,49 +98,112 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const searchTerms = searchLower.split(/\s+/).filter(term => term.length > 0);
         
         filteredResumes = filteredResumes.filter(resume => {
-          const titleLower = resume.title.toLowerCase();
-          const aboutLower = resume.about ? resume.about.toLowerCase() : '';
-          
-          // Поиск по всем словам в поисковом запросе
-          return searchTerms.some(term => {
-            if (titleLower.includes(term) || aboutLower.includes(term)) {
+          try {
+            // Поиск по заголовку и описанию
+            const titleLower = resume.title.toLowerCase();
+            const aboutLower = resume.about ? resume.about.toLowerCase() : '';
+            
+            // Если есть прямое совпадение в заголовке или описании - сразу возвращаем true
+            if (searchTerms.some(term => titleLower.includes(term) || aboutLower.includes(term))) {
               return true;
             }
             
             // Проверка навыков
-            let skills: string[] = [];
-            if (typeof resume.skills === 'string') {
-              try {
-                skills = JSON.parse(resume.skills);
-              } catch {
-                skills = [];
+            let skillsList: string[] = [];
+            
+            if (resume.skills) {
+              if (typeof resume.skills === 'string') {
+                try {
+                  skillsList = JSON.parse(resume.skills);
+                } catch (e) {
+                  skillsList = [];
+                }
+              } else if (Array.isArray(resume.skills)) {
+                skillsList = resume.skills
+                  .filter(skill => skill)
+                  .map(skill => {
+                    if (typeof skill === 'string') return skill;
+                    if (typeof skill === 'object' && skill !== null) {
+                      return skill.label || skill.name || skill.value || skill.text || '';
+                    }
+                    return '';
+                  })
+                  .filter(skill => skill !== '');
+              } else if (typeof resume.skills === 'object' && resume.skills !== null) {
+                // Если это объект, извлекаем все возможные строковые значения
+                skillsList = Object.values(resume.skills)
+                  .filter(val => val)
+                  .map(val => {
+                    if (typeof val === 'string') return val;
+                    if (typeof val === 'object' && val !== null) {
+                      return val.label || val.name || val.value || val.text || '';
+                    }
+                    return '';
+                  })
+                  .filter(val => val !== '');
               }
-            } else if (Array.isArray(resume.skills)) {
-              skills = resume.skills.filter(skill => typeof skill === 'string');
             }
             
-            if (skills.some(skill => skill.toLowerCase().includes(term))) {
+            // Поиск по навыкам
+            if (searchTerms.some(term => 
+                skillsList.some(skill => 
+                  typeof skill === 'string' && skill.toLowerCase().includes(term)
+                )
+             )) {
               return true;
             }
             
             // Проверка талантов
-            let talents: string[] = [];
-            if (typeof resume.talents === 'string') {
-              try {
-                talents = JSON.parse(resume.talents);
-              } catch {
-                talents = [];
+            let talentsList: string[] = [];
+            
+            if (resume.talents) {
+              if (typeof resume.talents === 'string') {
+                try {
+                  talentsList = JSON.parse(resume.talents);
+                } catch (e) {
+                  talentsList = [];
+                }
+              } else if (Array.isArray(resume.talents)) {
+                talentsList = resume.talents
+                  .filter(talent => talent)
+                  .map(talent => {
+                    if (typeof talent === 'string') return talent;
+                    if (typeof talent === 'object' && talent !== null) {
+                      return talent.label || talent.name || talent.value || talent.text || '';
+                    }
+                    return '';
+                  })
+                  .filter(talent => talent !== '');
+              } else if (typeof resume.talents === 'object' && resume.talents !== null) {
+                // Если это объект, извлекаем все возможные строковые значения
+                talentsList = Object.values(resume.talents)
+                  .filter(val => val)
+                  .map(val => {
+                    if (typeof val === 'string') return val;
+                    if (typeof val === 'object' && val !== null) {
+                      return val.label || val.name || val.value || val.text || '';
+                    }
+                    return '';
+                  })
+                  .filter(val => val !== '');
               }
-            } else if (Array.isArray(resume.talents)) {
-              talents = resume.talents.filter(talent => typeof talent === 'string');
             }
             
-            if (talents.some(talent => talent.toLowerCase().includes(term))) {
+            // Поиск по талантам
+            if (searchTerms.some(term => 
+                talentsList.some(talent => 
+                  typeof talent === 'string' && talent.toLowerCase().includes(term)
+                )
+             )) {
               return true;
             }
             
             return false;
-          });
+          } catch (e) {
+            console.error("Error filtering resume by search:", e);
+            // В случае ошибки, включаем резюме в результаты
+            return true;
+          }
         });
       }
     
@@ -603,10 +682,100 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(formattedProjects);
     } else {
+      // Получаем базовые проекты из БД
       const projects = await storage.getProjects({ field, remote, search, dateFrom, dateTo });
       
+      // Дополнительный поиск по массивам (positions, requirements), если указан поисковый запрос
+      let filteredBySearch = projects;
+      if (search) {
+        const searchLower = search.toLowerCase();
+        filteredBySearch = projects.filter(project => {
+          try {
+            // Проверка по заголовку и описанию
+            if (project.title.toLowerCase().includes(searchLower) || 
+                project.description.toLowerCase().includes(searchLower)) {
+              return true;
+            }
+            
+            // Проверка по требованиям (requirements)
+            if (project.requirements) {
+              let reqArray = [];
+              
+              if (Array.isArray(project.requirements)) {
+                reqArray = project.requirements;
+              } else if (typeof project.requirements === 'string') {
+                try {
+                  reqArray = JSON.parse(project.requirements);
+                } catch (e) {
+                  reqArray = [];
+                }
+              } else if (typeof project.requirements === 'object') {
+                reqArray = Array.isArray(project.requirements) 
+                  ? project.requirements 
+                  : [project.requirements];
+              }
+              
+              for (const req of reqArray) {
+                if (typeof req === 'string' && req.toLowerCase().includes(searchLower)) {
+                  return true;
+                } else if (req && typeof req === 'object') {
+                  const hasText = req.text && typeof req.text === 'string' && 
+                    req.text.toLowerCase().includes(searchLower);
+                  const hasTitle = req.title && typeof req.title === 'string' && 
+                    req.title.toLowerCase().includes(searchLower);
+                  
+                  if (hasText || hasTitle) {
+                    return true;
+                  }
+                }
+              }
+            }
+            
+            // Проверка по позициям (positions)
+            if (project.positions) {
+              let posArray = [];
+              
+              if (Array.isArray(project.positions)) {
+                posArray = project.positions;
+              } else if (typeof project.positions === 'string') {
+                try {
+                  posArray = JSON.parse(project.positions);
+                } catch (e) {
+                  posArray = [];
+                }
+              } else if (typeof project.positions === 'object') {
+                posArray = Array.isArray(project.positions) 
+                  ? project.positions 
+                  : [project.positions];
+              }
+              
+              for (const pos of posArray) {
+                if (typeof pos === 'string' && pos.toLowerCase().includes(searchLower)) {
+                  return true;
+                } else if (pos && typeof pos === 'object') {
+                  const hasTitle = pos.title && typeof pos.title === 'string' && 
+                    pos.title.toLowerCase().includes(searchLower);
+                  const hasName = pos.name && typeof pos.name === 'string' && 
+                    pos.name.toLowerCase().includes(searchLower);
+                  
+                  if (hasTitle || hasName) {
+                    return true;
+                  }
+                }
+              }
+            }
+            
+            return false;
+          } catch (e) {
+            console.error("Error filtering project:", e);
+            // В случае ошибки, включаем проект в результаты
+            return true;
+          }
+        });
+      }
+      
       // Фильтрация для неадминов - только одобренные проекты
-      let filteredProjects = projects;
+      let filteredProjects = filteredBySearch;
       if (req.isAuthenticated()) {
         if (!req.user.isAdmin) {
           // Не админам показываем только одобренные проекты других пользователей
