@@ -15,8 +15,10 @@ import { Separator } from "@/components/ui/separator";
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
+  DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function Messages() {
   const { user } = useAuth();
@@ -333,6 +335,24 @@ export default function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   
+  // Автоматическая прокрутка при загрузке сообщений
+  useEffect(() => {
+    if (conversationMessages && conversationMessages.length > 0) {
+      scrollToBottom();
+    }
+  }, [conversationMessages]);
+  
+  // Автоматическая прокрутка при смене контакта
+  useEffect(() => {
+    if (activeContactId) {
+      // Небольшая задержка для уверенности, что DOM обновился
+      const timer = setTimeout(() => {
+        scrollToBottom();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [activeContactId]);
+  
   // Handle send on Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -581,7 +601,7 @@ export default function Messages() {
                       </ScrollArea>
                       
                       {/* Message input */}
-                      <div className="p-4 pb-5 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
+                      <div className="p-4 pb-2 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
                         {/* Предпросмотр прикрепленного файла */}
                         {attachmentFile && (
                           <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
@@ -676,6 +696,12 @@ export default function Messages() {
       {/* Модальное окно для просмотра изображений */}
       <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
         <DialogContent className="sm:max-w-[900px] max-h-[80vh] p-0 overflow-hidden">
+          <DialogTitle>
+            <VisuallyHidden>Просмотр изображения</VisuallyHidden>
+          </DialogTitle>
+          <DialogDescription>
+            <VisuallyHidden>Просмотр изображения в полном размере</VisuallyHidden>
+          </DialogDescription>
           <div className="relative">
             {currentImageUrl && (
               <div className="flex justify-center items-center bg-black/50 backdrop-blur-sm">
