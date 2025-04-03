@@ -3,7 +3,7 @@ import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Перечисление для типов уведомлений
-export const notificationTypeEnum = pgEnum('notification_type', ['message', 'application', 'application_response']);
+export const notificationTypeEnum = pgEnum('notification_type', ['message', 'application', 'application_response', 'moderation_sent', 'moderation_approved']);
 
 // User model
 export const users = pgTable("users", {

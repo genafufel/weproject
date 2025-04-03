@@ -533,6 +533,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
       
       const resume = await storage.createResume(validatedData);
+      
+      // Создаем уведомление о том, что резюме отправлено на модерацию
+      await storage.createNotification({
+        userId: req.user.id,
+        type: "application",  // Используем существующий тип, так как новые типы еще не мигрированы
+        title: "Резюме отправлено на модерацию",
+        message: `Ваше резюме "${resume.title}" отправлено на модерацию. Оно будет доступно в поиске после проверки администратором.`,
+        relatedId: resume.id,
+        read: false
+      });
+      
       res.status(201).json(resume);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -566,6 +577,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       const updatedResume = await storage.updateResume(resumeId, updateData);
+      
+      // Создаем уведомление о том, что резюме отправлено на повторную модерацию
+      if (updatedResume) {
+        await storage.createNotification({
+          userId: req.user.id,
+          type: "application",  // Используем существующий тип, так как новые типы еще не мигрированы
+          title: "Резюме отправлено на модерацию",
+          message: `Ваше обновленное резюме "${updatedResume.title}" отправлено на модерацию. Изменения будут видны в поиске после проверки администратором.`,
+          relatedId: resumeId,
+          read: false
+        });
+      }
+      
       res.json(updatedResume);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -611,6 +635,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       const updatedResume = await storage.updateResume(resumeId, updateData);
+      
+      // Создаем уведомление о том, что резюме отправлено на повторную модерацию
+      if (updatedResume) {
+        await storage.createNotification({
+          userId: req.user.id,
+          type: "application",  // Используем существующий тип, так как новые типы еще не мигрированы
+          title: "Резюме отправлено на модерацию",
+          message: `Ваше обновленное резюме "${updatedResume.title}" отправлено на модерацию. Изменения будут видны в поиске после проверки администратором.`,
+          relatedId: resumeId,
+          read: false
+        });
+      }
+      
       res.json(updatedResume);
     } catch (error) {
       console.error("Error updating resume:", error);
