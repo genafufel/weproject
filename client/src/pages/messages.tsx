@@ -148,6 +148,13 @@ export default function Messages() {
       }
       return res.json();
     },
+    onSuccess: (data) => {
+      if (data && data.length > 0) {
+        // При успешном получении сообщений делаем прокрутку
+        setTimeout(() => scrollToBottom(), 50);
+        setTimeout(() => scrollToBottom(), 150);  // Повторно для надежности
+      }
+    },
     enabled: !!activeContactId && !!user,
     // Обновляем диалог каждые 3 секунды
     refetchInterval: 3000,
@@ -422,11 +429,24 @@ export default function Messages() {
   // Автоматическая прокрутка при смене контакта
   useEffect(() => {
     if (activeContactId) {
-      // Небольшая задержка для уверенности, что DOM обновился
-      const timer = setTimeout(() => {
+      // Несколько попыток прокрутки с разной задержкой для надежности
+      const timer1 = setTimeout(() => {
         scrollToBottom();
       }, 100);
-      return () => clearTimeout(timer);
+      
+      const timer2 = setTimeout(() => {
+        scrollToBottom();
+      }, 300);
+      
+      const timer3 = setTimeout(() => {
+        scrollToBottom();
+      }, 500);
+      
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+      };
     }
   }, [activeContactId]);
   
