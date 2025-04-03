@@ -113,7 +113,10 @@ export default function Messages() {
         }
       }
       
-      return contactsList;
+      // Сортируем контакты по времени последнего сообщения (от нового к старому)
+      return contactsList.sort((a, b) => 
+        b.lastMessageTime.getTime() - a.lastMessageTime.getTime()
+      );
     },
     enabled: !!user && !!userMessages,
   });
