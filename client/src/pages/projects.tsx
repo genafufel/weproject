@@ -253,7 +253,7 @@ export default function Projects() {
           ) : (
             <div className="masonry-grid gap-6">
               {projects.map((project: any) => (
-                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? 'max-h-[550px]' : 'flex flex-col h-auto'}`}>
+                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? 'h-[450px]' : 'flex flex-col h-[280px]'}`}>
                   {project.photos && project.photos.length > 0 && (
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-48 max-h-[240px] w-full overflow-hidden">
@@ -269,7 +269,7 @@ export default function Projects() {
                       </div>
                     </Link>
                   )}
-                  <CardHeader className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'pt-4' : ''}`}>
+                  <CardHeader className="pb-2 pt-4">
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle className="text-xl">
@@ -287,7 +287,7 @@ export default function Projects() {
                     </div>
                   </CardHeader>
                   
-                  <CardContent className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'py-1' : ''}`}>
+                  <CardContent className="pb-2">
                     <p className="text-gray-600 dark:text-gray-300 mb-2 line-clamp-3">{project.description}</p>
                     
                     <div className="mb-2">
@@ -302,7 +302,7 @@ export default function Projects() {
                     </div>
                   </CardContent>
                   
-                  <CardFooter className={`flex justify-between items-center pt-0 ${!(project.photos && project.photos.length > 0) ? 'pb-3 mt-1' : 'mt-auto'}`}>
+                  <CardFooter className="flex justify-between items-center pt-0 mt-auto">
                     <div className="flex flex-col space-y-1">
                       <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                         <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />

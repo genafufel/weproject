@@ -429,7 +429,7 @@ export default function Talent() {
                 const hasPhoto = photos.length > 0;
                 
                 return (
-                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${hasPhoto ? 'max-h-[550px]' : 'flex flex-col h-auto'}`}>
+                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${hasPhoto ? 'h-[450px]' : 'flex flex-col h-[280px]'}`}>
                     {hasPhoto && (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] max-h-[240px] w-full overflow-hidden">
@@ -442,7 +442,7 @@ export default function Talent() {
                       </Link>
                     )}
                     
-                    <CardHeader className={`pb-2 ${!hasPhoto ? 'pt-4' : ''}`}>
+                    <CardHeader className="pb-2 pt-4">
                       <div className="flex justify-between items-start">
                         <Link href={`/talent/${resume.id}`} className="hover:underline">
                           <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{resume.title}</h3>
@@ -476,7 +476,7 @@ export default function Talent() {
                       )}
                     </CardHeader>
                     
-                    <CardContent className={`pb-2 ${!hasPhoto ? 'py-1' : ''}`}>
+                    <CardContent className="pb-2">
                       <div className="flex flex-wrap gap-1 mb-2">
                         {skills.map((skill, index) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
@@ -491,7 +491,7 @@ export default function Talent() {
                       )}
                     </CardContent>
                     
-                    <CardFooter className={`pt-0 flex justify-between ${!hasPhoto ? 'pb-3 mt-1' : 'mt-auto'}`}>
+                    <CardFooter className="pt-0 flex justify-between mt-auto">
                       {!isOwnResume && resumeUser && user && (
                         <Dialog>
                           <DialogTrigger asChild>
