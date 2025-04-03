@@ -572,7 +572,7 @@ export default function Messages() {
                     </ScrollArea>
                     
                     {/* Message input */}
-                    <div className="p-4 border-t border-gray-200 dark:border-gray-700">
+                    <div className="p-4 pb-5 border-t border-gray-200 dark:border-gray-700">
                       {/* Предпросмотр прикрепленного файла */}
                       {attachmentFile && (
                         <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
