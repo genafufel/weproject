@@ -80,6 +80,9 @@ export const messages = pgTable("messages", {
   senderId: integer("sender_id").notNull(),
   receiverId: integer("receiver_id").notNull(),
   content: text("content").notNull(),
+  attachment: text("attachment"), // URL прикрепленного файла
+  attachmentType: text("attachment_type"), // Тип прикрепленного файла (image, document и т.д.)
+  attachmentName: text("attachment_name"), // Оригинальное имя файла
   read: boolean("read").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });

@@ -30,11 +30,31 @@ const fileStorage = multer.diskStorage({
 
 // Фильтр файлов по типу
 const fileFilter = (req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  // Принимаем только изображения
-  if (file.mimetype.startsWith('image/')) {
-    cb(null, true);
+  // Проверяем путь запроса - для сообщений разрешаем больше типов файлов
+  if (req.path === '/api/upload/message-attachment') {
+    // Для сообщений разрешаем изображения, документы, PDF и т.д.
+    const allowedMimeTypes = [
+      'image/', 
+      'application/pdf', 
+      'application/msword', 
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'text/plain'
+    ];
+    
+    if (allowedMimeTypes.some(type => file.mimetype.startsWith(type) || file.mimetype === type)) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
   } else {
-    cb(null, false);
+    // Для других загрузок (аватары, фото проектов) только изображения
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(null, false);
+    }
   }
 };
 
@@ -138,6 +158,43 @@ export function setupUploads(app: Express) {
       });
     } catch (error) {
       console.error('Ошибка при загрузке файла резюме:', error);
+      res.status(500).json({ message: 'Не удалось обработать загрузку файла', error: String(error) });
+    }
+  });
+
+  // Маршрут для загрузки прикрепляемых к сообщениям файлов
+  app.post('/api/upload/message-attachment', upload.single('attachment'), async (req, res) => {
+    try {
+      if (!req.file) {
+        console.log('Ошибка: файл не был загружен');
+        return res.status(400).json({ message: 'Не удалось загрузить файл' });
+      }
+
+      console.log('Файл сообщения успешно загружен:', req.file);
+
+      // Создаем URL для доступа к файлу
+      const fileUrl = `/uploads/${req.file.filename}`;
+      console.log('Сгенерирован URL:', fileUrl);
+
+      // Определяем тип файла
+      const fileType = req.file.mimetype.startsWith('image/') 
+        ? 'image' 
+        : req.file.mimetype.includes('pdf') 
+          ? 'pdf' 
+          : req.file.mimetype.includes('word') 
+            ? 'document' 
+            : req.file.mimetype.includes('excel') 
+              ? 'spreadsheet' 
+              : 'file';
+
+      res.json({
+        success: true,
+        fileUrl,
+        fileName: req.file.originalname,
+        fileType
+      });
+    } catch (error) {
+      console.error('Ошибка при загрузке файла сообщения:', error);
       res.status(500).json({ message: 'Не удалось обработать загрузку файла', error: String(error) });
     }
   });

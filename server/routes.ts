@@ -1344,10 +1344,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
     
     try {
+      // Расширяем схему для поддержки прикрепленных файлов
       const validatedData = insertMessageSchema.parse({
         ...req.body,
         senderId: req.user!.id,
-        read: false
+        read: false,
+        attachment: req.body.attachment || null,
+        attachmentType: req.body.attachmentType || null,
+        attachmentName: req.body.attachmentName || null
       });
       
       // Verify receiver exists
@@ -1357,11 +1361,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const message = await storage.createMessage(validatedData);
+      
+      // Создаем уведомление о новом сообщении
+      if (receiver.id !== req.user!.id) {
+        await storage.createNotification({
+          userId: receiver.id,
+          type: 'message',
+          title: 'Новое сообщение',
+          message: `${req.user!.fullName} отправил(а) вам сообщение`,
+          relatedId: message.id,
+          read: false
+        });
+      }
+      
       res.status(201).json(message);
     } catch (error) {
       if (error instanceof z.ZodError) {
         res.status(400).json({ errors: error.errors });
       } else {
+        console.error('Ошибка при создании сообщения:', error);
         res.status(500).json({ message: "Internal server error" });
       }
     }
