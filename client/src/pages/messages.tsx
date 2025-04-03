@@ -117,6 +117,7 @@ export default function Messages() {
             avatar: contactUser.avatar,
             lastMessage: lastMessage.content || "",
             lastMessageTime: new Date(lastMessage.createdAt),
+            lastMessageAttachmentType: lastMessage.attachmentType || null,
             unread: unreadCount,
           });
         } catch (error) {
@@ -448,7 +449,14 @@ export default function Messages() {
                                   </span>
                                 </div>
                                 <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                  {contact.lastMessage}
+                                  {contact.lastMessageAttachmentType === 'image' && !contact.lastMessage ? 
+                                    "Изображение" : 
+                                    contact.lastMessageAttachmentType === 'pdf' && !contact.lastMessage ? 
+                                    "PDF файл" :
+                                    contact.lastMessageAttachmentType && !contact.lastMessage ?
+                                    "Файл" :
+                                    contact.lastMessage?.replace(/Прикрепленный файл:.*$/, '') || ''
+                                  }
                                 </p>
                               </div>
                               {contact.unread > 0 && (
