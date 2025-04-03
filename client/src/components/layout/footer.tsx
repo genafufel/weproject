@@ -36,31 +36,31 @@ export function Footer() {
   ];
 
   return (
-    <footer className="bg-white">
+    <footer className="bg-white dark:bg-gray-800 shadow-sm dark:shadow-gray-700/20">
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2">
             <div className="flex items-center">
               <Logo />
             </div>
-            <p className="mt-4 text-base text-gray-600">
+            <p className="mt-4 text-base text-gray-600 dark:text-gray-300">
               Объединяем талантливых студентов с интересными стартап-возможностями.
               Создавайте портфолио, расширяйте сеть контактов и начинайте карьеру.
             </p>
             <div className="mt-6 flex space-x-6">
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="#" className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                 <span className="sr-only">Facebook</span>
                 <FacebookIcon className="h-6 w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="#" className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                 <span className="sr-only">Instagram</span>
                 <InstagramIcon className="h-6 w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="#" className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                 <span className="sr-only">Twitter</span>
                 <TwitterIcon className="h-6 w-6" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-gray-500">
+              <a href="#" className="text-gray-400 hover:text-gray-500 dark:hover:text-gray-300">
                 <span className="sr-only">LinkedIn</span>
                 <LinkedinIcon className="h-6 w-6" />
               </a>
@@ -77,7 +77,7 @@ export function Footer() {
                   <li key={link.label}>
                     <Link 
                       href={link.href}
-                      className="text-base text-gray-600 hover:text-gray-900"
+                      className="text-base text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
                     >
                       {link.label}
                     </Link>
@@ -87,8 +87,8 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <div className="mt-12 border-t border-gray-200 pt-8">
-          <p className="text-base text-gray-400 text-center">
+        <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
+          <p className="text-base text-gray-400 dark:text-gray-500 text-center">
             &copy; {currentYear} weproject. Все права защищены.
           </p>
         </div>
