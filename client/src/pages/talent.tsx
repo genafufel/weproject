@@ -430,7 +430,7 @@ export default function Talent() {
                 
                 return (
                   <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full ${hasPhoto ? '' : 'flex flex-col'}`}>
-                    {hasPhoto && (
+                    {hasPhoto ? (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] w-full overflow-hidden">
                           <img 
@@ -440,6 +440,8 @@ export default function Talent() {
                           />
                         </div>
                       </Link>
+                    ) : (
+                      <div className="h-0"></div>
                     )}
                     
                     <CardHeader className={`pb-2 ${!hasPhoto ? 'pt-4' : ''}`}>

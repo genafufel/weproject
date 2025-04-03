@@ -254,7 +254,7 @@ export default function Projects() {
             <div className="masonry-grid gap-6">
               {projects.map((project: any) => (
                 <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col'}`}>
-                  {project.photos && project.photos.length > 0 && (
+                  {project.photos && project.photos.length > 0 ? (
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative h-48 w-full overflow-hidden">
                         <img 
@@ -268,6 +268,8 @@ export default function Projects() {
                         />
                       </div>
                     </Link>
+                  ) : (
+                    <div className="h-0"></div>
                   )}
                   <CardHeader className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'pt-4' : ''}`}>
                     <div className="flex justify-between items-start">
