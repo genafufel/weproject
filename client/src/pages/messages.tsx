@@ -529,7 +529,7 @@ export default function Messages() {
                                       : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   }`}
                                 >
-                                  <p className="break-words">{message.content}</p>
+                                  <p className="break-words">{message.content?.replace(/Прикрепленный файл:.*$/, '')}</p>
                                   
                                   {/* Отображение прикрепленного файла */}
                                   {message.attachment && (
