@@ -182,6 +182,13 @@ export default function Talent() {
     setSelectedField(value);
     setTimeout(updateUrlWithFilters, 0);
   };
+  
+  // Clear all filters
+  const clearAllFilters = () => {
+    setSearchTerm("");
+    setSelectedField("all");
+    setLocation("/talent", { replace: true });
+  };
 
   // Add skills type guard
   const getResumeSkills = (resume: Resume): string[] => {
@@ -401,8 +408,8 @@ export default function Talent() {
               <p className="text-gray-500 dark:text-gray-400 mb-6">
                 Мы не смогли найти резюме, соответствующие критериям поиска.
               </p>
-              <Button asChild variant="outline">
-                <Link href="/talent">Очистить все фильтры</Link>
+              <Button variant="outline" onClick={clearAllFilters}>
+                Очистить все фильтры
               </Button>
             </div>
           ) : (

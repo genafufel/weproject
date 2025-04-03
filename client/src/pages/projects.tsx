@@ -123,6 +123,16 @@ export default function Projects() {
     setDateTo(e.target.value);
     setTimeout(updateUrlWithFilters, 0);
   };
+  
+  // Clear all filters
+  const clearAllFilters = () => {
+    setSearchTerm("");
+    setSelectedField("all");
+    setRemoteOnly(false);
+    setDateFrom("");
+    setDateTo("");
+    setLocation("/projects", { replace: true });
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -252,8 +262,8 @@ export default function Projects() {
               <p className="text-gray-500 dark:text-gray-400 mb-6">
                 Мы не смогли найти проекты, соответствующие вашим критериям поиска.
               </p>
-              <Button asChild variant="outline">
-                <Link href="/projects">Очистить все фильтры</Link>
+              <Button variant="outline" onClick={clearAllFilters}>
+                Очистить все фильтры
               </Button>
             </div>
           ) : (
