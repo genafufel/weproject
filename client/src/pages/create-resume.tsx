@@ -15,6 +15,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Form,
   FormControl,
   FormDescription,
@@ -68,19 +75,19 @@ type ResumeFormValues = z.infer<typeof resumeFormSchema>;
 
 // Field of study directions
 const studyDirections = [
-  "Компьютерные науки",
-  "Информационные технологии",
-  "Графический дизайн",
-  "UX/UI дизайн",
-  "Бизнес администрирование",
-  "Маркетинг",
-  "Финансы",
-  "Образование",
-  "Инженерия",
-  "Искусство",
-  "Организация мероприятий",
-  "Здравоохранение",
-  "Другое"
+  { value: "Computer Science", label: "Компьютерные науки" },
+  { value: "Information Technology", label: "Информационные технологии" },
+  { value: "Graphic Design", label: "Графический дизайн" },
+  { value: "UX/UI Design", label: "UX/UI дизайн" },
+  { value: "Business Administration", label: "Бизнес-администрирование" },
+  { value: "Marketing", label: "Маркетинг" },
+  { value: "Finance", label: "Финансы" },
+  { value: "Education", label: "Образование" },
+  { value: "Engineering", label: "Инженерия" },
+  { value: "Arts", label: "Искусство" },
+  { value: "Event Management", label: "Организация мероприятий" },
+  { value: "Health Sciences", label: "Медицинские науки" },
+  { value: "Other", label: "Другое" }
 ];
 
 export default function CreateResume() {
@@ -459,17 +466,22 @@ export default function CreateResume() {
                       <FormItem>
                         <FormLabel>Направление обучения/специализация</FormLabel>
                         <FormControl>
-                          <Input
-                            list="study-directions"
-                            placeholder="Например, компьютерные науки, графический дизайн и т.д."
-                            {...field}
-                          />
+                          <select
+                            className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                            onChange={field.onChange}
+                            value={field.value}
+                          >
+                            <option value="" disabled>Выберите направление</option>
+                            {studyDirections.map((direction) => (
+                              <option 
+                                key={direction.value} 
+                                value={direction.value}
+                              >
+                                {direction.label}
+                              </option>
+                            ))}
+                          </select>
                         </FormControl>
-                        <datalist id="study-directions">
-                          {studyDirections.map((direction) => (
-                            <option key={direction} value={direction} />
-                          ))}
-                        </datalist>
                         <FormDescription>
                           Ваша основная область обучения или специализации.
                         </FormDescription>

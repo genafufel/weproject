@@ -44,12 +44,18 @@ export default function SimpleCreateProject() {
   
   // Поля для выбора области проекта
   const projectFields = [
-    { value: "IT", label: "Информационные технологии" },
-    { value: "Art", label: "Искусство и дизайн" },
+    { value: "Information Technology", label: "Информационные технологии" },
+    { value: "Arts", label: "Искусство" },
+    { value: "Graphic Design", label: "Графический дизайн" },
+    { value: "UX/UI Design", label: "UX/UI дизайн" },
+    { value: "Business Administration", label: "Бизнес-администрирование" },
     { value: "Marketing", label: "Маркетинг" },
-    { value: "Education", label: "Образование" },
     { value: "Finance", label: "Финансы" },
-    { value: "Event", label: "Организация мероприятий" },
+    { value: "Education", label: "Образование" },
+    { value: "Engineering", label: "Инженерия" },
+    { value: "Computer Science", label: "Компьютерные науки" },
+    { value: "Event Management", label: "Организация мероприятий" },
+    { value: "Health Sciences", label: "Медицинские науки" },
     { value: "Other", label: "Другое" }
   ];
   
