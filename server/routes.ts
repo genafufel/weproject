@@ -8,6 +8,29 @@ import { insertProjectSchema, insertResumeSchema, insertApplicationSchema, inser
 import { askForSMSAPIKey, sendSMS } from "./sms"; // Сервис для отправки SMS
 import { askForEmailAPIKey, sendEmail } from "./email"; // Сервис для отправки email
 
+// Общие данные о направлениях специализации
+interface FieldDirection {
+  value: string;
+  label: string;
+}
+
+const fieldDirections: FieldDirection[] = [
+  { value: "all", label: "Все направления" },
+  { value: "Computer Science", label: "Компьютерные науки" },
+  { value: "Information Technology", label: "Информационные технологии" },
+  { value: "Graphic Design", label: "Графический дизайн" },
+  { value: "UX/UI Design", label: "UX/UI дизайн" },
+  { value: "Business Administration", label: "Бизнес-администрирование" },
+  { value: "Marketing", label: "Маркетинг" },
+  { value: "Finance", label: "Финансы" },
+  { value: "Education", label: "Образование" },
+  { value: "Engineering", label: "Инженерия" },
+  { value: "Arts", label: "Искусство" },
+  { value: "Event Management", label: "Организация мероприятий" },
+  { value: "Health Sciences", label: "Медицинские науки" },
+  { value: "Other", label: "Другое" },
+];
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Setup authentication routes
   setupAuth(app);
@@ -117,8 +140,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
             const titleLower = resume.title.toLowerCase();
             const aboutLower = resume.about ? resume.about.toLowerCase() : '';
             
-            // Если есть прямое совпадение в заголовке или описании - сразу возвращаем true
-            if (searchTerms.some(term => titleLower.includes(term) || aboutLower.includes(term))) {
+            // Получение направления и его метки для поиска
+            let directionValue = '';
+            let directionLabel = '';
+            
+            if (typeof resume.direction === 'object' && resume.direction !== null) {
+              const dirObj = resume.direction as Record<string, any>;
+              directionValue = (dirObj.value || '').toLowerCase();
+              directionLabel = (dirObj.label || '').toLowerCase();
+            } else if (typeof resume.direction === 'string') {
+              directionValue = resume.direction.toLowerCase();
+              // Ищем соответствие в переводах направлений
+              const fieldItem = fieldDirections.find((f: FieldDirection) => f.value === resume.direction);
+              directionLabel = fieldItem ? fieldItem.label.toLowerCase() : '';
+            }
+            
+            // Если есть прямое совпадение в заголовке, описании или направлении - сразу возвращаем true
+            if (searchTerms.some(term => 
+              titleLower.includes(term) || 
+              aboutLower.includes(term) ||
+              directionValue.includes(term) ||
+              directionLabel.includes(term)
+            )) {
               return true;
             }
             
@@ -732,11 +775,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let filteredBySearch = projects;
       if (search) {
         const searchLower = search.toLowerCase();
+        const searchTerms = searchLower.split(/\s+/).filter(term => term.length > 0);
+        
         filteredBySearch = projects.filter(project => {
           try {
             // Проверка по заголовку и описанию
-            if (project.title.toLowerCase().includes(searchLower) || 
-                project.description.toLowerCase().includes(searchLower)) {
+            if (searchTerms.some(term => 
+              project.title.toLowerCase().includes(term) || 
+              project.description.toLowerCase().includes(term)
+            )) {
+              return true;
+            }
+            
+            // Получение поля (сферы) и его метки для поиска
+            let fieldValue = '';
+            let fieldLabel = '';
+            
+            if (typeof project.field === 'object' && project.field !== null) {
+              const fieldObj = project.field as Record<string, any>;
+              fieldValue = (fieldObj.value || '').toLowerCase();
+              fieldLabel = (fieldObj.label || '').toLowerCase();
+            } else if (typeof project.field === 'string') {
+              fieldValue = project.field.toLowerCase();
+              // Ищем соответствие в переводах направлений
+              const fieldItem = fieldDirections.find((f: FieldDirection) => f.value === project.field);
+              fieldLabel = fieldItem ? fieldItem.label.toLowerCase() : '';
+            }
+            
+            // Если есть совпадение в поле (сфере) - возвращаем true
+            if (searchTerms.some(term => 
+              fieldValue.includes(term) ||
+              fieldLabel.includes(term)
+            )) {
               return true;
             }
             
