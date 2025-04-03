@@ -126,7 +126,7 @@ export default function Talent() {
       }
       
       const data = await res.json();
-      console.log("Получены данные о всех резюме:", data);
+      // Удаляем логирование для предотвращения перезагрузок
       return data;
     },
   });
@@ -157,7 +157,7 @@ export default function Talent() {
               userMap[userId] = userData;
             }
           } catch (err) {
-            console.error(`Failed to fetch user data for user ${userId}:`, err);
+            // Удаляем console.error для предотвращения перезагрузок
           }
         })
       );
@@ -207,7 +207,7 @@ export default function Talent() {
         return resume.skills.filter(skill => typeof skill === 'string');
       }
     } catch (e) {
-      console.error("Failed to parse skills", e);
+      // Удаляем console.error для предотвращения перезагрузок
     }
     
     return [];
@@ -245,7 +245,7 @@ export default function Talent() {
         educationArray = resume.education;
       }
     } catch (e) {
-      console.error("Failed to parse education", e);
+      // Удаляем console.error для предотвращения перезагрузок
       return null;
     }
     
