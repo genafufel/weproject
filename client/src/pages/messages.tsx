@@ -332,7 +332,11 @@ export default function Messages() {
   
   // Scroll to bottom of messages
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Находим ближайший ScrollArea viewport и прокручиваем его вниз
+    const scrollArea = document.querySelector('.messages-scroll-area [data-radix-scroll-area-viewport]');
+    if (scrollArea) {
+      scrollArea.scrollTop = scrollArea.scrollHeight;
+    }
   };
   
   // Автоматическая прокрутка при загрузке сообщений
@@ -498,10 +502,10 @@ export default function Messages() {
                       </div>
                     </div>
                     
-                    {/* Messages container with fixed height */}
-                    <div className="flex flex-col h-[486px]">
+                    {/* Messages container with fixed height - увеличиваем высоту, чтобы увеличить область чата */}
+                    <div className="flex flex-col h-[520px]">
                       {/* Messages list with scrolling */}
-                      <ScrollArea className="flex-1 p-4">
+                      <ScrollArea className="flex-1 p-4 messages-scroll-area">
                         {messagesLoading ? (
                           <div className="flex justify-center items-center h-full">
                             <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -600,8 +604,8 @@ export default function Messages() {
                         )}
                       </ScrollArea>
                       
-                      {/* Message input */}
-                      <div className="p-4 pb-2 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
+                      {/* Message input - уменьшаем верхний отступ */}
+                      <div className="p-2 pt-1 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
                         {/* Предпросмотр прикрепленного файла */}
                         {attachmentFile && (
                           <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
