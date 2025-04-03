@@ -502,8 +502,8 @@ export default function Messages() {
                       </div>
                     </div>
                     
-                    {/* Messages container with fixed height - увеличиваем высоту, чтобы увеличить область чата */}
-                    <div className="flex flex-col h-[520px]">
+                    {/* Messages container with fixed height - увеличиваем высоту максимально */}
+                    <div className="flex flex-col h-[540px]">
                       {/* Messages list with scrolling */}
                       <ScrollArea className="flex-1 p-4 messages-scroll-area">
                         {messagesLoading ? (
@@ -604,8 +604,8 @@ export default function Messages() {
                         )}
                       </ScrollArea>
                       
-                      {/* Message input - уменьшаем верхний отступ */}
-                      <div className="p-2 pt-1 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
+                      {/* Message input - максимально придвигаем вниз */}
+                      <div className="px-2 py-0.5 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
                         {/* Предпросмотр прикрепленного файла */}
                         {attachmentFile && (
                           <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
