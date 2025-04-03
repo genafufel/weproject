@@ -701,12 +701,7 @@ export default function Messages() {
       {/* Модальное окно для просмотра изображений */}
       <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
         <DialogContent className="sm:max-w-[900px] max-h-[80vh] p-0 overflow-hidden">
-          <DialogTitle>
-            <VisuallyHidden>Просмотр изображения</VisuallyHidden>
-          </DialogTitle>
-          <DialogDescription>
-            <VisuallyHidden>Просмотр изображения в полном размере</VisuallyHidden>
-          </DialogDescription>
+          {/* Удалили заголовок и кнопку закрытия по умолчанию */}
           <div className="relative">
             {currentImageUrl && (
               <div className="flex justify-center items-center bg-black/50 backdrop-blur-sm">
