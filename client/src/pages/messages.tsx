@@ -9,9 +9,10 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, Send, X } from "lucide-react";
+import { Loader2, Send, X, Upload } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { DragDropFileUpload } from "@/components/ui/drag-drop-file-upload";
 import {
   Dialog,
   DialogContent,
@@ -163,22 +164,18 @@ export default function Messages() {
     fileInputRef.current?.click();
   };
 
-  // Обработка выбора файлов
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
+  // Обработка выбора файлов (через input или drag-and-drop)
+  const handleFilesSelected = async (files: File[]) => {
+    if (files.length === 0) return;
 
     setAttachmentLoading(true);
 
     try {
-      // Преобразуем FileList в массив для обработки
-      const fileArray = Array.from(files);
-      
       // Добавляем новые файлы к существующим
-      setAttachmentFiles(prev => [...prev, ...fileArray]);
+      setAttachmentFiles(prev => [...prev, ...files]);
       
       // Обрабатываем каждый файл для создания превью
-      for (const file of fileArray) {
+      for (const file of files) {
         if (file.type.startsWith('image/')) {
           const reader = new FileReader();
           reader.onloadend = () => {
@@ -205,11 +202,18 @@ export default function Messages() {
       });
     } finally {
       setAttachmentLoading(false);
-      
-      // Сбрасываем значение input, чтобы можно было выбрать те же файлы снова
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
+    }
+  };
+  
+  // Обработка выбора файлов через input (для обратной совместимости)
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    handleFilesSelected(Array.from(files));
+    
+    // Сбрасываем значение input, чтобы можно было выбрать те же файлы снова
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -719,7 +723,7 @@ export default function Messages() {
                         )}
                         
                         <div className="flex">
-                          {/* Скрытый input для файлов */}
+                          {/* Скрытый input для файлов (для обратной совместимости) */}
                           <input
                             type="file"
                             ref={fileInputRef}
@@ -746,14 +750,22 @@ export default function Messages() {
                             )}
                           </Button>
                           
-                          <Input
-                            type="text"
-                            placeholder="Type your message..."
-                            value={messageText}
-                            onChange={(e) => setMessageText(e.target.value)}
-                            onKeyDown={handleKeyDown}
+                          {/* Drag-and-drop область для сообщения */}
+                          <DragDropFileUpload
+                            onFilesSelected={handleFilesSelected}
+                            multiple={true}
+                            disabled={attachmentLoading}
                             className="flex-1 mr-2"
-                          />
+                          >
+                            <Input
+                              type="text"
+                              placeholder="Type your message... или перетащите файлы сюда"
+                              value={messageText}
+                              onChange={(e) => setMessageText(e.target.value)}
+                              onKeyDown={handleKeyDown}
+                              className="w-full h-full"
+                            />
+                          </DragDropFileUpload>
                           <Button
                             type="button"
                             onClick={sendMessage}

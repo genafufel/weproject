@@ -24,6 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DragDropFileUpload } from "@/components/ui/drag-drop-file-upload";
 import { PlusIcon, X, Upload, Loader2 } from "lucide-react";
 
 // Define fields available for projects
@@ -189,7 +190,14 @@ export default function CreateProject() {
     }
   };
   
-  // Обработчик изменения файла
+  // Обработчик для drag-and-drop загрузки
+  const handleFilesSelected = (files: File[]) => {
+    if (files.length > 0) {
+      handleFileUpload(files[0]); // Берем только один файл для загрузки
+    }
+  };
+  
+  // Обработчик изменения файла через Input
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -536,7 +544,7 @@ export default function CreateProject() {
                       <div>
                         <h3 className="text-lg font-medium mb-2 text-gray-900 dark:text-gray-100">Загрузить фото проекта</h3>
                         <p className="text-sm text-muted-foreground mb-4">
-                          Выберите изображение с вашего устройства
+                          Выберите изображение с вашего устройства или перетащите его сюда
                         </p>
                         
                         <input
@@ -546,6 +554,23 @@ export default function CreateProject() {
                           accept="image/*"
                           onChange={handleFileChange}
                         />
+                        
+                        <DragDropFileUpload
+                          onFilesSelected={handleFilesSelected}
+                          accept="image/*"
+                          disabled={uploadingPhoto}
+                          className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md p-6 mb-4 flex flex-col items-center justify-center hover:border-primary transition-colors"
+                        >
+                          <div className="text-center">
+                            <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                              {uploadingPhoto ? "Загрузка..." : "Перетащите изображение сюда"}
+                            </h3>
+                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                              или выберите файл с компьютера (PNG, JPG, GIF до 5 МБ)
+                            </p>
+                          </div>
+                        </DragDropFileUpload>
                         
                         <div className="flex gap-2">
                           <Button 

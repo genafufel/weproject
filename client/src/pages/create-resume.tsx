@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import { DragDropFileUpload } from "@/components/ui/drag-drop-file-upload";
 import {
   Select,
   SelectContent,
@@ -300,6 +301,19 @@ export default function CreateResume() {
     const file = event.target.files?.[0];
     if (!file) return;
     
+    await uploadFile(file);
+  };
+  
+  // Handle files selected via drag-and-drop
+  const handleFilesSelected = async (files: File[]) => {
+    if (files.length === 0) return;
+    
+    // Берем только первый файл для простоты
+    await uploadFile(files[0]);
+  };
+  
+  // Common function to handle file upload
+  const uploadFile = async (file: File) => {
     try {
       setIsUploading(true);
       
@@ -937,18 +951,28 @@ export default function CreateResume() {
                           );
                         })}
                         
-                        <div className={`${photoFields.length === 0 ? 'col-span-full' : ''} flex flex-col items-center justify-center p-4 border border-dashed border-gray-300 rounded-md bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer h-32`} onClick={() => fileInputRef.current?.click()}>
-                          {isUploading ? (
-                            <Loader2 className="h-6 w-6 text-gray-400 animate-spin" />
-                          ) : (
-                            <>
-                              <Upload className="h-6 w-6 text-gray-400 mb-2" />
-                              <p className="text-sm text-gray-500 text-center">
-                                {photoFields.length === 0 ? 'Добавьте фотографии работ, портфолио или навыков' : 'Добавить еще'}
-                              </p>
-                            </>
-                          )}
-                        </div>
+                        <DragDropFileUpload
+                          onFilesSelected={handleFilesSelected}
+                          accept="image/*"
+                          disabled={isUploading}
+                          className={`${photoFields.length === 0 ? 'col-span-full' : ''} border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-md p-6 flex flex-col items-center justify-center hover:border-primary transition-colors h-40`}
+                        >
+                          <div className="text-center">
+                            {isUploading ? (
+                              <Loader2 className="h-8 w-8 text-gray-400 animate-spin mx-auto" />
+                            ) : (
+                              <>
+                                <Upload className="h-8 w-8 text-gray-400 mb-2 mx-auto" />
+                                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">
+                                  {photoFields.length === 0 ? 'Загрузите фотографии работ' : 'Добавить еще'}
+                                </h3>
+                                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                  Перетащите изображение сюда или выберите файл с компьютера
+                                </p>
+                              </>
+                            )}
+                          </div>
+                        </DragDropFileUpload>
                       </div>
                       
                       <input
