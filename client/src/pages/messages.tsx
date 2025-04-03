@@ -704,19 +704,26 @@ export default function Messages() {
                     
                     {/* Messages container with flex to fill available space */}
                     <div className="flex flex-col flex-1">
-                      {/* Messages list with scrolling */}
+                      {/* Messages list with scrolling - добавлен контейнер для drag-and-drop */}
                       <ScrollArea className="h-[calc(100vh-280px)] p-4 messages-scroll-area">
-                        {messagesLoading ? (
-                          <div className="flex justify-center items-center h-full">
-                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                          </div>
-                        ) : !conversationMessages || conversationMessages.length === 0 ? (
-                          <div className="text-center p-4 text-gray-500 dark:text-gray-400">
-                            Сообщений пока нет. Начните диалог!
-                          </div>
-                        ) : (
-                          <div className="space-y-4">
-                            {conversationMessages.map((message: any) => (
+                        <DragDropFileUpload 
+                          onFilesSelected={handleFilesSelected}
+                          multiple={true}
+                          disabled={attachmentLoading}
+                          className="min-h-full w-full"
+                        >
+                          {messagesLoading ? (
+                            <div className="flex justify-center items-center h-full">
+                              <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                            </div>
+                          ) : !conversationMessages || conversationMessages.length === 0 ? (
+                            <div className="text-center p-4 text-gray-500 dark:text-gray-400">
+                              Сообщений пока нет. Начните диалог!<br/>
+                              <span className="text-sm mt-2 block">Вы можете перетащить файлы сюда для загрузки</span>
+                            </div>
+                          ) : (
+                            <div className="space-y-4">
+                              {conversationMessages.map((message: any) => (
                               <div
                                 key={message.id}
                                 className={`flex ${
@@ -800,6 +807,7 @@ export default function Messages() {
                             <div ref={messagesEndRef} />
                           </div>
                         )}
+                        </DragDropFileUpload>
                       </ScrollArea>
                       
                       {/* Message input - немного приподнимаем от низа */}
