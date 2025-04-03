@@ -367,7 +367,7 @@ export default function Messages() {
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Messages</h1>
           
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div className="grid grid-cols-1 md:grid-cols-3 h-[700px]">
+            <div className="grid grid-cols-1 md:grid-cols-3 h-[650px]">
               {/* Contacts sidebar */}
               <div className="border-r border-gray-200 dark:border-gray-700">
                 <div className="p-4 border-b border-gray-200 dark:border-gray-700">
@@ -378,7 +378,7 @@ export default function Messages() {
                   />
                 </div>
                 
-                <ScrollArea className="h-[640px]">
+                <ScrollArea className="h-[590px]">
                   {contactsLoading || messagesDataLoading ? (
                     <div className="flex justify-center items-center h-full">
                       <Loader2 className="h-6 w-6 animate-spin text-primary" />
@@ -475,7 +475,7 @@ export default function Messages() {
                     </div>
                     
                     {/* Messages */}
-                    <ScrollArea className="flex-1 p-4 h-[536px]">
+                    <ScrollArea className="flex-1 p-4 h-[486px]">
                       {messagesLoading ? (
                         <div className="flex justify-center items-center h-full">
                           <Loader2 className="h-6 w-6 animate-spin text-primary" />
