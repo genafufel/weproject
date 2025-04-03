@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
@@ -147,13 +147,6 @@ export default function Messages() {
         throw new Error("Failed to fetch conversation messages");
       }
       return res.json();
-    },
-    onSuccess: (data) => {
-      if (data && data.length > 0) {
-        // При успешном получении сообщений делаем прокрутку
-        setTimeout(() => scrollToBottom(), 50);
-        setTimeout(() => scrollToBottom(), 150);  // Повторно для надежности
-      }
     },
     enabled: !!activeContactId && !!user,
     // Обновляем диалог каждые 3 секунды
@@ -416,17 +409,68 @@ export default function Messages() {
     const scrollArea = document.querySelector('.messages-scroll-area [data-radix-scroll-area-viewport]');
     if (scrollArea) {
       scrollArea.scrollTop = scrollArea.scrollHeight;
+      // Дополнительно устанавливаем максимальную прокрутку для родительского контейнера
+      const parentScrollArea = document.querySelector('.messages-scroll-area');
+      if (parentScrollArea) {
+        parentScrollArea.scrollTop = parentScrollArea.scrollHeight;
+      }
     }
+    
+    console.log('Прокрутка выполнена, высота:', 
+      document.querySelector('.messages-scroll-area [data-radix-scroll-area-viewport]')?.scrollHeight
+    );
   };
   
-  // Автоматическая прокрутка при загрузке сообщений
+  // Состояние для отслеживания, была ли выполнена начальная прокрутка для этого диалога
+  const [initialScrollApplied, setInitialScrollApplied] = useState<{[key: number]: boolean}>({});
+  
+  // Эффект для первичной прокрутки при первой загрузке диалога
+  useEffect(() => {
+    if (
+      activeContactId && 
+      conversationMessages && 
+      conversationMessages.length > 0 && 
+      !initialScrollApplied[activeContactId]
+    ) {
+      console.log('Применяем первичную прокрутку для диалога', activeContactId);
+      
+      // Устанавливаем флаг, что начальная прокрутка была выполнена для этого контакта
+      setInitialScrollApplied(prev => ({ ...prev, [activeContactId]: true }));
+      
+      // Мощный алгоритм прокрутки с использованием нескольких подходов
+      scrollToBottom();
+      
+      // Серия прокруток с увеличивающимися интервалами
+      const scrollIntervals = [10, 50, 100, 300, 500, 1000];
+      
+      scrollIntervals.forEach(delay => {
+        setTimeout(() => {
+          scrollToBottom();
+        }, delay);
+      });
+    }
+  }, [activeContactId, conversationMessages, initialScrollApplied]);
+  
+  // Автоматическая прокрутка при загрузке сообщений - используем useEffect
   useEffect(() => {
     if (conversationMessages && conversationMessages.length > 0) {
       scrollToBottom();
     }
   }, [conversationMessages]);
   
-  // Автоматическая прокрутка при смене контакта
+  // Используем useLayoutEffect для гарантированной прокрутки после рендеринга
+  useLayoutEffect(() => {
+    if (conversationMessages && conversationMessages.length > 0) {
+      scrollToBottom();
+      // Дополнительная отложенная прокрутка для случаев, когда DOM ещё не полностью готов
+      const scrollTimer = setTimeout(() => {
+        scrollToBottom();
+      }, 50);
+      return () => clearTimeout(scrollTimer);
+    }
+  }, [conversationMessages]);
+  
+  // Автоматическая прокрутка при смене контакта - используем useEffect
   useEffect(() => {
     if (activeContactId) {
       // Несколько попыток прокрутки с разной задержкой для надежности
@@ -449,6 +493,21 @@ export default function Messages() {
       };
     }
   }, [activeContactId]);
+  
+  // Дополнительно используем useLayoutEffect для контакта, который более надежен
+  useLayoutEffect(() => {
+    if (activeContactId && conversationMessages && conversationMessages.length > 0) {
+      // Мгновенно прокручиваем первый раз
+      scrollToBottom();
+      
+      // Затем делаем несколько отложенных попыток с разными интервалами
+      const timerIds = [100, 200, 400, 800].map(delay => 
+        setTimeout(() => scrollToBottom(), delay)
+      );
+      
+      return () => timerIds.forEach(id => clearTimeout(id));
+    }
+  }, [activeContactId, conversationMessages]);
   
   // Handle send on Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
