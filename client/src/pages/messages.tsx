@@ -324,11 +324,6 @@ export default function Messages() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   
-  // Уже не автопрокручиваем при изменении сообщений
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [conversationMessages]);
-  
   // Handle send on Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -362,7 +357,7 @@ export default function Messages() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8 min-h-screen">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Messages</h1>
           
@@ -474,183 +469,186 @@ export default function Messages() {
                       </div>
                     </div>
                     
-                    {/* Messages */}
-                    <ScrollArea className="flex-1 p-4 h-[486px]">
-                      {messagesLoading ? (
-                        <div className="flex justify-center items-center h-full">
-                          <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                        </div>
-                      ) : !conversationMessages || conversationMessages.length === 0 ? (
-                        <div className="text-center p-4 text-gray-500 dark:text-gray-400">
-                          Сообщений пока нет. Начните диалог!
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {conversationMessages.map((message: any) => (
-                            <div
-                              key={message.id}
-                              className={`flex ${
-                                message.senderId === user?.id ? "justify-end" : "justify-start"
-                              }`}
-                            >
+                    {/* Messages container with fixed height */}
+                    <div className="flex flex-col h-[486px]">
+                      {/* Messages list with scrolling */}
+                      <ScrollArea className="flex-1 p-4">
+                        {messagesLoading ? (
+                          <div className="flex justify-center items-center h-full">
+                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                          </div>
+                        ) : !conversationMessages || conversationMessages.length === 0 ? (
+                          <div className="text-center p-4 text-gray-500 dark:text-gray-400">
+                            Сообщений пока нет. Начните диалог!
+                          </div>
+                        ) : (
+                          <div className="space-y-4">
+                            {conversationMessages.map((message: any) => (
                               <div
-                                className={`max-w-[75%] rounded-lg px-4 py-2 ${
-                                  message.senderId === user?.id
-                                    ? "bg-primary text-white"
-                                    : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                key={message.id}
+                                className={`flex ${
+                                  message.senderId === user?.id ? "justify-end" : "justify-start"
                                 }`}
                               >
-                                <p className="break-words">{message.content}</p>
-                                
-                                {/* Отображение прикрепленного файла */}
-                                {message.attachment && (
-                                  <div className="mt-2">
-                                    {message.attachmentType === 'image' ? (
-                                      <a href={message.attachment} target="_blank" rel="noopener noreferrer" className="block">
-                                        <img 
-                                          src={message.attachment} 
-                                          alt="Прикрепленное изображение" 
-                                          className="max-w-full max-h-[200px] rounded-md"
-                                          onError={(e) => {
-                                            console.log("Ошибка загрузки изображения");
-                                            e.currentTarget.style.display = 'none';
-                                          }}
-                                        />
-                                      </a>
-                                    ) : (
-                                      <a 
-                                        href={message.attachment} 
-                                        target="_blank" 
-                                        rel="noopener noreferrer"
-                                        className={`flex items-center gap-2 p-2 rounded-md ${
-                                          message.senderId === user?.id 
-                                            ? "bg-blue-700 text-blue-50 hover:bg-blue-600" 
-                                            : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-500"
-                                        }`}
-                                      >
-                                        {message.attachmentType === 'pdf' ? (
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                            <polyline points="14 2 14 8 20 8"/>
-                                            <path d="M9 15v-2h6v2"/>
-                                            <path d="M9 18v-2h6v2"/>
-                                            <path d="M9 12v-2h2v2"/>
-                                          </svg>
-                                        ) : message.attachmentType === 'document' ? (
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                            <polyline points="14 2 14 8 20 8"/>
-                                          </svg>
-                                        ) : (
-                                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                            <polyline points="7 10 12 15 17 10"/>
-                                            <line x1="12" y1="15" x2="12" y2="3"/>
-                                          </svg>
-                                        )}
-                                        <span className="text-sm truncate max-w-[150px]">
-                                          {message.attachmentName || "Прикрепленный файл"}
-                                        </span>
-                                      </a>
-                                    )}
-                                  </div>
-                                )}
-                                
                                 <div
-                                  className={`text-xs mt-1 ${
-                                    message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
+                                  className={`max-w-[75%] rounded-lg px-4 py-2 ${
+                                    message.senderId === user?.id
+                                      ? "bg-primary text-white"
+                                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   }`}
                                 >
-                                  {formatMessageTime(new Date(message.createdAt))}
+                                  <p className="break-words">{message.content}</p>
+                                  
+                                  {/* Отображение прикрепленного файла */}
+                                  {message.attachment && (
+                                    <div className="mt-2">
+                                      {message.attachmentType === 'image' ? (
+                                        <a href={message.attachment} target="_blank" rel="noopener noreferrer" className="block">
+                                          <img 
+                                            src={message.attachment} 
+                                            alt="Прикрепленное изображение" 
+                                            className="max-w-full max-h-[200px] rounded-md"
+                                            onError={(e) => {
+                                              console.log("Ошибка загрузки изображения");
+                                              e.currentTarget.style.display = 'none';
+                                            }}
+                                          />
+                                        </a>
+                                      ) : (
+                                        <a 
+                                          href={message.attachment} 
+                                          target="_blank" 
+                                          rel="noopener noreferrer"
+                                          className={`flex items-center gap-2 p-2 rounded-md ${
+                                            message.senderId === user?.id 
+                                              ? "bg-blue-700 text-blue-50 hover:bg-blue-600" 
+                                              : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-500"
+                                          }`}
+                                        >
+                                          {message.attachmentType === 'pdf' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                              <polyline points="14 2 14 8 20 8"/>
+                                              <path d="M9 15v-2h6v2"/>
+                                              <path d="M9 18v-2h6v2"/>
+                                              <path d="M9 12v-2h2v2"/>
+                                            </svg>
+                                          ) : message.attachmentType === 'document' ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                              <polyline points="14 2 14 8 20 8"/>
+                                            </svg>
+                                          ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                              <polyline points="7 10 12 15 17 10"/>
+                                              <line x1="12" y1="15" x2="12" y2="3"/>
+                                            </svg>
+                                          )}
+                                          <span className="text-sm truncate max-w-[150px]">
+                                            {message.attachmentName || "Прикрепленный файл"}
+                                          </span>
+                                        </a>
+                                      )}
+                                    </div>
+                                  )}
+                                  
+                                  <div
+                                    className={`text-xs mt-1 ${
+                                      message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
+                                    }`}
+                                  >
+                                    {formatMessageTime(new Date(message.createdAt))}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          ))}
-                          <div ref={messagesEndRef} />
-                        </div>
-                      )}
-                    </ScrollArea>
-                    
-                    {/* Message input */}
-                    <div className="p-4 pb-5 border-t border-gray-200 dark:border-gray-700">
-                      {/* Предпросмотр прикрепленного файла */}
-                      {attachmentFile && (
-                        <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
-                          <div className="flex items-center overflow-hidden">
-                            {attachmentPreview ? (
-                              <img 
-                                src={attachmentPreview} 
-                                alt="Preview" 
-                                className="h-10 w-10 rounded object-cover mr-2" 
-                              />
-                            ) : (
-                              <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center mr-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-gray-500 dark:text-gray-400">
-                                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                  <polyline points="14 2 14 8 20 8"/>
-                                </svg>
-                              </div>
-                            )}
-                            <span className="text-sm truncate max-w-[200px]">
-                              {attachmentFile.name}
-                            </span>
+                            ))}
+                            <div ref={messagesEndRef} />
                           </div>
+                        )}
+                      </ScrollArea>
+                      
+                      {/* Message input */}
+                      <div className="p-4 pb-5 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
+                        {/* Предпросмотр прикрепленного файла */}
+                        {attachmentFile && (
+                          <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
+                            <div className="flex items-center overflow-hidden">
+                              {attachmentPreview ? (
+                                <img 
+                                  src={attachmentPreview} 
+                                  alt="Preview" 
+                                  className="h-10 w-10 rounded object-cover mr-2" 
+                                />
+                              ) : (
+                                <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center mr-2">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 text-gray-500 dark:text-gray-400">
+                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                  </svg>
+                                </div>
+                              )}
+                              <span className="text-sm truncate max-w-[200px]">
+                                {attachmentFile.name}
+                              </span>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={handleRemoveAttachment}
+                              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                              </svg>
+                            </Button>
+                          </div>
+                        )}
+                        
+                        <div className="flex">
+                          {/* Скрытый input для файла */}
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            className="hidden"
+                            onChange={handleFileChange}
+                          />
+                          
+                          {/* Кнопка прикрепления файла */}
                           <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={handleRemoveAttachment}
-                            className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            onClick={handleAttachmentClick}
+                            className="mr-2"
+                            disabled={attachmentLoading}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                              <line x1="18" y1="6" x2="6" y2="18"></line>
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
+                            {attachmentLoading ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                              </svg>
+                            )}
+                          </Button>
+                          
+                          <Input
+                            type="text"
+                            placeholder="Type your message..."
+                            value={messageText}
+                            onChange={(e) => setMessageText(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            className="flex-1 mr-2"
+                          />
+                          <Button
+                            type="button"
+                            onClick={sendMessage}
+                            disabled={(!messageText.trim() && !attachmentFile) || attachmentLoading}
+                          >
+                            <Send className="h-4 w-4" />
                           </Button>
                         </div>
-                      )}
-                      
-                      <div className="flex">
-                        {/* Скрытый input для файла */}
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          className="hidden"
-                          onChange={handleFileChange}
-                        />
-                        
-                        {/* Кнопка прикрепления файла */}
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="icon"
-                          onClick={handleAttachmentClick}
-                          className="mr-2"
-                          disabled={attachmentLoading}
-                        >
-                          {attachmentLoading ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                              <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-                            </svg>
-                          )}
-                        </Button>
-                        
-                        <Input
-                          type="text"
-                          placeholder="Type your message..."
-                          value={messageText}
-                          onChange={(e) => setMessageText(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          className="flex-1 mr-2"
-                        />
-                        <Button
-                          type="button"
-                          onClick={sendMessage}
-                          disabled={(!messageText.trim() && !attachmentFile) || attachmentLoading}
-                        >
-                          <Send className="h-4 w-4" />
-                        </Button>
                       </div>
                     </div>
                   </>
