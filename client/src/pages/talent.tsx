@@ -429,7 +429,7 @@ export default function Talent() {
                 const hasPhoto = photos.length > 0;
                 
                 return (
-                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${hasPhoto ? 'h-[560px]' : 'flex flex-col h-[280px]'}`}>
+                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${hasPhoto ? 'h-[570px] flex flex-col' : 'flex flex-col h-[280px]'}`}>
                     {hasPhoto && (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] max-h-[320px] w-full overflow-hidden">
@@ -476,7 +476,7 @@ export default function Talent() {
                       )}
                     </CardHeader>
                     
-                    <CardContent className="pb-2">
+                    <CardContent className="pb-2 flex-grow">
                       <div className="flex flex-wrap gap-1 mb-2">
                         {skills.map((skill, index) => (
                           <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
