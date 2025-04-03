@@ -603,8 +603,8 @@ export default function Messages() {
                         )}
                       </ScrollArea>
                       
-                      {/* Message input - максимально придвигаем вниз */}
-                      <div className="px-2 py-0.5 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
+                      {/* Message input - немного приподнимаем от низа */}
+                      <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 mt-auto shrink-0">
                         {/* Предпросмотр прикрепленного файла */}
                         {attachmentFile && (
                           <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex items-center justify-between">
