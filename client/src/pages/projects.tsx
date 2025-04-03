@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Search, MapPin, ChevronDown } from "lucide-react";
+import { CardContainer } from "@/components/card-container";
 import {
   Card,
   CardContent,
@@ -251,7 +252,7 @@ export default function Projects() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <CardContainer>
               {projects.map((project: any) => (
                 <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? 'h-[584px] flex flex-col' : 'flex flex-col h-[280px] card-no-photo'}`}>
                   {project.photos && project.photos.length > 0 && (
@@ -325,7 +326,7 @@ export default function Projects() {
                   </CardFooter>
                 </Card>
               ))}
-            </div>
+            </CardContainer>
           )}
           
           {/* Post a project CTA for non-applicants */}

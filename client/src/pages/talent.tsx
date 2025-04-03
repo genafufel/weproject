@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Search, ChevronDown, GraduationCap, Briefcase, Mail, Edit, Phone } from "lucide-react";
+import { CardContainer } from "@/components/card-container";
 import {
   Card,
   CardContent,
@@ -419,7 +420,7 @@ export default function Talent() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <CardContainer>
               {filteredResumes.map((resume) => {
                 const skills = getResumeSkills(resume);
                 const resumeUser = userData?.[resume.userId];
@@ -541,7 +542,7 @@ export default function Talent() {
                   </Card>
                 );
               })}
-            </div>
+            </CardContainer>
           )}
           
           {/* Create resume CTA for logged-in users */}
