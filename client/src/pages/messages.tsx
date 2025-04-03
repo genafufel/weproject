@@ -325,7 +325,11 @@ export default function Messages() {
       // Прокручиваем вниз чтобы увидеть отправленное сообщение
       setTimeout(() => {
         scrollToBottom();
-      }, 300);
+        // Дополнительная попытка прокрутки через короткое время для надежности
+        setTimeout(() => {
+          scrollToBottom();
+        }, 200);
+      }, 100);
       
     } catch (error: any) {
       console.error("Ошибка отправки сообщения:", error);
@@ -395,7 +399,13 @@ export default function Messages() {
   
   // Scroll to bottom of messages
   const scrollToBottom = () => {
-    // Находим ближайший ScrollArea viewport и прокручиваем его вниз
+    // Сначала попробуем прокрутить к messagesEndRef
+    if (messagesEndRef.current) {
+      // Для мгновенной надежной прокрутки
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto', block: 'end' });
+    } 
+    
+    // В любом случае делаем прямую прокрутку ScrollArea, это более надежно
     const scrollArea = document.querySelector('.messages-scroll-area [data-radix-scroll-area-viewport]');
     if (scrollArea) {
       scrollArea.scrollTop = scrollArea.scrollHeight;
