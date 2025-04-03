@@ -580,9 +580,7 @@ export default function Messages() {
                                               <line x1="12" y1="15" x2="12" y2="3"/>
                                             </svg>
                                           )}
-                                          <span className="text-sm truncate max-w-[150px]">
-                                            {message.attachmentName || "Прикрепленный файл"}
-                                          </span>
+
                                         </a>
                                       )}
                                     </div>
