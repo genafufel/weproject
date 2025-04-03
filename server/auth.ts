@@ -23,7 +23,7 @@ export async function hashPassword(password: string) {
   return `${buf.toString("hex")}.${salt}`;
 }
 
-async function comparePasswords(supplied: string, stored: string) {
+export async function comparePasswords(supplied: string, stored: string) {
   // Проверяем, содержит ли хеш соль (разделитель точка)
   if (stored.includes(".")) {
     // Старый формат с солью

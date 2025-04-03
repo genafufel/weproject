@@ -1562,6 +1562,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Маршрут для изменения пароля пользователя
+  app.post("/api/user/:id/change-password", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
+    const userId = parseInt(req.params.id);
+    
+    // Проверяем, имеет ли пользователь право менять свой пароль
+    if (userId !== req.user!.id) {
+      return res.status(403).json({ message: "Forbidden: Вы не можете изменять пароль другого пользователя" });
+    }
+    
+    try {
+      const { currentPassword, newPassword } = req.body;
+      
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: "Текущий и новый пароли обязательны" });
+      }
+      
+      // Получаем текущего пользователя для проверки пароля
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "Пользователь не найден" });
+      }
+      
+      // Проверяем текущий пароль
+      const { hashPassword, comparePasswords } = await import('./auth');
+      const isPasswordValid = await comparePasswords(currentPassword, user.password);
+      
+      if (!isPasswordValid) {
+        return res.status(400).json({ message: "Текущий пароль неверен" });
+      }
+      
+      // Хешируем новый пароль
+      const hashedNewPassword = await hashPassword(newPassword);
+      
+      // Обновляем пароль пользователя
+      const updatedUser = await storage.updateUser(userId, { password: hashedNewPassword });
+      
+      if (!updatedUser) {
+        return res.status(500).json({ message: "Не удалось обновить пароль" });
+      }
+      
+      // Обновляем пользователя в сессии
+      req.login(updatedUser, (err) => {
+        if (err) {
+          console.error("Ошибка при обновлении пользователя в сессии:", err);
+          return res.status(500).json({ message: "Внутренняя ошибка сервера" });
+        }
+        
+        res.json({ message: "Пароль успешно изменен" });
+      });
+    } catch (error) {
+      console.error("Ошибка при изменении пароля:", error);
+      res.status(500).json({ message: "Внутренняя ошибка сервера" });
+    }
+  });
+  
   // User Routes
   app.get("/api/users/:id", async (req, res) => {
     const userId = parseInt(req.params.id);
