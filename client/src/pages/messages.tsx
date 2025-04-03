@@ -9,9 +9,14 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, Send } from "lucide-react";
+import { Loader2, Send, X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Messages() {
   const { user } = useAuth();
@@ -26,6 +31,10 @@ export default function Messages() {
   // State for the active conversation
   const [activeContactId, setActiveContactId] = useState<number | null>(initialContactId);
   const [messageText, setMessageText] = useState("");
+  
+  // State for image preview modal
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   
   // Получаем все сообщения текущего пользователя
   const {
@@ -503,17 +512,20 @@ export default function Messages() {
                                   {message.attachment && (
                                     <div className="mt-2">
                                       {message.attachmentType === 'image' ? (
-                                        <a href={message.attachment} target="_blank" rel="noopener noreferrer" className="block">
+                                        <div className="cursor-pointer" onClick={() => {
+                                          setCurrentImageUrl(message.attachment);
+                                          setIsImageModalOpen(true);
+                                        }}>
                                           <img 
                                             src={message.attachment} 
                                             alt="Прикрепленное изображение" 
-                                            className="max-w-full max-h-[200px] rounded-md"
+                                            className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
                                             onError={(e) => {
                                               console.log("Ошибка загрузки изображения");
                                               e.currentTarget.style.display = 'none';
                                             }}
                                           />
-                                        </a>
+                                        </div>
                                       ) : (
                                         <a 
                                           href={message.attachment} 
@@ -660,6 +672,39 @@ export default function Messages() {
       </main>
       
       <Footer />
+
+      {/* Модальное окно для просмотра изображений */}
+      <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
+        <DialogContent className="sm:max-w-[900px] max-h-[80vh] p-0 overflow-hidden">
+          <div className="relative">
+            {currentImageUrl && (
+              <div className="flex justify-center items-center bg-black/50 backdrop-blur-sm">
+                <img 
+                  src={currentImageUrl} 
+                  alt="Просмотр изображения" 
+                  className="max-w-full max-h-[80vh] object-contain"
+                  onError={() => {
+                    toast({
+                      title: "Ошибка загрузки",
+                      description: "Не удалось загрузить изображение",
+                      variant: "destructive",
+                    });
+                    setIsImageModalOpen(false);
+                  }}
+                />
+              </div>
+            )}
+            <Button
+              size="icon"
+              variant="ghost"
+              className="absolute right-2 top-2 rounded-full bg-black/20 hover:bg-black/40 text-white"
+              onClick={() => setIsImageModalOpen(false)}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
