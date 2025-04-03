@@ -253,10 +253,10 @@ export default function Projects() {
           ) : (
             <div className="masonry-grid gap-6">
               {projects.map((project: any) => (
-                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? '' : 'flex flex-col h-auto'}`}>
+                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? 'max-h-[550px]' : 'flex flex-col h-auto'}`}>
                   {project.photos && project.photos.length > 0 && (
                     <Link href={`/projects/${project.id}`}>
-                      <div className="relative h-48 w-full overflow-hidden">
+                      <div className="relative h-48 max-h-[240px] w-full overflow-hidden">
                         <img 
                           src={project.photos[0].startsWith('/uploads') ? project.photos[0] : `/uploads/${project.photos[0].split('/').pop()}`}
                           alt={project.title} 
@@ -288,7 +288,7 @@ export default function Projects() {
                   </CardHeader>
                   
                   <CardContent className={`pb-2 ${!(project.photos && project.photos.length > 0) ? 'py-1' : ''}`}>
-                    <p className="text-gray-600 dark:text-gray-300 mb-2">{project.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-2 line-clamp-3">{project.description}</p>
                     
                     <div className="mb-2">
                       <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Требуемые позиции:</h4>
