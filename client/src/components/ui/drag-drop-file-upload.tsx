@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
 
 interface DragDropFileUploadProps {
-  onFilesSelected?: (files: File[]) => void;
-  onFilesDrop?: (files: File[]) => void; // Добавляем новое свойство для обратной совместимости
+  onFilesSelected: (files: File[]) => void;
   multiple?: boolean;
   accept?: string;
   className?: string;
@@ -14,7 +13,6 @@ interface DragDropFileUploadProps {
 
 export function DragDropFileUpload({
   onFilesSelected,
-  onFilesDrop,
   multiple = false,
   accept,
   className,
@@ -62,13 +60,7 @@ export function DragDropFileUpload({
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const droppedFiles = Array.from(e.dataTransfer.files);
       const filesToUpload = multiple ? droppedFiles : [droppedFiles[0]];
-      
-      // Используем новый колбэк, если он есть, иначе старый
-      if (onFilesDrop) {
-        onFilesDrop(filesToUpload);
-      } else if (onFilesSelected) {
-        onFilesSelected(filesToUpload);
-      }
+      onFilesSelected(filesToUpload);
       
       // Сброс значения input для возможности перезагрузки тех же файлов
       if (fileInputRef.current) {
@@ -91,14 +83,7 @@ export function DragDropFileUpload({
     if (e.target.files && e.target.files.length > 0) {
       const selectedFiles = Array.from(e.target.files);
       const filesToUpload = multiple ? selectedFiles : [selectedFiles[0]];
-      
-      // Используем колбэк, если он существует
-      if (onFilesSelected) {
-        onFilesSelected(filesToUpload);
-      } else if (onFilesDrop) {
-        // Если нет onFilesSelected, но есть onFilesDrop, используем его для совместимости
-        onFilesDrop(filesToUpload);
-      }
+      onFilesSelected(filesToUpload);
       
       // Сброс значения input для возможности перезагрузки тех же файлов
       if (fileInputRef.current) {

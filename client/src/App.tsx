@@ -14,7 +14,7 @@ import CreateProject from "@/pages/create-project";
 import EditProject from "@/pages/edit-project";
 import SimpleCreateProject from "@/pages/simple-create-project";
 import CreateResume from "@/pages/create-resume";
-import Messages from "@/pages/messages_new";
+import Messages from "@/pages/messages";
 import VerificationPage from "@/pages/verification-page";
 import EditProfile from "@/pages/edit-profile";
 import AdminPanel from "@/pages/admin-panel";
