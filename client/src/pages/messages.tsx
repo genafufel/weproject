@@ -54,8 +54,9 @@ export default function Messages() {
       return res.json();
     },
     enabled: !!user,
-    // Обновляем данные каждые 5 секунд
-    refetchInterval: 5000,
+    // Обновляем данные каждые 10 секунд, чтобы снизить нагрузку
+    refetchInterval: 10000,
+    staleTime: 8000, // Кешируем данные на 8 секунд
   });
   
   // Получаем данные контактов, с которыми есть переписка
@@ -166,8 +167,9 @@ export default function Messages() {
       return messages;
     },
     enabled: !!activeContactId && !!user,
-    // Обновляем диалог каждые 3 секунды
-    refetchInterval: 3000,
+    // Увеличиваем интервал обновления до 8 секунд для улучшения производительности
+    refetchInterval: 8000,
+    staleTime: 6000, // Кешируем данные на 6 секунд
   });
   
   // Мутация для отметки сообщения как прочитанного
@@ -235,7 +237,7 @@ export default function Messages() {
         }
       }
     } catch (error) {
-      console.error('Ошибка при обработке файлов:', error);
+      // Сообщаем пользователю об ошибке без избыточного логирования
       toast({
         title: "Ошибка при обработке файлов",
         description: "Не удалось обработать выбранные файлы",
@@ -373,7 +375,7 @@ export default function Messages() {
       }, 100);
       
     } catch (error: any) {
-      console.error("Ошибка отправки сообщения:", error);
+      // Более аккуратная обработка ошибки без избыточного логирования
       toast({
         title: "Ошибка отправки",
         description: error.message || "Не удалось отправить сообщение. Пожалуйста, попробуйте позже.",
@@ -438,28 +440,24 @@ export default function Messages() {
     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
   
-  // Scroll to bottom of messages
+  // Оптимизированная функция прокрутки вниз (меньше DOM-обращений)
   const scrollToBottom = () => {
-    // Сначала попробуем прокрутить к messagesEndRef
+    // Используем ref для прокрутки - самый эффективный способ
     if (messagesEndRef.current) {
-      // Для мгновенной надежной прокрутки
       messagesEndRef.current.scrollIntoView({ behavior: 'auto', block: 'end' });
     } 
     
-    // В любом случае делаем прямую прокрутку ScrollArea, это более надежно
+    // В качестве запасного варианта используем прямую прокрутку 
     const scrollArea = document.querySelector('.messages-scroll-area [data-radix-scroll-area-viewport]');
     if (scrollArea) {
       scrollArea.scrollTop = scrollArea.scrollHeight;
-      // Дополнительно устанавливаем максимальную прокрутку для родительского контейнера
+      
+      // Оптимизация: устанавливаем прокрутку для родительского контейнера только если он существует
       const parentScrollArea = document.querySelector('.messages-scroll-area');
       if (parentScrollArea) {
         parentScrollArea.scrollTop = parentScrollArea.scrollHeight;
       }
     }
-    
-    console.log('Прокрутка выполнена, высота:', 
-      document.querySelector('.messages-scroll-area [data-radix-scroll-area-viewport]')?.scrollHeight
-    );
   };
   
   // Состояние для отслеживания, была ли выполнена начальная прокрутка для этого диалога
@@ -475,100 +473,46 @@ export default function Messages() {
       
       // Если есть непрочитанные сообщения, отмечаем их как прочитанные
       if (unreadMessages.length > 0) {
-        console.log('Отмечаем как прочитанные сообщения:', unreadMessages.length);
-        
-        // Отмечаем каждое сообщение как прочитанное
-        unreadMessages.forEach((msg: any) => {
-          markAsReadMutation.mutate(msg.id);
-        });
+        // Отмечаем каждое сообщение как прочитанное более эффективно
+        // Используем Promise.all для параллельной обработки всех запросов
+        Promise.all(
+          unreadMessages.map((msg: any) => markAsReadMutation.mutate(msg.id))
+        );
       }
     }
   }, [activeContactId, conversationMessages, user]);
   
-  // Эффект для первичной прокрутки при первой загрузке диалога
-  useEffect(() => {
+  // Объединенный эффект для прокрутки, оптимизирован для лучшей производительности
+  useLayoutEffect(() => {
     if (
       activeContactId && 
       conversationMessages && 
-      conversationMessages.length > 0 && 
-      !initialScrollApplied[activeContactId]
+      conversationMessages.length > 0
     ) {
-      console.log('Применяем первичную прокрутку для диалога', activeContactId);
+      // Проверяем, первая ли это загрузка диалога
+      const isFirstLoad = !initialScrollApplied[activeContactId];
       
-      // Устанавливаем флаг, что начальная прокрутка была выполнена для этого контакта
-      setInitialScrollApplied(prev => ({ ...prev, [activeContactId]: true }));
+      if (isFirstLoad) {
+        // Устанавливаем флаг, что начальная прокрутка была выполнена
+        setInitialScrollApplied(prev => ({ ...prev, [activeContactId]: true }));
+      }
       
-      // Мощный алгоритм прокрутки с использованием нескольких подходов
+      // Немедленная прокрутка
       scrollToBottom();
       
-      // Серия прокруток с увеличивающимися интервалами
-      const scrollIntervals = [10, 50, 100, 300, 500, 1000];
+      // Ограниченное количество повторных попыток прокрутки с увеличивающимися интервалами
+      // Используем меньше таймеров для снижения нагрузки
+      const intervals = isFirstLoad 
+        ? [50, 200, 500] // Больше попыток при первой загрузке
+        : [100, 300];    // Меньше попыток при обновлении
       
-      scrollIntervals.forEach(delay => {
-        setTimeout(() => {
-          scrollToBottom();
-        }, delay);
-      });
-    }
-  }, [activeContactId, conversationMessages, initialScrollApplied]);
-  
-  // Автоматическая прокрутка при загрузке сообщений - используем useEffect
-  useEffect(() => {
-    if (conversationMessages && conversationMessages.length > 0) {
-      scrollToBottom();
-    }
-  }, [conversationMessages]);
-  
-  // Используем useLayoutEffect для гарантированной прокрутки после рендеринга
-  useLayoutEffect(() => {
-    if (conversationMessages && conversationMessages.length > 0) {
-      scrollToBottom();
-      // Дополнительная отложенная прокрутка для случаев, когда DOM ещё не полностью готов
-      const scrollTimer = setTimeout(() => {
-        scrollToBottom();
-      }, 50);
-      return () => clearTimeout(scrollTimer);
-    }
-  }, [conversationMessages]);
-  
-  // Автоматическая прокрутка при смене контакта - используем useEffect
-  useEffect(() => {
-    if (activeContactId) {
-      // Несколько попыток прокрутки с разной задержкой для надежности
-      const timer1 = setTimeout(() => {
-        scrollToBottom();
-      }, 100);
-      
-      const timer2 = setTimeout(() => {
-        scrollToBottom();
-      }, 300);
-      
-      const timer3 = setTimeout(() => {
-        scrollToBottom();
-      }, 500);
-      
-      return () => {
-        clearTimeout(timer1);
-        clearTimeout(timer2);
-        clearTimeout(timer3);
-      };
-    }
-  }, [activeContactId]);
-  
-  // Дополнительно используем useLayoutEffect для контакта, который более надежен
-  useLayoutEffect(() => {
-    if (activeContactId && conversationMessages && conversationMessages.length > 0) {
-      // Мгновенно прокручиваем первый раз
-      scrollToBottom();
-      
-      // Затем делаем несколько отложенных попыток с разными интервалами
-      const timerIds = [100, 200, 400, 800].map(delay => 
+      const timerIds = intervals.map(delay => 
         setTimeout(() => scrollToBottom(), delay)
       );
       
       return () => timerIds.forEach(id => clearTimeout(id));
     }
-  }, [activeContactId, conversationMessages]);
+  }, [activeContactId, conversationMessages, initialScrollApplied]);
   
   // Handle send on Enter key
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -685,7 +629,7 @@ export default function Messages() {
                                   src={contact.avatar?.startsWith('/uploads') ? contact.avatar : (contact.avatar ? `/uploads/${contact.avatar.split('/').pop()}` : undefined)} 
                                   alt={contact.fullName}
                                   onError={(e) => {
-                                    console.log("Ошибка загрузки аватара:", contact.avatar);
+                                    // Тихая обработка ошибки без логирования
                                     e.currentTarget.src = '/uploads/default.jpg';
                                   }}
                                 />
@@ -748,7 +692,7 @@ export default function Messages() {
                           })()}
                           alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
                           onError={(e) => {
-                            console.log("Ошибка загрузки аватара активного контакта");
+                            // Тихая обработка ошибки без логирования
                             e.currentTarget.src = '/uploads/default.jpg';
                           }}
                         />
@@ -814,7 +758,7 @@ export default function Messages() {
                                             alt="Прикрепленное изображение" 
                                             className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
                                             onError={(e) => {
-                                              console.log("Ошибка загрузки изображения");
+                                              // Тихая обработка ошибки без логирования
                                               e.currentTarget.style.display = 'none';
                                             }}
                                           />
@@ -862,16 +806,16 @@ export default function Messages() {
                                     }`}
                                   >
                                     <div className="flex items-center gap-1 justify-end">
+                                      {formatMessageTime(new Date(message.createdAt))}
                                       {message.senderId === user?.id && (
                                         <span className="inline-flex items-center">
                                           {message.read ? (
-                                            <span className="mr-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
+                                            <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
                                           ) : (
-                                            <span className="mr-1 text-xs">✓</span>
+                                            <span className="ml-1 text-xs">✓</span>
                                           )}
                                         </span>
                                       )}
-                                      {formatMessageTime(new Date(message.createdAt))}
                                     </div>
                                   </div>
                                 </div>
