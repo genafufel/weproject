@@ -386,6 +386,53 @@ export default function Messages() {
     }
   };
   
+  // Функция для преобразования текста в текст с кликабельными ссылками
+  const linkifyText = (text: string) => {
+    if (!text) return '';
+    
+    // Регулярное выражение для поиска URL (поддерживает http, https, www)
+    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g;
+    
+    // Разделяем текст на части: текст и ссылки
+    const parts = [];
+    let lastIndex = 0;
+    let match;
+    
+    // Находим все совпадения регулярного выражения
+    while ((match = urlRegex.exec(text)) !== null) {
+      // Добавляем текст до ссылки
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index));
+      }
+      
+      // Формируем полный URL (добавляем http:// если начинается с www.)
+      const url = match[0].startsWith('www.') ? `http://${match[0]}` : match[0];
+      
+      // Добавляем ссылку
+      parts.push(
+        <a 
+          key={match.index} 
+          href={url} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="text-blue-500 hover:underline dark:text-blue-300"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {match[0]}
+        </a>
+      );
+      
+      lastIndex = match.index + match[0].length;
+    }
+    
+    // Добавляем оставшийся текст
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+    
+    return parts.length ? parts : text;
+  };
+
   // Format date for display
   const formatMessageTime = (date: Date) => {
     const now = new Date();
@@ -743,7 +790,9 @@ export default function Messages() {
                                       : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   }`}
                                 >
-                                  <p className="break-words">{message.content?.replace(/Прикрепленный файл:.*$/, '')}</p>
+                                  <p className="break-words">
+                                    {linkifyText(message.content?.replace(/Прикрепленный файл:.*$/, '') || '')}
+                                  </p>
                                   
                                   {/* Отображение прикрепленного файла */}
                                   {message.attachment && (
