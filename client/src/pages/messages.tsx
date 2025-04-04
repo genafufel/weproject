@@ -249,13 +249,18 @@ export default function Messages() {
       // Устанавливаем ID для подсветки сообщения
       setHighlightedMessageId(messageId);
       
-      // Прокручиваем к сообщению
-      messageRef.scrollIntoView({ behavior: "smooth", block: "center" });
-      
-      // Убираем подсветку через 2 секунды
+      // Прокручиваем к сообщению, но более плавно и предсказуемо
       setTimeout(() => {
-        setHighlightedMessageId(null);
-      }, 2000);
+        messageRef.scrollIntoView({ 
+          behavior: "smooth", 
+          block: "center" 
+        });
+        
+        // Убираем подсветку через 2 секунды
+        setTimeout(() => {
+          setHighlightedMessageId(null);
+        }, 2000);
+      }, 100); // Небольшая задержка для более стабильной прокрутки
     }
   };
 
@@ -598,12 +603,11 @@ export default function Messages() {
                   {/* Область сообщений */}
                   <ScrollArea className="flex-1 p-4">
                     <DragDropFileUpload
-                      onFilesDrop={(files) => {
-                        const newFiles = Array.from(files);
-                        setAttachmentFiles(prev => [...prev, ...newFiles]);
+                      onFilesDrop={(files: File[]) => {
+                        setAttachmentFiles(prev => [...prev, ...files]);
                         
                         // Создаем превью для каждого файла
-                        const newPreviews = newFiles.map(file => {
+                        const newPreviews = files.map(file => {
                           let preview: string | null = null;
                           
                           if (file.type.startsWith('image/')) {
@@ -647,11 +651,15 @@ export default function Messages() {
                                       {/* Если это ответ на другое сообщение, показываем цитату */}
                                       {message.replyToId && (
                                         <div 
-                                          className={`text-xs border-l-2 pl-2 mb-2 ${
+                                          className={`text-xs border-l-2 pl-2 mb-2 cursor-pointer ${
                                             message.senderId === user?.id
                                               ? "border-blue-300 text-blue-100"
                                               : "border-gray-400 text-gray-500 dark:text-gray-400"
                                           }`}
+                                          onClick={(e) => {
+                                            e.stopPropagation(); // Останавливаем всплытие события
+                                            scrollToMessage(message.replyToId);
+                                          }}
                                         >
                                           {/* Находим сообщение, на которое отвечаем */}
                                           {conversationMessages.find((msg: any) => msg.id === message.replyToId)?.content || "Исходное сообщение удалено"}
@@ -748,8 +756,8 @@ export default function Messages() {
                                       content: message.content,
                                       senderId: message.senderId,
                                       senderName: message.senderId === user?.id 
-                                        ? user.fullName 
-                                        : activeContact?.fullName
+                                        ? user?.fullName || 'Вы'
+                                        : activeContact?.fullName || 'Собеседник'
                                     });
                                   }}>
                                     <Reply className="mr-2 h-4 w-4" />
