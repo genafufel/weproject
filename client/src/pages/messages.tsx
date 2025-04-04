@@ -865,7 +865,7 @@ export default function Messages() {
                                       {message.senderId === user?.id && (
                                         <span className="inline-flex items-center">
                                           {message.read ? (
-                                            <span className="mr-1 text-xs">✓✓</span>
+                                            <span className="mr-1 text-xs tracking-tighter">✓&thinsp;✓</span>
                                           ) : (
                                             <span className="mr-1 text-xs">✓</span>
                                           )}
