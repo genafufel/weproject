@@ -865,14 +865,9 @@ export default function Messages() {
                                       {message.senderId === user?.id && (
                                         <span className="inline-flex items-center">
                                           {message.read ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1 h-3 w-3">
-                                              <path d="M18 6L7 17l-5-5"/>
-                                              <path d="M22 10L7 17l-5-5"/>
-                                            </svg>
+                                            <span className="mr-1 text-xs">✓✓</span>
                                           ) : (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1 h-3 w-3">
-                                              <path d="M20 6L9 17l-5-5"/>
-                                            </svg>
+                                            <span className="mr-1 text-xs">✓</span>
                                           )}
                                         </span>
                                       )}
