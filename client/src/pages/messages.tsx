@@ -387,7 +387,7 @@ export default function Messages() {
   };
   
   // Функция для преобразования текста в текст с кликабельными ссылками
-  const linkifyText = (text: string) => {
+  const linkifyText = (text: string, isOwnMessage: boolean = false) => {
     if (!text) return '';
     
     // Регулярное выражение для поиска URL (поддерживает http, https, www)
@@ -408,6 +408,11 @@ export default function Messages() {
       // Формируем полный URL (добавляем http:// если начинается с www.)
       const url = match[0].startsWith('www.') ? `http://${match[0]}` : match[0];
       
+      // Определяем цвет ссылки в зависимости от того, чье это сообщение
+      const linkClass = isOwnMessage 
+        ? "text-white hover:underline" // Белый цвет для собственных сообщений на синем фоне
+        : "text-blue-500 hover:underline dark:text-blue-300"; // Синий для сообщений собеседника
+      
       // Добавляем ссылку
       parts.push(
         <a 
@@ -415,7 +420,7 @@ export default function Messages() {
           href={url} 
           target="_blank" 
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline dark:text-blue-300"
+          className={linkClass}
           onClick={(e) => e.stopPropagation()}
         >
           {match[0]}
@@ -791,7 +796,10 @@ export default function Messages() {
                                   }`}
                                 >
                                   <p className="break-words">
-                                    {linkifyText(message.content?.replace(/Прикрепленный файл:.*$/, '') || '')}
+                                    {linkifyText(
+                                      message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
+                                      message.senderId === user?.id // Передаем true, если это наше сообщение
+                                    )}
                                   </p>
                                   
                                   {/* Отображение прикрепленного файла */}
