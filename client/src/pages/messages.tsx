@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Loader2, Send, X, Upload, Reply } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { DragDropFileUpload } from "@/components/ui/drag-drop-file-upload";
+
 import {
   Dialog,
   DialogContent,
@@ -601,25 +601,37 @@ export default function Messages() {
                   </div>
                   
                   {/* Область сообщений */}
-                  <ScrollArea className="flex-1 p-4">
-                    <DragDropFileUpload
-                      onFilesDrop={(files: File[]) => {
-                        setAttachmentFiles(prev => [...prev, ...files]);
-                        
-                        // Создаем превью для каждого файла
-                        const newPreviews = files.map(file => {
-                          let preview: string | null = null;
-                          
-                          if (file.type.startsWith('image/')) {
-                            preview = URL.createObjectURL(file);
-                          }
-                          
-                          return { file, preview };
-                        });
-                        
-                        setAttachmentPreviews(prev => [...prev, ...newPreviews]);
+                  <div className="flex-1 flex flex-col relative">
+                    <div
+                      className="absolute inset-0 z-10 pointer-events-none"
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
                       }}
-                    >
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                          const newFiles = Array.from(e.dataTransfer.files);
+                          setAttachmentFiles(prev => [...prev, ...newFiles]);
+                          
+                          // Создаем превью для каждого файла
+                          const newPreviews = newFiles.map(file => {
+                            let preview: string | null = null;
+                            
+                            if (file.type.startsWith('image/')) {
+                              preview = URL.createObjectURL(file);
+                            }
+                            
+                            return { file, preview };
+                          });
+                          
+                          setAttachmentPreviews(prev => [...prev, ...newPreviews]);
+                        }
+                      }}
+                    />
+                    <ScrollArea className="flex-1 p-4">
                       {messagesDataLoading ? (
                         <div className="flex items-center justify-center h-full p-8">
                           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -770,8 +782,8 @@ export default function Messages() {
                           <div ref={messagesEndRef} />
                         </div>
                       )}
-                    </DragDropFileUpload>
-                  </ScrollArea>
+                    </ScrollArea>
+                  </div>
                   
                   {/* Message input - немного приподнимаем от низа */}
                   <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mt-auto sticky bottom-0">
