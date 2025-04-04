@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { useLocation } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
@@ -146,11 +146,52 @@ export default function Messages() {
       if (!res.ok) {
         throw new Error("Failed to fetch conversation messages");
       }
-      return res.json();
+      
+      // После получения сообщений проверим наличие непрочитанных
+      const messages = await res.json();
+      
+      // Если есть непрочитанные сообщения в этом диалоге, инвалидируем кэш списка контактов
+      const hasUnreadMessages = messages.some((msg: any) => 
+        msg.receiverId === user?.id && !msg.read
+      );
+      
+      if (hasUnreadMessages) {
+        // Обновим список всех сообщений, чтобы обновить счетчики непрочитанных
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
+          queryClient.invalidateQueries({ queryKey: ['/api/messages/contacts'] });
+        }, 500);
+      }
+      
+      return messages;
     },
     enabled: !!activeContactId && !!user,
     // Обновляем диалог каждые 3 секунды
     refetchInterval: 3000,
+  });
+  
+  // Мутация для отметки сообщения как прочитанного
+  const markAsReadMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      const res = await fetch(`/api/messages/${messageId}/read`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      
+      if (!res.ok) {
+        throw new Error("Failed to mark message as read");
+      }
+      
+      return true;
+    },
+    onSuccess: () => {
+      // Обновляем списки сообщений
+      refetchConversation();
+      queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/messages/contacts'] });
+    },
   });
   
   // Состояние для прикрепленных файлов
@@ -423,6 +464,26 @@ export default function Messages() {
   
   // Состояние для отслеживания, была ли выполнена начальная прокрутка для этого диалога
   const [initialScrollApplied, setInitialScrollApplied] = useState<{[key: number]: boolean}>({});
+  
+  // Эффект для автоматической отметки сообщений как прочитанные
+  useEffect(() => {
+    if (activeContactId && conversationMessages && conversationMessages.length > 0 && user) {
+      // Находим все непрочитанные сообщения адресованные текущему пользователю 
+      const unreadMessages = conversationMessages.filter(
+        (msg: any) => msg.receiverId === user.id && !msg.read
+      );
+      
+      // Если есть непрочитанные сообщения, отмечаем их как прочитанные
+      if (unreadMessages.length > 0) {
+        console.log('Отмечаем как прочитанные сообщения:', unreadMessages.length);
+        
+        // Отмечаем каждое сообщение как прочитанное
+        unreadMessages.forEach((msg: any) => {
+          markAsReadMutation.mutate(msg.id);
+        });
+      }
+    }
+  }, [activeContactId, conversationMessages, user]);
   
   // Эффект для первичной прокрутки при первой загрузке диалога
   useEffect(() => {
@@ -800,7 +861,23 @@ export default function Messages() {
                                       message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
                                     }`}
                                   >
-                                    {formatMessageTime(new Date(message.createdAt))}
+                                    <div className="flex items-center gap-1 justify-end">
+                                      {message.senderId === user?.id && (
+                                        <span className="inline-flex items-center">
+                                          {message.read ? (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1 h-3 w-3">
+                                              <path d="M18 6L7 17l-5-5"/>
+                                              <path d="M22 10L7 17l-5-5"/>
+                                            </svg>
+                                          ) : (
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1 h-3 w-3">
+                                              <path d="M20 6L9 17l-5-5"/>
+                                            </svg>
+                                          )}
+                                        </span>
+                                      )}
+                                      {formatMessageTime(new Date(message.createdAt))}
+                                    </div>
                                   </div>
                                 </div>
                               </div>
