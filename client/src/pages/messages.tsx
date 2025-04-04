@@ -46,6 +46,8 @@ export default function Messages() {
   
   // Реф объекты для каждого сообщения, чтобы можно было прокрутить к ним
   const messageRefs = useRef<{[key: number]: HTMLDivElement}>({});
+  // Реф для области сообщений
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   
   // State for image preview modal
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -486,7 +488,7 @@ export default function Messages() {
                 <div className="text-lg font-semibold">Сообщения</div>
               </div>
               
-              <ScrollArea className="flex-1">
+              <div className="flex-1 p-4 overflow-y-auto">
                 {contactsLoading ? (
                   <div className="flex items-center justify-center h-full">
                     <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -572,7 +574,7 @@ export default function Messages() {
                     У вас пока нет сообщений
                   </div>
                 )}
-              </ScrollArea>
+              </div>
             </div>
             
             {/* Main chat area */}
@@ -601,37 +603,33 @@ export default function Messages() {
                   </div>
                   
                   {/* Область сообщений */}
-                  <div className="flex-1 flex flex-col relative">
-                    <div
-                      className="absolute inset-0 z-10 pointer-events-none"
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
+                  <div className="flex-1 flex flex-col relative"
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault();
+                      
+                      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                        const newFiles = Array.from(e.dataTransfer.files);
+                        setAttachmentFiles(prev => [...prev, ...newFiles]);
                         
-                        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                          const newFiles = Array.from(e.dataTransfer.files);
-                          setAttachmentFiles(prev => [...prev, ...newFiles]);
+                        // Создаем превью для каждого файла
+                        const newPreviews = newFiles.map(file => {
+                          let preview: string | null = null;
                           
-                          // Создаем превью для каждого файла
-                          const newPreviews = newFiles.map(file => {
-                            let preview: string | null = null;
-                            
-                            if (file.type.startsWith('image/')) {
-                              preview = URL.createObjectURL(file);
-                            }
-                            
-                            return { file, preview };
-                          });
+                          if (file.type.startsWith('image/')) {
+                            preview = URL.createObjectURL(file);
+                          }
                           
-                          setAttachmentPreviews(prev => [...prev, ...newPreviews]);
-                        }
-                      }}
-                    />
-                    <ScrollArea className="flex-1 p-4">
+                          return { file, preview };
+                        });
+                        
+                        setAttachmentPreviews(prev => [...prev, ...newPreviews]);
+                      }
+                    }}
+                  >
+                    <div className="flex-1 p-4 overflow-y-auto" ref={scrollAreaRef}>
                       {messagesDataLoading ? (
                         <div className="flex items-center justify-center h-full p-8">
                           <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -782,7 +780,7 @@ export default function Messages() {
                           <div ref={messagesEndRef} />
                         </div>
                       )}
-                    </ScrollArea>
+                    </div>
                   </div>
                   
                   {/* Message input - немного приподнимаем от низа */}
