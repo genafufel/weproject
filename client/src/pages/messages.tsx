@@ -39,6 +39,14 @@ export default function Messages() {
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   
+  // State for message replies
+  const [replyToMessage, setReplyToMessage] = useState<{
+    id: number;
+    content: string;
+    senderId: number;
+    senderName?: string;
+  } | null>(null);
+  
   // Получаем все сообщения текущего пользователя
   const {
     data: userMessages,
@@ -336,6 +344,8 @@ export default function Messages() {
         body: JSON.stringify({
           receiverId: activeContactId,
           content: messageText.trim() || "",
+          // Добавляем ID сообщения, на которое отвечаем
+          replyToId: replyToMessage?.id || null,
           // Поддержка для старой версии API
           attachment: attachmentsData.length > 0 ? attachmentsData[0].url : null,
           attachmentType: attachmentsData.length > 0 ? attachmentsData[0].type : null,
@@ -350,9 +360,10 @@ export default function Messages() {
         throw new Error(errorData.message || "Failed to send message");
       }
       
-      // Очищаем поле ввода, убираем прикрепленные файлы и обновляем данные
+      // Очищаем поле ввода, убираем прикрепленные файлы и сбрасываем состояние ответа
       setMessageText("");
       handleRemoveAllAttachments();
+      setReplyToMessage(null);
       
       // Инвалидируем кэш запросов сообщений
       queryClient.invalidateQueries({ queryKey: ['/api/messages', 'all'] });
@@ -789,12 +800,26 @@ export default function Messages() {
                                 }`}
                               >
                                 <div
-                                  className={`max-w-[75%] rounded-lg px-4 py-2 ${
+                                  className={`group max-w-[75%] rounded-lg px-4 py-2 ${
                                     message.senderId === user?.id
                                       ? "bg-primary text-white"
                                       : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                   }`}
                                 >
+                                  {/* Если это ответ на другое сообщение, показываем цитату */}
+                                  {message.replyToId && (
+                                    <div 
+                                      className={`text-xs border-l-2 pl-2 mb-2 ${
+                                        message.senderId === user?.id
+                                          ? "border-blue-300 text-blue-100"
+                                          : "border-gray-400 text-gray-500 dark:text-gray-400"
+                                      }`}
+                                    >
+                                      {/* Находим сообщение, на которое отвечаем */}
+                                      {conversationMessages.find((msg: any) => msg.id === message.replyToId)?.content || "Исходное сообщение удалено"}
+                                    </div>
+                                  )}
+                                  
                                   <p className="break-words">
                                     {linkifyText(
                                       message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
@@ -862,17 +887,38 @@ export default function Messages() {
                                       message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
                                     }`}
                                   >
-                                    <div className="flex items-center gap-1 justify-end">
-                                      {formatMessageTime(new Date(message.createdAt))}
-                                      {message.senderId === user?.id && (
-                                        <span className="inline-flex items-center">
-                                          {message.read ? (
-                                            <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
-                                          ) : (
-                                            <span className="ml-1 text-xs">✓</span>
-                                          )}
-                                        </span>
-                                      )}
+                                    <div className="flex items-center gap-1 justify-between">
+                                      {/* Кнопка ответа */}
+                                      <button
+                                        type="button"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setReplyToMessage({
+                                            id: message.id,
+                                            content: message.content || '',
+                                            senderId: message.senderId,
+                                            senderName: contacts?.find((c: any) => c.id === message.senderId)?.fullName || 'Пользователь'
+                                          });
+                                        }}
+                                        className={`opacity-0 group-hover:opacity-100 hover:underline transition-opacity ${
+                                          message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
+                                        }`}
+                                      >
+                                        Ответить
+                                      </button>
+                                      
+                                      <div className="flex items-center">
+                                        {formatMessageTime(new Date(message.createdAt))}
+                                        {message.senderId === user?.id && (
+                                          <span className="inline-flex items-center">
+                                            {message.read ? (
+                                              <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
+                                            ) : (
+                                              <span className="ml-1 text-xs">✓</span>
+                                            )}
+                                          </span>
+                                        )}
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
@@ -886,6 +932,28 @@ export default function Messages() {
                       
                       {/* Message input - немного приподнимаем от низа */}
                       <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mt-auto sticky bottom-0">
+                        {/* Показываем информацию о сообщении, на которое отвечаем */}
+                        {replyToMessage && (
+                          <div className="mb-2 p-2 rounded-md bg-blue-50 dark:bg-blue-900/20 border-l-2 border-primary flex items-center justify-between">
+                            <div className="flex-1 overflow-hidden">
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                Ответ для {replyToMessage.senderName === user?.fullName ? "себя" : replyToMessage.senderName}
+                              </p>
+                              <p className="text-sm truncate text-gray-700 dark:text-gray-300">
+                                {replyToMessage.content?.slice(0, 50)}
+                                {replyToMessage.content?.length > 50 ? "..." : ""}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => setReplyToMessage(null)}
+                              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                        )}
+                        
                         {/* Предпросмотр прикрепленных файлов */}
                         {attachmentPreviews.length > 0 && (
                           <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex flex-wrap items-center">

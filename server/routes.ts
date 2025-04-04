@@ -1347,11 +1347,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Проверяем наличие множественных вложений
       const hasMultipleAttachments = req.body.attachments && Array.isArray(req.body.attachments) && req.body.attachments.length > 0;
       
-      // Расширяем схему для поддержки прикрепленных файлов
+      // Расширяем схему для поддержки прикрепленных файлов и ответов на сообщения
       const validatedData = insertMessageSchema.parse({
         ...req.body,
         senderId: req.user!.id,
         read: false,
+        // Добавляем поддержку ответов на сообщения
+        replyToId: req.body.replyToId || null,
         // Поддержка обратной совместимости для одного вложения
         attachment: req.body.attachment || (hasMultipleAttachments ? req.body.attachments[0].url : null),
         attachmentType: req.body.attachmentType || (hasMultipleAttachments ? req.body.attachments[0].type : null),

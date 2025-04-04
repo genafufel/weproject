@@ -80,6 +80,7 @@ export const messages = pgTable("messages", {
   senderId: integer("sender_id").notNull(),
   receiverId: integer("receiver_id").notNull(),
   content: text("content").notNull(),
+  replyToId: integer("reply_to_id"), // ID сообщения, на которое отвечают
   attachment: text("attachment"), // URL прикрепленного файла (устаревшее, оставлено для обратной совместимости)
   attachmentType: text("attachment_type"), // Тип прикрепленного файла (устаревшее)
   attachmentName: text("attachment_name"), // Оригинальное имя файла (устаревшее)
