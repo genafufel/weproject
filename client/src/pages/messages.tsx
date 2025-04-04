@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, Send, X, Upload } from "lucide-react";
+import { Loader2, Send, X, Upload, Reply } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { DragDropFileUpload } from "@/components/ui/drag-drop-file-upload";
@@ -19,7 +19,13 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
+
 
 export default function Messages() {
   const { user } = useAuth();
@@ -35,6 +41,12 @@ export default function Messages() {
   const [activeContactId, setActiveContactId] = useState<number | null>(initialContactId);
   const [messageText, setMessageText] = useState("");
   
+  // Добавляем состояние для подсвечивания оригинального сообщения
+  const [highlightedMessageId, setHighlightedMessageId] = useState<number | null>(null);
+  
+  // Реф объекты для каждого сообщения, чтобы можно было прокрутить к ним
+  const messageRefs = useRef<{[key: number]: HTMLDivElement}>({});
+  
   // State for image preview modal
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
@@ -47,6 +59,12 @@ export default function Messages() {
     senderName?: string;
   } | null>(null);
   
+  // Состояние для прикрепленных файлов
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
+  const [attachmentLoading, setAttachmentLoading] = useState(false);
+  const [attachmentPreviews, setAttachmentPreviews] = useState<{file: File, preview: string | null}[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   // Получаем все сообщения текущего пользователя
   const {
     data: userMessages,
@@ -89,197 +107,155 @@ export default function Messages() {
         }
       });
       
-      const contactsList = [];
-      const contactIds = Array.from(contactIdsSet);
+      // Удаляем ID текущего пользователя, если он есть в списке
+      contactIdsSet.delete(user?.id || 0);
       
-      // Для каждого контакта получаем последнее сообщение
-      for (const contactId of contactIds) {
-        // Пропускаем самого себя (если такие сообщения есть)
-        if (contactId === user?.id) continue;
-        
+      // Получаем данные о каждом контакте
+      const contactPromises = Array.from(contactIdsSet).map(async (contactId) => {
+        const res = await fetch(`/api/users/${contactId}`);
+        if (!res.ok) return null;
+        return res.json();
+      });
+      
+      const contactsData = await Promise.all(contactPromises);
+      return contactsData.filter(Boolean);
+    },
+    enabled: !!userMessages && !!user,
+    staleTime: 30000, // Кешируем данные о контактах на 30 секунд
+  });
+  
+  // Mutation для отправки сообщения
+  const sendMessageMutation = useMutation({
+    mutationFn: async (data: { 
+      receiverId: number, 
+      content: string, 
+      attachment?: File,
+      replyToId?: number
+    }) => {
+      let attachmentPath = undefined;
+      let attachmentType = undefined;
+      
+      // Если есть прикрепленный файл, загружаем его
+      if (data.attachment) {
         try {
-          const userRes = await fetch(`/api/users/${contactId}`);
-          if (!userRes.ok) continue;
+          setAttachmentLoading(true);
           
-          const contactUser = await userRes.json();
+          const formData = new FormData();
+          formData.append("file", data.attachment);
           
-          // Находим последнее сообщение в диалоге
-          const conversationMessages = userMessages.filter((msg: any) => 
-            (msg.senderId === user?.id && msg.receiverId === contactId) || 
-            (msg.senderId === contactId && msg.receiverId === user?.id)
-          );
-          
-          // Сортируем по времени создания (от нового к старому)
-          conversationMessages.sort((a: any, b: any) => 
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-          );
-          
-          const lastMessage = conversationMessages[0];
-          
-          // Считаем количество непрочитанных сообщений
-          const unreadCount = conversationMessages.filter((msg: any) => 
-            msg.receiverId === user?.id && msg.senderId === contactId && !msg.read
-          ).length;
-          
-          contactsList.push({
-            id: contactId,
-            fullName: contactUser.fullName,
-            avatar: contactUser.avatar,
-            lastMessage: lastMessage.content || "",
-            lastMessageTime: new Date(lastMessage.createdAt),
-            lastMessageAttachmentType: lastMessage.attachmentType || null,
-            unread: unreadCount,
+          const uploadRes = await fetch("/api/uploads", {
+            method: "POST",
+            body: formData,
           });
+          
+          if (!uploadRes.ok) {
+            throw new Error("Failed to upload attachment");
+          }
+          
+          const uploadData = await uploadRes.json();
+          attachmentPath = uploadData.path;
+          
+          // Определяем тип прикрепленного файла
+          const fileType = data.attachment.type;
+          if (fileType.startsWith("image/")) {
+            attachmentType = "image";
+          } else if (fileType === "application/pdf") {
+            attachmentType = "pdf";
+          } else if (
+            fileType === "application/msword" || 
+            fileType === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+            fileType === "application/vnd.oasis.opendocument.text"
+          ) {
+            attachmentType = "document";
+          } else {
+            attachmentType = "file";
+          }
         } catch (error) {
-          console.error(`Failed to fetch contact ${contactId}:`, error);
+          console.error("Error uploading attachment:", error);
+          throw new Error("Failed to upload attachment");
+        } finally {
+          setAttachmentLoading(false);
         }
       }
       
-      // Сортируем контакты по времени последнего сообщения (от нового к старому)
-      return contactsList.sort((a, b) => 
-        b.lastMessageTime.getTime() - a.lastMessageTime.getTime()
-      );
-    },
-    enabled: !!user && !!userMessages,
-  });
-  
-  // Получаем сообщения для текущего диалога
-  const {
-    data: conversationMessages,
-    isLoading: messagesLoading,
-    refetch: refetchConversation,
-  } = useQuery({
-    queryKey: ['/api/messages', activeContactId],
-    queryFn: async () => {
-      const res = await fetch(`/api/messages?userId=${activeContactId}`);
-      if (!res.ok) {
-        throw new Error("Failed to fetch conversation messages");
-      }
-      
-      // После получения сообщений проверим наличие непрочитанных
-      const messages = await res.json();
-      
-      // Если есть непрочитанные сообщения в этом диалоге, инвалидируем кэш списка контактов
-      const hasUnreadMessages = messages.some((msg: any) => 
-        msg.receiverId === user?.id && !msg.read
-      );
-      
-      if (hasUnreadMessages) {
-        // Обновим список всех сообщений, чтобы обновить счетчики непрочитанных
-        setTimeout(() => {
-          queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
-          queryClient.invalidateQueries({ queryKey: ['/api/messages/contacts'] });
-        }, 500);
-      }
-      
-      return messages;
-    },
-    enabled: !!activeContactId && !!user,
-    // Увеличиваем интервал обновления до 8 секунд для улучшения производительности
-    refetchInterval: 8000,
-    staleTime: 6000, // Кешируем данные на 6 секунд
-  });
-  
-  // Мутация для отметки сообщения как прочитанного
-  const markAsReadMutation = useMutation({
-    mutationFn: async (messageId: number) => {
-      const res = await fetch(`/api/messages/${messageId}/read`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      // Отправляем сообщение с прикрепленным файлом (если есть)
+      const res = await apiRequest("POST", "/api/messages", { 
+        receiverId: data.receiverId, 
+        content: data.content,
+        attachment: attachmentPath,
+        attachmentType,
+        replyToId: data.replyToId
       });
       
+      if (!res.ok) {
+        throw new Error("Failed to send message");
+      }
+      
+      return res.json();
+    },
+    onSuccess: () => {
+      setMessageText("");
+      setAttachmentFiles([]);
+      setAttachmentPreviews([]);
+      setReplyToMessage(null);
+      
+      // Обновляем список сообщений
+      refetchMessages();
+      
+      // Прокручиваем к концу списка сообщений
+      setTimeout(() => {
+        scrollToBottom();
+      }, 300);
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Ошибка при отправке сообщения",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Mutation для отметки сообщения как прочитанного
+  const markAsReadMutation = useMutation({
+    mutationFn: async (messageId: number) => {
+      const res = await apiRequest("POST", `/api/messages/${messageId}/read`, {});
       if (!res.ok) {
         throw new Error("Failed to mark message as read");
       }
-      
-      return true;
+      return res.json();
     },
     onSuccess: () => {
-      // Обновляем списки сообщений
-      refetchConversation();
-      queryClient.invalidateQueries({ queryKey: ['/api/messages'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/messages/contacts'] });
+      // Обновляем список сообщений
+      refetchMessages();
+    },
+    onError: (error: any) => {
+      // При ошибке отметки сообщения как прочитанного - просто логируем, но не показываем пользователю
+      console.error("Error marking message as read:", error);
     },
   });
-  
-  // Состояние для прикрепленных файлов
-  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
-  const [attachmentPreviews, setAttachmentPreviews] = useState<{file: File, preview: string | null}[]>([]);
-  const [attachmentLoading, setAttachmentLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Открыть диалог выбора файла
-  const handleAttachmentClick = () => {
-    fileInputRef.current?.click();
+  // Прокрутка к концу списка сообщений
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-  // Обработка выбора файлов (через input или drag-and-drop)
-  const handleFilesSelected = async (files: File[]) => {
-    if (files.length === 0) return;
-
-    setAttachmentLoading(true);
-
-    try {
-      // Добавляем новые файлы к существующим
-      setAttachmentFiles(prev => [...prev, ...files]);
+  // Прокрутка к конкретному сообщению с подсветкой
+  const scrollToMessage = (messageId: number) => {
+    const messageRef = messageRefs.current[messageId];
+    if (messageRef) {
+      // Устанавливаем ID для подсветки сообщения
+      setHighlightedMessageId(messageId);
       
-      // Обрабатываем каждый файл для создания превью
-      for (const file of files) {
-        if (file.type.startsWith('image/')) {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setAttachmentPreviews(prev => [
-              ...prev, 
-              { file, preview: reader.result as string }
-            ]);
-          };
-          reader.readAsDataURL(file);
-        } else {
-          // Для других типов файлов добавляем без превью
-          setAttachmentPreviews(prev => [
-            ...prev, 
-            { file, preview: null }
-          ]);
-        }
-      }
-    } catch (error) {
-      // Сообщаем пользователю об ошибке без избыточного логирования
-      toast({
-        title: "Ошибка при обработке файлов",
-        description: "Не удалось обработать выбранные файлы",
-        variant: "destructive",
-      });
-    } finally {
-      setAttachmentLoading(false);
-    }
-  };
-  
-  // Обработка выбора файлов через input (для обратной совместимости)
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-    handleFilesSelected(Array.from(files));
-    
-    // Сбрасываем значение input, чтобы можно было выбрать те же файлы снова
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-    }
-  };
-
-  // Удаление прикрепленного файла
-  const handleRemoveAttachment = (file: File) => {
-    setAttachmentFiles(prev => prev.filter(f => f !== file));
-    setAttachmentPreviews(prev => prev.filter(p => p.file !== file));
-  };
-  
-  // Удаление всех прикрепленных файлов
-  const handleRemoveAllAttachments = () => {
-    setAttachmentFiles([]);
-    setAttachmentPreviews([]);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      // Прокручиваем к сообщению
+      messageRef.scrollIntoView({ behavior: "smooth", block: "center" });
+      
+      // Убираем подсветку через 2 секунды
+      setTimeout(() => {
+        setHighlightedMessageId(null);
+      }, 2000);
     }
   };
 
@@ -288,731 +264,588 @@ export default function Messages() {
     if ((!messageText.trim() && attachmentFiles.length === 0) || !activeContactId) return;
     
     try {
-      let attachmentsData = [];
-
-      // Если есть прикрепленные файлы, загружаем их сначала
+      // Если есть прикрепленные файлы, отправляем их по одному
       if (attachmentFiles.length > 0) {
-        setAttachmentLoading(true);
-        
-        if (attachmentFiles.length === 1) {
-          // Для совместимости со старым кодом, если файл один - используем старый API
-          const formData = new FormData();
-          formData.append('attachment', attachmentFiles[0]);
-
-          const uploadRes = await fetch('/api/upload/message-attachment', {
-            method: 'POST',
-            body: formData,
+        for (const file of attachmentFiles) {
+          await sendMessageMutation.mutateAsync({
+            receiverId: activeContactId,
+            content: messageText || `Прикрепленный файл: ${file.name}`,
+            attachment: file,
+            replyToId: replyToMessage?.id
           });
-
-          if (!uploadRes.ok) {
-            throw new Error("Не удалось загрузить файл");
-          }
-
-          const data = await uploadRes.json();
-          attachmentsData.push({
-            url: data.fileUrl,
-            type: data.fileType,
-            name: data.fileName
-          });
-        } else {
-          // Если файлов несколько, используем новый API для загрузки нескольких файлов
-          const formData = new FormData();
-          attachmentFiles.forEach(file => {
-            formData.append('attachments', file);
-          });
-
-          const uploadRes = await fetch('/api/upload/message-attachments', {
-            method: 'POST',
-            body: formData,
-          });
-
-          if (!uploadRes.ok) {
-            throw new Error("Не удалось загрузить файлы");
-          }
-
-          const data = await uploadRes.json();
-          attachmentsData = data.files;
         }
-      }
-
-      // Отправляем сообщение с прикрепленными файлами
-      const res = await fetch("/api/messages", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      } else {
+        // Если нет прикрепленных файлов, отправляем только текст
+        await sendMessageMutation.mutateAsync({
           receiverId: activeContactId,
-          content: messageText.trim() || "",
-          // Добавляем ID сообщения, на которое отвечаем
-          replyToId: replyToMessage?.id || null,
-          // Поддержка для старой версии API
-          attachment: attachmentsData.length > 0 ? attachmentsData[0].url : null,
-          attachmentType: attachmentsData.length > 0 ? attachmentsData[0].type : null,
-          attachmentName: attachmentsData.length > 0 ? attachmentsData[0].name : null,
-          // Новое поле для множественных вложений
-          attachments: attachmentsData.length > 0 ? attachmentsData : null,
-        }),
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: "Неизвестная ошибка" }));
-        throw new Error(errorData.message || "Failed to send message");
+          content: messageText,
+          replyToId: replyToMessage?.id
+        });
       }
-      
-      // Очищаем поле ввода, убираем прикрепленные файлы и сбрасываем состояние ответа
-      setMessageText("");
-      handleRemoveAllAttachments();
-      setReplyToMessage(null);
-      
-      // Инвалидируем кэш запросов сообщений
-      queryClient.invalidateQueries({ queryKey: ['/api/messages', 'all'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/messages', activeContactId] });
-      queryClient.invalidateQueries({ queryKey: ['/api/messages/contacts'] });
-      
-      // Немедленно запрашиваем обновленные данные
-      await Promise.all([
-        refetchMessages(),
-        refetchConversation()
-      ]);
-      
-      // Прокручиваем вниз чтобы увидеть отправленное сообщение
-      setTimeout(() => {
-        scrollToBottom();
-        // Дополнительная попытка прокрутки через короткое время для надежности
-        setTimeout(() => {
-          scrollToBottom();
-        }, 200);
-      }, 100);
-      
-    } catch (error: any) {
-      // Более аккуратная обработка ошибки без избыточного логирования
+    } catch (error) {
+      console.error("Error sending message:", error);
       toast({
-        title: "Ошибка отправки",
-        description: error.message || "Не удалось отправить сообщение. Пожалуйста, попробуйте позже.",
+        title: "Ошибка при отправке сообщения",
+        description: "Попробуйте еще раз",
         variant: "destructive",
       });
-    } finally {
-      setAttachmentLoading(false);
     }
-  };
-  
-  // Функция для преобразования текста в текст с кликабельными ссылками
-  const linkifyText = (text: string, isOwnMessage: boolean = false) => {
-    if (!text) return '';
-    
-    // Регулярное выражение для поиска URL (поддерживает http, https, www)
-    const urlRegex = /(https?:\/\/[^\s]+)|(www\.[^\s]+)/g;
-    
-    // Разделяем текст на части: текст и ссылки
-    const parts = [];
-    let lastIndex = 0;
-    let match;
-    
-    // Находим все совпадения регулярного выражения
-    while ((match = urlRegex.exec(text)) !== null) {
-      // Добавляем текст до ссылки
-      if (match.index > lastIndex) {
-        parts.push(text.substring(lastIndex, match.index));
-      }
-      
-      // Формируем полный URL (добавляем http:// если начинается с www.)
-      const url = match[0].startsWith('www.') ? `http://${match[0]}` : match[0];
-      
-      // Определяем цвет ссылки в зависимости от того, чье это сообщение
-      const linkClass = isOwnMessage 
-        ? "text-white hover:underline" // Белый цвет для собственных сообщений на синем фоне
-        : "text-blue-500 hover:underline dark:text-blue-300"; // Синий для сообщений собеседника
-      
-      // Добавляем ссылку
-      parts.push(
-        <a 
-          key={match.index} 
-          href={url} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className={linkClass}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {match[0]}
-        </a>
-      );
-      
-      lastIndex = match.index + match[0].length;
-    }
-    
-    // Добавляем оставшийся текст
-    if (lastIndex < text.length) {
-      parts.push(text.substring(lastIndex));
-    }
-    
-    return parts.length ? parts : text;
   };
 
-  // Format date for display
-  const formatMessageTime = (date: Date) => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const messageDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    
-    // If same day, show time
-    if (messageDate.getTime() === today.getTime()) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    
-    // If yesterday, show "Yesterday"
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    if (messageDate.getTime() === yesterday.getTime()) {
-      return "Yesterday";
-    }
-    
-    // Otherwise show date
-    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-  };
-  
-  // Format date for conversation list
-  const formatConversationTime = (date: Date) => {
-    const now = new Date();
-    const diff = now.getTime() - date.getTime();
-    
-    // Less than a minute
-    if (diff < 60 * 1000) {
-      return "Just now";
-    }
-    
-    // Less than an hour
-    if (diff < 60 * 60 * 1000) {
-      const minutes = Math.floor(diff / (60 * 1000));
-      return `${minutes}m ago`;
-    }
-    
-    // Less than a day
-    if (diff < 24 * 60 * 60 * 1000) {
-      const hours = Math.floor(diff / (60 * 60 * 1000));
-      return `${hours}h ago`;
-    }
-    
-    // Less than a week
-    if (diff < 7 * 24 * 60 * 60 * 1000) {
-      const days = Math.floor(diff / (24 * 60 * 60 * 1000));
-      return days === 1 ? "Yesterday" : `${days}d ago`;
-    }
-    
-    // Otherwise show date
-    return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-  };
-  
-  // Оптимизированная функция прокрутки вниз (меньше DOM-обращений)
-  const scrollToBottom = () => {
-    // Используем ref для прокрутки - самый эффективный способ
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'auto', block: 'end' });
-    } 
-    
-    // В качестве запасного варианта используем прямую прокрутку 
-    const scrollArea = document.querySelector('.messages-scroll-area [data-radix-scroll-area-viewport]');
-    if (scrollArea) {
-      scrollArea.scrollTop = scrollArea.scrollHeight;
-      
-      // Оптимизация: устанавливаем прокрутку для родительского контейнера только если он существует
-      const parentScrollArea = document.querySelector('.messages-scroll-area');
-      if (parentScrollArea) {
-        parentScrollArea.scrollTop = parentScrollArea.scrollHeight;
-      }
-    }
-  };
-  
-  // Состояние для отслеживания, была ли выполнена начальная прокрутка для этого диалога
-  const [initialScrollApplied, setInitialScrollApplied] = useState<{[key: number]: boolean}>({});
-  
-  // Эффект для автоматической отметки сообщений как прочитанные
-  useEffect(() => {
-    if (activeContactId && conversationMessages && conversationMessages.length > 0 && user) {
-      // Находим все непрочитанные сообщения адресованные текущему пользователю 
-      const unreadMessages = conversationMessages.filter(
-        (msg: any) => msg.receiverId === user.id && !msg.read
-      );
-      
-      // Если есть непрочитанные сообщения, отмечаем их как прочитанные
-      if (unreadMessages.length > 0) {
-        // Отмечаем каждое сообщение как прочитанное более эффективно
-        // Используем Promise.all для параллельной обработки всех запросов
-        Promise.all(
-          unreadMessages.map((msg: any) => markAsReadMutation.mutate(msg.id))
-        );
-      }
-    }
-  }, [activeContactId, conversationMessages, user]);
-  
-  // Объединенный эффект для прокрутки, оптимизирован для лучшей производительности
-  useLayoutEffect(() => {
-    if (
-      activeContactId && 
-      conversationMessages && 
-      conversationMessages.length > 0
-    ) {
-      // Проверяем, первая ли это загрузка диалога
-      const isFirstLoad = !initialScrollApplied[activeContactId];
-      
-      if (isFirstLoad) {
-        // Устанавливаем флаг, что начальная прокрутка была выполнена
-        setInitialScrollApplied(prev => ({ ...prev, [activeContactId]: true }));
-      }
-      
-      // Немедленная прокрутка
-      scrollToBottom();
-      
-      // Ограниченное количество повторных попыток прокрутки с увеличивающимися интервалами
-      // Используем меньше таймеров для снижения нагрузки
-      const intervals = isFirstLoad 
-        ? [50, 200, 500] // Больше попыток при первой загрузке
-        : [100, 300];    // Меньше попыток при обновлении
-      
-      const timerIds = intervals.map(delay => 
-        setTimeout(() => scrollToBottom(), delay)
-      );
-      
-      return () => timerIds.forEach(id => clearTimeout(id));
-    }
-  }, [activeContactId, conversationMessages, initialScrollApplied]);
-  
-  // Handle send on Enter key
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  // Обработчик нажатия Enter для отправки сообщения
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       sendMessage();
     }
   };
 
-  // Отображение прикрепленных файлов
+  // Функция для выделения и стилизации ссылок в тексте сообщения
+  const linkifyText = (text: string, isOwnMessage: boolean) => {
+    if (!text) return null;
+    
+    // Regular expression to match URLs
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    
+    const parts = text.split(urlRegex);
+    
+    return parts.map((part, index) => {
+      if (part.match(urlRegex)) {
+        return (
+          <a 
+            key={index} 
+            href={part} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className={`underline ${isOwnMessage ? 'text-blue-200' : 'text-blue-500 dark:text-blue-400'}`}
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
+  // Обработчик клика на кнопку прикрепления файлов
+  const handleAttachmentClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  // Обработчик изменения выбранных файлов
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const newFiles = Array.from(e.target.files);
+      
+      // Добавляем новые файлы к существующим
+      setAttachmentFiles(prev => [...prev, ...newFiles]);
+      
+      // Создаем превью для каждого файла
+      const newPreviews = newFiles.map(file => {
+        let preview: string | null = null;
+        
+        if (file.type.startsWith('image/')) {
+          preview = URL.createObjectURL(file);
+        }
+        
+        return { file, preview };
+      });
+      
+      setAttachmentPreviews(prev => [...prev, ...newPreviews]);
+      
+      // Сбрасываем значение input, чтобы можно было выбрать тот же файл повторно
+      e.target.value = '';
+    }
+  };
+
+  // Обработчик удаления прикрепленного файла
+  const handleRemoveAttachment = (file: File) => {
+    setAttachmentFiles(prev => prev.filter(f => f !== file));
+    setAttachmentPreviews(prev => {
+      // Очищаем URL объекты, чтобы избежать утечек памяти
+      const itemToRemove = prev.find(item => item.file === file);
+      if (itemToRemove && itemToRemove.preview) {
+        URL.revokeObjectURL(itemToRemove.preview);
+      }
+      return prev.filter(item => item.file !== file);
+    });
+  };
+
+  // Функция для отображения превью прикрепленных файлов
   const renderAttachmentPreviews = () => {
     return attachmentPreviews.map((item, index) => (
-      <div key={index} className="flex items-center mr-2 bg-gray-100 dark:bg-gray-700 rounded p-1">
+      <div key={index} className="relative mr-2 mb-2">
         {item.preview ? (
-          <img 
-            src={item.preview} 
-            alt={`Preview ${index}`} 
-            className="h-10 w-10 rounded object-cover" 
-          />
+          <div className="group relative">
+            <img 
+              src={item.preview} 
+              alt={item.file.name} 
+              className="h-16 w-auto rounded border border-gray-300 dark:border-gray-600"
+            />
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors rounded flex items-center justify-center">
+              <button
+                type="button"
+                onClick={() => handleRemoveAttachment(item.file)}
+                className="opacity-0 group-hover:opacity-100 bg-red-500 text-white p-1 rounded-full"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         ) : (
-          <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center">
-            {item.file.type.includes('pdf') ? (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                <polyline points="14 2 14 8 20 8"/>
-              </svg>
-            ) : (
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
-                <polyline points="13 2 13 9 20 9"/>
-              </svg>
-            )}
+          <div className="group relative h-16 px-3 flex items-center rounded border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800">
+            <span className="text-xs truncate max-w-[100px]">{item.file.name}</span>
+            <button
+              type="button"
+              onClick={() => handleRemoveAttachment(item.file)}
+              className="ml-2 opacity-50 group-hover:opacity-100 text-red-500"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
         )}
-        <div className="mx-2 text-xs truncate max-w-[100px]">
-          {item.file.name}
-        </div>
-        <button
-          type="button"
-          onClick={() => handleRemoveAttachment(item.file)}
-          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
       </div>
     ));
   };
 
-  // If user is not logged in, show message to login
-  if (!user) {
-    return (
-      <div className="flex flex-col h-screen">
-        <Navbar />
-        <main className="flex-1 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-          <div className="text-center max-w-md px-4">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Sign in to access Messages</h1>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              You need to be signed in to view and send messages to project owners and applicants.
-            </p>
-            <Button asChild>
-              <a href="/auth">Sign In</a>
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-col h-screen">
-      <Navbar />
+  // Отмечаем непрочитанные сообщения как прочитанные при активации контакта
+  useEffect(() => {
+    if (activeContactId && userMessages && userMessages.length > 0) {
+      // Находим все непрочитанные сообщения от активного контакта
+      const unreadMessages = userMessages.filter((message: any) => 
+        message.senderId === activeContactId && 
+        message.receiverId === user?.id && 
+        !message.read
+      );
       
-      <main className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden pb-4">
-        <div className="h-full flex flex-col max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-2">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-3">Messages</h1>
-          
-          <div className="flex-1 bg-white dark:bg-gray-800 rounded-lg shadow-sm overflow-hidden border border-gray-200 dark:border-gray-700">
-            <div className="grid grid-cols-1 md:grid-cols-3 h-full">
-              {/* Contacts sidebar */}
-              <div className="border-r border-gray-200 dark:border-gray-700">
-                <div className="p-4 border-b border-gray-200 dark:border-gray-700">
-                  <Input
-                    type="text"
-                    placeholder="Search conversations..."
-                    className="bg-gray-50 dark:bg-gray-700 dark:placeholder-gray-400"
-                  />
-                </div>
-                
-                <ScrollArea className="flex-1">
-                  {contactsLoading || messagesDataLoading ? (
-                    <div className="flex justify-center items-center h-full">
-                      <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                    </div>
-                  ) : contacts && contacts.length === 0 ? (
-                    <div className="text-center p-4 text-gray-500 dark:text-gray-400">
-                      У вас пока нет сообщений
-                    </div>
-                  ) : (
-                    <div>
-                      {contacts && contacts.map((contact: any) => (
-                        <div key={contact.id}>
-                          <button
-                            className={`w-full text-left p-4 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors ${
-                              activeContactId === contact.id ? "bg-blue-50 dark:bg-gray-600" : ""
-                            }`}
-                            onClick={() => setActiveContactId(contact.id)}
-                          >
-                            <div className="flex items-center">
-                              <Avatar className="h-10 w-10 mr-3">
-                                <AvatarImage 
-                                  src={contact.avatar?.startsWith('/uploads') ? contact.avatar : (contact.avatar ? `/uploads/${contact.avatar.split('/').pop()}` : undefined)} 
-                                  alt={contact.fullName}
-                                  onError={(e) => {
-                                    // Тихая обработка ошибки без логирования
-                                    e.currentTarget.src = '/uploads/default.jpg';
-                                  }}
-                                />
-                                <AvatarFallback>
-                                  {contact.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex justify-between items-center">
-                                  <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
-                                    {contact.fullName}
-                                  </h3>
-                                  <span className="text-xs text-gray-500 dark:text-gray-400">
-                                    {formatConversationTime(contact.lastMessageTime)}
-                                  </span>
-                                </div>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-                                  {contact.lastMessageAttachmentType === 'image' && !contact.lastMessage ? 
-                                    "Изображение" : 
-                                    contact.lastMessageAttachmentType === 'pdf' && !contact.lastMessage ? 
-                                    "PDF файл" :
-                                    contact.lastMessageAttachmentType && !contact.lastMessage ?
-                                    "Файл" :
-                                    contact.lastMessage?.replace(/Прикрепленный файл:.*$/, '') || ''
-                                  }
-                                </p>
-                              </div>
-                              {contact.unread > 0 && (
-                                <span className="ml-2 bg-primary text-white text-xs font-medium rounded-full h-5 min-w-5 px-1.5 flex items-center justify-center">
-                                  {contact.unread}
-                                </span>
-                              )}
-                            </div>
-                          </button>
-                          <Separator className="dark:bg-gray-700" />
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </ScrollArea>
+      // Отмечаем каждое сообщение как прочитанное
+      unreadMessages.forEach((message: any) => {
+        markAsReadMutation.mutate(message.id);
+      });
+    }
+  }, [activeContactId, userMessages, user?.id]);
+
+  // Прокручиваем к концу списка сообщений при загрузке и при изменении активного контакта
+  useEffect(() => {
+    if (!messagesDataLoading && activeContactId) {
+      scrollToBottom();
+    }
+  }, [messagesDataLoading, activeContactId]);
+
+  // Получаем сообщения для текущего активного контакта
+  const conversationMessages = userMessages && activeContactId
+    ? userMessages.filter((message: any) => 
+        (message.senderId === user?.id && message.receiverId === activeContactId) ||
+        (message.senderId === activeContactId && message.receiverId === user?.id)
+      ).sort((a: any, b: any) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    : [];
+
+  // Получаем данные об активном контакте
+  const activeContact = contacts && activeContactId
+    ? contacts.find((contact: any) => contact.id === activeContactId)
+    : null;
+
+  // Функции форматирования времени
+  const formatMessageTime = (date: Date) => {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const formatConversationTime = (date: Date) => {
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    
+    if (days === 0) {
+      return formatMessageTime(date);
+    } else if (days === 1) {
+      return "Вчера";
+    } else if (days < 7) {
+      const options: Intl.DateTimeFormatOptions = { weekday: 'short' };
+      return date.toLocaleDateString(undefined, options);
+    } else {
+      const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
+      return date.toLocaleDateString(undefined, options);
+    }
+  };
+
+  // Отрисовка UI
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900">
+      <Navbar />
+      <main className="flex-1 container max-w-screen-xl mx-auto my-4 px-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+          <div className="grid md:grid-cols-[300px_1fr] h-[calc(100vh-12rem)] border dark:border-gray-700 rounded-lg">
+            {/* Sidebar - список контактов */}
+            <div className="border-r dark:border-gray-700 h-full flex flex-col">
+              <div className="p-4 border-b dark:border-gray-700">
+                <div className="text-lg font-semibold">Сообщения</div>
               </div>
               
-              {/* Messages area */}
-              <div className="col-span-2 flex flex-col">
-                {!activeContactId ? (
-                  <div className="flex-1 flex items-center justify-center p-4 text-gray-500 dark:text-gray-400">
-                    Select a conversation to start messaging
+              <ScrollArea className="flex-1">
+                {contactsLoading ? (
+                  <div className="flex items-center justify-center h-full">
+                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                  </div>
+                ) : contacts && contacts.length > 0 ? (
+                  <div>
+                    {contacts.map((contact: any) => {
+                      // Находим последнее сообщение в переписке
+                      const lastMessage = userMessages
+                        ? userMessages
+                            .filter((m: any) => 
+                              (m.senderId === user?.id && m.receiverId === contact.id) ||
+                              (m.senderId === contact.id && m.receiverId === user?.id)
+                            )
+                            .sort((a: any, b: any) => 
+                              new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                            )[0]
+                        : null;
+                      
+                      // Считаем количество непрочитанных сообщений
+                      const unreadCount = userMessages
+                        ? userMessages.filter((m: any) => 
+                            m.senderId === contact.id && 
+                            m.receiverId === user?.id && 
+                            !m.read
+                          ).length
+                        : 0;
+                      
+                      return (
+                        <div
+                          key={contact.id}
+                          className={`p-3 flex items-center hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors ${
+                            activeContactId === contact.id ? "bg-gray-100 dark:bg-gray-700" : ""
+                          }`}
+                          onClick={() => setActiveContactId(contact.id)}
+                        >
+                          <Avatar className="h-10 w-10 mr-3">
+                            {contact.profilePicture ? (
+                              <AvatarImage src={contact.profilePicture} alt={contact.fullName} />
+                            ) : (
+                              <AvatarFallback>
+                                {contact.fullName?.charAt(0) || "U"}
+                              </AvatarFallback>
+                            )}
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex justify-between items-center">
+                              <div className="font-medium truncate">{contact.fullName}</div>
+                              {lastMessage && (
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  {formatConversationTime(new Date(lastMessage.createdAt))}
+                                </div>
+                              )}
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <div className="text-sm text-gray-500 dark:text-gray-400 truncate">
+                                {lastMessage ? (
+                                  lastMessage.attachment ? (
+                                    <span className="flex items-center">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-3 w-3 mr-1">
+                                        <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                                      </svg>
+                                      Вложение
+                                    </span>
+                                  ) : (
+                                    lastMessage.content
+                                  )
+                                ) : "Нет сообщений"}
+                              </div>
+                              {unreadCount > 0 && (
+                                <div className="ml-2 bg-primary text-white text-xs rounded-full min-w-5 h-5 flex items-center justify-center px-1">
+                                  {unreadCount}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : (
-                  <>
-                    {/* Conversation header */}
-                    <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
-                      <Avatar className="h-10 w-10 mr-3">
-                        <AvatarImage
-                          src={(() => {
-                            const contact = contacts?.find((c: any) => c.id === activeContactId);
-                            const avatar = contact?.avatar;
-                            if (!avatar) return undefined;
-                            return avatar.startsWith('/uploads') ? avatar : `/uploads/${avatar.split('/').pop()}`;
-                          })()}
-                          alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
-                          onError={(e) => {
-                            // Тихая обработка ошибки без логирования
-                            e.currentTarget.src = '/uploads/default.jpg';
-                          }}
-                        />
+                  <div className="p-4 text-center text-gray-500 dark:text-gray-400">
+                    У вас пока нет сообщений
+                  </div>
+                )}
+              </ScrollArea>
+            </div>
+            
+            {/* Main chat area */}
+            <div className="flex flex-col h-full">
+              {!activeContactId ? (
+                <div className="flex flex-col items-center justify-center h-full p-4 text-center">
+                  <div className="text-xl font-medium mb-2">Выберите контакт</div>
+                  <p className="text-gray-500 dark:text-gray-400 max-w-md">
+                    Выберите чат из списка слева или найдите новый контакт
+                  </p>
+                </div>
+              ) : (
+                <>
+                  {/* Заголовок чата */}
+                  <div className="p-3 border-b dark:border-gray-700 flex items-center">
+                    <Avatar className="h-8 w-8 mr-2">
+                      {activeContact?.profilePicture ? (
+                        <AvatarImage src={activeContact.profilePicture} alt={activeContact.fullName} />
+                      ) : (
                         <AvatarFallback>
-                          {contacts?.find((c: any) => c.id === activeContactId)?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "?"}
+                          {activeContact?.fullName?.charAt(0) || "U"}
                         </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
-                          {contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
-                        </h3>
-                      </div>
-                    </div>
-                    
-                    {/* Messages container with flex to fill available space */}
-                    <div className="flex flex-col flex-1">
-                      {/* Messages list with scrolling - добавлен контейнер для drag-and-drop */}
-                      <ScrollArea className="h-[calc(100vh-280px)] p-4 messages-scroll-area">
-                        <DragDropFileUpload 
-                          onFilesSelected={handleFilesSelected}
-                          multiple={true}
-                          disabled={attachmentLoading}
-                          className="min-h-full w-full"
-                          clickToUpload={false}
-                        >
-                          {messagesLoading ? (
-                            <div className="flex justify-center items-center h-full">
-                              <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                            </div>
-                          ) : !conversationMessages || conversationMessages.length === 0 ? (
-                            <div className="text-center p-4 text-gray-500 dark:text-gray-400">
-                              Сообщений пока нет. Начните диалог!<br/>
-                              <span className="text-sm mt-2 block">Вы можете перетащить файлы сюда для загрузки</span>
-                            </div>
-                          ) : (
-                            <div className="space-y-4">
-                              {conversationMessages.map((message: any) => (
-                              <div
-                                key={message.id}
-                                className={`flex ${
-                                  message.senderId === user?.id ? "justify-end" : "justify-start"
-                                }`}
-                              >
-                                <div
-                                  className={`group max-w-[75%] rounded-lg px-4 py-2 ${
-                                    message.senderId === user?.id
-                                      ? "bg-primary text-white"
-                                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                                  }`}
-                                >
-                                  {/* Если это ответ на другое сообщение, показываем цитату */}
-                                  {message.replyToId && (
-                                    <div 
-                                      className={`text-xs border-l-2 pl-2 mb-2 ${
+                      )}
+                    </Avatar>
+                    <div className="font-medium ml-1">{activeContact?.fullName}</div>
+                  </div>
+                  
+                  {/* Область сообщений */}
+                  <ScrollArea className="flex-1 p-4">
+                    <DragDropFileUpload
+                      onFilesDrop={(files) => {
+                        const newFiles = Array.from(files);
+                        setAttachmentFiles(prev => [...prev, ...newFiles]);
+                        
+                        // Создаем превью для каждого файла
+                        const newPreviews = newFiles.map(file => {
+                          let preview: string | null = null;
+                          
+                          if (file.type.startsWith('image/')) {
+                            preview = URL.createObjectURL(file);
+                          }
+                          
+                          return { file, preview };
+                        });
+                        
+                        setAttachmentPreviews(prev => [...prev, ...newPreviews]);
+                      }}
+                    >
+                      {messagesDataLoading ? (
+                        <div className="flex items-center justify-center h-full p-8">
+                          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                        </div>
+                      ) : conversationMessages.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center text-center h-64 text-gray-500 dark:text-gray-400">
+                          Сообщений пока нет. Начните диалог!<br/>
+                          <span className="text-sm mt-2 block">Вы можете перетащить файлы сюда для загрузки</span>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          {conversationMessages.map((message: any) => (
+                            <div key={message.id}>
+                              <ContextMenu>
+                                <ContextMenuTrigger>
+                                  <div
+                                    ref={(el) => el && (messageRefs.current[message.id] = el)}
+                                    className={`flex ${
+                                      message.senderId === user?.id ? "justify-end" : "justify-start"
+                                    } ${highlightedMessageId === message.id ? "animate-pulse bg-yellow-50 dark:bg-yellow-900/20 rounded-lg" : ""}`}
+                                  >
+                                    <div
+                                      className={`group max-w-[75%] rounded-lg px-4 py-2 ${
                                         message.senderId === user?.id
-                                          ? "border-blue-300 text-blue-100"
-                                          : "border-gray-400 text-gray-500 dark:text-gray-400"
+                                          ? "bg-primary text-white"
+                                          : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                                       }`}
                                     >
-                                      {/* Находим сообщение, на которое отвечаем */}
-                                      {conversationMessages.find((msg: any) => msg.id === message.replyToId)?.content || "Исходное сообщение удалено"}
-                                    </div>
-                                  )}
-                                  
-                                  <p className="break-words">
-                                    {linkifyText(
-                                      message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
-                                      message.senderId === user?.id // Передаем true, если это наше сообщение
-                                    )}
-                                  </p>
-                                  
-                                  {/* Отображение прикрепленного файла */}
-                                  {message.attachment && (
-                                    <div className="mt-2">
-                                      {message.attachmentType === 'image' ? (
-                                        <div className="cursor-pointer" onClick={() => {
-                                          setCurrentImageUrl(message.attachment);
-                                          setIsImageModalOpen(true);
-                                        }}>
-                                          <img 
-                                            src={message.attachment} 
-                                            alt="Прикрепленное изображение" 
-                                            className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
-                                            onError={(e) => {
-                                              // Тихая обработка ошибки без логирования
-                                              e.currentTarget.style.display = 'none';
-                                            }}
-                                          />
-                                        </div>
-                                      ) : (
-                                        <a 
-                                          href={message.attachment} 
-                                          target="_blank" 
-                                          rel="noopener noreferrer"
-                                          className={`flex items-center gap-2 p-2 rounded-md ${
-                                            message.senderId === user?.id 
-                                              ? "bg-blue-700 text-blue-50 hover:bg-blue-600" 
-                                              : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-500"
+                                      {/* Если это ответ на другое сообщение, показываем цитату */}
+                                      {message.replyToId && (
+                                        <div 
+                                          className={`text-xs border-l-2 pl-2 mb-2 ${
+                                            message.senderId === user?.id
+                                              ? "border-blue-300 text-blue-100"
+                                              : "border-gray-400 text-gray-500 dark:text-gray-400"
                                           }`}
                                         >
-                                          {message.attachmentType === 'pdf' ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                              <polyline points="14 2 14 8 20 8"/>
-                                              <path d="M9 15v-2h6v2"/>
-                                              <path d="M9 18v-2h6v2"/>
-                                              <path d="M9 12v-2h2v2"/>
-                                            </svg>
-                                          ) : message.attachmentType === 'document' ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                              <polyline points="14 2 14 8 20 8"/>
-                                            </svg>
-                                          ) : (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                              <polyline points="7 10 12 15 17 10"/>
-                                              <line x1="12" y1="15" x2="12" y2="3"/>
-                                            </svg>
-                                          )}
-
-                                        </a>
+                                          {/* Находим сообщение, на которое отвечаем */}
+                                          {conversationMessages.find((msg: any) => msg.id === message.replyToId)?.content || "Исходное сообщение удалено"}
+                                        </div>
                                       )}
-                                    </div>
-                                  )}
-                                  
-                                  <div
-                                    className={`text-xs mt-1 ${
-                                      message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
-                                    }`}
-                                  >
-                                    <div className="flex items-center gap-1 justify-between">
-                                      {/* Кнопка ответа */}
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setReplyToMessage({
-                                            id: message.id,
-                                            content: message.content || '',
-                                            senderId: message.senderId,
-                                            senderName: contacts?.find((c: any) => c.id === message.senderId)?.fullName || 'Пользователь'
-                                          });
-                                        }}
-                                        className={`opacity-0 group-hover:opacity-100 hover:underline transition-opacity ${
+                                      
+                                      <p className="break-words">
+                                        {linkifyText(
+                                          message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
+                                          message.senderId === user?.id // Передаем true, если это наше сообщение
+                                        )}
+                                      </p>
+                                      
+                                      {/* Отображение прикрепленного файла */}
+                                      {message.attachment && (
+                                        <div className="mt-2">
+                                          {message.attachmentType === 'image' ? (
+                                            <div className="cursor-pointer" onClick={() => {
+                                              setCurrentImageUrl(message.attachment);
+                                              setIsImageModalOpen(true);
+                                            }}>
+                                              <img 
+                                                src={message.attachment} 
+                                                alt="Прикрепленное изображение" 
+                                                className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
+                                                onError={(e) => {
+                                                  // Тихая обработка ошибки без логирования
+                                                  e.currentTarget.style.display = 'none';
+                                                }}
+                                              />
+                                            </div>
+                                          ) : (
+                                            <a 
+                                              href={message.attachment} 
+                                              target="_blank" 
+                                              rel="noopener noreferrer"
+                                              className={`flex items-center gap-2 p-2 rounded-md ${
+                                                message.senderId === user?.id 
+                                                  ? "bg-blue-700 text-blue-50 hover:bg-blue-600" 
+                                                  : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-500"
+                                              }`}
+                                            >
+                                              {message.attachmentType === 'pdf' ? (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                                  <polyline points="14 2 14 8 20 8"/>
+                                                  <path d="M9 15v-2h6v2"/>
+                                                  <path d="M9 18v-2h6v2"/>
+                                                  <path d="M9 12v-2h2v2"/>
+                                                </svg>
+                                              ) : message.attachmentType === 'document' ? (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                                  <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                                  <polyline points="14 2 14 8 20 8"/>
+                                                </svg>
+                                              ) : (
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                  <polyline points="7 10 12 15 17 10"/>
+                                                  <line x1="12" y1="15" x2="12" y2="3"/>
+                                                </svg>
+                                              )}
+                                              {message.attachment.split('/').pop()}
+                                            </a>
+                                          )}
+                                        </div>
+                                      )}
+                                      
+                                      <div
+                                        className={`text-xs mt-1 ${
                                           message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
                                         }`}
                                       >
-                                        Ответить
-                                      </button>
-                                      
-                                      <div className="flex items-center">
-                                        {formatMessageTime(new Date(message.createdAt))}
-                                        {message.senderId === user?.id && (
-                                          <span className="inline-flex items-center">
-                                            {message.read ? (
-                                              <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
-                                            ) : (
-                                              <span className="ml-1 text-xs">✓</span>
-                                            )}
-                                          </span>
-                                        )}
+                                        <div className="flex items-center gap-1 justify-end">
+                                          {formatMessageTime(new Date(message.createdAt))}
+                                          {message.senderId === user?.id && (
+                                            <span className="inline-flex items-center">
+                                              {message.read ? (
+                                                <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
+                                              ) : (
+                                                <span className="ml-1 text-xs">✓</span>
+                                              )}
+                                            </span>
+                                          )}
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              </div>
-                            ))}
-                            <div ref={messagesEndRef} />
-                          </div>
-                        )}
-                        </DragDropFileUpload>
-                      </ScrollArea>
-                      
-                      {/* Message input - немного приподнимаем от низа */}
-                      <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mt-auto sticky bottom-0">
-                        {/* Показываем информацию о сообщении, на которое отвечаем */}
-                        {replyToMessage && (
-                          <div className="mb-2 p-2 rounded-md bg-blue-50 dark:bg-blue-900/20 border-l-2 border-primary flex items-center justify-between">
-                            <div className="flex-1 overflow-hidden">
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                Ответ для {replyToMessage.senderName === user?.fullName ? "себя" : replyToMessage.senderName}
-                              </p>
-                              <p className="text-sm truncate text-gray-700 dark:text-gray-300">
-                                {replyToMessage.content?.slice(0, 50)}
-                                {replyToMessage.content?.length > 50 ? "..." : ""}
-                              </p>
+                                </ContextMenuTrigger>
+                                <ContextMenuContent>
+                                  <ContextMenuItem onClick={() => {
+                                    setReplyToMessage({
+                                      id: message.id,
+                                      content: message.content,
+                                      senderId: message.senderId,
+                                      senderName: message.senderId === user?.id 
+                                        ? user.fullName 
+                                        : activeContact?.fullName
+                                    });
+                                  }}>
+                                    <Reply className="mr-2 h-4 w-4" />
+                                    <span>Ответить</span>
+                                  </ContextMenuItem>
+                                </ContextMenuContent>
+                              </ContextMenu>
                             </div>
-                            <button
-                              type="button"
-                              onClick={() => setReplyToMessage(null)}
-                              className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
-                            >
-                              <X className="h-4 w-4" />
-                            </button>
-                          </div>
-                        )}
-                        
-                        {/* Предпросмотр прикрепленных файлов */}
-                        {attachmentPreviews.length > 0 && (
-                          <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex flex-wrap items-center">
-                            {renderAttachmentPreviews()}
-                          </div>
-                        )}
-                        
-                        <div className="flex">
-                          {/* Скрытый input для файлов (для обратной совместимости) */}
-                          <input
-                            type="file"
-                            ref={fileInputRef}
-                            className="hidden"
-                            onChange={handleFileChange}
-                            multiple
-                          />
-                          
-                          {/* Кнопка прикрепления файла */}
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="icon"
-                            onClick={handleAttachmentClick}
-                            className="mr-2"
-                            disabled={attachmentLoading}
-                          >
-                            {attachmentLoading ? (
-                              <Loader2 className="h-4 w-4 animate-spin" />
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
-                                <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
-                              </svg>
-                            )}
-                          </Button>
-                          
-                          {/* Поле ввода сообщения без drag-and-drop */}
-                          <div className="flex-1 mr-2">
-                            <Input
-                              type="text"
-                              placeholder="Type your message..."
-                              value={messageText}
-                              onChange={(e) => setMessageText(e.target.value)}
-                              onKeyDown={handleKeyDown}
-                              className="w-full h-full"
-                            />
-                          </div>
-                          <Button
-                            type="button"
-                            onClick={sendMessage}
-                            disabled={(!messageText.trim() && attachmentFiles.length === 0) || attachmentLoading}
-                          >
-                            <Send className="h-4 w-4" />
-                          </Button>
+                          ))}
+                          <div ref={messagesEndRef} />
                         </div>
+                      )}
+                    </DragDropFileUpload>
+                  </ScrollArea>
+                  
+                  {/* Message input - немного приподнимаем от низа */}
+                  <div className="px-2 py-2 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 mt-auto sticky bottom-0">
+                    {/* Показываем информацию о сообщении, на которое отвечаем */}
+                    {replyToMessage && (
+                      <div className="mb-2 p-2 rounded-md bg-blue-50 dark:bg-blue-900/20 border-l-2 border-primary flex items-center justify-between">
+                        <div className="flex-1 overflow-hidden">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
+                            Ответ для {replyToMessage.senderName === user?.fullName ? "себя" : replyToMessage.senderName}
+                          </p>
+                          <p className="text-sm truncate text-gray-700 dark:text-gray-300">
+                            {replyToMessage.content?.slice(0, 50)}
+                            {replyToMessage.content?.length > 50 ? "..." : ""}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setReplyToMessage(null)}
+                          className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 ml-2"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
                       </div>
+                    )}
+                    
+                    {/* Предпросмотр прикрепленных файлов */}
+                    {attachmentPreviews.length > 0 && (
+                      <div className="mb-2 p-2 rounded-md bg-gray-100 dark:bg-gray-700 flex flex-wrap items-center">
+                        {renderAttachmentPreviews()}
+                      </div>
+                    )}
+                    
+                    <div className="flex">
+                      {/* Скрытый input для файлов (для обратной совместимости) */}
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        className="hidden"
+                        onChange={handleFileChange}
+                        multiple
+                      />
+                      
+                      {/* Кнопка прикрепления файла */}
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="icon"
+                        onClick={handleAttachmentClick}
+                        className="mr-2"
+                        disabled={attachmentLoading}
+                      >
+                        {attachmentLoading ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+                            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                          </svg>
+                        )}
+                      </Button>
+                      
+                      {/* Поле ввода сообщения без drag-and-drop */}
+                      <div className="flex-1 mr-2">
+                        <Input
+                          type="text"
+                          placeholder="Type your message..."
+                          value={messageText}
+                          onChange={(e) => setMessageText(e.target.value)}
+                          onKeyDown={handleKeyDown}
+                          className="w-full h-full"
+                        />
+                      </div>
+                      <Button
+                        type="button"
+                        onClick={sendMessage}
+                        disabled={(!messageText.trim() && attachmentFiles.length === 0) || attachmentLoading}
+                      >
+                        <Send className="h-4 w-4" />
+                      </Button>
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
