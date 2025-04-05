@@ -40,6 +40,7 @@ export default function Messages() {
   // State for the active conversation
   const [activeContactId, setActiveContactId] = useState<number | null>(initialContactId);
   const [messageText, setMessageText] = useState("");
+  const messageInputRef = useRef<HTMLInputElement>(null);
   
   // State for image preview modal
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -925,6 +926,8 @@ export default function Messages() {
                                             senderId: message.senderId,
                                             senderName: contacts?.find((c: any) => c.id === message.senderId)?.fullName || 'Пользователь'
                                           });
+                                          // Устанавливаем фокус на поле ввода с небольшой задержкой
+                                          setTimeout(() => messageInputRef.current?.focus(), 100);
                                         }}
                                       >
                                         <Reply className="h-4 w-4" />
@@ -1017,6 +1020,7 @@ export default function Messages() {
                           {/* Поле ввода сообщения без drag-and-drop */}
                           <div className="flex-1 mr-2">
                             <Input
+                              ref={messageInputRef}
                               type="text"
                               placeholder="Type your message..."
                               value={messageText}
