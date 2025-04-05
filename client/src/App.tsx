@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -22,6 +22,8 @@ import Notifications from "@/pages/notifications";
 import { AuthProvider, useAuth } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { HelmetProvider } from "react-helmet-async";
+import { imagePreloader } from "@/lib/image-preloader";
+import { useEffect, useState } from "react";
 
 // Компонент для маршрутов, требующих верификации (временно отключена проверка верификации)
 function VerifiedRoute({ component: Component, ...rest }: { component: React.ComponentType, path: string }) {
@@ -35,6 +37,79 @@ function VerifiedRoute({ component: Component, ...rest }: { component: React.Com
       component={ComponentWrapper}
     />
   );
+}
+
+// Компонент для предзагрузки изображений
+function ImagePreloader() {
+  const [location] = useLocation();
+  const { user } = useAuth();
+  const [initialized, setInitialized] = useState(false);
+  
+  // Инициализация предзагрузки при первом монтировании компонента
+  useEffect(() => {
+    if (!initialized) {
+      // Выполняем глобальную предзагрузку для ускорения загрузки сайта
+      imagePreloader.preloadGlobalImages();
+      setInitialized(true);
+    }
+  }, [initialized]);
+  
+  // Предзагружаем изображения при изменении маршрута
+  useEffect(() => {
+    // Предзагружаем изображения DOM после монтирования или смены маршрута
+    imagePreloader.preloadImagesFromPage();
+    
+    // Логика предзагрузки по маршрутам
+    const preloadRouteImages = async () => {
+      try {
+        // Общие предзагрузки
+        if (user?.avatar) {
+          imagePreloader.preloadAvatars([user]);
+        }
+        
+        // Предзагрузки для конкретных маршрутов
+        if (location.startsWith('/projects')) {
+          // Предзагрузка проектов
+          const projectsResponse = await fetch('/api/projects');
+          if (projectsResponse.ok) {
+            const projects = await projectsResponse.json();
+            imagePreloader.preloadProjectImages(projects);
+          }
+        } 
+        else if (location.startsWith('/talent')) {
+          // Предзагрузка резюме
+          const resumesResponse = await fetch('/api/resumes');
+          if (resumesResponse.ok) {
+            const resumes = await resumesResponse.json();
+            imagePreloader.preloadResumeImages(resumes);
+          }
+        }
+        else if (location.startsWith('/messages')) {
+          // Предзагрузка аватаров пользователей (приоритетная)
+          const usersResponse = await fetch('/api/users');
+          if (usersResponse.ok) {
+            const users = await usersResponse.json();
+            imagePreloader.preloadAvatars(users);
+          }
+          
+          // Предзагрузка сообщений
+          if (user?.id) {
+            const messagesResponse = await fetch('/api/messages');
+            if (messagesResponse.ok) {
+              const messages = await messagesResponse.json();
+              imagePreloader.preloadFromMessages(messages);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error preloading images:', error);
+      }
+    };
+    
+    preloadRouteImages();
+  }, [location, user]);
+  
+  return null;
 }
 
 function Router() {
@@ -81,6 +156,7 @@ function App() {
       <AuthProvider>
         <HelmetProvider>
           <div className="app-container">
+            <ImagePreloader />
             <Router />
             <Toaster />
           </div>

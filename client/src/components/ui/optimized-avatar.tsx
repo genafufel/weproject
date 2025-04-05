@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from '@/lib/utils';
+import { imagePreloader } from '@/lib/image-preloader';
 
 interface OptimizedAvatarProps {
   src?: string;
@@ -9,6 +10,7 @@ interface OptimizedAvatarProps {
   fallbackSrc?: string;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
+  priority?: boolean;
 }
 
 export function OptimizedAvatar({
@@ -17,11 +19,13 @@ export function OptimizedAvatar({
   fallback,
   fallbackSrc = '/uploads/default.jpg',
   className,
-  size = 'md'
+  size = 'md',
+  priority = true // Аватары загружаем с высоким приоритетом по умолчанию
 }: OptimizedAvatarProps) {
   const [imageSrc, setImageSrc] = useState<string | undefined>(src);
   const [isLoading, setIsLoading] = useState(!!src);
   const [error, setError] = useState(false);
+  const mountedRef = useRef(false);
 
   // Определяем размер аватара
   const sizeClasses = {
@@ -35,34 +39,61 @@ export function OptimizedAvatar({
     src.startsWith('/uploads') ? src : `/uploads/${src.split('/').pop()}`
   ) : undefined;
 
-  // Предзагрузка аватара
+  // Предзагрузка аватара с использованием сервиса предзагрузки
   useEffect(() => {
+    mountedRef.current = true;
+    
     if (!normalizedSrc) {
-      setIsLoading(false);
-      setError(true);
+      if (mountedRef.current) {
+        setIsLoading(false);
+        setError(true);
+      }
       return;
     }
 
     setImageSrc(normalizedSrc);
+    
+    // Проверяем, есть ли аватар в кэше
+    if (imagePreloader.has(normalizedSrc)) {
+      if (mountedRef.current) {
+        setIsLoading(false);
+        setError(false);
+      }
+      return;
+    }
+    
+    // Если аватара нет в кэше, загружаем его через сервис предзагрузки
+    imagePreloader.preload(normalizedSrc, priority);
+    
     const img = new Image();
     img.src = normalizedSrc;
     
     img.onload = () => {
-      setIsLoading(false);
-      setError(false);
+      if (mountedRef.current) {
+        setIsLoading(false);
+        setError(false);
+      }
     };
     
     img.onerror = () => {
-      setIsLoading(false);
-      setError(true);
-      setImageSrc(fallbackSrc);
+      if (mountedRef.current) {
+        setIsLoading(false);
+        setError(true);
+        setImageSrc(fallbackSrc);
+        
+        // Если основное изображение не загрузилось, попробуем загрузить fallback
+        if (fallbackSrc) {
+          imagePreloader.preload(fallbackSrc, true);
+        }
+      }
     };
 
     return () => {
+      mountedRef.current = false;
       img.onload = null;
       img.onerror = null;
     };
-  }, [normalizedSrc, fallbackSrc]);
+  }, [normalizedSrc, fallbackSrc, priority]);
 
   // Создаем инициалы для фоллбека
   const initials = fallback || (alt ? alt.split(' ').map(n => n[0]).join('').toUpperCase() : '?');
