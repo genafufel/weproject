@@ -20,6 +20,7 @@ import EditProfile from "@/pages/edit-profile";
 import AdminPanel from "@/pages/admin-panel";
 import Notifications from "@/pages/notifications";
 import ImageTestPage from "@/pages/image-test-page";
+import DirectImageTest from "@/pages/direct-image-test";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { HelmetProvider } from "react-helmet-async";
@@ -49,8 +50,9 @@ function Router() {
       <Route path="/projects/:id" component={ProjectDetail} />
       <Route path="/talent/:id" component={TalentDetail} />
       
-      {/* Тестовая страница для изображений */}
+      {/* Тестовые страницы для изображений */}
       <Route path="/image-test" component={ImageTestPage} />
+      <Route path="/direct-image-test" component={DirectImageTest} />
       
       {/* Страница верификации (доступна только для авторизованных пользователей) */}
       <ProtectedRoute path="/verification" component={VerificationPage} />
