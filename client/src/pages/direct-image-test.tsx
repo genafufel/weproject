@@ -9,18 +9,18 @@ export default function DirectImageTest() {
   const testImages = [
     {
       name: "Аватар Bankster",
-      path: "/uploads/1743734897606-170046638.jpeg"
+      path: "/uploads/bankster.jpeg"
     },
     {
-      name: "Изображение 1 - Бомбардиро",
-      path: "/uploads/1743734805298-100203336.png"
+      name: "Concrete",
+      path: "/uploads/concrete.jpeg"
     },
     {
-      name: "Изображение 2 - Бомбардиро",
-      path: "/uploads/1743734809447-576158971.jpg"
+      name: "Бетон",
+      path: "/uploads/beton.jpg"
     },
     {
-      name: "Изображение - Рантье",
+      name: "Предыдущее изображение",
       path: "/uploads/1743734874030-175873835.jpeg"
     }
   ];
