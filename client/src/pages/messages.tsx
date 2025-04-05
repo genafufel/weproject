@@ -711,8 +711,7 @@ export default function Messages() {
                                 src={contact.avatar}
                                 alt={contact.fullName}
                                 fallback={contact.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
-                                className="h-10 w-10 mr-3"
-                                size="md"
+                                className="mr-3"
                               />
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-center">
@@ -763,8 +762,7 @@ export default function Messages() {
                         src={contacts?.find((c: any) => c.id === activeContactId)?.avatar}
                         alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
                         fallback={contacts?.find((c: any) => c.id === activeContactId)?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "?"}
-                        className="h-10 w-10 mr-3"
-                        size="md"
+                        className="mr-3"
                       />
                       <div>
                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -836,9 +834,9 @@ export default function Messages() {
                                                 <OptimizedImage 
                                                   src={message.attachment} 
                                                   alt="Прикрепленное изображение" 
-                                                  className="max-w-full max-h-[200px] w-auto rounded-md hover:opacity-90 transition-opacity"
+                                                  className="max-w-[230px] max-h-[200px] w-auto rounded-md hover:opacity-90 transition-opacity"
                                                   fallbackSrc="/uploads/default.jpg"
-                                                  width={300}
+                                                  width={230}
                                                   height={200}
                                                 />
                                               </div>
