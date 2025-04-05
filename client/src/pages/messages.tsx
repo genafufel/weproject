@@ -612,7 +612,7 @@ export default function Messages() {
           <OptimizedImage 
             src={item.preview!} 
             alt={`Preview ${index}`} 
-            className="h-10 w-10 rounded object-cover"
+            className="h-10 w-10 rounded object-cover overflow-hidden"
             placeholderColor="#f5f5f5"
           />
         ) : (
@@ -711,7 +711,8 @@ export default function Messages() {
                                 src={contact.avatar}
                                 alt={contact.fullName}
                                 fallback={contact.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
-                                className="mr-3"
+                                className="h-10 w-10 mr-3"
+                                size="md"
                               />
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-center">
@@ -762,7 +763,8 @@ export default function Messages() {
                         src={contacts?.find((c: any) => c.id === activeContactId)?.avatar}
                         alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
                         fallback={contacts?.find((c: any) => c.id === activeContactId)?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "?"}
-                        className="mr-3"
+                        className="h-10 w-10 mr-3"
+                        size="md"
                       />
                       <div>
                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -834,8 +836,10 @@ export default function Messages() {
                                                 <OptimizedImage 
                                                   src={message.attachment} 
                                                   alt="Прикрепленное изображение" 
-                                                  className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
+                                                  className="max-w-full max-h-[200px] w-auto rounded-md hover:opacity-90 transition-opacity"
                                                   fallbackSrc="/uploads/default.jpg"
+                                                  width={300}
+                                                  height={200}
                                                 />
                                               </div>
                                             ) : (
@@ -1039,7 +1043,7 @@ export default function Messages() {
       
       {/* Модальное окно для просмотра изображений */}
       <Dialog open={isImageModalOpen} onOpenChange={setIsImageModalOpen}>
-        <DialogContent className="sm:max-w-[900px] max-h-[80vh] p-0 overflow-hidden">
+        <DialogContent className="sm:max-w-[900px] max-h-[80vh] p-0 overflow-hidden" style={{ maxWidth: "900px" }}>
           {/* Удалили заголовок и кнопку закрытия по умолчанию */}
           <div className="relative">
             {currentImageUrl && (
@@ -1047,9 +1051,10 @@ export default function Messages() {
                 <OptimizedImage 
                   src={currentImageUrl!} 
                   alt="Просмотр изображения" 
-                  className="max-w-full max-h-[80vh] object-contain"
+                  className="max-w-[900px] max-h-[80vh] object-contain"
                   fallbackSrc="/uploads/default.jpg"
-                  onLoadingComplete={() => {}}
+                  width={900}
+                  height={600}
                 />
               </div>
             )}

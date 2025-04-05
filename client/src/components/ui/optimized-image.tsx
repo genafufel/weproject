@@ -69,8 +69,9 @@ export function OptimizedImage({
         src={error && fallbackSrc ? fallbackSrc : imageSrc}
         alt={alt || "Image"}
         className={cn(
-          "w-full h-full transition-opacity duration-300",
+          "transition-opacity duration-300",
           isLoading ? "opacity-0" : "opacity-100",
+          props.width ? "w-auto" : "w-full",
         )}
         {...props}
       />
