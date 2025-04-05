@@ -1809,6 +1809,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // API для получения всех пользователей (для предзагрузки аватаров)
   app.get("/api/users", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ message: "Unauthorized" });
+    
     try {
       const users = await Promise.all(
         Array.from({ length: 10 }).map((_, i) => storage.getUser(i + 1))
@@ -1830,6 +1832,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
+  // Публичный API для получения пользователей (для тестирования изображений)
+  app.get("/api/public/users", async (req, res) => {
+    try {
+      const users = await Promise.all(
+        Array.from({ length: 10 }).map((_, i) => storage.getUser(i + 1))
+      );
+      
+      // Фильтруем undefined значения и сокращаем ответ для экономии трафика
+      const filteredUsers = users.filter(Boolean).map(user => ({
+        id: user!.id,
+        username: user!.username,
+        email: user!.email,
+        avatar: user!.avatar
+      }));
+      
+      res.json(filteredUsers);
+    } catch (error) {
+      console.error("Error fetching public users:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
   // API для предзагрузки всех ресурсов с изображениями (пользователи, проекты, резюме)
   app.get("/api/preload-resources", async (req, res) => {
     try {
@@ -1846,6 +1870,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Собираем урлы всех изображений
       const imageUrls = [];
+      const missingFiles = [];
+      
+      // Проверка существования файла
+      const fileExists = async (filePath: string): Promise<boolean> => {
+        const fs = await import('fs/promises');
+        try {
+          // Удаляем первый слеш для правильного пути
+          const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+          await fs.access(normalizedPath);
+          return true;
+        } catch (error: unknown) {
+          return false;
+        }
+      };
       
       // Аватары пользователей
       const userAvatars = users
@@ -1892,29 +1930,44 @@ export async function registerRoutes(app: Express): Promise<Server> {
         .filter(Boolean);
       
       // Объединяем все изображения
-      imageUrls.push(...userAvatars, ...projectImages, ...resumeImages);
+      const allImages = [...userAvatars, ...projectImages, ...resumeImages, '/uploads/default.jpg'];
       
-      // Добавляем дефолтное изображение
-      imageUrls.push('/uploads/default.jpg');
+      // Проверяем все изображения на существование
+      for (const img of allImages) {
+        if (img) {
+          imageUrls.push(img);
+          // Проверяем существование файла только если это локальный файл
+          if (img.startsWith('/uploads/')) {
+            const exists = await fileExists(img);
+            if (!exists) {
+              missingFiles.push(img);
+            }
+          }
+        }
+      }
       
       // Удаляем дубликаты
       const uniqueImageUrls = [...new Set(imageUrls)];
+      const uniqueMissingFiles = [...new Set(missingFiles)];
       
       res.json({
         success: true,
         imageUrls: uniqueImageUrls,
+        missingFiles: uniqueMissingFiles,
         counts: {
           users: userAvatars.length,
           projects: projectImages.length,
           resumes: resumeImages.length,
-          total: uniqueImageUrls.length
+          total: uniqueImageUrls.length,
+          missing: uniqueMissingFiles.length
         }
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Ошибка при сборе ресурсов для предзагрузки:', error);
       res.status(500).json({ 
         success: false, 
-        error: 'Не удалось собрать ресурсы для предзагрузки' 
+        error: 'Не удалось собрать ресурсы для предзагрузки',
+        message: error instanceof Error ? error.message : 'Неизвестная ошибка'
       });
     }
   });
