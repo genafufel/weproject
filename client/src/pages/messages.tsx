@@ -430,17 +430,18 @@ export default function Messages() {
         ? "text-white hover:underline" // Белый цвет для собственных сообщений на синем фоне
         : "text-blue-500 hover:underline dark:text-blue-300"; // Синий для сообщений собеседника
       
-      // Добавляем ссылку
+      // Добавляем ссылку с обрезанием текста
       parts.push(
         <a 
           key={match.index} 
           href={url} 
           target="_blank" 
           rel="noopener noreferrer"
-          className={linkClass}
+          className={`${linkClass} break-all overflow-hidden inline-block max-w-full`}
           onClick={(e) => e.stopPropagation()}
+          title={match[0]} // Полная ссылка при наведении
         >
-          {match[0]}
+          {match[0].length > 30 ? `${match[0].substring(0, 27)}...` : match[0]}
         </a>
       );
       
@@ -885,8 +886,8 @@ export default function Messages() {
                                         {/* Обновленное отображение сообщения - текст идет в одной строке с временем */}
                                         <div className="flex flex-wrap items-end gap-1 justify-between">
                                           {/* Основной контент сообщения */}
-                                          <div className="flex-1">
-                                            <div className="whitespace-pre-wrap break-words">
+                                          <div className="flex-1 overflow-hidden">
+                                            <div className="whitespace-pre-wrap break-words overflow-hidden">
                                               {linkifyText(
                                                 message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
                                                 message.senderId === user?.id // Передаем true, если это наше сообщение
