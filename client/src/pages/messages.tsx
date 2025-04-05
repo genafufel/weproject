@@ -803,12 +803,12 @@ export default function Messages() {
                                   key={message.id}
                                   className={`flex ${
                                     message.senderId === user?.id ? "justify-end" : "justify-start"
-                                  }`}
+                                  } max-w-[95%]`}
                                 >
                                   <ContextMenu>
                                     <ContextMenuTrigger>
                                       <div
-                                        className={`group max-w-[75%] rounded-2xl px-4 py-2 ${
+                                        className={`group rounded-2xl px-4 py-2 inline-block max-w-full ${
                                           message.senderId === user?.id
                                             ? "bg-primary text-white rounded-tr-sm"
                                             : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-tl-sm"
@@ -886,7 +886,7 @@ export default function Messages() {
                                         <div className="flex flex-wrap items-end gap-1 justify-between">
                                           {/* Основной контент сообщения */}
                                           <div className="flex-1">
-                                            <div className="break-words">
+                                            <div className="whitespace-pre-wrap break-words">
                                               {linkifyText(
                                                 message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
                                                 message.senderId === user?.id // Передаем true, если это наше сообщение
