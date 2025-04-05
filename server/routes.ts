@@ -1807,6 +1807,118 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Подключаем административные маршруты
   setupAdminRoutes(app);
   
+  // API для получения всех пользователей (для предзагрузки аватаров)
+  app.get("/api/users", async (req, res) => {
+    try {
+      const users = await Promise.all(
+        Array.from({ length: 10 }).map((_, i) => storage.getUser(i + 1))
+      );
+      
+      // Фильтруем undefined значения и сокращаем ответ для экономии трафика
+      const filteredUsers = users.filter(Boolean).map(user => ({
+        id: user!.id,
+        username: user!.username,
+        email: user!.email,
+        avatar: user!.avatar,
+        isAdmin: user!.isAdmin // Используем isAdmin вместо role
+      }));
+      
+      res.json(filteredUsers);
+    } catch (error) {
+      console.error("Error fetching users for preload:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  });
+  
+  // API для предзагрузки всех ресурсов с изображениями (пользователи, проекты, резюме)
+  app.get("/api/preload-resources", async (req, res) => {
+    try {
+      // Получаем пользователей
+      const users = await Promise.all(
+        Array.from({ length: 10 }).map((_, i) => storage.getUser(i + 1))
+      );
+      
+      // Получаем проекты
+      const projects = await storage.getProjects();
+      
+      // Получаем резюме
+      const resumes = await storage.getAllResumes();
+      
+      // Собираем урлы всех изображений
+      const imageUrls = [];
+      
+      // Аватары пользователей
+      const userAvatars = users
+        .filter(Boolean)
+        .map(user => user!.avatar)
+        .filter(Boolean);
+      
+      // Изображения проектов (используем photos, так как это массив)
+      const projectImages = projects
+        .flatMap(project => {
+          const photos = project.photos;
+          // Проверяем, является ли photos массивом или объектом, который можно преобразовать в массив
+          if (Array.isArray(photos)) {
+            return photos;
+          } else if (photos && typeof photos === 'object') {
+            try {
+              // Пытаемся преобразовать объект в массив, если это возможно
+              return Object.values(photos);
+            } catch (e) {
+              return [];
+            }
+          }
+          return [];
+        })
+        .filter(Boolean);
+      
+      // Изображения резюме (используем photos, так как это массив)
+      const resumeImages = resumes
+        .flatMap(resume => {
+          const photos = resume.photos;
+          // Проверяем, является ли photos массивом или объектом, который можно преобразовать в массив
+          if (Array.isArray(photos)) {
+            return photos;
+          } else if (photos && typeof photos === 'object') {
+            try {
+              // Пытаемся преобразовать объект в массив, если это возможно
+              return Object.values(photos);
+            } catch (e) {
+              return [];
+            }
+          }
+          return [];
+        })
+        .filter(Boolean);
+      
+      // Объединяем все изображения
+      imageUrls.push(...userAvatars, ...projectImages, ...resumeImages);
+      
+      // Добавляем дефолтное изображение
+      imageUrls.push('/uploads/default.jpg');
+      
+      // Удаляем дубликаты
+      const uniqueImageUrls = [...new Set(imageUrls)];
+      
+      res.json({
+        success: true,
+        imageUrls: uniqueImageUrls,
+        counts: {
+          users: userAvatars.length,
+          projects: projectImages.length,
+          resumes: resumeImages.length,
+          total: uniqueImageUrls.length
+        }
+      });
+    } catch (error) {
+      console.error('Ошибка при сборе ресурсов для предзагрузки:', error);
+      res.status(500).json({ 
+        success: false, 
+        error: 'Не удалось собрать ресурсы для предзагрузки' 
+      });
+    }
+  });
+  
   const httpServer = createServer(app);
   return httpServer;
 }

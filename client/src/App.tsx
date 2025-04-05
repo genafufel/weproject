@@ -22,7 +22,7 @@ import Notifications from "@/pages/notifications";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { HelmetProvider } from "react-helmet-async";
-import { ImagePreloadManager } from "@/components/image-preload-manager";
+import { DebugLayout } from "@/components/debug-layout";
 
 // Компонент для маршрутов, требующих верификации (временно отключена проверка верификации)
 function VerifiedRoute({ component: Component, ...rest }: { component: React.ComponentType, path: string }) {
@@ -81,11 +81,12 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <HelmetProvider>
-          <div className="app-container">
-            <ImagePreloadManager />
-            <Router />
-            <Toaster />
-          </div>
+          <DebugLayout>
+            <div className="app-container">
+              <Router />
+              <Toaster />
+            </div>
+          </DebugLayout>
         </HelmetProvider>
       </AuthProvider>
     </QueryClientProvider>
