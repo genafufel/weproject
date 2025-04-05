@@ -8,8 +8,11 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { OptimizedAvatar } from "@/components/ui/optimized-avatar";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 import { Loader2, Send, X, Upload, Reply, Copy } from "lucide-react";
+import { imagePreloader } from "@/lib/image-preloader";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { DragDropFileUpload } from "@/components/ui/drag-drop-file-upload";
@@ -143,9 +146,14 @@ export default function Messages() {
       }
       
       // Сортируем контакты по времени последнего сообщения (от нового к старому)
-      return contactsList.sort((a, b) => 
+      const sortedContacts = contactsList.sort((a, b) => 
         b.lastMessageTime.getTime() - a.lastMessageTime.getTime()
       );
+      
+      // Предзагружаем аватары всех контактов
+      imagePreloader.preloadAvatars(sortedContacts);
+      
+      return sortedContacts;
     },
     enabled: !!user && !!userMessages,
   });
@@ -178,6 +186,9 @@ export default function Messages() {
           queryClient.invalidateQueries({ queryKey: ['/api/messages/contacts'] });
         }, 500);
       }
+      
+      // Предзагружаем изображения из сообщений
+      imagePreloader.preloadFromMessages(messages);
       
       return messages;
     },
@@ -598,10 +609,11 @@ export default function Messages() {
     return attachmentPreviews.map((item, index) => (
       <div key={index} className="flex items-center mr-2 bg-gray-100 dark:bg-gray-700 rounded p-1">
         {item.preview ? (
-          <img 
-            src={item.preview} 
+          <OptimizedImage 
+            src={item.preview!} 
             alt={`Preview ${index}`} 
-            className="h-10 w-10 rounded object-cover" 
+            className="h-10 w-10 rounded object-cover"
+            placeholderColor="#f5f5f5"
           />
         ) : (
           <div className="h-10 w-10 bg-gray-200 dark:bg-gray-600 rounded flex items-center justify-center">
@@ -695,19 +707,12 @@ export default function Messages() {
                             onClick={() => setActiveContactId(contact.id)}
                           >
                             <div className="flex items-center">
-                              <Avatar className="h-10 w-10 mr-3">
-                                <AvatarImage 
-                                  src={contact.avatar?.startsWith('/uploads') ? contact.avatar : (contact.avatar ? `/uploads/${contact.avatar.split('/').pop()}` : undefined)} 
-                                  alt={contact.fullName}
-                                  onError={(e) => {
-                                    // Тихая обработка ошибки без логирования
-                                    e.currentTarget.src = '/uploads/default.jpg';
-                                  }}
-                                />
-                                <AvatarFallback>
-                                  {contact.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
-                                </AvatarFallback>
-                              </Avatar>
+                              <OptimizedAvatar 
+                                src={contact.avatar}
+                                alt={contact.fullName}
+                                fallback={contact.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
+                                className="mr-3"
+                              />
                               <div className="flex-1 min-w-0">
                                 <div className="flex justify-between items-center">
                                   <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
@@ -753,24 +758,12 @@ export default function Messages() {
                   <>
                     {/* Conversation header */}
                     <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex items-center">
-                      <Avatar className="h-10 w-10 mr-3">
-                        <AvatarImage
-                          src={(() => {
-                            const contact = contacts?.find((c: any) => c.id === activeContactId);
-                            const avatar = contact?.avatar;
-                            if (!avatar) return undefined;
-                            return avatar.startsWith('/uploads') ? avatar : `/uploads/${avatar.split('/').pop()}`;
-                          })()}
-                          alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
-                          onError={(e) => {
-                            // Тихая обработка ошибки без логирования
-                            e.currentTarget.src = '/uploads/default.jpg';
-                          }}
-                        />
-                        <AvatarFallback>
-                          {contacts?.find((c: any) => c.id === activeContactId)?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "?"}
-                        </AvatarFallback>
-                      </Avatar>
+                      <OptimizedAvatar 
+                        src={contacts?.find((c: any) => c.id === activeContactId)?.avatar}
+                        alt={contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
+                        fallback={contacts?.find((c: any) => c.id === activeContactId)?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase() || "?"}
+                        className="mr-3"
+                      />
                       <div>
                         <h3 className="text-sm font-medium text-gray-900 dark:text-gray-100">
                           {contacts?.find((c: any) => c.id === activeContactId)?.fullName || "Контакт"}
@@ -838,14 +831,11 @@ export default function Messages() {
                                                 setCurrentImageUrl(message.attachment);
                                                 setIsImageModalOpen(true);
                                               }}>
-                                                <img 
+                                                <OptimizedImage 
                                                   src={message.attachment} 
                                                   alt="Прикрепленное изображение" 
                                                   className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
-                                                  onError={(e) => {
-                                                    // Тихая обработка ошибки без логирования
-                                                    e.currentTarget.style.display = 'none';
-                                                  }}
+                                                  fallbackSrc="/uploads/default.jpg"
                                                 />
                                               </div>
                                             ) : (
@@ -1054,18 +1044,12 @@ export default function Messages() {
           <div className="relative">
             {currentImageUrl && (
               <div className="flex justify-center items-center bg-black/50 backdrop-blur-sm">
-                <img 
-                  src={currentImageUrl} 
+                <OptimizedImage 
+                  src={currentImageUrl!} 
                   alt="Просмотр изображения" 
                   className="max-w-full max-h-[80vh] object-contain"
-                  onError={() => {
-                    toast({
-                      title: "Ошибка загрузки",
-                      description: "Не удалось загрузить изображение",
-                      variant: "destructive",
-                    });
-                    setIsImageModalOpen(false);
-                  }}
+                  fallbackSrc="/uploads/default.jpg"
+                  onLoadingComplete={() => {}}
                 />
               </div>
             )}
