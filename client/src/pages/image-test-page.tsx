@@ -5,8 +5,9 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ApiErrorDebugPanel } from "@/components/api-error-debug";
 import { ImageDebugPanel } from "@/components/image-debug-panel";
-import { EnhancedImage } from "@/components/ui/enhanced-image";
-import { EnhancedAvatar } from "@/components/ui/enhanced-avatar";
+import { Link } from 'wouter';
+import { TestImage } from "@/components/test-image";
+import { TestAvatar } from "@/components/test-avatar";
 import { imageService } from "@/lib/image-service";
 
 interface ApiItem {
@@ -95,7 +96,7 @@ export default function ImageTestPage() {
               <Card key={user.id}>
                 <CardHeader>
                   <div className="flex items-center gap-4">
-                    <EnhancedAvatar 
+                    <TestAvatar 
                       src={user.avatar} 
                       alt={user.username || "User"} 
                       className="h-16 w-16"
@@ -115,7 +116,9 @@ export default function ImageTestPage() {
                   )}
                 </CardContent>
                 <CardFooter>
-                  <Button size="sm" variant="ghost">Просмотреть профиль</Button>
+                  <Link href={`/talent/${user.id}`}>
+                    <Button size="sm" variant="ghost">Просмотреть профиль</Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
@@ -135,13 +138,13 @@ export default function ImageTestPage() {
                 <CardContent>
                   <div className="overflow-hidden rounded-md mb-4">
                     {project.photos && project.photos.length > 0 ? (
-                      <EnhancedImage 
+                      <TestImage 
                         src={project.photos[0]} 
                         alt={project.title || "Project"} 
                         className="w-full h-36 object-cover"
                       />
                     ) : project.photo ? (
-                      <EnhancedImage 
+                      <TestImage 
                         src={project.photo} 
                         alt={project.title || "Project"} 
                         className="w-full h-36 object-cover"
@@ -158,7 +161,7 @@ export default function ImageTestPage() {
                       <h4 className="text-sm font-medium mb-1">Все изображения:</h4>
                       <div className="grid grid-cols-3 gap-2">
                         {project.photos.map((photo, idx) => (
-                          <EnhancedImage 
+                          <TestImage 
                             key={idx}
                             src={photo} 
                             alt={`${project.title || "Project"} photo ${idx+1}`} 
@@ -176,7 +179,9 @@ export default function ImageTestPage() {
                   )}
                 </CardContent>
                 <CardFooter>
-                  <Button size="sm" variant="ghost">Подробнее</Button>
+                  <Link href={`/project/${project.id}`}>
+                    <Button size="sm" variant="ghost">Подробнее</Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
@@ -196,7 +201,7 @@ export default function ImageTestPage() {
                 <CardContent>
                   {resume.photos && resume.photos.length > 0 && (
                     <div className="overflow-hidden rounded-md mb-4">
-                      <EnhancedImage 
+                      <TestImage 
                         src={resume.photos[0]} 
                         alt={resume.title || "Resume"} 
                         className="w-full h-36 object-cover"
@@ -209,7 +214,7 @@ export default function ImageTestPage() {
                       <h4 className="text-sm font-medium mb-1">Все изображения:</h4>
                       <div className="grid grid-cols-3 gap-2">
                         {resume.photos.map((photo, idx) => (
-                          <EnhancedImage 
+                          <TestImage 
                             key={idx}
                             src={photo} 
                             alt={`${resume.title || "Resume"} photo ${idx+1}`} 
@@ -227,7 +232,9 @@ export default function ImageTestPage() {
                   )}
                 </CardContent>
                 <CardFooter>
-                  <Button size="sm" variant="ghost">Подробнее</Button>
+                  <Link href={`/resume/${resume.id}`}>
+                    <Button size="sm" variant="ghost">Подробнее</Button>
+                  </Link>
                 </CardFooter>
               </Card>
             ))}
@@ -242,7 +249,7 @@ export default function ImageTestPage() {
             <Card>
               <CardHeader>
                 <div className="flex items-center gap-4">
-                  <EnhancedAvatar 
+                  <TestAvatar 
                     src="/uploads/1743734897606-170046638.jpeg" 
                     alt="Bankster"
                     className="h-16 w-16"
@@ -256,7 +263,7 @@ export default function ImageTestPage() {
               <CardContent className="space-y-6">
                 <div>
                   <h3 className="text-lg font-medium mb-2">Аватар пользователя</h3>
-                  <EnhancedImage 
+                  <TestImage 
                     src="/uploads/1743734897606-170046638.jpeg" 
                     alt="Bankster Avatar" 
                     className="max-w-sm rounded-md overflow-hidden"
@@ -274,7 +281,7 @@ export default function ImageTestPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <p className="text-sm mb-2">Изображение 1:</p>
-                      <EnhancedImage 
+                      <TestImage 
                         src="/uploads/1743734805298-100203336.png" 
                         alt="Бомбардиро Выскребдино Image 1" 
                         className="w-full rounded-md overflow-hidden"
@@ -286,7 +293,7 @@ export default function ImageTestPage() {
                     </div>
                     <div>
                       <p className="text-sm mb-2">Изображение 2:</p>
-                      <EnhancedImage 
+                      <TestImage 
                         src="/uploads/1743734809447-576158971.jpg" 
                         alt="Бомбардиро Выскребдино Image 2" 
                         className="w-full rounded-md overflow-hidden"
@@ -303,7 +310,7 @@ export default function ImageTestPage() {
                 
                 <div>
                   <h3 className="text-lg font-medium mb-2">Резюме "Рантье"</h3>
-                  <EnhancedImage 
+                  <TestImage 
                     src="/uploads/1743734874030-175873835.jpeg" 
                     alt="Рантье Resume" 
                     className="max-w-sm rounded-md overflow-hidden"
@@ -314,6 +321,11 @@ export default function ImageTestPage() {
                   </p>
                 </div>
               </CardContent>
+              <CardFooter>
+                <Link href="/talent/6">
+                  <Button size="sm" variant="default">Просмотреть профиль</Button>
+                </Link>
+              </CardFooter>
             </Card>
           </div>
         </TabsContent>
