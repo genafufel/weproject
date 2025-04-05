@@ -17,7 +17,7 @@ class ImageCache {
   private static instance: ImageCache;
   private cache: Map<string, ImageState> = new Map();
   private loadPromises: Map<string, Promise<HTMLImageElement>> = new Map();
-  private defaultImage: string = '/uploads/default.jpg';
+  private defaultImage: string = '/uploads/default-avatar-test.jpg';
   private preloadQueue: string[] = [];
   private isProcessingQueue: boolean = false;
   private concurrentLoads: number = 5; // Количество одновременных загрузок
@@ -29,6 +29,9 @@ class ImageCache {
     this.loadImage(this.defaultImage).catch(() => {
       console.error('Не удалось загрузить дефолтное изображение');
     });
+    
+    // Логируем для отладки - это поможет понять, что происходит
+    console.log('🖼️ ImageCache инициализирован, дефолтное изображение:', this.defaultImage);
     
     // Обработчик для офлайн/онлайн событий
     window.addEventListener('online', () => this.handleOnlineStatusChange(true));
@@ -246,6 +249,13 @@ class ImageCache {
   public getImageUrl(url: string): string {
     const normalizedUrl = this.normalizeUrl(url);
     const cachedImage = this.cache.get(normalizedUrl);
+    
+    // Для тестовой страницы изображений и вкладки Банкстер всегда возвращаем оригинальный URL
+    // чтобы мы могли увидеть ошибки загрузки
+    if (window.location.pathname === '/image-test') {
+      console.log(`🧪 На тестовой странице: URL ${normalizedUrl} возвращается без фолбэка`);
+      return normalizedUrl;
+    }
     
     if (cachedImage && cachedImage.loaded && !cachedImage.error) {
       return normalizedUrl;
