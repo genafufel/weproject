@@ -54,8 +54,17 @@ export function EnhancedImage({
     const normalizedSrc = imageService.normalizeUrl(src);
     const defaultSrc = fallbackSrc ? imageService.normalizeUrl(fallbackSrc) : '';
     
-    // Немедленно устанавливаем изображение из кэша, если оно там есть
-    setImageSrc(imageService.getImageUrl(normalizedSrc));
+    // Проверяем, находимся ли мы на тестовой странице
+    const isTestPage = window.location.pathname === '/image-test';
+    
+    // На тестовой странице всегда используем оригинальный URL без фолбэков
+    if (isTestPage) {
+      console.log(`🔍 Enhanced Image на тестовой странице: ${normalizedSrc}`);
+      setImageSrc(normalizedSrc);
+    } else {
+      // Немедленно устанавливаем изображение из кэша, если оно там есть
+      setImageSrc(imageService.getImageUrl(normalizedSrc));
+    }
     
     // Загружаем изображение с высоким приоритетом, если указан приоритет
     const loadImagePromise = priority 
@@ -73,7 +82,10 @@ export function EnhancedImage({
         .then((img) => {
           // Проверяем, что компонент всё еще смонтирован
           if (mountedRef.current) {
-            setImageSrc(img.src);
+            // На тестовой странице не обновляем src, чтобы сохранить оригинальный URL
+            if (!isTestPage) {
+              setImageSrc(img.src);
+            }
             setIsLoading(false);
             if (onLoadingComplete) onLoadingComplete();
           }
@@ -81,7 +93,7 @@ export function EnhancedImage({
         .catch(() => {
           // В случае ошибки используем запасное изображение, если оно указано
           if (mountedRef.current) {
-            if (defaultSrc) {
+            if (defaultSrc && !isTestPage) {
               setImageSrc(defaultSrc);
             }
             setIsLoading(false);

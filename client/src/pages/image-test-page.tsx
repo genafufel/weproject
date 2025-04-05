@@ -260,6 +260,7 @@ export default function ImageTestPage() {
                     src="/uploads/1743734897606-170046638.jpeg" 
                     alt="Bankster Avatar" 
                     className="max-w-sm rounded-md overflow-hidden"
+                    priority
                   />
                   <p className="text-xs font-mono break-all mt-2">
                     URL: /uploads/1743734897606-170046638.jpeg
@@ -277,6 +278,7 @@ export default function ImageTestPage() {
                         src="/uploads/1743734805298-100203336.png" 
                         alt="Бомбардиро Выскребдино Image 1" 
                         className="w-full rounded-md overflow-hidden"
+                        priority
                       />
                       <p className="text-xs font-mono break-all mt-2">
                         URL: /uploads/1743734805298-100203336.png
@@ -288,6 +290,7 @@ export default function ImageTestPage() {
                         src="/uploads/1743734809447-576158971.jpg" 
                         alt="Бомбардиро Выскребдино Image 2" 
                         className="w-full rounded-md overflow-hidden"
+                        priority
                       />
                       <p className="text-xs font-mono break-all mt-2">
                         URL: /uploads/1743734809447-576158971.jpg
@@ -304,6 +307,7 @@ export default function ImageTestPage() {
                     src="/uploads/1743734874030-175873835.jpeg" 
                     alt="Рантье Resume" 
                     className="max-w-sm rounded-md overflow-hidden"
+                    priority
                   />
                   <p className="text-xs font-mono break-all mt-2">
                     URL: /uploads/1743734874030-175873835.jpeg
