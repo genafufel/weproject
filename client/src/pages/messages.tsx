@@ -800,13 +800,14 @@ export default function Messages() {
                                 }`}
                               >
                                 <div
-                                  className={`group max-w-[75%] rounded-lg px-4 py-2 ${
+                                  className={`group max-w-[75%] rounded-2xl px-4 py-2 ${
                                     message.senderId === user?.id
-                                      ? "bg-primary text-white"
-                                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                      ? "bg-primary text-white rounded-tr-sm"
+                                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-tl-sm"
                                   }`}
                                 >
                                   {/* Если это ответ на другое сообщение, показываем цитату */}
+                                  {/* Цитата */}
                                   {message.replyToId && (
                                     <div 
                                       className={`text-xs border-l-2 pl-2 mb-2 ${
@@ -819,13 +820,6 @@ export default function Messages() {
                                       {conversationMessages.find((msg: any) => msg.id === message.replyToId)?.content || "Исходное сообщение удалено"}
                                     </div>
                                   )}
-                                  
-                                  <p className="break-words">
-                                    {linkifyText(
-                                      message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
-                                      message.senderId === user?.id // Передаем true, если это наше сообщение
-                                    )}
-                                  </p>
                                   
                                   {/* Отображение прикрепленного файла */}
                                   {message.attachment && (
@@ -882,13 +876,11 @@ export default function Messages() {
                                     </div>
                                   )}
                                   
-                                  <div
-                                    className={`text-xs mt-1 ${
-                                      message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
-                                    }`}
-                                  >
-                                    <div className="flex items-center gap-1 justify-between">
-                                      {/* Кнопка ответа */}
+                                  {/* Обновленное отображение сообщения - текст идет в одной строке с временем */}
+                                  <div className="flex flex-wrap items-end gap-1 justify-between">
+                                    {/* Основной контент сообщения */}
+                                    <div className="flex-1">
+                                      {/* Кнопка ответа - теперь показывается над сообщением */}
                                       <button
                                         type="button"
                                         onClick={(e) => {
@@ -900,25 +892,36 @@ export default function Messages() {
                                             senderName: contacts?.find((c: any) => c.id === message.senderId)?.fullName || 'Пользователь'
                                           });
                                         }}
-                                        className={`opacity-0 group-hover:opacity-100 hover:underline transition-opacity ${
+                                        className={`text-xs opacity-0 group-hover:opacity-100 hover:underline transition-opacity block mb-1 ${
                                           message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
                                         }`}
                                       >
                                         Ответить
                                       </button>
                                       
-                                      <div className="flex items-center">
-                                        {formatMessageTime(new Date(message.createdAt))}
-                                        {message.senderId === user?.id && (
-                                          <span className="inline-flex items-center">
-                                            {message.read ? (
-                                              <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
-                                            ) : (
-                                              <span className="ml-1 text-xs">✓</span>
-                                            )}
-                                          </span>
+                                      {/* Добавляем содержимое сообщения */}
+                                      <div className="break-words">
+                                        {linkifyText(
+                                          message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
+                                          message.senderId === user?.id // Передаем true, если это наше сообщение
                                         )}
                                       </div>
+                                    </div>
+
+                                    {/* Время отправки - теперь сбоку текста */}
+                                    <div className={`text-xs flex items-center self-end ml-2 ${
+                                      message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
+                                    }`}>
+                                      {formatMessageTime(new Date(message.createdAt))}
+                                      {message.senderId === user?.id && (
+                                        <span className="inline-flex items-center">
+                                          {message.read ? (
+                                            <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
+                                          ) : (
+                                            <span className="ml-1 text-xs">✓</span>
+                                          )}
+                                        </span>
+                                      )}
                                     </div>
                                   </div>
                                 </div>
