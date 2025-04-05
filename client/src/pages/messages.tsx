@@ -9,7 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Loader2, Send, X, Upload } from "lucide-react";
+import { Loader2, Send, X, Upload, Reply, Copy } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { DragDropFileUpload } from "@/components/ui/drag-drop-file-upload";
@@ -19,6 +19,12 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 
 export default function Messages() {
@@ -793,98 +799,125 @@ export default function Messages() {
                           ) : (
                             <div className="space-y-4">
                               {conversationMessages.map((message: any) => (
-                              <div
-                                key={message.id}
-                                className={`flex ${
-                                  message.senderId === user?.id ? "justify-end" : "justify-start"
-                                }`}
-                              >
                                 <div
-                                  className={`group max-w-[75%] rounded-2xl px-4 py-2 ${
-                                    message.senderId === user?.id
-                                      ? "bg-primary text-white rounded-tr-sm"
-                                      : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-tl-sm"
+                                  key={message.id}
+                                  className={`flex ${
+                                    message.senderId === user?.id ? "justify-end" : "justify-start"
                                   }`}
                                 >
-                                  {/* Если это ответ на другое сообщение, показываем цитату */}
-                                  {/* Цитата */}
-                                  {message.replyToId && (
-                                    <div 
-                                      className={`text-xs border-l-2 pl-2 mb-2 ${
-                                        message.senderId === user?.id
-                                          ? "border-blue-300 text-blue-100"
-                                          : "border-gray-400 text-gray-500 dark:text-gray-400"
-                                      }`}
-                                    >
-                                      {/* Находим сообщение, на которое отвечаем */}
-                                      {conversationMessages.find((msg: any) => msg.id === message.replyToId)?.content || "Исходное сообщение удалено"}
-                                    </div>
-                                  )}
-                                  
-                                  {/* Отображение прикрепленного файла */}
-                                  {message.attachment && (
-                                    <div className="mt-2">
-                                      {message.attachmentType === 'image' ? (
-                                        <div className="cursor-pointer" onClick={() => {
-                                          setCurrentImageUrl(message.attachment);
-                                          setIsImageModalOpen(true);
-                                        }}>
-                                          <img 
-                                            src={message.attachment} 
-                                            alt="Прикрепленное изображение" 
-                                            className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
-                                            onError={(e) => {
-                                              // Тихая обработка ошибки без логирования
-                                              e.currentTarget.style.display = 'none';
-                                            }}
-                                          />
-                                        </div>
-                                      ) : (
-                                        <a 
-                                          href={message.attachment} 
-                                          target="_blank" 
-                                          rel="noopener noreferrer"
-                                          className={`flex items-center gap-2 p-2 rounded-md ${
-                                            message.senderId === user?.id 
-                                              ? "bg-blue-700 text-blue-50 hover:bg-blue-600" 
-                                              : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-500"
-                                          }`}
-                                        >
-                                          {message.attachmentType === 'pdf' ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                              <polyline points="14 2 14 8 20 8"/>
-                                              <path d="M9 15v-2h6v2"/>
-                                              <path d="M9 18v-2h6v2"/>
-                                              <path d="M9 12v-2h2v2"/>
-                                            </svg>
-                                          ) : message.attachmentType === 'document' ? (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
-                                              <polyline points="14 2 14 8 20 8"/>
-                                            </svg>
-                                          ) : (
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                                              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                              <polyline points="7 10 12 15 17 10"/>
-                                              <line x1="12" y1="15" x2="12" y2="3"/>
-                                            </svg>
-                                          )}
+                                  <ContextMenu>
+                                    <ContextMenuTrigger>
+                                      <div
+                                        className={`group max-w-[75%] rounded-2xl px-4 py-2 ${
+                                          message.senderId === user?.id
+                                            ? "bg-primary text-white rounded-tr-sm"
+                                            : "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-tl-sm"
+                                        }`}
+                                      >
+                                        {/* Если это ответ на другое сообщение, показываем цитату */}
+                                        {message.replyToId && (
+                                          <div 
+                                            className={`text-xs border-l-2 pl-2 mb-2 ${
+                                              message.senderId === user?.id
+                                                ? "border-blue-300 text-blue-100"
+                                                : "border-gray-400 text-gray-500 dark:text-gray-400"
+                                            }`}
+                                          >
+                                            {/* Находим сообщение, на которое отвечаем */}
+                                            {conversationMessages.find((msg: any) => msg.id === message.replyToId)?.content || "Исходное сообщение удалено"}
+                                          </div>
+                                        )}
+                                        
+                                        {/* Отображение прикрепленного файла */}
+                                        {message.attachment && (
+                                          <div className="mt-2">
+                                            {message.attachmentType === 'image' ? (
+                                              <div className="cursor-pointer" onClick={() => {
+                                                setCurrentImageUrl(message.attachment);
+                                                setIsImageModalOpen(true);
+                                              }}>
+                                                <img 
+                                                  src={message.attachment} 
+                                                  alt="Прикрепленное изображение" 
+                                                  className="max-w-full max-h-[200px] rounded-md hover:opacity-90 transition-opacity"
+                                                  onError={(e) => {
+                                                    // Тихая обработка ошибки без логирования
+                                                    e.currentTarget.style.display = 'none';
+                                                  }}
+                                                />
+                                              </div>
+                                            ) : (
+                                              <a 
+                                                href={message.attachment} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer"
+                                                className={`flex items-center gap-2 p-2 rounded-md ${
+                                                  message.senderId === user?.id 
+                                                    ? "bg-blue-700 text-blue-50 hover:bg-blue-600" 
+                                                    : "bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-500"
+                                                }`}
+                                              >
+                                                {message.attachmentType === 'pdf' ? (
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                                    <polyline points="14 2 14 8 20 8"/>
+                                                    <path d="M9 15v-2h6v2"/>
+                                                    <path d="M9 18v-2h6v2"/>
+                                                    <path d="M9 12v-2h2v2"/>
+                                                  </svg>
+                                                ) : message.attachmentType === 'document' ? (
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                                    <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                                                    <polyline points="14 2 14 8 20 8"/>
+                                                  </svg>
+                                                ) : (
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="7 10 12 15 17 10"/>
+                                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                                  </svg>
+                                                )}
+                                              </a>
+                                            )}
+                                          </div>
+                                        )}
+                                        
+                                        {/* Обновленное отображение сообщения - текст идет в одной строке с временем */}
+                                        <div className="flex flex-wrap items-end gap-1 justify-between">
+                                          {/* Основной контент сообщения */}
+                                          <div className="flex-1">
+                                            <div className="break-words">
+                                              {linkifyText(
+                                                message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
+                                                message.senderId === user?.id // Передаем true, если это наше сообщение
+                                              )}
+                                            </div>
+                                          </div>
 
-                                        </a>
-                                      )}
-                                    </div>
-                                  )}
-                                  
-                                  {/* Обновленное отображение сообщения - текст идет в одной строке с временем */}
-                                  <div className="flex flex-wrap items-end gap-1 justify-between">
-                                    {/* Основной контент сообщения */}
-                                    <div className="flex-1">
-                                      {/* Кнопка ответа - теперь показывается над сообщением */}
-                                      <button
-                                        type="button"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
+                                          {/* Время отправки - теперь сбоку текста */}
+                                          <div className={`text-xs flex items-center self-end ml-2 ${
+                                            message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
+                                          }`}>
+                                            {formatMessageTime(new Date(message.createdAt))}
+                                            {message.senderId === user?.id && (
+                                              <span className="inline-flex items-center">
+                                                {message.read ? (
+                                                  <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
+                                                ) : (
+                                                  <span className="ml-1 text-xs">✓</span>
+                                                )}
+                                              </span>
+                                            )}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </ContextMenuTrigger>
+                                    
+                                    {/* Контекстное меню при правом клике */}
+                                    <ContextMenuContent>
+                                      <ContextMenuItem 
+                                        className="flex items-center gap-2 cursor-pointer"
+                                        onClick={() => {
                                           setReplyToMessage({
                                             id: message.id,
                                             content: message.content || '',
@@ -892,44 +925,32 @@ export default function Messages() {
                                             senderName: contacts?.find((c: any) => c.id === message.senderId)?.fullName || 'Пользователь'
                                           });
                                         }}
-                                        className={`text-xs opacity-0 group-hover:opacity-100 hover:underline transition-opacity block mb-1 ${
-                                          message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
-                                        }`}
                                       >
-                                        Ответить
-                                      </button>
+                                        <Reply className="h-4 w-4" />
+                                        <span>Ответить</span>
+                                      </ContextMenuItem>
                                       
-                                      {/* Добавляем содержимое сообщения */}
-                                      <div className="break-words">
-                                        {linkifyText(
-                                          message.content?.replace(/Прикрепленный файл:.*$/, '') || '',
-                                          message.senderId === user?.id // Передаем true, если это наше сообщение
-                                        )}
-                                      </div>
-                                    </div>
-
-                                    {/* Время отправки - теперь сбоку текста */}
-                                    <div className={`text-xs flex items-center self-end ml-2 ${
-                                      message.senderId === user?.id ? "text-blue-100" : "text-gray-500 dark:text-gray-400"
-                                    }`}>
-                                      {formatMessageTime(new Date(message.createdAt))}
-                                      {message.senderId === user?.id && (
-                                        <span className="inline-flex items-center">
-                                          {message.read ? (
-                                            <span className="ml-1 text-xs" style={{ letterSpacing: "-0.25em" }}>✓✓</span>
-                                          ) : (
-                                            <span className="ml-1 text-xs">✓</span>
-                                          )}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
+                                      <ContextMenuItem 
+                                        className="flex items-center gap-2 cursor-pointer"
+                                        onClick={() => {
+                                          navigator.clipboard.writeText(message.content || '');
+                                          toast({
+                                            title: "Скопировано",
+                                            description: "Текст сообщения скопирован в буфер обмена",
+                                            duration: 2000,
+                                          });
+                                        }}
+                                      >
+                                        <Copy className="h-4 w-4" />
+                                        <span>Копировать текст</span>
+                                      </ContextMenuItem>
+                                    </ContextMenuContent>
+                                  </ContextMenu>
                                 </div>
-                              </div>
-                            ))}
-                            <div ref={messagesEndRef} />
-                          </div>
-                        )}
+                              ))}
+                              <div ref={messagesEndRef} />
+                            </div>
+                          )}
                         </DragDropFileUpload>
                       </ScrollArea>
                       
