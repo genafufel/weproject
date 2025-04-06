@@ -114,11 +114,55 @@ export default function HomePage() {
             {/* Затемнение с эффектом пульсации */}
             <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 animate-[slowFade_8s_ease-in-out_infinite]"></div>
             
-            {/* Декоративные элементы */}
+            {/* Современные декоративные элементы - геометрические формы */}
             <div className="absolute inset-0 opacity-30">
-              <div className="absolute -top-20 -left-20 w-80 h-80 rounded-full bg-blue-500/20 blur-3xl"></div>
-              <div className="absolute top-1/3 -right-20 w-80 h-80 rounded-full bg-purple-500/20 blur-3xl"></div>
-              <div className="absolute -bottom-10 left-1/4 w-60 h-60 rounded-full bg-indigo-500/20 blur-3xl"></div>
+              {/* Сетка диагональных линий */}
+              <div className="absolute inset-0 overflow-hidden opacity-15">
+                <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+                  {[...Array(20)].map((_, i) => (
+                    <line 
+                      key={`line-1-${i}`}
+                      x1={i * 50}
+                      y1="0"
+                      x2={i * 50 + 500}
+                      y2="1000"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      className="text-blue-500/60"
+                    />
+                  ))}
+                  {[...Array(20)].map((_, i) => (
+                    <line 
+                      key={`line-2-${i}`}
+                      x1="1000"
+                      y1={i * 50}
+                      x2="0"
+                      y2={i * 50 + 500}
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      className="text-purple-500/60"
+                    />
+                  ))}
+                </svg>
+              </div>
+              
+              {/* Геометрические фигуры вместо размытых кругов */}
+              <div className="absolute top-10 left-10 w-64 h-64 border border-blue-500/40 transform rotate-12 animate-float-slow"></div>
+              <div className="absolute top-1/3 right-10 w-80 h-40 bg-gradient-to-r from-purple-500/20 to-transparent animate-float" style={{animationDelay: '0.8s'}}></div>
+              <div className="absolute bottom-10 left-1/4 w-40 h-40 border-4 border-indigo-500/30 transform -rotate-12 animate-pulse" style={{animationDelay: '1.2s'}}></div>
+              
+              {/* Сетка из точек в углу */}
+              <div className="absolute bottom-0 right-0 grid grid-cols-10 gap-4 w-80 h-80">
+                {[...Array(100)].map((_, i) => (
+                  <div 
+                    key={`dot-${i}`} 
+                    className="w-1 h-1 bg-white rounded-full"
+                    style={{ 
+                      opacity: Math.random() * 0.6 + 0.2,
+                    }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
           
