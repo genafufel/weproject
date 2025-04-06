@@ -31,20 +31,26 @@
   grid-row: span 1;
 }
 
-/* Адаптируем стандартную сетку чтобы карточки без фото располагались в одну колонку друг под другом */
-.card-no-photo {
-  grid-column: 1 !important;
-}
-
+/* Адаптируем стандартную сетку чтобы карточки без фото располагались друг под другом */
 @media (min-width: 640px) {
-  .card-no-photo {
-    grid-column: 1 / span 2 !important;
+  .card-no-photo:nth-child(4n+1) {
+    grid-column: 1;
+  }
+  .card-no-photo:nth-child(4n+2) {
+    grid-column: 1;
+  }
+  .card-no-photo:nth-child(4n+3) {
+    grid-column: 2;
+  }
+  .card-no-photo:nth-child(4n+4) {
+    grid-column: 2;
   }
 }
 
+/* Для десктоп размера, размещаем только одну карточку без фото в каждой колонке */
 @media (min-width: 1024px) {
-  .card-no-photo {
-    grid-column: 1 / span 3 !important;
+  .lg\:grid-cols-3 .card-no-photo {
+    grid-column: 1;
   }
 }
 
