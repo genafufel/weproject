@@ -160,12 +160,17 @@ export default function HomePage() {
         <div className="h-4 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
         
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
+        <section id="categories" className="bg-gradient-to-br from-blue-100 via-indigo-50 to-white dark:bg-gradient-to-br dark:from-blue-900 dark:via-indigo-950/30 dark:to-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
           {/* Декоративный элемент градиентной тени сверху */}
           <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-200/90 dark:from-blue-800/80 to-transparent pointer-events-none"></div>
           
           {/* Декоративные элементы */}
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
+          
+          {/* Паттерн фона */}
+          <div className="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none">
+            <div className="absolute inset-0" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0,0,150,0.2) 1px, transparent 0)', backgroundSize: '24px 24px' }}></div>
+          </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -237,10 +242,15 @@ export default function HomePage() {
         <div className="h-4 bg-blue-600/70 backdrop-blur-md shadow-md relative z-20"></div>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-900 py-20 relative fullscreen-section section-animate overflow-hidden">
+        <section id="steps" className="bg-gradient-to-tr from-white via-blue-50 to-cyan-100 dark:bg-gradient-to-tr dark:from-gray-900 dark:via-blue-950/20 dark:to-cyan-950/30 py-20 relative fullscreen-section section-animate overflow-hidden">
           {/* Декоративные элементы */}
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-100/80 dark:from-blue-900/80 to-transparent"></div>
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-cyan-100/80 dark:from-cyan-950/30 to-transparent"></div>
+          
+          {/* Узорчатый фон */}
+          <div className="absolute inset-0 opacity-5 dark:opacity-10 pointer-events-none">
+            <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(0deg, transparent 24%, rgba(0, 100, 255, 0.3) 25%, rgba(0, 100, 255, 0.3) 26%, transparent 27%, transparent 74%, rgba(0, 100, 255, 0.3) 75%, rgba(0, 100, 255, 0.3) 76%, transparent 77%, transparent), linear-gradient(90deg, transparent 24%, rgba(0, 100, 255, 0.3) 25%, rgba(0, 100, 255, 0.3) 26%, transparent 27%, transparent 74%, rgba(0, 100, 255, 0.3) 75%, rgba(0, 100, 255, 0.3) 76%, transparent 77%, transparent)', backgroundSize: '50px 50px' }}></div>
+          </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
