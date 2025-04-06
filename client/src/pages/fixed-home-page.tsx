@@ -222,9 +222,9 @@ export default function HomePage() {
         </div>
         
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-950 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
+        <section id="categories" className="bg-gradient-to-b from-blue-300 to-white dark:bg-gradient-to-b dark:from-blue-800 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
           {/* Декоративный элемент градиентной тени сверху */}
-          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-200/90 dark:from-blue-900/80 to-transparent pointer-events-none"></div>
+          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-400/90 dark:from-blue-700/90 to-transparent pointer-events-none"></div>
           
           {/* Декоративные элементы - новый дизайн */}
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
@@ -331,9 +331,9 @@ export default function HomePage() {
         </section>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-950 py-16 relative fullscreen-section section-animate overflow-hidden">
+        <section id="steps" className="bg-gradient-to-b from-white to-blue-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-800 py-16 relative fullscreen-section section-animate overflow-hidden">
           {/* Декоративные элементы */}
-          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
+          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/90 dark:from-gray-900/90 to-transparent"></div>
           
           {/* Новый декоративный дизайн с линиями и геометрическими элементами */}
           
@@ -416,7 +416,7 @@ export default function HomePage() {
 
         {/* Новый декоративный разделитель - зигзагообразная линия */}
         <div className="relative z-10 h-16 transform -translate-y-16 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-blue-100/50 to-primary/60 dark:from-blue-950/70 dark:to-primary/70">
+          <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-blue-300/60 to-primary/70 dark:from-blue-800/80 dark:to-primary/80">
             <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1200 120" preserveAspectRatio="none">
               <path 
                 d="M0,0 L120,20 L240,0 L360,20 L480,0 L600,20 L720,0 L840,20 L960,0 L1080,20 L1200,0 V120 H0 V0 Z" 
