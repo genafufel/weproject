@@ -76,6 +76,73 @@ export default function HomePage() {
       section.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  
+  // Обработка прокрутки страницы для перехода между секциями
+  useEffect(() => {
+    // Массив ID всех секций в порядке их появления на странице
+    const sectionIds = ['hero', 'categories', 'steps', 'cta'];
+    
+    let isScrolling = false;
+    let currentSectionIndex = 0;
+    
+    // Определяем текущую секцию при загрузке страницы
+    const determineCurrentSection = () => {
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+      
+      for (let i = 0; i < sectionIds.length; i++) {
+        const section = document.getElementById(sectionIds[i]);
+        if (section) {
+          const sectionTop = section.offsetTop;
+          const sectionBottom = sectionTop + section.offsetHeight;
+          
+          if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+            currentSectionIndex = i;
+            break;
+          }
+        }
+      }
+    };
+    
+    // Обработчик события прокрутки колесика мыши
+    const handleWheel = (event: WheelEvent) => {
+      // Предотвращаем обработку, если уже выполняется анимация прокрутки
+      if (isScrolling) return;
+      
+      // Определяем направление прокрутки
+      const direction = event.deltaY > 0 ? 1 : -1;
+      
+      // Обновляем индекс текущей секции
+      determineCurrentSection();
+      
+      // Вычисляем индекс следующей секции
+      let nextSectionIndex = currentSectionIndex + direction;
+      
+      // Проверяем, что индекс в пределах массива
+      if (nextSectionIndex >= 0 && nextSectionIndex < sectionIds.length) {
+        // Предотвращаем стандартное поведение прокрутки
+        event.preventDefault();
+        
+        // Устанавливаем флаг прокрутки
+        isScrolling = true;
+        
+        // Выполняем прокрутку к следующей секции
+        scrollToNextSection(sectionIds[nextSectionIndex]);
+        
+        // Сбрасываем флаг прокрутки через время анимации
+        setTimeout(() => {
+          isScrolling = false;
+        }, 800); // Время немного больше, чем duration анимации прокрутки
+      }
+    };
+    
+    // Добавляем обработчик события
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    
+    // Очистка при размонтировании компонента
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
+  }, []);
 
   return (
     <div className="flex flex-col min-h-screen">
