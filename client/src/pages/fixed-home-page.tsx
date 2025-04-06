@@ -102,7 +102,7 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="hero" className="relative overflow-hidden bg-gray-50 fullscreen-section">
+        <section id="hero" className="relative overflow-hidden bg-gray-50 fullscreen-section min-h-screen flex items-center">
           {/* Анимированный фон */}
           <div className="absolute inset-0 overflow-hidden animate-fade-in">
             <img 
@@ -156,20 +156,8 @@ export default function HomePage() {
           </div>
         </section>
         
-        {/* Простой плавный разделитель */}
-        <div className="relative z-10 h-16 transform -translate-y-16 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-black/30 to-blue-100/80 dark:from-black/50 dark:to-blue-950/80">
-            <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path 
-                d="M0,0 L1200,0 1200,120 0,120 Z" 
-                className="fill-blue-100 dark:fill-blue-950 opacity-90"
-              />
-            </svg>
-          </div>
-        </div>
-        
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden -mt-16">
+        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
           {/* Декоративный элемент градиентной тени сверху */}
           <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-200/90 dark:from-blue-800/80 to-transparent pointer-events-none"></div>
           
@@ -243,7 +231,7 @@ export default function HomePage() {
         </section>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-900 py-10 relative fullscreen-section section-animate overflow-hidden">
+        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-900 py-20 relative fullscreen-section section-animate overflow-hidden">
           {/* Декоративные элементы */}
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-100/80 dark:from-blue-900/80 to-transparent"></div>
@@ -293,21 +281,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* Простой градиентный разделитель */}
-        <div className="relative z-10 h-16 transform -translate-y-16 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-blue-100/80 to-primary/80 dark:from-blue-900/90 dark:to-primary/90">
-            <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1200 120" preserveAspectRatio="none">
-              <path 
-                d="M0,0 L1200,0 1200,120 0,120 Z" 
-                className="fill-primary dark:fill-primary opacity-90"
-              />
-            </svg>
-          </div>
-        </div>
         
         {/* CTA Section */}
-        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-0 section-animate -mt-16 fullscreen-section min-h-screen flex items-center">
+        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-0 section-animate fullscreen-section min-h-screen flex items-center">
           {/* Декоративные элементы */}
           <div className="absolute top-0 left-0 w-full h-full opacity-20">
             <div className="absolute top-20 left-[10%] w-40 h-40 rounded-full bg-white animate-float-slow"></div>
