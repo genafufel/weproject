@@ -83,64 +83,100 @@ export default function HomePage() {
     const sectionIds = ['hero', 'categories', 'steps', 'cta'];
     
     let isScrolling = false;
-    let currentSectionIndex = 0;
+    let lastScrollTime = 0;
+    let scrollTimeout: NodeJS.Timeout | null = null;
     
-    // Определяем текущую секцию при загрузке страницы
-    const determineCurrentSection = () => {
-      const scrollPosition = window.scrollY + window.innerHeight / 2;
+    // Определяем текущую видимую секцию
+    const getCurrentSectionIndex = () => {
+      const viewportMiddle = window.scrollY + (window.innerHeight / 2);
       
       for (let i = 0; i < sectionIds.length; i++) {
         const section = document.getElementById(sectionIds[i]);
         if (section) {
-          const sectionTop = section.offsetTop;
-          const sectionBottom = sectionTop + section.offsetHeight;
+          const rect = section.getBoundingClientRect();
+          const sectionTop = window.scrollY + rect.top;
+          const sectionBottom = sectionTop + rect.height;
           
-          if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-            currentSectionIndex = i;
-            break;
+          if (viewportMiddle >= sectionTop && viewportMiddle <= sectionBottom) {
+            return i;
           }
         }
       }
+      
+      // Если не найдено, возвращаем индекс на основе положения прокрутки
+      const scrollRatio = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+      return Math.min(Math.floor(scrollRatio * sectionIds.length), sectionIds.length - 1);
     };
     
     // Обработчик события прокрутки колесика мыши
     const handleWheel = (event: WheelEvent) => {
-      // Предотвращаем обработку, если уже выполняется анимация прокрутки
+      // Предотвращаем частые вызовы
+      const now = new Date().getTime();
+      if (now - lastScrollTime < 100) return;
+      lastScrollTime = now;
+      
+      // Если анимация уже выполняется, игнорируем событие
       if (isScrolling) return;
       
       // Определяем направление прокрутки
       const direction = event.deltaY > 0 ? 1 : -1;
       
-      // Обновляем индекс текущей секции
-      determineCurrentSection();
+      // Получаем текущую секцию
+      const currentIndex = getCurrentSectionIndex();
+      const targetIndex = currentIndex + direction;
       
-      // Вычисляем индекс следующей секции
-      let nextSectionIndex = currentSectionIndex + direction;
-      
-      // Проверяем, что индекс в пределах массива
-      if (nextSectionIndex >= 0 && nextSectionIndex < sectionIds.length) {
-        // Предотвращаем стандартное поведение прокрутки
+      // Проверяем, что целевой индекс в допустимых пределах
+      if (targetIndex >= 0 && targetIndex < sectionIds.length) {
+        // Останавливаем стандартную прокрутку
         event.preventDefault();
         
-        // Устанавливаем флаг прокрутки
+        // Блокируем дальнейшую прокрутку на время анимации
         isScrolling = true;
         
-        // Выполняем прокрутку к следующей секции
-        scrollToNextSection(sectionIds[nextSectionIndex]);
+        // Очищаем предыдущий таймаут, если он был
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
+        }
         
-        // Сбрасываем флаг прокрутки через время анимации
-        setTimeout(() => {
-          isScrolling = false;
-        }, 800); // Время немного больше, чем duration анимации прокрутки
+        // Прокручиваем к целевой секции
+        const targetSection = document.getElementById(sectionIds[targetIndex]);
+        if (targetSection) {
+          targetSection.scrollIntoView({ behavior: 'smooth' });
+          
+          // Сбрасываем блокировку через время анимации
+          scrollTimeout = setTimeout(() => {
+            isScrolling = false;
+          }, 1000);
+        }
       }
     };
     
-    // Добавляем обработчик события
+    // Настройка для обработки прокрутки страницы при загрузке
+    const setupInitialSection = () => {
+      // Определяем текущую секцию при загрузке страницы
+      const hash = window.location.hash.substring(1);
+      if (hash && sectionIds.includes(hash)) {
+        const section = document.getElementById(hash);
+        if (section) {
+          setTimeout(() => {
+            section.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
+        }
+      }
+    };
+    
+    // Инициализация при монтировании
+    setupInitialSection();
+    
+    // Добавляем обработчик события прокрутки
     window.addEventListener('wheel', handleWheel, { passive: false });
     
-    // Очистка при размонтировании компонента
+    // Очистка при размонтировании
     return () => {
       window.removeEventListener('wheel', handleWheel);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
     };
   }, []);
 
