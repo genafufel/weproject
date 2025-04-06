@@ -334,10 +334,14 @@ export default function Talent() {
                     placeholder="Поиск по названию, навыкам или направлению"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-0"
+                    className="pl-9 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-lg focus:bg-white dark:focus:bg-gray-700"
                   />
                 </div>
-                <Button type="submit" variant="secondary" className="bg-white text-primary hover:bg-gray-100">
+                <Button 
+                  type="submit" 
+                  variant="secondary" 
+                  className="bg-white dark:bg-gray-800 text-primary dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-lg transition-all duration-300 hover:scale-105 search-button"
+                >
                   Поиск
                 </Button>
               </form>
@@ -353,10 +357,10 @@ export default function Talent() {
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Фильтры:</span>
                 
                 <Select value={selectedField} onValueChange={handleFieldChange}>
-                  <SelectTrigger className="w-[200px]">
+                  <SelectTrigger className="w-[200px] bg-white/90 dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow">
                     <SelectValue placeholder="Область изучения" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
                     {fieldDirections.map((field) => (
                       <SelectItem key={field.value} value={field.value}>
                         {field.label}
@@ -371,14 +375,18 @@ export default function Talent() {
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center gap-1">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center gap-1 bg-white/90 dark:bg-gray-800 shadow-sm hover:shadow-md transition-shadow border-gray-200 dark:border-gray-700"
+                    >
                       Сортировка
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" className="dark:bg-gray-800 dark:border-gray-700">
                     <DropdownMenuLabel>Сортировать по</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
+                    <DropdownMenuSeparator className="dark:border-gray-700"/>
                     <DropdownMenuCheckboxItem checked>
                       Релевантности
                     </DropdownMenuCheckboxItem>
@@ -525,7 +533,7 @@ export default function Talent() {
                                 placeholder="Введите ваше сообщение здесь..."
                                 value={messageText}
                                 onChange={(e) => setMessageText(e.target.value)}
-                                className="min-h-[120px]"
+                                className="min-h-[120px] dark:bg-gray-800 dark:border-gray-700"
                               />
                             </div>
                             <DialogFooter>

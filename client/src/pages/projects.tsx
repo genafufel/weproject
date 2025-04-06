@@ -191,13 +191,13 @@ export default function Projects() {
                     placeholder="Поиск проектов по названию или ключевым словам"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 bg-white/90 backdrop-blur-sm text-gray-900 border-0 shadow-lg focus:bg-white"
+                    className="pl-9 bg-white/90 dark:bg-gray-800 backdrop-blur-sm text-gray-900 dark:text-gray-100 border-0 shadow-lg focus:bg-white dark:focus:bg-gray-700"
                   />
                 </div>
                 <Button 
                   type="submit" 
                   variant="secondary" 
-                  className="bg-white/90 backdrop-blur-sm text-primary hover:bg-white shadow-lg transition-all duration-300 hover:scale-105"
+                  className="bg-white/90 dark:bg-gray-800 backdrop-blur-sm text-primary dark:text-white hover:bg-white dark:hover:bg-gray-700 shadow-lg transition-all duration-300 hover:scale-105 search-button"
                 >
                   Поиск
                 </Button>
@@ -214,10 +214,10 @@ export default function Projects() {
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Фильтры:</span>
                 
                 <Select value={selectedField} onValueChange={handleFieldChange}>
-                  <SelectTrigger className="w-[180px] shadow-sm border border-gray-200 hover:border-primary/30 transition-all">
+                  <SelectTrigger className="w-[180px] shadow-sm border border-gray-200 dark:border-gray-700 hover:border-primary/30 dark:hover:border-gray-600 transition-all filter-element dark:bg-gray-800">
                     <SelectValue placeholder="Направление" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="dark:bg-gray-800">
                     {projectFields.map((field) => (
                       <SelectItem key={field.value} value={field.value}>
                         {field.label}
@@ -226,7 +226,7 @@ export default function Projects() {
                   </SelectContent>
                 </Select>
                 
-                <div className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
+                <div className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 rounded-md shadow-sm filter-element">
                   <Switch
                     id="remote-only"
                     checked={remoteOnly}
@@ -236,25 +236,25 @@ export default function Projects() {
                   <Label htmlFor="remote-only" className="cursor-pointer">Только удаленно</Label>
                 </div>
                 
-                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 rounded-md shadow-sm filter-element">
                   <Label htmlFor="date-from" className="whitespace-nowrap text-xs">Начало:</Label>
                   <Input
                     id="date-from"
                     type="date"
                     value={dateFrom}
                     onChange={handleDateFromChange}
-                    className="w-auto border-gray-200"
+                    className="w-auto border-gray-200 dark:border-gray-700 dark:bg-gray-800"
                   />
                 </div>
                 
-                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 rounded-md shadow-sm filter-element">
                   <Label htmlFor="date-to" className="whitespace-nowrap text-xs">Окончание:</Label>
                   <Input
                     id="date-to"
                     type="date"
                     value={dateTo}
                     onChange={handleDateToChange}
-                    className="w-auto border-gray-200"
+                    className="w-auto border-gray-200 dark:border-gray-700 dark:bg-gray-800"
                   />
                 </div>
                 
@@ -271,7 +271,7 @@ export default function Projects() {
               </div>
               
               <div className="flex items-center space-x-3 text-sm">
-                <span className="text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
+                <span className="text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 px-3 py-1.5 rounded-md shadow-sm filter-element">
                   {isLoading ? (
                     <span className="flex items-center gap-2">
                       <Loader2 className="h-3 w-3 animate-spin" />
@@ -287,7 +287,7 @@ export default function Projects() {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 border-gray-200 shadow-sm hover:border-primary/50"
+                      className="flex items-center gap-1 bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-sm hover:border-primary/50 filter-element"
                     >
                       Сортировка
                       <ChevronDown className="h-4 w-4" />
@@ -373,7 +373,7 @@ export default function Projects() {
                           </span>
                         </p>
                       </div>
-                      <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                      <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700">
                         {(() => {
                           if (typeof project.field === 'object' && project.field !== null) {
                             return project.field?.label || project.field?.title || '';

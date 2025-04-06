@@ -215,7 +215,7 @@
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
+    --input: 220 10% 20%; /* Изменено на серый цвет */
   }
   
   * {
@@ -231,5 +231,18 @@
   textarea,
   select {
     @apply bg-background;
+  }
+  
+  /* Стили для темной темы для полей ввода и кнопок поиска */
+  .dark input,
+  .dark textarea,
+  .dark select {
+    @apply bg-gray-800;
+  }
+  
+  /* Стили для кнопок поиска и фильтров в темной теме */
+  .dark .search-button,
+  .dark .filter-element {
+    @apply bg-gray-800 hover:bg-gray-700;
   }
 }
