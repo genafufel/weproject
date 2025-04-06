@@ -161,8 +161,23 @@ export default function HomePage() {
           </div>
         </section>
         
+        {/* Декоративный разделитель */}
+        <div className="relative z-10 bg-gradient-to-b from-black/50 to-blue-200/50 dark:from-black/70 dark:to-blue-900/60 h-16 transform -translate-y-16 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path 
+                d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C100,0,250,55,321.39,56.44Z" 
+                className="fill-blue-100 dark:fill-blue-950 opacity-80"
+              />
+            </svg>
+          </div>
+        </div>
+        
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-950 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden">
+        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-950 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
+          {/* Декоративный элемент градиентной тени сверху */}
+          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-200/90 dark:from-blue-900/80 to-transparent pointer-events-none"></div>
+          
           {/* Декоративные элементы */}
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
           
@@ -292,8 +307,20 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Декоративный разделитель между How It Works и CTA */}
+        <div className="relative z-10 bg-gradient-to-b from-blue-100/50 to-primary/50 dark:from-blue-950/70 dark:to-primary/60 h-16 transform -translate-y-16 overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1200 120" preserveAspectRatio="none">
+              <path 
+                d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" 
+                className="fill-primary dark:fill-primary opacity-80"
+              />
+            </svg>
+          </div>
+        </div>
+        
         {/* CTA Section */}
-        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-12 section-animate">
+        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-12 section-animate -mt-16">
           {/* Декоративные элементы */}
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
             <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-white"></div>
