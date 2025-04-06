@@ -167,16 +167,23 @@ export default function Projects() {
       
       <main className="flex-1 bg-gray-50 dark:bg-gray-900">
         {/* Hero section */}
-        <div className="bg-primary text-white py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative bg-gradient-to-br from-primary to-blue-600 text-white py-16 overflow-hidden">
+          {/* Декоративные элементы */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 left-0 w-72 h-72 rounded-full bg-blue-400 filter blur-3xl"></div>
+            <div className="absolute bottom-0 right-0 w-72 h-72 rounded-full bg-indigo-500 filter blur-3xl"></div>
+            <div className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-purple-500 filter blur-3xl"></div>
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="text-center max-w-3xl mx-auto">
-              <h1 className="text-3xl font-bold mb-4">Поиск проектов</h1>
-              <p className="text-blue-100 text-lg mb-8">
+              <h1 className="text-4xl font-extrabold mb-4 animate-fade-in">Поиск проектов</h1>
+              <p className="text-blue-100 text-lg mb-8 animate-fade-in animate-delay-100">
                 Найдите интересные возможности в различных областях для формирования вашего портфолио и развития карьеры.
               </p>
               
               {/* Search form */}
-              <form onSubmit={handleSearchSubmit} className="flex w-full gap-2">
+              <form onSubmit={handleSearchSubmit} className="flex w-full gap-2 animate-fade-in animate-delay-200">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -184,10 +191,14 @@ export default function Projects() {
                     placeholder="Поиск проектов по названию или ключевым словам"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 bg-white text-gray-900 border-0"
+                    className="pl-9 bg-white/90 backdrop-blur-sm text-gray-900 border-0 shadow-lg focus:bg-white"
                   />
                 </div>
-                <Button type="submit" variant="secondary" className="bg-white text-primary hover:bg-gray-100">
+                <Button 
+                  type="submit" 
+                  variant="secondary" 
+                  className="bg-white/90 backdrop-blur-sm text-primary hover:bg-white shadow-lg transition-all duration-300 hover:scale-105"
+                >
                   Поиск
                 </Button>
               </form>
@@ -196,14 +207,14 @@ export default function Projects() {
         </div>
         
         {/* Filters section */}
-        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
             <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-wrap items-center gap-4">
                 <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Фильтры:</span>
                 
                 <Select value={selectedField} onValueChange={handleFieldChange}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-[180px] shadow-sm border border-gray-200 hover:border-primary/30 transition-all">
                     <SelectValue placeholder="Направление" />
                   </SelectTrigger>
                   <SelectContent>
@@ -215,49 +226,74 @@ export default function Projects() {
                   </SelectContent>
                 </Select>
                 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
                   <Switch
                     id="remote-only"
                     checked={remoteOnly}
                     onCheckedChange={handleRemoteToggle}
+                    className="data-[state=checked]:bg-primary"
                   />
-                  <Label htmlFor="remote-only">Только удаленно</Label>
+                  <Label htmlFor="remote-only" className="cursor-pointer">Только удаленно</Label>
                 </div>
                 
-                <div className="flex items-center space-x-2">
-                  <Label htmlFor="date-from" className="mr-1 whitespace-nowrap text-xs">Дата начала:</Label>
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
+                  <Label htmlFor="date-from" className="whitespace-nowrap text-xs">Начало:</Label>
                   <Input
                     id="date-from"
                     type="date"
                     value={dateFrom}
                     onChange={handleDateFromChange}
-                    className="w-auto"
+                    className="w-auto border-gray-200"
                   />
                 </div>
                 
-                <div className="flex items-center space-x-2">
-                  <Label htmlFor="date-to" className="mr-1 whitespace-nowrap text-xs">Дата окончания:</Label>
+                <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
+                  <Label htmlFor="date-to" className="whitespace-nowrap text-xs">Окончание:</Label>
                   <Input
                     id="date-to"
                     type="date"
                     value={dateTo}
                     onChange={handleDateToChange}
-                    className="w-auto"
+                    className="w-auto border-gray-200"
                   />
                 </div>
+                
+                {(searchTerm || selectedField !== "all" || remoteOnly || dateFrom || dateTo) && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={clearAllFilters}
+                    className="text-gray-500 hover:text-primary"
+                  >
+                    Сбросить фильтры
+                  </Button>
+                )}
               </div>
               
-              <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-                <span>{isLoading ? "Загрузка..." : `${projects?.length || 0} результатов`}</span>
+              <div className="flex items-center space-x-3 text-sm">
+                <span className="text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-md shadow-sm">
+                  {isLoading ? (
+                    <span className="flex items-center gap-2">
+                      <Loader2 className="h-3 w-3 animate-spin" />
+                      Загрузка...
+                    </span>
+                  ) : (
+                    <span className="font-medium">{projects?.length || 0} результатов</span>
+                  )}
+                </span>
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center gap-1">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="flex items-center gap-1 bg-gray-50 dark:bg-gray-700 border-gray-200 shadow-sm hover:border-primary/50"
+                    >
                       Сортировка
                       <ChevronDown className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
+                  <DropdownMenuContent align="end" className="shadow-lg">
                     <DropdownMenuLabel>Сортировка</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuCheckboxItem checked>
@@ -294,31 +330,38 @@ export default function Projects() {
               </Button>
             </div>
           ) : (
-            <CardContainer>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
               {projects.map((project: any) => (
-                <Card key={project.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${project.photos && project.photos.length > 0 ? 'h-[584px] flex flex-col' : 'flex flex-col h-[280px] card-no-photo'}`}>
-                  {project.photos && project.photos.length > 0 && (
+                <Card 
+                  key={project.id} 
+                  className="overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col h-full group"
+                >
+                  {project.photos && project.photos.length > 0 ? (
                     <Link href={`/projects/${project.id}`}>
-                      <div className="relative h-60 max-h-[320px] w-full overflow-hidden">
+                      <div className="relative h-48 w-full overflow-hidden">
                         <img 
                           src={project.photos[0].startsWith('/uploads') ? project.photos[0] : `/uploads/${project.photos[0].split('/').pop()}`}
                           alt={project.title} 
-                          className="w-full h-full object-cover transition-transform hover:scale-105"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                           onError={(e) => {
-                            // Не выводим ошибку в консоль, чтобы избежать перезагрузок
                             e.currentTarget.src = '/uploads/default.jpg';
-                            // Предотвращаем дальнейшее распространение события
                             e.stopPropagation();
                           }}
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                       </div>
                     </Link>
+                  ) : (
+                    <div className="h-24 bg-gradient-to-r from-primary/10 to-blue-400/10 flex items-center justify-center">
+                      <span className="text-primary/40 text-lg font-medium">Нет изображения</span>
+                    </div>
                   )}
+                  
                   <CardHeader className="pb-2 pt-4">
-                    <div className="flex justify-between items-start">
+                    <div className="flex justify-between items-start gap-2">
                       <div>
                         <CardTitle className="text-xl">
-                          <Link href={`/projects/${project.id}`} className="hover:text-primary">
+                          <Link href={`/projects/${project.id}`} className="hover:text-primary transition-colors">
                             {project.title}
                           </Link>
                         </CardTitle>
@@ -330,36 +373,41 @@ export default function Projects() {
                           </span>
                         </p>
                       </div>
-                      <Badge>{(() => {
-                        // Определяем и форматируем field для отображения
-                        if (typeof project.field === 'object' && project.field !== null) {
-                          return project.field?.label || project.field?.title || '';
-                        } else {
-                          // Находим соответствующее название поля в projectFields
-                          const fieldItem = projectFields.find(f => f.value === project.field);
-                          return fieldItem ? fieldItem.label : project.field;
-                        }
-                      })()}</Badge>
+                      <Badge className="bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
+                        {(() => {
+                          if (typeof project.field === 'object' && project.field !== null) {
+                            return project.field?.label || project.field?.title || '';
+                          } else {
+                            const fieldItem = projectFields.find(f => f.value === project.field);
+                            return fieldItem ? fieldItem.label : project.field;
+                          }
+                        })()}
+                      </Badge>
                     </div>
                   </CardHeader>
                   
                   <CardContent className="pb-2 flex-grow">
-                    <p className="text-gray-600 dark:text-gray-300 mb-2 line-clamp-3">{project.description}</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">{project.description}</p>
+                    
+                    {(project.positions && project.positions.length > 0) && (
+                      <div className="mb-3">
+                        <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1.5">Требуемые позиции:</h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {(project.positions || []).map((position: any, index: number) => (
+                            <Badge 
+                              key={index} 
+                              className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20"
+                            >
+                              {typeof position === 'string' ? position : position.title}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </CardContent>
                   
-                  <CardFooter className="flex flex-col pt-0 mt-auto">
-                    <div className="w-full mb-3">
-                      <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-1">Требуемые позиции:</h4>
-                      <div className="flex flex-wrap gap-1">
-                        {(project.positions || []).map((position: any, index: number) => (
-                          <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
-                            {typeof position === 'string' ? position : position.title}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                    
-                    <div className="flex justify-between items-center w-full">
+                  <CardFooter className="flex flex-col pt-0 mt-auto border-t border-gray-100 dark:border-gray-800">
+                    <div className="flex justify-between items-center w-full pt-3">
                       <div className="flex flex-col space-y-1">
                         <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                           <MapPin className="h-4 w-4 mr-1 text-gray-400 dark:text-gray-500" />
@@ -375,44 +423,72 @@ export default function Projects() {
                       </div>
                       
                       <Link href={`/projects/${project.id}`}>
-                        <Button variant="default" size="sm">
-                          Откликнуться
+                        <Button 
+                          variant="default" 
+                          size="sm"
+                          className="shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105"
+                        >
+                          Подробнее
                         </Button>
                       </Link>
                     </div>
                   </CardFooter>
                 </Card>
               ))}
-            </CardContainer>
+            </div>
           )}
           
           {/* Post a project CTA for non-applicants */}
           {user?.userType === "projectOwner" && (
-            <div className="mt-12 bg-primary rounded-lg p-8 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">Нужны таланты для ваших проектов?</h2>
-              <p className="mb-6 text-blue-100">
-                Разместите новый проект, чтобы связаться с талантливыми студентами и начинающими специалистами.
-              </p>
-              <Link href="/create-project">
-                <Button variant="secondary" size="lg">
-                  Разместить проект
-                </Button>
-              </Link>
+            <div className="mt-12 relative bg-gradient-to-r from-primary to-blue-600 rounded-lg p-8 text-white text-center overflow-hidden shadow-lg">
+              {/* Декоративные элементы */}
+              <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-0 right-1/4 w-40 h-40 rounded-full bg-white"></div>
+                <div className="absolute bottom-0 left-1/3 w-32 h-32 rounded-full bg-blue-300"></div>
+              </div>
+              
+              <div className="relative z-10">
+                <h2 className="text-2xl font-extrabold mb-2">Нужны таланты для ваших проектов?</h2>
+                <p className="mb-6 text-blue-100">
+                  Разместите новый проект, чтобы связаться с талантливыми студентами и начинающими специалистами.
+                </p>
+                <Link href="/create-project">
+                  <Button 
+                    variant="secondary" 
+                    size="lg" 
+                    className="bg-white/90 backdrop-blur-sm text-primary hover:bg-white shadow-lg transition-all duration-300 hover:scale-105"
+                  >
+                    Разместить проект
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
           
           {/* Create account CTA for non-logged in users */}
           {!user && (
-            <div className="mt-12 bg-primary rounded-lg p-8 text-white text-center">
-              <h2 className="text-2xl font-bold mb-2">Готовы откликнуться на проекты?</h2>
-              <p className="mb-6 text-blue-100">
-                Создайте аккаунт, чтобы откликаться на проекты и создавать своё портфолио.
-              </p>
-              <Link href="/auth">
-                <Button variant="secondary" size="lg" className="bg-white text-gray-800 hover:bg-gray-50">
-                  Создать аккаунт
-                </Button>
-              </Link>
+            <div className="mt-12 relative bg-gradient-to-r from-primary to-blue-600 rounded-lg p-8 text-white text-center overflow-hidden shadow-lg">
+              {/* Декоративные элементы */}
+              <div className="absolute inset-0 opacity-20">
+                <div className="absolute top-0 right-1/4 w-40 h-40 rounded-full bg-white"></div>
+                <div className="absolute bottom-0 left-1/3 w-32 h-32 rounded-full bg-blue-300"></div>
+              </div>
+              
+              <div className="relative z-10">
+                <h2 className="text-2xl font-extrabold mb-2">Готовы откликнуться на проекты?</h2>
+                <p className="mb-6 text-blue-100">
+                  Создайте аккаунт, чтобы откликаться на проекты и создавать своё портфолио.
+                </p>
+                <Link href="/auth">
+                  <Button 
+                    variant="secondary" 
+                    size="lg"
+                    className="bg-white/90 backdrop-blur-sm text-primary hover:bg-white shadow-lg transition-all duration-300 hover:scale-105"
+                  >
+                    Создать аккаунт
+                  </Button>
+                </Link>
+              </div>
             </div>
           )}
         </div>
