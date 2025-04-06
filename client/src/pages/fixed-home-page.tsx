@@ -114,77 +114,7 @@ export default function HomePage() {
             {/* Затемнение с эффектом пульсации */}
             <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 animate-[slowFade_8s_ease-in-out_infinite]"></div>
             
-            {/* Современные декоративные элементы - геометрические формы */}
-            <div className="absolute inset-0 opacity-40">
-              {/* Сетка диагональных линий */}
-              <div className="absolute inset-0 overflow-hidden opacity-40">
-                <svg className="absolute top-0 left-0 w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-                  {[...Array(20)].map((_, i) => (
-                    <line 
-                      key={`line-1-${i}`}
-                      x1={i * 50}
-                      y1="0"
-                      x2={i * 50 + 500}
-                      y2="1000"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      className="text-blue-500/80"
-                    />
-                  ))}
-                  {[...Array(20)].map((_, i) => (
-                    <line 
-                      key={`line-2-${i}`}
-                      x1="1000"
-                      y1={i * 50}
-                      x2="0"
-                      y2={i * 50 + 500}
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                      className="text-purple-500/80"
-                    />
-                  ))}
-                </svg>
-              </div>
-              
-              {/* Геометрические фигуры вместо размытых кругов */}
-              <div className="absolute top-10 left-10 w-64 h-64 border-2 border-blue-500/70 transform rotate-12 animate-float-slow"></div>
-              <div className="absolute top-1/3 right-10 w-80 h-40 bg-gradient-to-r from-purple-500/40 to-transparent animate-float" style={{animationDelay: '0.8s'}}></div>
-              <div className="absolute bottom-10 left-1/4 w-40 h-40 border-4 border-indigo-500/60 transform -rotate-12 animate-pulse" style={{animationDelay: '1.2s'}}></div>
-              
-              {/* Топографические линии */}
-              <div className="absolute top-1/4 right-1/4 w-96 h-60 opacity-60">
-                <svg viewBox="0 0 200 200" className="w-full h-full">
-                  {[...Array(15)].map((_, i) => (
-                    <path 
-                      key={i}
-                      d={`M0,${20 + i * 12} Q${40 + i * 8},${15 + i * 10} ${100 + i * 5},${25 + i * 8} T200,${35 + i * 9}`}
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                      className="text-blue-400"
-                    />
-                  ))}
-                </svg>
-              </div>
-              
-              {/* Сетка из точек в углу */}
-              <div className="absolute bottom-0 right-0 grid grid-cols-10 gap-4 w-96 h-96">
-                {[...Array(100)].map((_, i) => (
-                  <div 
-                    key={`dot-${i}`} 
-                    className="w-1.5 h-1.5 bg-white rounded-full"
-                    style={{ 
-                      opacity: Math.random() * 0.7 + 0.3,
-                      transform: `scale(${Math.random() * 0.8 + 0.5})`
-                    }}
-                  />
-                ))}
-              </div>
-              
-              {/* Дополнительные геометрические элементы */}
-              <div className="absolute top-40 left-1/3 w-20 h-20 bg-gradient-to-br from-blue-500/30 to-transparent transform rotate-45 animate-pulse" style={{animationDelay: '2s'}}></div>
-              <div className="absolute bottom-1/3 right-1/3 w-32 h-3 bg-blue-400/40 animate-pulse" style={{animationDelay: '1.5s'}}></div>
-            </div>
+            {/* Только затемняющий градиент для фона, без декоративных элементов */}
           </div>
           
           {/* Контейнер для контента */}
@@ -226,78 +156,25 @@ export default function HomePage() {
           </div>
         </section>
         
-        {/* Новый декоративный разделитель - острые углы */}
+        {/* Простой плавный разделитель */}
         <div className="relative z-10 h-16 transform -translate-y-16 overflow-hidden">
           <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-black/30 to-blue-100/80 dark:from-black/50 dark:to-blue-950/80">
             <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1200 120" preserveAspectRatio="none">
               <path 
-                d="M1200 0L0 0 892.25 114.72 1200 0z" 
+                d="M0,0 L1200,0 1200,120 0,120 Z" 
                 className="fill-blue-100 dark:fill-blue-950 opacity-90"
-              />
-              <path 
-                d="M0 0L0 120 1200 120 1200 0 307.75 114.72 0 0z" 
-                className="fill-blue-100 dark:fill-blue-950 opacity-80"
               />
             </svg>
           </div>
         </div>
         
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-b from-blue-300 to-white dark:bg-gradient-to-b dark:from-blue-800 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
+        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
           {/* Декоративный элемент градиентной тени сверху */}
-          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-400/90 dark:from-blue-700/90 to-transparent pointer-events-none"></div>
+          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-200/90 dark:from-blue-800/80 to-transparent pointer-events-none"></div>
           
-          {/* Декоративные элементы - новый дизайн */}
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/90 dark:from-gray-900/90 to-transparent"></div>
-          
-          {/* Топографические линии в качестве декора */}
-          <div className="absolute bottom-0 right-0 w-96 h-80 opacity-20 dark:opacity-30 overflow-hidden">
-            <svg viewBox="0 0 200 200" className="w-full h-full">
-              {[...Array(15)].map((_, i) => (
-                <path 
-                  key={i}
-                  d={`M0,${20 + i * 12} Q${50 + i * 8},${10 + i * 10} ${100 + i * 5},${30 + i * 7} T200,${40 + i * 8}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="text-primary/80"
-                />
-              ))}
-            </svg>
-          </div>
-          
-          {/* Сетка из точек */}
-          <div className="absolute top-20 left-20 w-96 h-96 opacity-30 dark:opacity-40">
-            <div className="grid grid-cols-10 gap-4">
-              {[...Array(100)].map((_, i) => (
-                <div 
-                  key={i} 
-                  className="w-2 h-2 bg-primary rounded-full"
-                  style={{ 
-                    opacity: Math.random() * 0.9 + 0.3,
-                    transform: `scale(${Math.random() * 0.8 + 0.6})`
-                  }}
-                />
-              ))}
-            </div>
-          </div>
-          
-          {/* Прямоугольник с перфорацией */}
-          <div className="absolute top-1/4 right-1/5 w-64 h-32 overflow-hidden opacity-30">
-            <div className="grid grid-cols-8 grid-rows-4 gap-2 w-full h-full">
-              {[...Array(32)].map((_, i) => (
-                <div 
-                  key={i} 
-                  className="w-4 h-4 border border-primary/80 rounded-sm"
-                ></div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Современные геометрические фигуры */}
-          <div className="absolute top-1/3 right-1/4 w-20 h-20 border-2 border-primary/60 transform skew-x-12 skew-y-12 animate-float" style={{animationDelay: '0.5s'}}></div>
-          <div className="absolute bottom-1/3 left-1/3 w-32 h-6 bg-primary/30 animate-pulse" style={{animationDelay: '1.2s'}}></div>
-          <div className="absolute bottom-1/4 right-1/3 w-16 h-16 bg-gradient-to-tr from-blue-400/40 to-transparent transform rotate-45 animate-float-slow"></div>
+          {/* Декоративные элементы */}
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -365,62 +242,10 @@ export default function HomePage() {
         </section>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-white to-blue-300 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-800 py-16 relative fullscreen-section section-animate overflow-hidden">
+        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-900 py-16 relative fullscreen-section section-animate overflow-hidden">
           {/* Декоративные элементы */}
-          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/90 dark:from-gray-900/90 to-transparent"></div>
-          
-          {/* Новый декоративный дизайн с линиями и геометрическими элементами */}
-          
-          {/* Диагональные линии в фоне */}
-          <div className="absolute top-0 right-0 w-full h-full opacity-15 dark:opacity-20 overflow-hidden">
-            <svg className="w-full h-full" viewBox="0 0 800 800" preserveAspectRatio="none">
-              {[...Array(30)].map((_, i) => (
-                <line 
-                  key={i}
-                  x1={i * 30}
-                  y1="0"
-                  x2={i * 30 + 800}
-                  y2="800"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="text-primary/80"
-                />
-              ))}
-            </svg>
-          </div>
-          
-          {/* Топографические линии */}
-          <div className="absolute bottom-20 left-20 w-80 h-60 opacity-30 dark:opacity-40 overflow-hidden">
-            <svg viewBox="0 0 200 200" className="w-full h-full">
-              {[...Array(12)].map((_, i) => (
-                <path 
-                  key={i}
-                  d={`M0,${20 + i * 15} Q${30 + i * 5},${10 + i * 10} ${100 + i * 3},${30 + i * 5} T200,${40 + i * 7}`}
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  className="text-primary/70"
-                />
-              ))}
-            </svg>
-          </div>
-          
-          {/* Геометрические фигуры */}
-          <div className="absolute top-20 right-20 flex space-x-6">
-            <div className="w-28 h-28 border-2 border-primary/50 rotate-45 animate-float-slow"></div>
-            <div className="w-20 h-20 border-3 border-primary/60 rotate-12 animate-float" style={{animationDelay: '1.5s'}}></div>
-          </div>
-          
-          {/* Линейные полосы */}
-          <div className="absolute bottom-40 left-10 space-y-3">
-            <div className="w-36 h-1.5 bg-primary/40 animate-pulse"></div>
-            <div className="w-48 h-1.5 bg-primary/30 animate-pulse" style={{animationDelay: '0.7s'}}></div>
-            <div className="w-28 h-1.5 bg-primary/50 animate-pulse" style={{animationDelay: '1.4s'}}></div>
-          </div>
-          
-          {/* Дополнительные геометрические элементы */}
-          <div className="absolute top-1/3 left-1/4 w-24 h-24 bg-gradient-to-br from-primary/20 to-transparent transform -rotate-12 animate-float" style={{animationDelay: '1s'}}></div>
-          <div className="absolute bottom-1/4 right-1/3 w-16 h-16 border border-dashed border-primary/40 rounded-sm animate-pulse" style={{animationDelay: '2s'}}></div>
+          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-100/80 dark:from-blue-900/80 to-transparent"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -468,13 +293,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Новый декоративный разделитель - зигзагообразная линия */}
+        {/* Простой градиентный разделитель */}
         <div className="relative z-10 h-16 transform -translate-y-16 overflow-hidden">
-          <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-blue-300/80 to-primary/80 dark:from-blue-800/90 dark:to-primary/90">
+          <div className="absolute inset-0 overflow-hidden bg-gradient-to-b from-blue-100/80 to-primary/80 dark:from-blue-900/90 dark:to-primary/90">
             <svg className="absolute bottom-0 w-full h-32" viewBox="0 0 1200 120" preserveAspectRatio="none">
               <path 
-                d="M0,0 L120,20 L240,0 L360,20 L480,0 L600,20 L720,0 L840,20 L960,0 L1080,20 L1200,0 V120 H0 V0 Z" 
-                className="fill-primary dark:fill-primary opacity-95"
+                d="M0,0 L1200,0 1200,120 0,120 Z" 
+                className="fill-primary dark:fill-primary opacity-90"
               />
             </svg>
           </div>
