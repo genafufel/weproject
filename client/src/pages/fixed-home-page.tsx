@@ -77,103 +77,12 @@ export default function HomePage() {
     }
   };
   
-  // Функция для обработки прокрутки страницы
+  // Используем простую функцию прокрутки без перехвата событий колеса мыши
   useEffect(() => {
-    // Идентификаторы секций
-    const sectionIds = ['hero', 'categories', 'steps', 'cta'];
-    
-    // Флаг блокировки повторных прокруток пока идет анимация
-    let isScrolling = false;
-    
-    // Таймаут для сброса блокировки
-    let scrollTimeout: NodeJS.Timeout | null = null;
-    
-    // Получаем позицию текущей видимой секции
-    const getCurrentSectionIndex = () => {
-      // Находим позицию центра экрана
-      const viewportCenter = window.scrollY + window.innerHeight / 2;
-      
-      // Проверяем каждую секцию
-      for (let i = 0; i < sectionIds.length; i++) {
-        const section = document.getElementById(sectionIds[i]);
-        if (!section) continue;
-        
-        const sectionTop = section.offsetTop;
-        const sectionBottom = sectionTop + section.offsetHeight;
-        
-        // Если центр экрана находится в пределах секции, возвращаем её индекс
-        if (viewportCenter >= sectionTop && viewportCenter <= sectionBottom) {
-          return i;
-        }
-      }
-      
-      // Если мы здесь, то вероятно мы между секциями
-      // Вернем индекс ближайшей секции
-      const scrollPosition = window.scrollY;
-      for (let i = 0; i < sectionIds.length; i++) {
-        const section = document.getElementById(sectionIds[i]);
-        if (!section) continue;
-        
-        if (scrollPosition < section.offsetTop + section.offsetHeight / 2) {
-          return i;
-        }
-      }
-      
-      // Если мы в самом низу страницы
-      return sectionIds.length - 1;
-    };
-    
-    // Обработчик события прокрутки колесика мыши
-    const handleWheel = (event: WheelEvent) => {
-      // Если уже идет прокрутка, игнорируем событие
-      if (isScrolling) return;
-      
-      // Получаем направление прокрутки
-      const direction = event.deltaY > 0 ? 1 : -1;
-      
-      // Находим текущую позицию
-      const currentIndex = getCurrentSectionIndex();
-      
-      // Рассчитываем следующую позицию
-      const nextIndex = currentIndex + direction;
-      
-      // Проверяем, что следующая позиция находится в пределах секций
-      if (nextIndex >= 0 && nextIndex < sectionIds.length) {
-        // Блокируем прокрутку на время анимации
-        isScrolling = true;
-        
-        // Очищаем предыдущий таймаут, если он был
-        if (scrollTimeout) {
-          clearTimeout(scrollTimeout);
-        }
-        
-        // Прокручиваем к следующей секции
-        const nextSection = document.getElementById(sectionIds[nextIndex]);
-        if (nextSection) {
-          // Используем стандартную прокрутку браузера с плавной анимацией
-          nextSection.scrollIntoView({ 
-            behavior: 'smooth',
-            block: 'start'
-          });
-        }
-        
-        // Устанавливаем таймаут для снятия блокировки
-        scrollTimeout = setTimeout(() => {
-          isScrolling = false;
-        }, 1000);
-        
-        // Предотвращаем стандартное поведение прокрутки только если мы перемещаемся между секциями
-        event.preventDefault();
-      }
-    };
-    
-    // Настройка обработчика события прокрутки
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    
     // Обработка хэша URL для прокрутки к секции при загрузке страницы
     const handleInitialScroll = () => {
       const hash = window.location.hash.substring(1);
-      if (hash && sectionIds.includes(hash)) {
+      if (hash) {
         const section = document.getElementById(hash);
         if (section) {
           setTimeout(() => {
@@ -185,14 +94,6 @@ export default function HomePage() {
     
     // Выполняем начальную прокрутку
     handleInitialScroll();
-    
-    // Очистка при размонтировании
-    return () => {
-      window.removeEventListener('wheel', handleWheel);
-      if (scrollTimeout) {
-        clearTimeout(scrollTimeout);
-      }
-    };
   }, []);
 
   return (
