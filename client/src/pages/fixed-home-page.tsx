@@ -102,7 +102,7 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="hero" className="relative overflow-hidden bg-gray-50 fullscreen-section min-h-screen flex items-center">
+        <section id="hero" className="relative overflow-hidden bg-gray-50 fullscreen-section">
           {/* Анимированный фон */}
           <div className="absolute inset-0 overflow-hidden animate-fade-in">
             <img 
@@ -118,7 +118,7 @@ export default function HomePage() {
           </div>
           
           {/* Контейнер для контента */}
-          <div className="relative h-full z-10">
+          <div className="relative h-full z-10 pt-28">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <div className="bg-white/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
                 <div className="text-left">
