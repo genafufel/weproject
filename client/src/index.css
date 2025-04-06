@@ -112,6 +112,33 @@
 .animate-delay-300 { animation-delay: 300ms; }
 .animate-delay-400 { animation-delay: 400ms; }
 .animate-delay-500 { animation-delay: 500ms; }
+.animate-delay-700 { animation-delay: 700ms; }
+.animate-delay-1000 { animation-delay: 1000ms; }
+
+/* Анимации для прокрутки страницы */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.section-animate {
+  opacity: 0;
+}
+
+.section-animate.animate-visible {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Стили для полноэкранных секций */
+.fullscreen-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  scroll-margin-top: 4rem; /* для учета высоты навбара */
+}
 
 /* Стильные эффекты для карточек и элементов */
 .hover-card {

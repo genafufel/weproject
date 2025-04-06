@@ -196,10 +196,8 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-        
-        {/* Кнопка прокрутки к следующему разделу */}
+            
+            {/* Кнопка прокрутки к следующему разделу */}
             <div className="absolute bottom-8 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('steps')}
@@ -208,9 +206,11 @@ export default function HomePage() {
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
             </div>
+          </div>
+        </section>
             
         {/* How It Works Section */}
-        <div id="steps" className="bg-gray-50 dark:bg-gray-900 py-16 relative fullscreen-section section-animate">
+        <section id="steps" className="bg-gray-50 dark:bg-gray-900 py-16 relative fullscreen-section section-animate">
           {/* Декоративный элемент */}
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white dark:from-gray-800 to-transparent"></div>
           
@@ -247,10 +247,8 @@ export default function HomePage() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-        
-        {/* Кнопка прокрутки к следующему разделу */}
+            
+            {/* Кнопка прокрутки к следующему разделу */}
             <div className="absolute bottom-8 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
@@ -259,10 +257,11 @@ export default function HomePage() {
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
             </div>
-        </div>
+          </div>
+        </section>
 
         {/* CTA Section */}
-        <div id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden fullscreen-section section-animate">
+        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden fullscreen-section section-animate">
           {/* Декоративные элементы */}
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
             <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-white"></div>
@@ -297,7 +296,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </main>
       
       <Footer />
