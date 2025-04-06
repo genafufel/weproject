@@ -169,12 +169,32 @@ export default function HomePage() {
         </div>
         
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
-          {/* Декоративный элемент градиентной тени сверху */}
-          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-200/90 dark:from-blue-800/80 to-transparent pointer-events-none"></div>
+        <section id="categories" className="bg-gradient-to-b from-blue-50 via-white to-white dark:bg-gradient-to-b dark:from-blue-950 dark:via-gray-900 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
+          {/* Плавный градиент сверху */}
+          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-blue-100/90 dark:from-blue-900/80 to-transparent pointer-events-none"></div>
           
-          {/* Декоративные элементы */}
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
+          {/* Волнистый фоновый паттерн */}
+          <div className="absolute inset-0 opacity-10 dark:opacity-15 pointer-events-none">
+            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 text-primary">
+              <defs>
+                <pattern id="wave-pattern" x="0" y="0" width="100" height="30" patternUnits="userSpaceOnUse">
+                  <path 
+                    d="M0,15 C20,5 35,25 50,15 C65,5 80,25 100,15 L100,30 L0,30 Z" 
+                    fill="currentColor" 
+                    opacity="0.2"
+                  />
+                </pattern>
+              </defs>
+              <rect x="0" y="0" width="100%" height="100%" fill="url(#wave-pattern)" />
+            </svg>
+          </div>
+          
+          {/* Декоративные круги в стиле минимализма */}
+          <div className="absolute top-1/4 right-10 w-40 h-40 rounded-full border border-primary/30 dark:border-primary/20 opacity-60 dark:opacity-40"></div>
+          <div className="absolute bottom-1/4 left-10 w-32 h-32 rounded-full border border-primary/20 dark:border-primary/15 opacity-60 dark:opacity-40"></div>
+          
+          {/* Плавный градиент снизу */}
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/90 dark:from-gray-900/90 to-transparent"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -192,37 +212,46 @@ export default function HomePage() {
                 {fields.map((field, index) => (
                   <div 
                     key={field.title} 
-                    className={`group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 rounded-xl shadow-md overflow-hidden hover-card animate-fade-in`}
+                    className={`group relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm overflow-hidden hover-card animate-fade-in rounded-lg shadow-sm hover:shadow-md transition-all duration-300`}
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="aspect-w-3 aspect-h-2 overflow-hidden">
+                    {/* Цветная полоса сверху */}
+                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-primary to-blue-500"></div>
+                    
+                    <div className="relative overflow-hidden">
                       <img 
                         src={field.image} 
                         alt={field.title} 
-                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-30 group-hover:opacity-50 transition-opacity duration-300"></div>
                     </div>
+                    
                     <div className="p-6 relative">
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
-                          {field.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                      <div className="flex justify-between items-start mb-3">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 group-hover:text-primary transition-colors duration-300">
+                          <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none inline-block">
+                            {field.title}
+                          </Link>
+                        </h3>
+                        <span className="text-sm font-semibold rounded-full bg-primary/10 text-primary px-2 py-1">
+                          {field.count}
+                        </span>
+                      </div>
+                      
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                         {field.description}
                       </p>
-                      <div className="mt-4 flex justify-between items-center">
-                        <span className="text-sm font-medium text-primary">
-                          {field.count} активных проектов
-                        </span>
-                        <Link 
-                          href={`/projects?field=${encodeURIComponent(field.title)}`}
-                          className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
-                        >
-                          Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
-                        </Link>
-                      </div>
+                      
+                      <Link 
+                        href={`/projects?field=${encodeURIComponent(field.title)}`}
+                        className="inline-flex items-center text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group"
+                      >
+                        Смотреть проекты 
+                        <svg className="ml-1 h-5 w-5 transform transition-transform duration-300 group-hover:translate-x-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </Link>
                     </div>
                   </div>
                 ))}
@@ -242,10 +271,30 @@ export default function HomePage() {
         </section>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-900 py-16 relative fullscreen-section section-animate overflow-hidden">
-          {/* Декоративные элементы */}
-          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-100/80 dark:from-blue-900/80 to-transparent"></div>
+        <section id="steps" className="bg-white dark:bg-gray-900 py-16 relative fullscreen-section section-animate overflow-hidden">
+          {/* Фоновый паттерн в стиле японской волны с плавным градиентом */}
+          <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 via-white to-white dark:from-blue-950/30 dark:via-gray-900 dark:to-gray-900"></div>
+          
+          {/* Сетка из точек для добавления текстуры */}
+          <div className="absolute inset-0 opacity-5 dark:opacity-10">
+            <div className="h-full w-full" style={{
+              backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+              backgroundSize: '20px 20px',
+              color: 'var(--primary)'
+            }}></div>
+          </div>
+          
+          {/* Минималистичный декоративный элемент #1 */}
+          <div className="absolute top-10 right-10 w-64 h-1 bg-primary/20 rounded-full"></div>
+          <div className="absolute top-16 right-40 w-32 h-1 bg-primary/15 rounded-full"></div>
+          
+          {/* Минималистичный декоративный элемент #2 */}
+          <div className="absolute bottom-10 left-10 w-64 h-1 bg-primary/20 rounded-full"></div>
+          <div className="absolute bottom-16 left-40 w-32 h-1 bg-primary/15 rounded-full"></div>
+          
+          {/* Градиенты сверху и снизу */}
+          <div className="absolute top-0 inset-x-0 h-20 bg-gradient-to-b from-white dark:from-gray-900 to-transparent pointer-events-none"></div>
+          <div className="absolute bottom-0 inset-x-0 h-20 bg-gradient-to-t from-white dark:from-gray-900 to-transparent pointer-events-none"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -263,18 +312,30 @@ export default function HomePage() {
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md p-6 hover-card animate-fade-in border border-blue-100 dark:border-blue-900"
+                    className="relative bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm p-8 hover-card animate-fade-in overflow-hidden rounded-lg border-t-4 border-primary shadow-sm hover:shadow-md transition-all duration-300"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 bg-primary/10 text-primary mx-auto animate-pulse">
-                      <span className="text-2xl font-bold">{step.number}</span>
+                    {/* Номер в углу */}
+                    <div className="absolute -top-2 -left-2 h-16 w-16 rounded-br-lg bg-primary/10 flex items-center justify-center">
+                      <span className="text-3xl font-bold text-primary">{step.number}</span>
                     </div>
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-3">{step.title}</h3>
-                    <p className="text-base text-gray-600 dark:text-gray-400 text-center">
-                      {step.description}
-                    </p>
+                    
+                    {/* Декоративная линия */}
+                    <div className="absolute top-5 right-5 h-1 w-12 rounded-full bg-primary/20"></div>
+                    
+                    <div className="mt-10 mb-4">
+                      <h3 className="text-xl leading-6 font-medium text-gray-900 dark:text-gray-100 mb-3">{step.title}</h3>
+                      <p className="text-base text-gray-600 dark:text-gray-400">
+                        {step.description}
+                      </p>
+                    </div>
+                    
                     {index < steps.length - 1 && (
-                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 transform -translate-x-6"></div>
+                      <div className="hidden lg:flex absolute top-1/2 left-full items-center w-16 h-6 transform -translate-x-6 -translate-y-1/2">
+                        <svg className="w-12 h-6 text-primary/40" fill="none" viewBox="0 0 24 12" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M0 6h22M18 1l5 5-5 5" />
+                        </svg>
+                      </div>
                     )}
                   </div>
                 ))}
