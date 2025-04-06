@@ -13,25 +13,25 @@ const fields = [
   {
     title: "IT и технологии",
     description: "Веб-разработка, мобильные приложения, программная инженерия и многое другое.",
-    image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M140,100 L100,140 L140,180 M260,100 L300,140 L260,180 M220,60 L180,180' stroke='%234A89DC' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
     count: 287,
   },
   {
     title: "Искусство и дизайн",
     description: "Графический дизайн, UX/UI, анимация, иллюстрация и визуальное искусство.",
-    image: "https://images.unsplash.com/photo-1526289034009-0240ddb68ce3?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Ccircle cx='120' cy='100' r='40' fill='%234A89DC' opacity='0.6'/%3E%3Ccircle cx='200' cy='100' r='40' fill='%234A89DC' opacity='0.4'/%3E%3Ccircle cx='280' cy='100' r='40' fill='%234A89DC' opacity='0.2'/%3E%3C/svg%3E",
     count: 145,
   },
   {
     title: "Организация мероприятий",
     description: "Планирование мероприятий, координация, маркетинг и продюсирование.",
-    image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M100,150 L170,90 L230,120 L300,70' stroke='%234A89DC' stroke-width='4' fill='none'/%3E%3Ccircle cx='100' cy='150' r='6' fill='%234A89DC'/%3E%3Ccircle cx='170' cy='90' r='6' fill='%234A89DC'/%3E%3Ccircle cx='230' cy='120' r='6' fill='%234A89DC'/%3E%3Ccircle cx='300' cy='70' r='6' fill='%234A89DC'/%3E%3C/svg%3E",
     count: 89,
   },
   {
     title: "Финансы и бизнес",
     description: "Бизнес-анализ, финансовое планирование, бухгалтерский учет и консалтинг.",
-    image: "https://images.unsplash.com/photo-1556741533-6e6a62bd8b49?ixlib=rb-1.2.1&auto=format&fit=crop",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='100' y='140' width='40' height='40' fill='%234A89DC' opacity='0.2'/%3E%3Crect x='150' y='120' width='40' height='60' fill='%234A89DC' opacity='0.4'/%3E%3Crect x='200' y='100' width='40' height='80' fill='%234A89DC' opacity='0.6'/%3E%3Crect x='250' y='80' width='40' height='100' fill='%234A89DC' opacity='0.8'/%3E%3Cpath d='M100,80 L280,80' stroke='%234A89DC' stroke-width='2' stroke-dasharray='5,5'/%3E%3C/svg%3E",
     count: 124,
   },
 ];
@@ -192,16 +192,17 @@ export default function HomePage() {
                 {fields.map((field, index) => (
                   <div 
                     key={field.title} 
-                    className={`group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 rounded-xl shadow-md overflow-hidden hover-card animate-fade-in`}
+                    className={`group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card animate-fade-in transition-all duration-300`}
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="aspect-w-3 aspect-h-2 overflow-hidden">
                       <img 
                         src={field.image} 
                         alt={field.title} 
-                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      {/* Синее выделение по краям и снизу вместо затемнения */}
+                      <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
                     </div>
                     <div className="p-6 relative">
                       <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -263,7 +264,7 @@ export default function HomePage() {
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md p-6 hover-card animate-fade-in border border-blue-100 dark:border-blue-900"
+                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-6 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
                     <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 bg-primary/10 text-primary mx-auto animate-pulse">
