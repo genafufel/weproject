@@ -334,7 +334,7 @@ export default function Projects() {
               {projects.map((project: any) => (
                 <Card 
                   key={project.id} 
-                  className="overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col h-full group"
+                  className={`overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col group ${project.photos && project.photos.length > 0 ? 'h-full' : 'h-[280px]'}`}
                 >
                   {project.photos && project.photos.length > 0 ? (
                     <Link href={`/projects/${project.id}`}>
