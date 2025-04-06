@@ -261,12 +261,12 @@ export default function HomePage() {
         </section>
 
         {/* CTA Section */}
-        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden fullscreen-section section-animate">
+        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-12 section-animate">
           {/* Декоративные элементы */}
-          <div className="absolute top-0 left-0 w-full h-full opacity-20">
-            <div className="absolute top-10 left-10 w-20 h-20 rounded-full bg-white"></div>
-            <div className="absolute bottom-10 right-10 w-32 h-32 rounded-full bg-white"></div>
-            <div className="absolute top-1/3 left-1/4 w-12 h-12 rounded-full bg-white"></div>
+          <div className="absolute top-0 left-0 w-full h-full opacity-10">
+            <div className="absolute top-10 left-10 w-40 h-40 rounded-full bg-white"></div>
+            <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-white"></div>
+            <div className="absolute top-1/2 left-1/3 w-20 h-20 rounded-full bg-white"></div>
           </div>
           
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between relative z-10">
