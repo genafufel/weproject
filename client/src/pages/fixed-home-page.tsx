@@ -145,7 +145,7 @@ export default function HomePage() {
               </div>
             </div>
             {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center animate-fade-in animate-delay-500">
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center animate-fade-in animate-delay-500">
               <button 
                 onClick={() => scrollToNextSection('categories')}
                 className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110"
@@ -169,7 +169,7 @@ export default function HomePage() {
         </div>
         
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden -mt-16">
+        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden -mt-16">
           {/* Декоративный элемент градиентной тени сверху */}
           <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-200/90 dark:from-blue-800/80 to-transparent pointer-events-none"></div>
           
@@ -187,8 +187,8 @@ export default function HomePage() {
               </p>
             </div>
             
-            <div className="mt-10">
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="mt-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {fields.map((field, index) => (
                   <div 
                     key={field.title} 
@@ -199,12 +199,12 @@ export default function HomePage() {
                       <img 
                         src={field.image} 
                         alt={field.title} 
-                        className="w-full h-48 object-cover transition-transform duration-500 group-hover:scale-105"
+                        className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       {/* Синее выделение по краям и снизу вместо затемнения */}
                       <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
                     </div>
-                    <div className="p-6 relative">
+                    <div className="p-4 relative">
                       <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
                         <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
                           {field.title}
@@ -231,7 +231,7 @@ export default function HomePage() {
             </div>
             
             {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('steps')}
                 className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
@@ -243,7 +243,7 @@ export default function HomePage() {
         </section>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-900 py-16 relative fullscreen-section section-animate overflow-hidden">
+        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-900 py-10 relative fullscreen-section section-animate overflow-hidden">
           {/* Декоративные элементы */}
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-100/80 dark:from-blue-900/80 to-transparent"></div>
@@ -259,19 +259,19 @@ export default function HomePage() {
               </p>
             </div>
             
-            <div className="mt-16">
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="mt-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-6 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
+                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 bg-primary/10 text-primary mx-auto animate-pulse">
-                      <span className="text-2xl font-bold">{step.number}</span>
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 text-primary mx-auto animate-pulse">
+                      <span className="text-xl font-bold">{step.number}</span>
                     </div>
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-3">{step.title}</h3>
-                    <p className="text-base text-gray-600 dark:text-gray-400 text-center">
+                    <h3 className="text-base leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-2">{step.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                       {step.description}
                     </p>
                     {index < steps.length - 1 && (
@@ -283,7 +283,7 @@ export default function HomePage() {
             </div>
             
             {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-8 left-0 right-0 flex justify-center">
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
                 className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
@@ -307,7 +307,7 @@ export default function HomePage() {
         </div>
         
         {/* CTA Section */}
-        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-32 section-animate -mt-16 fullscreen-section">
+        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-20 section-animate -mt-16 fullscreen-section">
           {/* Декоративные элементы */}
           <div className="absolute top-0 left-0 w-full h-full opacity-20">
             <div className="absolute top-20 left-[10%] w-40 h-40 rounded-full bg-white animate-float-slow"></div>
@@ -321,7 +321,7 @@ export default function HomePage() {
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-blue-600/50 to-transparent pointer-events-none"></div>
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-primary/70 to-transparent pointer-events-none"></div>
           
-          <div className="max-w-7xl mx-auto py-28 px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between relative z-10">
+          <div className="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between relative z-10">
             <div>
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 <span className="block">Ваше будущее начинается здесь</span>

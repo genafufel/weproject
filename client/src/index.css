@@ -216,7 +216,7 @@
 
 /* Стили для полноэкранных секций */
 .fullscreen-section {
-  min-height: 100vh; /* вернули к 100vh для полноэкранного отображения */
+  min-height: 70vh; /* уменьшили на 30% от 100vh */
   display: flex;
   flex-direction: column;
   justify-content: center;
