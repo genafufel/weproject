@@ -10,6 +10,7 @@ export function setupScrollAnimations() {
   // Состояние для контроля автопрокрутки
   let isAutoScrolling = false;
   let lastScrollTime = Date.now();
+  let lastScrollY = window.scrollY || 0;
   let scrollTimeout: ReturnType<typeof setTimeout>;
   
   // Функция для проверки видимости элемента
@@ -45,31 +46,79 @@ export function setupScrollAnimations() {
     isAutoScrolling = true;
     lastScrollTime = Date.now();
     
+    // Определяем направление прокрутки (вверх или вниз)
+    const scrollDirection = window.scrollY > lastScrollY ? 1 : -1;
+    lastScrollY = window.scrollY;
+    
+    // Проверка, находимся ли мы внизу страницы
+    const isAtBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 50;
+    
+    // Если мы уже внизу страницы и пытаемся прокрутить дальше вниз, выходим
+    if (isAtBottom && scrollDirection > 0) {
+      isAutoScrolling = false;
+      return;
+    }
+    
     // Находим ближайшую секцию к текущей позиции прокрутки
-    let closestSection: Element | null = null;
+    let targetSection: Element | null = null;
     let minDistance = Infinity;
     
-    fullscreenSections.forEach((section) => {
+    fullscreenSections.forEach((section, index) => {
       const rect = section.getBoundingClientRect();
-      // Расстояние от верха вьюпорта до верха секции (для определения направления прокрутки)
-      const distance = Math.abs(rect.top);
       
-      // Если секция ближе всех остальных и не полностью на экране, запоминаем её
-      if (distance < minDistance && (rect.top < -10 || rect.top > 10)) {
-        minDistance = distance;
-        closestSection = section;
+      // Если скроллим вниз, ищем секцию, верх которой ниже текущего вида
+      if (scrollDirection > 0 && rect.top > 10) {
+        if (rect.top < minDistance) {
+          minDistance = rect.top;
+          targetSection = section;
+        }
+      } 
+      // Если скроллим вверх, ищем секцию, низ которой выше текущего вида
+      else if (scrollDirection < 0 && rect.bottom < 0) {
+        if (Math.abs(rect.bottom) < minDistance) {
+          minDistance = Math.abs(rect.bottom);
+          targetSection = section;
+        }
       }
     });
     
-    // Если нашли ближайшую секцию, скроллим к ней
-    if (closestSection) {
-      closestSection.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
+    // Если не нашли подходящую секцию через направление прокрутки,
+    // используем стандартный поиск ближайшей секции
+    if (!targetSection) {
+      minDistance = Infinity;
+      fullscreenSections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        const distance = Math.abs(rect.top);
+        
+        if (distance < minDistance && (rect.top < -10 || rect.top > 10)) {
+          minDistance = distance;
+          targetSection = section;
+        }
+      });
+    }
+    
+    // Если нашли секцию для прокрутки, скроллим к ней
+    if (targetSection) {
+      // Вместо scrollIntoView используем scrollTo с расчетом позиции
+      const rect = targetSection.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const targetY = rect.top + scrollTop;
+      
+      window.scrollTo({
+        top: targetY,
+        behavior: 'smooth'
       });
     } else {
-      // Если нет подходящей секции, сбрасываем флаг
-      isAutoScrolling = false;
+      // Если в самом низу страницы и не нашли секцию, прокручиваем до конца
+      if (scrollDirection > 0 && !isAtBottom) {
+        window.scrollTo({
+          top: document.body.scrollHeight,
+          behavior: 'smooth'
+        });
+      } else {
+        // Если нет подходящей секции, сбрасываем флаг
+        isAutoScrolling = false;
+      }
     }
   };
   
@@ -85,7 +134,7 @@ export function setupScrollAnimations() {
     if (!isAutoScrolling) {
       scrollTimeout = setTimeout(() => {
         scrollToNearestSection();
-      }, 180); // Небольшая задержка перед автопрокруткой
+      }, 50); // Уменьшаем задержку до 50мс для более быстрого отклика
     }
   };
   
