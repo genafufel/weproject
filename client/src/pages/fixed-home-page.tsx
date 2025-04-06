@@ -307,7 +307,7 @@ export default function HomePage() {
         </div>
         
         {/* CTA Section */}
-        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-32 section-animate -mt-16 fullscreen-section">
+        <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-0 section-animate -mt-16 fullscreen-section min-h-screen flex items-center">
           {/* Декоративные элементы */}
           <div className="absolute top-0 left-0 w-full h-full opacity-20">
             <div className="absolute top-20 left-[10%] w-40 h-40 rounded-full bg-white animate-float-slow"></div>
