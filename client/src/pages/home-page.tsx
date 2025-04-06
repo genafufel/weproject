@@ -257,7 +257,7 @@ export default function HomePage() {
                     className="relative bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 hover-card animate-fade-in"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 bg-primary/10 text-primary mx-auto animate-pulse">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 bg-primary/10 text-primary mx-auto animate-bounce-custom">
                       <span className="text-2xl font-bold">{step.number}</span>
                     </div>
                     <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-3">{step.title}</h3>
@@ -299,24 +299,24 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between relative z-10">
             <div>
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                <span className="block">Ваше будущее начинается здесь</span>
-                <span className="block text-blue-100">Станьте частью сообщества профессионалов и новаторов</span>
+                <span className="block animate-fade-in-left">Ваше будущее начинается здесь</span>
+                <span className="block text-blue-100 animate-fade-in-right animate-delay-200">Станьте частью сообщества профессионалов и новаторов</span>
               </h2>
-              <p className="mt-4 text-lg text-white/80 max-w-xl">
+              <p className="mt-4 text-lg text-white/80 max-w-xl animate-fade-in animate-delay-300">
                 Присоединяйтесь к сотням студентов и проектов уже сегодня для создания успешных историй сотрудничества.
               </p>
             </div>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 lg:mt-0 lg:flex-shrink-0 animate-fade-in-scale animate-delay-200">
               <div className="inline-flex rounded-md shadow">
                 <Link href={user ? "/dashboard" : "/auth"}>
-                  <Button variant="secondary" size="lg" className="bg-white/95 backdrop-blur-sm text-gray-800 hover:bg-white/100 transform transition-all duration-300 hover:scale-105">
+                  <Button variant="secondary" size="lg" className="bg-white/95 backdrop-blur-sm text-gray-800 hover:bg-white/100 transform transition-all duration-300 hover:scale-105 animate-pulse">
                     {user ? "В личный кабинет" : "Создать аккаунт"}
                   </Button>
                 </Link>
               </div>
               <div className="inline-flex rounded-md shadow">
                 <Link href="/projects">
-                  <Button variant="default" size="lg" className="bg-blue-600/60 backdrop-blur-sm border-2 border-white/30 hover:bg-blue-700/80 hover:border-white/60 transform transition-all duration-300 hover:scale-105">
+                  <Button variant="default" size="lg" className="bg-blue-600/60 backdrop-blur-sm border-2 border-white/30 hover:bg-blue-700/80 hover:border-white/60 transform transition-all duration-300 hover:scale-105 animate-shake">
                     Узнать больше
                   </Button>
                 </Link>
