@@ -122,27 +122,17 @@ export function setupScrollAnimations() {
     }
   };
   
-  // Функция с дебаунсом для автопрокрутки
-  const handleScrollWithAutoScroll = () => {
-    // Обрабатываем анимации при каждой прокрутке
+  // Функция для обработки прокрутки без автоскролла
+  const handleScrollWithoutAutoScroll = () => {
+    // Обрабатываем только анимации при прокрутке
     handleScroll();
-    
-    // Очищаем предыдущий таймаут
-    clearTimeout(scrollTimeout);
-    
-    // Если не в режиме автопрокрутки, планируем автопрокрутку через небольшую задержку
-    if (!isAutoScrolling) {
-      scrollTimeout = setTimeout(() => {
-        scrollToNearestSection();
-      }, 50); // Уменьшаем задержку до 50мс для более быстрого отклика
-    }
   };
   
   // Запускаем проверку при загрузке страницы
   window.addEventListener('load', handleScroll);
   
-  // Добавляем обработчик события прокрутки с функцией автопрокрутки
-  window.addEventListener('scroll', handleScrollWithAutoScroll, { passive: true });
+  // Добавляем обработчик события прокрутки без автопрокрутки
+  window.addEventListener('scroll', handleScrollWithoutAutoScroll, { passive: true });
   
   // Проверяем элементы сразу (для тех, которые уже видны)
   setTimeout(handleScroll, 100);
@@ -150,7 +140,7 @@ export function setupScrollAnimations() {
   return () => {
     // Функция очистки
     window.removeEventListener('load', handleScroll);
-    window.removeEventListener('scroll', handleScrollWithAutoScroll);
+    window.removeEventListener('scroll', handleScrollWithoutAutoScroll);
     clearTimeout(scrollTimeout);
   };
 }
