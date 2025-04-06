@@ -77,106 +77,121 @@ export default function HomePage() {
     }
   };
   
-  // Обработка прокрутки страницы для перехода между секциями
+  // Функция для обработки прокрутки страницы
   useEffect(() => {
-    // Массив ID всех секций в порядке их появления на странице
+    // Идентификаторы секций
     const sectionIds = ['hero', 'categories', 'steps', 'cta'];
     
+    // Флаг блокировки повторных прокруток пока идет анимация
     let isScrolling = false;
-    let currentSectionIndex = 0;
     
-    // Находим все секции на странице
-    const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+    // Таймаут для сброса блокировки
+    let scrollTimeout: NodeJS.Timeout | null = null;
     
-    // Определяем, какая секция в текущий момент наиболее видима
-    const determineActiveSection = () => {
-      let maxVisibleSection = 0;
-      let maxVisibleArea = 0;
+    // Получаем позицию текущей видимой секции
+    const getCurrentSectionIndex = () => {
+      // Находим позицию центра экрана
+      const viewportCenter = window.scrollY + window.innerHeight / 2;
       
-      sections.forEach((section, index) => {
-        if (!section) return;
+      // Проверяем каждую секцию
+      for (let i = 0; i < sectionIds.length; i++) {
+        const section = document.getElementById(sectionIds[i]);
+        if (!section) continue;
         
-        const rect = section.getBoundingClientRect();
-        const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+        const sectionTop = section.offsetTop;
+        const sectionBottom = sectionTop + section.offsetHeight;
         
-        if (visibleHeight > maxVisibleArea) {
-          maxVisibleArea = visibleHeight;
-          maxVisibleSection = index;
+        // Если центр экрана находится в пределах секции, возвращаем её индекс
+        if (viewportCenter >= sectionTop && viewportCenter <= sectionBottom) {
+          return i;
         }
-      });
+      }
       
-      currentSectionIndex = maxVisibleSection;
-      return currentSectionIndex;
+      // Если мы здесь, то вероятно мы между секциями
+      // Вернем индекс ближайшей секции
+      const scrollPosition = window.scrollY;
+      for (let i = 0; i < sectionIds.length; i++) {
+        const section = document.getElementById(sectionIds[i]);
+        if (!section) continue;
+        
+        if (scrollPosition < section.offsetTop + section.offsetHeight / 2) {
+          return i;
+        }
+      }
+      
+      // Если мы в самом низу страницы
+      return sectionIds.length - 1;
     };
     
-    // Функция для обработки события колесика мыши
+    // Обработчик события прокрутки колесика мыши
     const handleWheel = (event: WheelEvent) => {
-      // Предотвращаем стандартное поведение
-      event.preventDefault();
-      
-      // Если уже происходит прокрутка, не обрабатываем
+      // Если уже идет прокрутка, игнорируем событие
       if (isScrolling) return;
       
-      // Определяем направление прокрутки
+      // Получаем направление прокрутки
       const direction = event.deltaY > 0 ? 1 : -1;
       
-      // Обновляем индекс текущей секции
-      determineActiveSection();
+      // Находим текущую позицию
+      const currentIndex = getCurrentSectionIndex();
       
-      // Вычисляем индекс новой секции
-      const newIndex = currentSectionIndex + direction;
+      // Рассчитываем следующую позицию
+      const nextIndex = currentIndex + direction;
       
-      // Проверяем, что индекс в допустимом диапазоне
-      if (newIndex >= 0 && newIndex < sections.length) {
-        // Устанавливаем флаг прокрутки
+      // Проверяем, что следующая позиция находится в пределах секций
+      if (nextIndex >= 0 && nextIndex < sectionIds.length) {
+        // Блокируем прокрутку на время анимации
         isScrolling = true;
         
-        // Прокручиваем к новой секции
-        const targetSection = sections[newIndex];
-        if (targetSection) {
-          window.scrollTo({
-            top: targetSection.offsetTop,
-            behavior: 'smooth'
-          });
-          
-          // Сбрасываем флаг по завершении анимации
-          setTimeout(() => {
-            isScrolling = false;
-            // Еще раз обновляем индекс текущей секции
-            determineActiveSection();
-          }, 1000);
+        // Очищаем предыдущий таймаут, если он был
+        if (scrollTimeout) {
+          clearTimeout(scrollTimeout);
         }
-      } else {
-        // Даже если мы не переходим к новой секции, сбрасываем флаг через короткое время
-        isScrolling = true;
-        setTimeout(() => {
+        
+        // Прокручиваем к следующей секции
+        const nextSection = document.getElementById(sectionIds[nextIndex]);
+        if (nextSection) {
+          // Используем стандартную прокрутку браузера с плавной анимацией
+          nextSection.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+        
+        // Устанавливаем таймаут для снятия блокировки
+        scrollTimeout = setTimeout(() => {
           isScrolling = false;
-        }, 300);
+        }, 1000);
+        
+        // Предотвращаем стандартное поведение прокрутки только если мы перемещаемся между секциями
+        event.preventDefault();
       }
     };
     
-    // Настройка обработчика событий
-    document.addEventListener('wheel', handleWheel, { passive: false });
+    // Настройка обработчика события прокрутки
+    window.addEventListener('wheel', handleWheel, { passive: false });
     
-    // Опционально: обработка хэша URL для прокрутки к определенной секции при загрузке
+    // Обработка хэша URL для прокрутки к секции при загрузке страницы
     const handleInitialScroll = () => {
       const hash = window.location.hash.substring(1);
       if (hash && sectionIds.includes(hash)) {
-        const targetSection = document.getElementById(hash);
-        if (targetSection) {
+        const section = document.getElementById(hash);
+        if (section) {
           setTimeout(() => {
-            targetSection.scrollIntoView({ behavior: 'smooth' });
-          }, 300);
+            section.scrollIntoView({ behavior: 'smooth' });
+          }, 100);
         }
       }
     };
     
-    // Вызываем функцию при загрузке страницы
+    // Выполняем начальную прокрутку
     handleInitialScroll();
     
-    // Очистка при размонтировании компонента
+    // Очистка при размонтировании
     return () => {
-      document.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('wheel', handleWheel);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
     };
   }, []);
 

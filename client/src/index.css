@@ -132,14 +132,12 @@
 /* Стили для полноэкранных секций */
 .fullscreen-section {
   min-height: 100vh;
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   position: relative;
   overflow: hidden;
   scroll-margin-top: 4rem; /* для учета высоты навбара */
-  scroll-snap-align: start;
 }
 
 /* Стильные эффекты для карточек и элементов */
@@ -227,8 +225,6 @@
   body {
     @apply font-sans antialiased bg-background text-foreground;
     scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
-    overflow-y: scroll;
   }
 
   input,
