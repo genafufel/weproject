@@ -3,6 +3,8 @@ import { useAuth } from "./use-auth";
 import { useToast } from "./use-toast";
 import type { Notification } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
+import { useEffect } from "react";
+import { websocketService } from "@/lib/websocket";
 
 export function useNotifications() {
   const { user } = useAuth();
@@ -10,6 +12,19 @@ export function useNotifications() {
   const { toast } = useToast();
 
   const isAuthenticated = !!user;
+  
+  // Подключаем WebSocket для получения уведомлений в реальном времени
+  useEffect(() => {
+    if (user?.id) {
+      // Подключаемся к WebSocket серверу с ID пользователя для аутентификации
+      websocketService.connect(user.id);
+      
+      // Отключаемся при размонтировании компонента
+      return () => {
+        websocketService.disconnect();
+      };
+    }
+  }, [user?.id]);
 
   // Получение всех уведомлений пользователя
   const { 

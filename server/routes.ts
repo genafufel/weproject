@@ -1,5 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
+import { WebSocketServer, WebSocket } from "ws";
+
+// Добавляем глобальный тип для функции отправки уведомлений через WebSocket
+declare global {
+  var sendNotificationWS: (userId: number, notification: any) => void;
+}
 import { storage } from "./storage";
 import { setupAuth } from "./auth";
 import { setupAdminRoutes } from "./admin";
@@ -1973,5 +1979,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   const httpServer = createServer(app);
+  
+  // Настраиваем WebSocket для уведомлений в реальном времени
+  const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
+  
+  // Хранилище активных WebSocket подключений по userId
+  const activeConnections = new Map<number, WebSocket[]>();
+  
+  wss.on('connection', (ws) => {
+    console.log('WebSocket клиент подключился');
+    
+    // Получаем userId из URL запроса
+    ws.on('message', (message) => {
+      try {
+        const data = JSON.parse(message.toString());
+        
+        // Сообщение для аутентификации
+        if (data.type === 'auth' && data.userId) {
+          const userId = parseInt(data.userId);
+          
+          if (!activeConnections.has(userId)) {
+            activeConnections.set(userId, []);
+          }
+          
+          // Добавляем соединение для этого пользователя
+          activeConnections.get(userId)?.push(ws);
+          
+          console.log(`Пользователь ${userId} зарегистрировал WebSocket соединение`);
+          
+          // Отправляем подтверждение аутентификации
+          ws.send(JSON.stringify({ 
+            type: 'auth_success', 
+            message: 'Аутентификация успешна'
+          }));
+        }
+      } catch (error) {
+        console.error('Ошибка обработки WebSocket сообщения:', error);
+      }
+    });
+    
+    // Обработка отключений
+    ws.on('close', () => {
+      console.log('WebSocket клиент отключился');
+      
+      // Удаляем соединение из всех активных пользователей
+      for (const [userId, connections] of activeConnections.entries()) {
+        const index = connections.indexOf(ws);
+        if (index !== -1) {
+          connections.splice(index, 1);
+          console.log(`Удалено соединение пользователя ${userId}`);
+          
+          // Если у пользователя не осталось активных соединений, удаляем запись
+          if (connections.length === 0) {
+            activeConnections.delete(userId);
+            console.log(`Удалена запись пользователя ${userId} из активных соединений`);
+          }
+        }
+      }
+    });
+  });
+  
+  // Создаем функцию для отправки уведомлений через WebSocket
+  global.sendNotificationWS = (userId: number, notification: any) => {
+    const connections = activeConnections.get(userId);
+    
+    if (connections && connections.length > 0) {
+      const message = JSON.stringify({
+        type: 'notification',
+        data: notification
+      });
+      
+      // Отправляем уведомление через все соединения пользователя
+      connections.forEach(conn => {
+        if (conn.readyState === WebSocket.OPEN) {
+          conn.send(message);
+          console.log(`Отправлено WebSocket уведомление пользователю ${userId}`);
+        }
+      });
+    }
+  };
+  
+  // Перехватываем создание уведомлений для отправки через WebSocket
+  const originalCreateNotification = storage.createNotification;
+  storage.createNotification = async function(notificationData) {
+    const notification = await originalCreateNotification.call(storage, notificationData);
+    
+    // Отправляем уведомление через WebSocket, если такая функция существует
+    if (global.sendNotificationWS && notification.userId) {
+      global.sendNotificationWS(notification.userId, notification);
+    }
+    
+    return notification;
+  };
+  
   return httpServer;
 }
