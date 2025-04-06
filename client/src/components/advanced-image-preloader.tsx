@@ -121,14 +121,14 @@ export function AdvancedImagePreloader({
 
   return (
     <div className={`w-full ${className}`}>
-      {/* Индикатор прогресса */}
-      <Progress 
+      {/* Индикатор прогресса - скрыт */}
+      {false && <Progress 
         value={progress} 
         className={`w-full h-1.5 ${
           state === "error" ? "bg-red-200" : 
           state === "success" ? "bg-green-200" : "bg-gray-200"
         }`} 
-      />
+      />}
       
       {/* Дополнительная информация */}
       {showDetails && (
