@@ -331,31 +331,29 @@ export default function Projects() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
-              {projects.map((project: any) => (
-                <Card 
-                  key={project.id} 
-                  className={`overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col group ${project.photos && project.photos.length > 0 ? 'h-full' : 'h-[280px]'}`}
-                >
-                  {project.photos && project.photos.length > 0 ? (
-                    <Link href={`/projects/${project.id}`}>
-                      <div className="relative h-48 w-full overflow-hidden">
-                        <img 
-                          src={project.photos[0].startsWith('/uploads') ? project.photos[0] : `/uploads/${project.photos[0].split('/').pop()}`}
-                          alt={project.title} 
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          onError={(e) => {
-                            e.currentTarget.src = '/uploads/default.jpg';
-                            e.stopPropagation();
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                      </div>
-                    </Link>
-                  ) : (
-                    <div className="h-24 bg-gradient-to-r from-primary/10 to-blue-400/10 flex items-center justify-center">
-                      <span className="text-primary/40 text-lg font-medium">Нет изображения</span>
-                    </div>
-                  )}
+              {projects.map((project: any) => {
+                const hasPhotos = project.photos && project.photos.length > 0;
+                return (
+                  <Card 
+                    key={project.id} 
+                    className={`overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col group ${hasPhotos ? 'h-full' : 'h-[280px] card-no-photo'}`}
+                  >
+                    {hasPhotos && (
+                      <Link href={`/projects/${project.id}`}>
+                        <div className="relative h-48 w-full overflow-hidden">
+                          <img 
+                            src={project.photos[0].startsWith('/uploads') ? project.photos[0] : `/uploads/${project.photos[0].split('/').pop()}`}
+                            alt={project.title} 
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            onError={(e) => {
+                              e.currentTarget.src = '/uploads/default.jpg';
+                              e.stopPropagation();
+                            }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </div>
+                      </Link>
+                    )}
                   
                   <CardHeader className="pb-2 pt-4">
                     <div className="flex justify-between items-start gap-2">
@@ -434,7 +432,8 @@ export default function Projects() {
                     </div>
                   </CardFooter>
                 </Card>
-              ))}
+                );
+              })}
             </div>
           )}
           

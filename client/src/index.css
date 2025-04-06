@@ -31,6 +31,28 @@
   grid-row: span 1;
 }
 
+/* Адаптируем стандартную сетку для расположения карточек без фото попарно */
+@media (min-width: 640px) {
+  .card-no-photo:nth-child(odd) {
+    grid-column: 1;
+  }
+  .card-no-photo:nth-child(even) {
+    grid-column: 2;
+  }
+}
+
+@media (min-width: 1024px) {
+  .lg\:grid-cols-3 .card-no-photo:nth-child(3n+1) {
+    grid-column: 1;
+  }
+  .lg\:grid-cols-3 .card-no-photo:nth-child(3n+2) {
+    grid-column: 2;
+  }
+  .lg\:grid-cols-3 .card-no-photo:nth-child(3n) {
+    grid-column: 3;
+  }
+}
+
 /* Уточняем правила для сетки, чтобы карточки без фото размещались по 2 в ряд */
 @media (min-width: 640px) {
   .masonry-grid {
