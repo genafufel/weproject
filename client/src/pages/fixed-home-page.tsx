@@ -162,8 +162,16 @@ export default function HomePage() {
         </section>
         
         {/* Categories Section */}
-        <section id="categories" className="bg-white dark:bg-gray-800 py-12 fullscreen-section section-animate relative">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-950 dark:to-gray-900 py-12 fullscreen-section section-animate relative overflow-hidden">
+          {/* Декоративные элементы */}
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
+          
+          {/* Добавляем плавающие декоративные элементы */}
+          <div className="absolute bottom-20 right-10 w-32 h-32 rounded-full bg-blue-200/20 dark:bg-blue-800/20 backdrop-blur-sm animate-float-slow"></div>
+          <div className="absolute top-20 left-10 w-48 h-48 rounded-full bg-blue-200/10 dark:bg-blue-800/10 backdrop-blur-sm animate-float" style={{animationDelay: '1.5s'}}></div>
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 rounded-lg border-2 border-blue-300/20 dark:border-blue-700/30 transform rotate-12 animate-rotate" style={{animationDelay: '0.5s'}}></div>
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
               <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
               <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
@@ -179,7 +187,7 @@ export default function HomePage() {
                 {fields.map((field, index) => (
                   <div 
                     key={field.title} 
-                    className={`group relative bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl shadow-sm overflow-hidden hover-card animate-fade-in`}
+                    className={`group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 rounded-xl shadow-md overflow-hidden hover-card animate-fade-in`}
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="aspect-w-3 aspect-h-2 overflow-hidden">
@@ -220,7 +228,7 @@ export default function HomePage() {
             <div className="absolute bottom-8 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('steps')}
-                className="bg-primary/30 backdrop-blur-md hover:bg-primary/40 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110"
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
