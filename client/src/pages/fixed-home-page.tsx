@@ -157,7 +157,7 @@ export default function HomePage() {
         </section>
         
         {/* Разделитель между секциями */}
-        <div className="h-1 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
+        <div className="h-2 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
         
         {/* Categories Section */}
         <section id="categories" className="bg-gradient-to-b from-blue-100 to-white dark:bg-gradient-to-b dark:from-blue-900 dark:to-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
