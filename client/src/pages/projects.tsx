@@ -330,7 +330,7 @@ export default function Projects() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-fade-in">
+            <CardContainer>
               {projects.map((project: any) => {
                 const hasPhotos = project.photos && project.photos.length > 0;
                 return (
@@ -434,7 +434,7 @@ export default function Projects() {
                 </Card>
                 );
               })}
-            </div>
+            </CardContainer>
           )}
           
           {/* Post a project CTA for non-applicants */}
