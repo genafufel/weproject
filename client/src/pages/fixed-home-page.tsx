@@ -229,9 +229,14 @@ export default function HomePage() {
         </section>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gray-50 dark:bg-gray-900 py-16 relative fullscreen-section section-animate">
-          {/* Декоративный элемент */}
-          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white dark:from-gray-800 to-transparent"></div>
+        <section id="steps" className="bg-gradient-to-b from-white to-blue-100 dark:bg-gradient-to-b dark:from-gray-900 dark:to-blue-950 py-16 relative fullscreen-section section-animate overflow-hidden">
+          {/* Декоративные элементы */}
+          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
+          
+          {/* Добавляем плавающие декоративные элементы */}
+          <div className="absolute top-20 right-10 w-32 h-32 rounded-full bg-blue-200/20 dark:bg-blue-800/20 backdrop-blur-sm animate-float-slow"></div>
+          <div className="absolute bottom-20 left-10 w-48 h-48 rounded-full bg-blue-200/10 dark:bg-blue-800/10 backdrop-blur-sm animate-float" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-1/2 right-1/4 w-16 h-16 rounded-lg border-2 border-blue-300/20 dark:border-blue-700/30 transform rotate-45 animate-rotate"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -249,10 +254,10 @@ export default function HomePage() {
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className="relative bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 hover-card animate-fade-in"
+                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md p-6 hover-card animate-fade-in border border-blue-100 dark:border-blue-900"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 bg-primary/10 text-primary mx-auto">
+                    <div className="flex items-center justify-center h-16 w-16 rounded-full mb-6 bg-primary/10 text-primary mx-auto animate-pulse">
                       <span className="text-2xl font-bold">{step.number}</span>
                     </div>
                     <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-3">{step.title}</h3>
@@ -271,7 +276,7 @@ export default function HomePage() {
             <div className="absolute bottom-8 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110"
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
