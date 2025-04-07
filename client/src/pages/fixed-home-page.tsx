@@ -88,19 +88,25 @@ const steps = [
 export default function HomePage() {
   const { user } = useAuth();
   
+  // Переменная для отслеживания времени последней прокрутки
+  const [lastWheelTime, setLastWheelTime] = useState(0);
+  
   // Карусель для категорий
-  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+  const options = { 
     loop: true, 
     align: 'start',
     dragFree: true // Более плавная прокрутка
-  });
+  };
+  const [emblaRef, emblaApi] = useEmblaCarousel(options);
   
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
+    setLastWheelTime(Date.now());
   }, [emblaApi]);
   
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext();
+    setLastWheelTime(Date.now());
   }, [emblaApi]);
   
   // Инициализируем анимации при прокрутке
@@ -161,12 +167,24 @@ export default function HomePage() {
         // Предотвращаем стандартное поведение прокрутки страницы
         event.preventDefault();
         
-        // Определяем направление прокрутки
-        if (event.deltaX > 0 || event.deltaY > 0) {
+        // Добавляем проверку на силу прокрутки и используем дебаунс
+        const now = Date.now();
+        if (now - lastWheelTime < 500) {
+          return; // Игнорируем слишком частые события прокрутки
+        }
+        
+        // Определяем направление прокрутки с порогом для предотвращения случайных срабатываний
+        const threshold = 5;
+        if (Math.abs(event.deltaY) < threshold) return;
+        
+        if (event.deltaX > threshold || event.deltaY > threshold) {
           emblaApi.scrollNext();
-        } else {
+        } else if (event.deltaX < -threshold || event.deltaY < -threshold) {
           emblaApi.scrollPrev();
         }
+        
+        // Обновляем время последней прокрутки
+        setLastWheelTime(now);
       }
     };
     
@@ -177,7 +195,7 @@ export default function HomePage() {
     return () => {
       window.removeEventListener('wheel', handleWheel);
     };
-  }, [emblaApi]);
+  }, [emblaApi, lastWheelTime, setLastWheelTime]);
 
   return (
     <div className="flex flex-col min-h-screen">
