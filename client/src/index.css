@@ -416,4 +416,135 @@
   .dark .filter-element {
     @apply bg-gray-800 hover:bg-gray-700;
   }
+  
+  /* Улучшенная читаемость элементов в темной теме */
+  .dark [data-radix-select-trigger],
+  .dark [data-radix-select-content],
+  .dark [data-radix-select-item] {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
+  
+  .dark [data-radix-select-item][data-highlighted] {
+    @apply bg-gray-700 text-white;
+  }
+  
+  .dark [data-radix-select-item]:hover {
+    @apply bg-gray-700;
+  }
+  
+  .dark .SelectTrigger {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
+  
+  .dark .SelectContent {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
+  
+  .dark .SelectItem {
+    @apply text-gray-100 data-[highlighted]:bg-gray-700;
+  }
+  
+  /* Диалоговые окна в темной теме */
+  .dark [role="dialog"] {
+    @apply text-gray-100;
+  }
+  
+  .dark [data-radix-dialog-content] {
+    @apply bg-gray-800/95 backdrop-blur-sm border-gray-700;
+  }
+  
+  /* Выпадающие меню в темной теме */
+  .dark [data-radix-popper-content] {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
+  
+  /* Карточки в темной теме */
+  .dark .card, 
+  .dark [data-radix-card] {
+    @apply bg-gray-800/70 backdrop-blur-sm border-gray-700 text-gray-100;
+  }
+  
+  /* Поля ввода с лучшей контрастностью в темной теме */
+  .dark .input-placeholder-bold::placeholder, 
+  .dark textarea::placeholder {
+    @apply text-gray-400 font-normal;
+  }
+  
+  /* Улучшенная читаемость для элементов меню в темной теме */
+  .dark [data-radix-dropdown-menu-content],
+  .dark [data-radix-dropdown-menu-item],
+  .dark [data-radix-dropdown-menu-sub-trigger],
+  .dark [data-radix-dropdown-menu-sub-content] {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
+  
+  .dark [data-radix-dropdown-menu-item]:hover,
+  .dark [data-radix-dropdown-menu-item][data-highlighted],
+  .dark [data-radix-dropdown-menu-sub-trigger]:hover,
+  .dark [data-radix-dropdown-menu-sub-trigger][data-highlighted] {
+    @apply bg-gray-700 text-white;
+  }
+  
+  /* Табы в темной теме */
+  .dark [data-radix-tabs-content] {
+    @apply bg-gray-800/40 backdrop-blur-sm text-gray-100;
+  }
+  
+  /* Улучшенная читаемость для метки выбора (checkboxes) в темной теме */
+  .dark [data-radix-checkbox-root] {
+    @apply bg-gray-800 border-gray-600;
+  }
+  
+  .dark [data-radix-checkbox-indicator] {
+    @apply text-white;
+  }
+  
+  /* Улучшенная читаемость для таблиц в темной теме */
+  .dark table th, 
+  .dark table td {
+    @apply text-gray-100 border-gray-700;
+  }
+  
+  /* Улучшенная контрастность для списков в темной теме */
+  .dark ul li, 
+  .dark ol li {
+    @apply text-gray-200;
+  }
+  
+  /* Улучшенная контрастность и читаемость для текстовых элементов в темной теме */
+  .dark p, 
+  .dark span, 
+  .dark div, 
+  .dark label {
+    @apply text-gray-200;
+  }
+  
+  .dark h1, 
+  .dark h2, 
+  .dark h3, 
+  .dark h4, 
+  .dark h5, 
+  .dark h6 {
+    @apply text-gray-100;
+  }
+  
+  /* Улучшенная читаемость для уведомлений в темной теме */
+  .dark [data-radix-toast-root] {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
+  
+  .dark [data-radix-toast-title],
+  .dark [data-radix-toast-description] {
+    @apply text-gray-100;
+  }
+  
+  /* Улучшенная видимость для ссылок в темной теме */
+  .dark a {
+    @apply text-blue-400 hover:text-blue-300;
+  }
+  
+  /* Улучшенная читаемость для всплывающих подсказок в темной теме */
+  .dark [data-radix-tooltip-content] {
+    @apply bg-gray-800 text-gray-100 border-gray-700;
+  }
 }
