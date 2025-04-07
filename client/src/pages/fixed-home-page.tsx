@@ -460,9 +460,9 @@ export default function HomePage() {
         <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative fullscreen-section section-animate overflow-hidden">
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24">
-            {/* Заголовок максимально вправо, как в карусели - более компактный */}
-            <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
-              <div className="lg:max-w-sm ml-0 lg:ml-auto lg:pr-0">
+            {/* Заголовок слева */}
+            <div className="flex flex-col items-start text-left">
+              <div className="max-w-md">
                 <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
                 <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block whitespace-nowrap">Четыре шага к цели</p>
                 <p className="mt-4 text-lg text-gray-500 dark:text-gray-400 leading-snug">
@@ -495,10 +495,29 @@ export default function HomePage() {
                       border border-blue-100 dark:border-blue-800/30 p-6
                       transform transition-all duration-300 hover:-translate-y-1
                       relative overflow-hidden flex flex-col h-full
-                      ${index % 2 === 0 ? 'md:mt-16' : 'md:-mt-16'}
+                      ${(index === 0 || index === 2) ? 'md:mt-0' : 'md:mt-24'}
                     `}>
-                      {/* Номер шага в виде круга с градиентом */}
-                      <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-primary dark:from-blue-600 dark:to-primary opacity-10"></div>
+                      {/* Фон с фотографией/иллюстрацией для каждого шага */}
+                      {index === 0 && (
+                        <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg">
+                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900 bg-[url('/uploads/default-avatar-test.jpg')] bg-cover bg-center"></div>
+                        </div>
+                      )}
+                      {index === 1 && (
+                        <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg rotate-3">
+                          <div className="w-full h-full bg-[url('/uploads/default-avatar-test.jpg')] bg-cover bg-center"></div>
+                        </div>
+                      )}
+                      {index === 2 && (
+                        <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg -rotate-3">
+                          <div className="w-full h-full bg-[url('/uploads/default-avatar-test.jpg')] bg-cover bg-center"></div>
+                        </div>
+                      )}
+                      {index === 3 && (
+                        <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg rotate-6">
+                          <div className="w-full h-full bg-[url('/uploads/default-avatar-test.jpg')] bg-cover bg-center"></div>
+                        </div>
+                      )}
                       
                       <div className="flex items-center mb-4">
                         {/* Круг с номером */}
@@ -510,6 +529,14 @@ export default function HomePage() {
                         <h3 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white">
                           {step.title}
                         </h3>
+                      </div>
+                      
+                      {/* Изображение под заголовком */}
+                      <div className="w-full h-32 mb-4 rounded-md overflow-hidden">
+                        {index === 0 && <img src="/uploads/default-avatar-test.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 1 && <img src="/uploads/default-avatar-test.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 2 && <img src="/uploads/default-avatar-test.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 3 && <img src="/uploads/default-avatar-test.jpg" alt={step.title} className="w-full h-full object-cover" />}
                       </div>
                       
                       {/* Описание шага */}
