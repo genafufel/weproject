@@ -237,7 +237,7 @@ export default function ProjectDetail() {
             {/* Main content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Project header */}
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <div className="bg-white dark:bg-gray-700/70 rounded-lg shadow-sm p-6">
                 <div className="flex justify-between items-start flex-wrap gap-4">
                   <div>
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">{project?.title || 'Проект'}</h1>
@@ -385,7 +385,7 @@ export default function ProjectDetail() {
                 <CardContent>
                   {user ? (
                     project?.userId === user.id ? (
-                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg">
+                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-700/70 text-gray-700 dark:text-gray-300 rounded-lg">
                         Это ваш проект
                       </div>
                     ) : (
