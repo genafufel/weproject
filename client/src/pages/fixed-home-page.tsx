@@ -271,7 +271,7 @@ export default function HomePage() {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
+              <h2 className="text-base text-blue-600 dark:text-blue-400 font-semibold tracking-wide uppercase">Сферы деятельности</h2>
               <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
                 Откройте мир возможностей
               </p>
@@ -285,14 +285,14 @@ export default function HomePage() {
               <div className="flex justify-end mb-4 gap-2">
                 <button 
                   onClick={scrollPrev}
-                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  className="p-2 rounded-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 transition-all"
                   aria-label="Предыдущий слайд"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={scrollNext}
-                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  className="p-2 rounded-full bg-blue-500/10 hover:bg-blue-500/20 text-blue-600 dark:text-blue-400 transition-all"
                   aria-label="Следующий слайд"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
@@ -305,7 +305,7 @@ export default function HomePage() {
                   {fields.map((field, index) => (
                     <div 
                       key={field.title} 
-                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
+                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-blue-500/60 dark:hover:border-blue-500/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
                     >
                       <div className="aspect-w-3 aspect-h-2 overflow-hidden">
                         <img 
@@ -314,7 +314,7 @@ export default function HomePage() {
                           className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                         {/* Синее выделение по краям и снизу вместо затемнения */}
-                        <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
+                        <div className="absolute inset-0 border-b-2 border-blue-500/0 group-hover:border-blue-500/80 transition-all duration-300"></div>
                       </div>
                       <div className="p-4 relative">
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -326,12 +326,12 @@ export default function HomePage() {
                           {field.description}
                         </p>
                         <div className="mt-4 flex justify-between items-center">
-                          <span className="text-sm font-medium text-primary">
+                          <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                             {field.count} активных проектов
                           </span>
                           <Link 
                             href={`/projects?field=${encodeURIComponent(field.title)}`}
-                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
+                            className="text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
                           >
                             Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
                           </Link>
@@ -360,7 +360,7 @@ export default function HomePage() {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
+              <h2 className="text-base text-blue-600 dark:text-blue-400 font-semibold tracking-wide uppercase">Путь к успеху</h2>
               <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
                 Четыре простых шага к достижению цели
               </p>
@@ -374,10 +374,10 @@ export default function HomePage() {
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
+                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-blue-500/60 dark:hover:border-blue-500/60 transition-all duration-300"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 text-primary mx-auto animate-pulse">
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-blue-500/10 text-blue-600 dark:text-blue-400 mx-auto animate-pulse">
                       <span className="text-xl font-bold">{step.number}</span>
                     </div>
                     <h3 className="text-base leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-2">{step.title}</h3>
@@ -385,7 +385,7 @@ export default function HomePage() {
                       {step.description}
                     </p>
                     {index < steps.length - 1 && (
-                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 transform -translate-x-6"></div>
+                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-blue-500/50 transform -translate-x-6"></div>
                     )}
                   </div>
                 ))}
