@@ -304,7 +304,7 @@ export default function HomePage() {
                   <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-dark transition-colors">
                     Найти проект
                   </Link>
-                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-gray-200 hover:bg-gray-300 transition-colors">
+                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white border-primary hover:bg-gray-50 transition-colors">
                     Найти таланты
                   </Link>
                 </div>
