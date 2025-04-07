@@ -264,7 +264,7 @@ export default function HomePage() {
         </section>
         
         {/* Разделитель между секциями */}
-        <div className="h-4 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
+        <div className="h-4 bg-blue-500/40 backdrop-blur-md shadow-md relative z-20"></div>
         
         {/* Concept Section - Секция с описанием концепции */}
         <section id="concept" className="bg-white dark:bg-gray-900 py-20 relative fullscreen-section section-animate overflow-hidden">
