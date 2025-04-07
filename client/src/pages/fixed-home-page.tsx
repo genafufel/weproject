@@ -145,96 +145,77 @@ export default function HomePage() {
   useEffect(() => {
     if (!emblaApi) return;
     
-    // Состояние прокрутки страницы
-    let isPageScrolling = false;
-    let mouseOverCarousel = false;
-    let wheelEventStartedOverCarousel = false;
+    // Состояние прокрутки и флаги
+    let isScrolling = false;
+    let lastWheelTimestamp = 0;
+    let carouselElement: HTMLElement | null = null;
     
-    // Обработчик для отслеживания движения мыши над каруселью
-    const handleMouseMove = (event: MouseEvent) => {
-      // Получаем карусель по селектору
+    // Находим элемент карусели один раз
+    const getCarouselElement = () => {
+      if (carouselElement) return carouselElement;
+      
       const container = document.getElementById('categories');
-      if (!container) return;
+      if (!container) return null;
       
-      const emblaNode = container.querySelector('.overflow-hidden') as HTMLElement | null;
-      if (!emblaNode) return;
+      carouselElement = container.querySelector('.overflow-hidden') as HTMLElement | null;
+      return carouselElement;
+    };
+    
+    // Проверяем, находится ли курсор в области карусели
+    const isMouseOverCarousel = (event: WheelEvent): boolean => {
+      const carousel = getCarouselElement();
+      if (!carousel) return false;
       
-      const rect = emblaNode.getBoundingClientRect();
-      
-      // Проверяем, находится ли курсор мыши над каруселью
-      mouseOverCarousel = 
+      const rect = carousel.getBoundingClientRect();
+      return (
         event.clientX >= rect.left && 
         event.clientX <= rect.right && 
         event.clientY >= rect.top && 
-        event.clientY <= rect.bottom;
+        event.clientY <= rect.bottom
+      );
     };
     
-    // Обработчик начала прокрутки колесом мыши
-    const handleWheelStart = (event: WheelEvent) => {
-      // Запоминаем, где началась прокрутка
-      wheelEventStartedOverCarousel = mouseOverCarousel;
-      isPageScrolling = !wheelEventStartedOverCarousel;
-    };
-    
-    // Обработчик прокрутки колесом мыши
+    // Обработчик события колеса мыши
     const handleWheel = (event: WheelEvent) => {
-      // Если прокрутка началась не над каруселью, не перехватываем её
-      if (!wheelEventStartedOverCarousel) return;
+      // Проверяем, находится ли мышь над каруселью в момент события wheel
+      const mouseIsOver = isMouseOverCarousel(event);
       
-      // Получаем карусель по селектору
-      const container = document.getElementById('categories');
-      if (!container) return;
+      // Если мышь НЕ над каруселью, пропускаем дальнейшую обработку
+      if (!mouseIsOver) return;
       
-      const emblaNode = container.querySelector('.overflow-hidden') as HTMLElement | null;
-      if (!emblaNode) return;
+      // Предотвращаем стандартное поведение прокрутки страницы
+      event.preventDefault();
       
-      // Проверяем, находится ли курсор мыши над каруселью
-      if (mouseOverCarousel) {
-        // Предотвращаем стандартное поведение прокрутки страницы только если прокрутка началась над каруселью
-        event.preventDefault();
-        
-        // Добавляем проверку на силу прокрутки и используем дебаунс
-        const now = Date.now();
-        if (now - lastWheelTime < 500) {
-          return; // Игнорируем слишком частые события прокрутки
-        }
-        
-        // Определяем направление прокрутки с порогом для предотвращения случайных срабатываний
-        const threshold = 5;
-        if (Math.abs(event.deltaY) < threshold) return;
-        
-        if (event.deltaX > threshold || event.deltaY > threshold) {
-          emblaApi.scrollNext();
-        } else if (event.deltaX < -threshold || event.deltaY < -threshold) {
-          emblaApi.scrollPrev();
-        }
-        
-        // Обновляем время последней прокрутки
-        setLastWheelTime(now);
+      // Тротлинг событий - минимальный интервал 500 мс
+      const now = Date.now();
+      if (now - lastWheelTimestamp < 500) {
+        return;
       }
+      
+      // Пороговое значение для отфильтровывания слабых движений колеса
+      const threshold = 8;
+      if (Math.abs(event.deltaY) < threshold) return;
+      
+      // Определяем направление прокрутки и выполняем соответствующее действие
+      if (event.deltaY > 0) {
+        emblaApi.scrollNext();
+      } else {
+        emblaApi.scrollPrev();
+      }
+      
+      // Обновляем время последнего события
+      lastWheelTimestamp = now;
+      setLastWheelTime(now);
     };
     
-    // Обработчик окончания прокрутки (при отпускании мыши с колеса)
-    const handleWheelEnd = () => {
-      // Сбрасываем состояние после завершения прокрутки
-      wheelEventStartedOverCarousel = false;
-      isPageScrolling = false;
-    };
+    // Добавляем обработчик события
+    document.addEventListener('wheel', handleWheel, { passive: false });
     
-    // Добавляем обработчики событий
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('wheel', handleWheelStart, { passive: true, capture: true });
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('mouseup', handleWheelEnd, { passive: true });
-    
-    // Удаляем обработчики при размонтировании компонента
+    // Удаляем обработчик при размонтировании компонента
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('wheel', handleWheelStart, { capture: true });
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('mouseup', handleWheelEnd);
+      document.removeEventListener('wheel', handleWheel);
     };
-  }, [emblaApi, lastWheelTime, setLastWheelTime]);
+  }, [emblaApi, setLastWheelTime]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -334,11 +315,11 @@ export default function HomePage() {
               
               {/* Карусель */}
               <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex gap-4">
+                <div className="flex gap-6">
                   {fields.map((field, index) => (
                     <div 
                       key={field.title} 
-                      className="flex-[0_0_100%] sm:flex-[0_0_45%] md:flex-[0_0_30%] xl:flex-[0_0_23%] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300"
+                      className="flex-[0_0_100%] sm:flex-[0_0_45%] md:flex-[0_0_30%] xl:flex-[0_0_23%] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mr-2"
                     >
                       <div className="aspect-w-3 aspect-h-2 overflow-hidden">
                         <img 
