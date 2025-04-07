@@ -451,10 +451,11 @@ export default function Dashboard() {
                       <CardFooter className="flex flex-wrap gap-2 justify-between">
                         <div className="flex gap-2">
                           <Link href={`/talent/${resume.id}`}>
-                            <Button variant="outline">Просмотреть</Button>
+                            <Button variant="outline" className="dark:text-gray-100">Просмотреть</Button>
                           </Link>
                           <Button 
-                            variant={resume.isPublic !== false ? "outline" : "destructive"} 
+                            variant={resume.isPublic !== false ? "outline" : "destructive"}
+                            className={resume.isPublic !== false ? "dark:text-gray-100" : ""}
                             onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
                           >
                             {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
@@ -528,7 +529,7 @@ export default function Dashboard() {
                       </CardContent>
                       <CardFooter className="flex justify-between">
                         <Link href={`/projects/${project.id}`}>
-                          <Button variant="outline">Просмотреть</Button>
+                          <Button variant="outline" className="dark:text-gray-100">Просмотреть</Button>
                         </Link>
                         <Link href={`/projects/${project.id}/edit`}>
                           <Button>Редактировать</Button>
@@ -666,8 +667,8 @@ export default function Dashboard() {
                                 )}
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
-                                <div className="text-gray-600">{application.message}</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Сообщение</div>
+                                <div className="text-gray-600 dark:text-gray-300">{application.message}</div>
                               </div>
                             </div>
                           </CardContent>
@@ -830,14 +831,14 @@ export default function Dashboard() {
                                 })()}
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
-                                <div className="text-gray-600">{application.message}</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Сообщение</div>
+                                <div className="text-gray-600 dark:text-gray-300">{application.message}</div>
                               </div>
                             </div>
                           </CardContent>
                           <CardFooter className="flex justify-end">
                             <Link href={`/projects/${application.projectId}`}>
-                              <Button variant="outline">Просмотреть проект</Button>
+                              <Button variant="outline" className="dark:text-gray-100">Просмотреть проект</Button>
                             </Link>
                           </CardFooter>
                         </Card>
