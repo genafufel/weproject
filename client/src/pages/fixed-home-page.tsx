@@ -563,7 +563,7 @@ export default function HomePage() {
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-primary/70 to-transparent pointer-events-none"></div>
           
           <div className="max-w-7xl mx-auto py-28 px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between relative z-10">
-            <div>
+            <div className="cta-element">
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 <span className="block">Ваше будущее начинается здесь</span>
                 <span className="block text-blue-100">Станьте частью сообщества профессионалов и новаторов</span>
@@ -572,7 +572,7 @@ export default function HomePage() {
                 Присоединяйтесь к сотням студентов и проектов уже сегодня для создания успешных историй сотрудничества.
               </p>
             </div>
-            <div className="mt-8 flex flex-col sm:flex-row gap-3 lg:mt-0 lg:flex-shrink-0 animate-fade-in animate-delay-200">
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 lg:mt-0 lg:flex-shrink-0 cta-element">
               <div className="inline-flex rounded-md shadow">
                 <Link href={user ? "/dashboard" : "/auth"}>
                   <Button variant="secondary" size="lg" className="bg-white/95 backdrop-blur-sm text-gray-800 hover:bg-white/100 transform transition-all duration-300 hover:scale-105">
