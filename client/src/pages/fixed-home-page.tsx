@@ -457,8 +457,20 @@ export default function HomePage() {
         </section>
         
         {/* How It Works Section */}
-        <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative fullscreen-section section-animate overflow-hidden">
+          {/* Декоративный фон */}
+          <div className="absolute inset-0 overflow-hidden opacity-10">
+            <svg className="absolute w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+              <pattern id="topo-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
+                <path d="M0,100 C20,140 50,150 100,100 C150,50 180,60 200,100 C220,140 250,150 300,100 C350,50 380,60 400,100" fill="none" stroke="currentColor" strokeWidth="1"></path>
+                <path d="M0,200 C50,150 100,150 150,200 C200,250 250,250 300,200 C350,150 400,150 450,200" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(0, -100)"></path>
+                <path d="M0,300 C50,250 100,250 150,300 C200,350 250,350 300,300 C350,250 400,250 450,300" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(0, -200)"></path>
+              </pattern>
+              <rect x="0" y="0" width="100%" height="100%" fill="url(#topo-pattern)" />
+            </svg>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24">
             {/* Заголовок максимально вправо, как в карусели - более компактный */}
             <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
               <div className="lg:max-w-sm ml-0 lg:ml-auto lg:pr-0">
@@ -470,41 +482,54 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Простая схема без лишних декоративных элементов */}
-            <div className="mt-16 relative">
-              {/* Шаги расположены чередующимися колонками */}
-              <div className="flex flex-wrap">
+            {/* Новый дизайн с горизонтальной "рекой" прогресса */}
+            <div className="mt-24 relative">
+              {/* Линия прогресса */}
+              <div className="hidden md:block absolute left-0 right-0 top-1/2 transform -translate-y-1/2 h-1 bg-gradient-to-r from-blue-200 via-primary to-blue-400 dark:from-blue-900 dark:via-primary dark:to-blue-700 opacity-60 rounded-full"></div>
+              
+              {/* Карточки */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-4 relative">
                 {steps.map((step, index) => (
                   <div 
-                    key={step.number} 
-                    className={`w-full md:w-1/2 lg:w-1/4 p-4 flex ${index % 2 === 0 ? 'md:mt-0' : 'md:mt-32'} animate-fade-in`}
-                    style={{ animationDelay: `${300 + index * 200}ms` }}
+                    key={step.number}
+                    className="relative animate-fade-in"
+                    style={{ animationDelay: `${200 + index * 150}ms` }}
                   >
-                    <div className="flex flex-col w-full">
-                      {/* Цифра и содержимое объединены в одну карточку */}
-                      <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md border border-blue-100 dark:border-blue-900/30 overflow-hidden h-full flex flex-col">
-                        {/* Цифра шага в верхней части карточки */}
-                        <div className="bg-primary/10 p-3 flex justify-center">
-                          <span className="text-2xl font-bold text-primary">{step.number}</span>
+                    {/* Соединительные линии между шагами (только между карточками) */}
+                    {index < steps.length - 1 && (
+                      <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 w-8 h-1 bg-gradient-to-r from-blue-400 to-blue-300 dark:from-blue-700 dark:to-blue-600 z-10"></div>
+                    )}
+                    
+                    {/* Карточка шага */}
+                    <div className={`
+                      bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl 
+                      border border-blue-100 dark:border-blue-800/30 p-6
+                      transform transition-all duration-300 hover:-translate-y-1
+                      relative overflow-hidden flex flex-col h-full
+                      ${index % 2 === 0 ? 'md:mt-16' : 'md:-mt-16'}
+                    `}>
+                      {/* Номер шага в виде круга с градиентом */}
+                      <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-primary dark:from-blue-600 dark:to-primary opacity-10"></div>
+                      
+                      <div className="flex items-center mb-4">
+                        {/* Круг с номером */}
+                        <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-primary text-white font-bold text-xl shadow-md">
+                          {step.number}
                         </div>
                         
-                        {/* Содержимое шага */}
-                        <div className="p-5 flex-1 flex flex-col">
-                          <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-3">{step.title}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 flex-1">
-                            {step.description}
-                          </p>
-                          
-                          {/* Стрелка указывающая на следующий шаг (только между карточками) */}
-                          {index < steps.length - 1 && (
-                            <div className="hidden md:flex justify-center mt-4">
-                              <svg className="h-6 w-6 text-primary transform rotate-90 md:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                              </svg>
-                            </div>
-                          )}
-                        </div>
+                        {/* Заголовок шага */}
+                        <h3 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white">
+                          {step.title}
+                        </h3>
                       </div>
+                      
+                      {/* Описание шага */}
+                      <p className="text-gray-600 dark:text-gray-300 mt-2 flex-grow text-base">
+                        {step.description}
+                      </p>
+                      
+                      {/* Декоративный элемент внизу карточки */}
+                      <div className="h-1 w-1/3 bg-gradient-to-r from-primary to-blue-400 dark:from-primary dark:to-blue-600 rounded-full mt-6"></div>
                     </div>
                   </div>
                 ))}
