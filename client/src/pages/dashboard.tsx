@@ -438,7 +438,7 @@ export default function Dashboard() {
                             {(resume.education || []).slice(0, 1).map((edu: any, index: number) => (
                               <div key={index}>
                                 <p className="font-medium">{edu.institution}</p>
-                                <p className="text-sm text-gray-600 dark:text-gray-300">{edu.degree}, {edu.fieldOfStudy}</p>
+                                <p className="text-sm text-gray-600">{edu.degree}, {edu.fieldOfStudy}</p>
                                 <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
                               </div>
                             ))}
@@ -513,7 +513,7 @@ export default function Dashboard() {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">{project.description}</p>
+                        <p className="text-gray-600 line-clamp-2 mb-4">{project.description}</p>
                         <div className="flex flex-wrap gap-2 mb-4">
                           {Array.isArray(project.positions) ? project.positions.map((position: any, index: number) => (
                             <Badge key={index} variant="outline">{position.title}</Badge>
@@ -623,13 +623,13 @@ export default function Dashboard() {
                                         {application.resume.title}
                                       </Link>
                                     </div>
-                                    <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                    <div className="text-sm text-gray-600 mt-1">
                                       <span className="font-medium">Направление:</span> {application.resume.direction}
                                     </div>
                                     
                                     {/* Образование */}
                                     {Array.isArray(application.resume.education) && application.resume.education.length > 0 && (
-                                      <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                      <div className="text-sm text-gray-600 mt-1">
                                         <span className="font-medium">Образование:</span> {application.resume.education[0].institution}
                                         {application.resume.education.length > 1 && (
                                           <span className="text-xs text-gray-400 ml-1">+{application.resume.education.length - 1} ещё</span>
@@ -639,7 +639,7 @@ export default function Dashboard() {
                                     
                                     {/* Опыт работы */}
                                     {Array.isArray(application.resume.experience) && application.resume.experience.length > 0 && (
-                                      <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                      <div className="text-sm text-gray-600 mt-1">
                                         <span className="font-medium">Опыт:</span> {application.resume.experience[0].position} в {application.resume.experience[0].company}
                                         {application.resume.experience.length > 1 && (
                                           <span className="text-xs text-gray-400 ml-1">+{application.resume.experience.length - 1} ещё</span>
@@ -660,7 +660,7 @@ export default function Dashboard() {
                                     )}
                                   </div>
                                 ) : (
-                                  <div className="text-gray-600 dark:text-gray-300">
+                                  <div className="text-gray-600">
                                     Резюме #{application.resumeId} (информация недоступна)
                                   </div>
                                 )}
