@@ -505,7 +505,7 @@ export default function HomePage() {
                       )}
                       {index === 1 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-20 overflow-hidden rounded-lg rotate-3">
-                          <div className="w-full h-full bg-[url('/uploads/step2-architect-drawing.jpg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-[url('/uploads/step2-font-design.jpg')] bg-cover bg-center"></div>
                         </div>
                       )}
                       {index === 2 && (
@@ -534,7 +534,7 @@ export default function HomePage() {
                       {/* Изображение под заголовком */}
                       <div className="w-full h-56 mb-4 rounded-md overflow-hidden shadow-md">
                         {index === 0 && <img src="/uploads/step1-portfolio.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
-                        {index === 1 && <img src="/uploads/step2-architect-drawing.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
+                        {index === 1 && <img src="/uploads/step2-font-design.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                         {index === 2 && <img src="/uploads/step3-architects.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                         {index === 3 && <img src="/uploads/step4-team-collaboration.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                       </div>
