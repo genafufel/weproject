@@ -96,7 +96,8 @@ export default function HomePage() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true, // Возвращаем зацикливание для лучшего UX
     dragFree: true, // Более плавная прокрутка
-    skipSnaps: true // Разрешаем прокрутку до любой позиции
+    skipSnaps: true, // Разрешаем прокрутку до любой позиции
+    duration: 30 // Увеличиваем время анимации для более плавных переходов
   });
   
   const scrollPrev = useCallback(() => {
@@ -142,8 +143,7 @@ export default function HomePage() {
     handleInitialScroll();
   }, []);
   
-  // Добавляем специальный обработчик скролла только для кнопок
-  // Полностью убираем обработку колеса мыши для карусели
+  // Добавляем специальный обработчик скролла и события перехода на новый круг
   useEffect(() => {
     if (!emblaApi) return;
     
@@ -152,10 +152,33 @@ export default function HomePage() {
       emblaApi.reInit();
     };
     
+    // Обработчик перехода между первым и последним слайдом (плавность при зацикливании)
+    const onLoopPoints = () => {
+      // Добавляем плавную анимацию при переходе через точку зацикливания
+      emblaApi.containerNode().style.transition = 'transform 500ms ease-out';
+      
+      // Восстанавливаем обычную анимацию через некоторое время
+      setTimeout(() => {
+        emblaApi.containerNode().style.transition = '';
+      }, 600);
+    };
+    
+    // Подписываемся на событие достижения границы
+    emblaApi.on('reInit', onLoopPoints);
+    emblaApi.on('settle', () => {
+      // Проверяем, если карусель находится на границе (первый или последний слайд)
+      if (emblaApi.slideNodes().length > 0 && 
+         (emblaApi.selectedScrollSnap() === 0 || emblaApi.selectedScrollSnap() === emblaApi.slideNodes().length - 1)) {
+        onLoopPoints();
+      }
+    });
+    
     window.addEventListener('resize', onResize);
     
     return () => {
       window.removeEventListener('resize', onResize);
+      emblaApi.off('reInit', onLoopPoints);
+      emblaApi.off('settle', () => {});
     };
   }, [emblaApi]);
 
