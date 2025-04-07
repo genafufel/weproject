@@ -160,22 +160,12 @@ export default function HomePage() {
         <div className="h-4 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
         
         {/* Categories Section */}
-        <section id="categories" className="bg-gradient-to-br from-blue-200 via-sky-100 to-white dark:bg-gradient-to-br dark:from-blue-800 dark:via-sky-900/40 dark:to-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
+        <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
           {/* Декоративный элемент градиентной тени сверху */}
-          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-300/90 dark:from-blue-700/80 to-transparent pointer-events-none"></div>
+          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-100/80 dark:from-blue-900/30 to-transparent pointer-events-none"></div>
           
           {/* Декоративные элементы */}
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-white/80 dark:from-gray-900/80 to-transparent"></div>
-          
-          {/* Волнистый фон */}
-          <div className="absolute inset-0 opacity-10 dark:opacity-15 pointer-events-none">
-            <svg width="100%" height="100%" className="absolute inset-0">
-              <pattern id="wavyPattern" width="100" height="20" patternUnits="userSpaceOnUse">
-                <path d="M0,10 C30,20 70,0 100,10 L100,0 L0,0 Z" fill="rgba(0,100,255,0.2)"/>
-              </pattern>
-              <rect width="100%" height="100%" fill="url(#wavyPattern)" />
-            </svg>
-          </div>
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-gray-50/80 dark:from-gray-900/80 to-transparent"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -247,22 +237,10 @@ export default function HomePage() {
         <div className="h-4 bg-blue-600/70 backdrop-blur-md shadow-md relative z-20"></div>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-r from-blue-100 via-purple-50 to-blue-50 dark:bg-gradient-to-r dark:from-blue-950/40 dark:via-purple-950/30 dark:to-blue-950/20 py-20 relative fullscreen-section section-animate overflow-hidden">
+        <section id="steps" className="bg-gray-50 dark:bg-gray-900 py-20 relative fullscreen-section section-animate overflow-hidden">
           {/* Декоративные элементы */}
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-blue-50/80 dark:from-blue-950/30 to-transparent"></div>
-          
-          {/* Круговой узор на фоне */}
-          <div className="absolute inset-0 opacity-10 dark:opacity-15 pointer-events-none">
-            <svg width="100%" height="100%" className="absolute inset-0">
-              <defs>
-                <pattern id="circlePattern" x="0" y="0" width="50" height="50" patternUnits="userSpaceOnUse">
-                  <circle cx="25" cy="25" r="8" fill="none" stroke="rgba(60,80,200,0.4)" stroke-width="1.5" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#circlePattern)" />
-            </svg>
-          </div>
+          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-gray-100/80 dark:from-gray-800/50 to-transparent"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
