@@ -4,9 +4,10 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import { useEffect } from "react";
+import { CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { setupScrollAnimations } from "@/lib/scroll-animation";
+import useEmblaCarousel from 'embla-carousel-react';
 
 // Fields for categories section
 const fields = [
@@ -33,6 +34,30 @@ const fields = [
     description: "Бизнес-анализ, финансовое планирование, бухгалтерский учет и консалтинг.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='100' y='140' width='40' height='40' fill='%234A89DC' opacity='0.2'/%3E%3Crect x='150' y='120' width='40' height='60' fill='%234A89DC' opacity='0.4'/%3E%3Crect x='200' y='100' width='40' height='80' fill='%234A89DC' opacity='0.6'/%3E%3Crect x='250' y='80' width='40' height='100' fill='%234A89DC' opacity='0.8'/%3E%3Cpath d='M100,80 L280,80' stroke='%234A89DC' stroke-width='2' stroke-dasharray='5,5'/%3E%3C/svg%3E",
     count: 124,
+  },
+  {
+    title: "Маркетинг и реклама",
+    description: "SMM, контент-маркетинг, PR, таргетированная и контекстная реклама.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M200,60 L200,140 M150,90 L250,90' stroke='%234A89DC' stroke-width='8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='200' cy='170' r='10' fill='%234A89DC'/%3E%3Cpath d='M130,60 A70,70 0 0 1 270,60' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
+    count: 112,
+  },
+  {
+    title: "Образование и наука",
+    description: "Обучающие проекты, исследования, педагогика, воркшопы и тренинги.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='120' y='80' width='160' height='100' fill='%234A89DC' opacity='0.1' rx='5'/%3E%3Cpath d='M150,80 L150,40 L250,40 L250,80' stroke='%234A89DC' stroke-width='4' fill='none'/%3E%3Cpath d='M130,60 L270,60' stroke='%234A89DC' stroke-width='2' stroke-dasharray='5,5'/%3E%3Ccircle cx='200' cy='130' r='25' fill='%234A89DC' opacity='0.3'/%3E%3C/svg%3E",
+    count: 95,
+  },
+  {
+    title: "Музыка и аудио",
+    description: "Создание музыки, звукозапись, подкасты, аранжировка и звуковой дизайн.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M140,60 L140,140 M160,70 L160,130 M180,90 L180,110 M220,80 L220,120 M240,70 L240,130 M260,60 L260,140' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='140' cy='150' r='10' fill='%234A89DC' opacity='0.2'/%3E%3Ccircle cx='260' cy='150' r='10' fill='%234A89DC' opacity='0.2'/%3E%3C/svg%3E",
+    count: 78,
+  },
+  {
+    title: "Медиа и журналистика",
+    description: "Создание контента, журналистика, блоггинг, социальные медиа.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='120' y='70' width='160' height='100' rx='5' fill='%234A89DC' opacity='0.1'/%3E%3Cpath d='M140,90 L260,90 M140,110 L200,110 M140,130 L220,130' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='230' cy='50' r='15' fill='%234A89DC' opacity='0.3'/%3E%3C/svg%3E",
+    count: 67,
   },
 ];
 
@@ -95,6 +120,17 @@ export default function HomePage() {
     // Выполняем начальную прокрутку
     handleInitialScroll();
   }, []);
+  
+  // Карусель для категорий
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
+  
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+  
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -173,46 +209,66 @@ export default function HomePage() {
               </p>
             </div>
             
-            <div className="mt-6">
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {fields.map((field, index) => (
-                  <div 
-                    key={field.title} 
-                    className={`group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card animate-fade-in transition-all duration-300`}
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <div className="aspect-w-3 aspect-h-2 overflow-hidden">
-                      <img 
-                        src={field.image} 
-                        alt={field.title} 
-                        className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      {/* Синее выделение по краям и снизу вместо затемнения */}
-                      <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
-                    </div>
-                    <div className="p-4 relative">
-                      <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                        <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
-                          {field.title}
-                        </Link>
-                      </h3>
-                      <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                        {field.description}
-                      </p>
-                      <div className="mt-4 flex justify-between items-center">
-                        <span className="text-sm font-medium text-primary">
-                          {field.count} активных проектов
-                        </span>
-                        <Link 
-                          href={`/projects?field=${encodeURIComponent(field.title)}`}
-                          className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
-                        >
-                          Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
-                        </Link>
+            <div className="mt-6 relative">
+              {/* Кнопки навигации */}
+              <div className="flex justify-end mb-4 gap-2">
+                <button 
+                  onClick={scrollPrev}
+                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  aria-label="Предыдущий слайд"
+                >
+                  <ChevronLeftIcon className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={scrollNext}
+                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  aria-label="Следующий слайд"
+                >
+                  <ChevronRightIcon className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Карусель */}
+              <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex gap-4">
+                  {fields.map((field, index) => (
+                    <div 
+                      key={field.title} 
+                      className="flex-[0_0_100%] sm:flex-[0_0_45%] md:flex-[0_0_30%] xl:flex-[0_0_23%] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300"
+                    >
+                      <div className="aspect-w-3 aspect-h-2 overflow-hidden">
+                        <img 
+                          src={field.image} 
+                          alt={field.title} 
+                          className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        {/* Синее выделение по краям и снизу вместо затемнения */}
+                        <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
+                      </div>
+                      <div className="p-4 relative">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                          <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
+                            {field.title}
+                          </Link>
+                        </h3>
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                          {field.description}
+                        </p>
+                        <div className="mt-4 flex justify-between items-center">
+                          <span className="text-sm font-medium text-primary">
+                            {field.count} активных проектов
+                          </span>
+                          <Link 
+                            href={`/projects?field=${encodeURIComponent(field.title)}`}
+                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
+                          >
+                            Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
             
