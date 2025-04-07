@@ -457,9 +457,9 @@ export default function HomePage() {
         </section>
         
         {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative fullscreen-section section-animate overflow-hidden">
+        <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative section-animate overflow-hidden py-16">
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12">
             {/* Заголовок слева */}
             <div className="flex flex-col items-start text-left">
               <div className="max-w-md">
@@ -472,7 +472,7 @@ export default function HomePage() {
             </div>
             
             {/* Новый дизайн с горизонтальной "рекой" прогресса */}
-            <div className="mt-24 relative">
+            <div className="mt-16 relative">
               {/* Линия прогресса */}
               <div className="hidden md:block absolute left-0 right-0 top-1/2 transform -translate-y-1/2 h-1 bg-gradient-to-r from-blue-200 via-primary to-blue-400 dark:from-blue-900 dark:via-primary dark:to-blue-700 opacity-60 rounded-full"></div>
               
@@ -533,15 +533,15 @@ export default function HomePage() {
             </div>
             
             {/* Отступ для раздела кнопок */}
-            <div className="mt-24"></div>
+            <div className="mt-16"></div>
             
             {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-16 left-0 right-0 flex justify-center">
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-2 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
               >
-                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
+                <ChevronDownIcon className="h-5 w-5 animate-bounce" />
               </button>
             </div>
           </div>
