@@ -346,11 +346,112 @@ export default function HomePage() {
             {/* Кнопка прокрутки к следующему разделу */}
             <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
-                onClick={() => scrollToNextSection('steps')}
+                onClick={() => scrollToNextSection('concept')}
                 className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
+            </div>
+          </div>
+        </section>
+        
+        {/* Concept Section - Секция с описанием концепции */}
+        <section id="concept" className="bg-white dark:bg-gray-900 py-20 relative fullscreen-section section-animate overflow-hidden">
+          {/* Добавляем кнопку прокрутки к следующему разделу */}
+          <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+            <button 
+              onClick={() => scrollToNextSection('steps')}
+              className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+            >
+              <ChevronDownIcon className="h-6 w-6 animate-bounce" />
+            </button>
+          </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <div className="order-2 md:order-1">
+                <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
+                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+                  Соединяем таланты и возможности
+                </p>
+                <div className="mt-6 prose prose-lg dark:prose-invert">
+                  <p>
+                    Платформа <span className="font-semibold text-primary">weproject</span> создана для решения двух ключевых проблем:
+                  </p>
+                  <ul>
+                    <li className="dark:text-gray-300">
+                      <span className="font-medium">Для студентов и специалистов без опыта</span> — возможность получить реальный опыт работы, создать портфолио и развить навыки в реальных проектах.
+                    </li>
+                    <li className="dark:text-gray-300">
+                      <span className="font-medium">Для стартапов и проектов с ограниченным бюджетом</span> — возможность найти талантливых сотрудников и собрать команду единомышленников для реализации идей.
+                    </li>
+                  </ul>
+                  <p className="dark:text-gray-300">
+                    Мы верим, что каждый начинающий специалист заслуживает шанса проявить себя, а каждый инновационный проект — найти свою команду. Наша задача — создать экосистему, где энтузиазм и креативность встречаются с возможностями и идеями.
+                  </p>
+                </div>
+                <div className="mt-8">
+                  <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-dark transition-colors">
+                    Найти проект
+                  </Link>
+                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white border-primary hover:bg-gray-50 transition-colors">
+                    Найти таланты
+                  </Link>
+                </div>
+              </div>
+              <div className="order-1 md:order-2 flex justify-center">
+                <div className="relative w-full max-w-md">
+                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl opacity-70"></div>
+                  <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex space-x-2">
+                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                      </div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
+                    </div>
+                    <div className="space-y-4">
+                      <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">S</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Студент</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">Ищет первый опыт</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="h-8 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                      </div>
+                      <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">W</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">weproject</div>
+                            <div className="text-xs text-primary">Соединяет таланты и идеи</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="h-8 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                      </div>
+                      <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-600 font-bold">P</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Проект</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">Нуждается в талантах</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </section>
