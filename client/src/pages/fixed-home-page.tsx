@@ -208,7 +208,7 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar />
+      <Navbar className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-sm z-50" />
       
       <main className="flex-1">
         {/* Hero Section */}
@@ -216,7 +216,7 @@ export default function HomePage() {
           {/* Анимированный фон */}
           <div className="absolute inset-0 overflow-hidden animate-fade-in">
             <img 
-              src="/images/fallback-hero.jpeg" 
+              src="/background.jpeg" 
               alt="Фоновое изображение" 
               className="w-full h-full object-cover animate-[zoomPan_30s_ease-in-out_infinite]"
               style={{ transformOrigin: 'center center' }}
