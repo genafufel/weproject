@@ -273,7 +273,7 @@ export default function TalentDetail() {
         <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-gray-900 mb-4">Резюме не найдено</h1>
-            <p className="text-gray-600 mb-8">Запрашиваемое резюме не существует или было удалено.</p>
+            <p className="text-gray-600 dark:text-gray-400 mb-8">Запрашиваемое резюме не существует или было удалено.</p>
             <Button asChild>
               <Link href="/talent">Просмотреть все резюме</Link>
             </Button>
@@ -500,7 +500,7 @@ export default function TalentDetail() {
                     <CardTitle>О себе</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{resume.about}</p>
+                    <p className="text-gray-700 dark:text-gray-200 whitespace-pre-wrap">{resume.about}</p>
                   </CardContent>
                 </Card>
               )}

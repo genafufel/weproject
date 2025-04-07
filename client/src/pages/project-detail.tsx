@@ -298,8 +298,8 @@ export default function ProjectDetail() {
                   <CardTitle>Описание проекта</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="prose prose-blue max-w-none">
-                    <p className="whitespace-pre-line">{project?.description || 'Описание отсутствует'}</p>
+                  <div className="prose prose-blue max-w-none dark:prose-invert">
+                    <p className="whitespace-pre-line dark:text-gray-200">{project?.description || 'Описание отсутствует'}</p>
                   </div>
                 </CardContent>
               </Card>
