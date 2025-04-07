@@ -183,7 +183,7 @@ export default function AuthPage() {
                         <FormItem>
                           <FormLabel>Имя пользователя</FormLabel>
                           <FormControl>
-                            <Input placeholder="Введите имя пользователя" {...field} />
+                            <Input placeholder="Введите логин или почту" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
