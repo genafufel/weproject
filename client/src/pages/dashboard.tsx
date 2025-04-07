@@ -308,25 +308,25 @@ export default function Dashboard() {
                   <CardContent>
                     <div className="space-y-4">
                       <Link href="/create-project">
-                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
+                        <Button className="w-full justify-start" variant="outline">
                           <PlusIcon className="mr-2 h-4 w-4" />
                           Создать новый проект
                         </Button>
                       </Link>
                       <Link href="/create-resume">
-                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
+                        <Button className="w-full justify-start" variant="outline">
                           <PlusIcon className="mr-2 h-4 w-4" />
                           Создать новое резюме
                         </Button>
                       </Link>
                       <Link href="/projects">
-                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
+                        <Button className="w-full justify-start" variant="outline">
                           <Briefcase className="mr-2 h-4 w-4" />
                           Просмотреть проекты
                         </Button>
                       </Link>
                       <Link href="/messages">
-                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
+                        <Button className="w-full justify-start" variant="outline">
                           <Inbox className="mr-2 h-4 w-4" />
                           Проверить сообщения
                         </Button>
@@ -422,10 +422,10 @@ export default function Dashboard() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <p className="font-medium text-gray-900 dark:text-gray-100 mb-2">Направление: {resume.direction}</p>
+                        <p className="font-medium text-gray-900 mb-2">Направление: {resume.direction}</p>
                         <Separator className="my-4" />
                         <div className="mb-4">
-                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Навыки</h4>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">Навыки</h4>
                           <div className="flex flex-wrap gap-2">
                             {(resume.skills || []).map((skill: string, index: number) => (
                               <Badge key={index} variant="outline">{skill}</Badge>
@@ -433,17 +433,17 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Образование</h4>
+                          <h4 className="text-sm font-medium text-gray-700 mb-2">Образование</h4>
                           <div className="space-y-2">
                             {(resume.education || []).slice(0, 1).map((edu: any, index: number) => (
                               <div key={index}>
-                                <p className="font-medium dark:text-gray-100">{edu.institution}</p>
+                                <p className="font-medium">{edu.institution}</p>
                                 <p className="text-sm text-gray-600 dark:text-gray-300">{edu.degree}, {edu.fieldOfStudy}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
+                                <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
                               </div>
                             ))}
                             {resume.education?.length > 1 && (
-                              <p className="text-sm text-gray-500 dark:text-gray-400">+{resume.education.length - 1} еще</p>
+                              <p className="text-sm text-gray-500">+{resume.education.length - 1} еще</p>
                             )}
                           </div>
                         </div>
@@ -451,11 +451,10 @@ export default function Dashboard() {
                       <CardFooter className="flex flex-wrap gap-2 justify-between">
                         <div className="flex gap-2">
                           <Link href={`/talent/${resume.id}`}>
-                            <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50">Просмотреть</Button>
+                            <Button variant="outline">Просмотреть</Button>
                           </Link>
                           <Button 
-                            variant={resume.isPublic !== false ? "outline" : "destructive"}
-                            className={resume.isPublic !== false ? "dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50" : ""}
+                            variant={resume.isPublic !== false ? "outline" : "destructive"} 
                             onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
                           >
                             {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
@@ -520,7 +519,7 @@ export default function Dashboard() {
                             <Badge key={index} variant="outline">{position.title}</Badge>
                           )) : null}
                         </div>
-                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
+                        <div className="flex items-center text-sm text-gray-500">
                           <span className="mr-4">
                             {project.remote ? "Удаленно" : project.location || "Расположение не указано"}
                           </span>
@@ -529,7 +528,7 @@ export default function Dashboard() {
                       </CardContent>
                       <CardFooter className="flex justify-between">
                         <Link href={`/projects/${project.id}`}>
-                          <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50">Просмотреть</Button>
+                          <Button variant="outline">Просмотреть</Button>
                         </Link>
                         <Link href={`/projects/${project.id}/edit`}>
                           <Button>Редактировать</Button>
@@ -600,7 +599,7 @@ export default function Dashboard() {
                           <CardContent>
                             <div className="space-y-4">
                               <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Проект</div>
+                                <div className="text-sm text-gray-500 mb-1">Проект</div>
                                 <div className="font-medium">
                                   <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
                                     {projects?.find(p => p.id === application.projectId)?.title || `Проект #${application.projectId}`}
@@ -608,7 +607,7 @@ export default function Dashboard() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Кандидат</div>
+                                <div className="text-sm text-gray-500 mb-1">Кандидат</div>
                                 <div className="font-medium">
                                   <Link href={`/talent/${application.resume?.id}`} className="hover:text-primary hover:underline">
                                     {application.user?.fullName || application.user?.username || `Пользователь #${application.userId}`}
@@ -616,7 +615,7 @@ export default function Dashboard() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Резюме кандидата</div>
+                                <div className="text-sm text-gray-500 mb-1">Резюме кандидата</div>
                                 {application.resume ? (
                                   <div>
                                     <div className="font-medium">
@@ -667,8 +666,8 @@ export default function Dashboard() {
                                 )}
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Сообщение</div>
-                                <div className="text-gray-600 dark:text-gray-300">{application.message}</div>
+                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
+                                <div className="text-gray-600">{application.message}</div>
                               </div>
                             </div>
                           </CardContent>
@@ -703,7 +702,6 @@ export default function Dashboard() {
                             </div>
                             <Button 
                               variant="outline"
-                              className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50"
                               onClick={() => {
                                 // Здесь будет логика отправки сообщения
                                 console.log("Отправить сообщение", application.userId);
@@ -766,7 +764,7 @@ export default function Dashboard() {
                           <CardContent>
                             <div className="space-y-4">
                               <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Проект</div>
+                                <div className="text-sm text-gray-500 mb-1">Проект</div>
                                 <div className="font-medium">
                                   <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
                                     {application.project?.title || `Проект #${application.projectId}`}
@@ -774,7 +772,7 @@ export default function Dashboard() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Резюме</div>
+                                <div className="text-sm text-gray-500 mb-1">Резюме</div>
                                 {(() => {
                                   const resume = resumes?.find(r => r.id === application.resumeId) || application.resume;
                                   if (resume) {
@@ -785,13 +783,13 @@ export default function Dashboard() {
                                             {resume.title}
                                           </Link>
                                         </div>
-                                        <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                        <div className="text-sm text-gray-600 mt-1">
                                           <span className="font-medium">Направление:</span> {resume.direction}
                                         </div>
                                         
                                         {/* Образование */}
                                         {Array.isArray(resume.education) && resume.education.length > 0 && (
-                                          <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                          <div className="text-sm text-gray-600 mt-1">
                                             <span className="font-medium">Образование:</span> {resume.education[0].institution}
                                             {resume.education.length > 1 && (
                                               <span className="text-xs text-gray-400 ml-1">+{resume.education.length - 1} ещё</span>
@@ -801,7 +799,7 @@ export default function Dashboard() {
                                         
                                         {/* Опыт работы */}
                                         {Array.isArray(resume.experience) && resume.experience.length > 0 && (
-                                          <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
+                                          <div className="text-sm text-gray-600 mt-1">
                                             <span className="font-medium">Опыт:</span> {resume.experience[0].position} в {resume.experience[0].company}
                                             {resume.experience.length > 1 && (
                                               <span className="text-xs text-gray-400 ml-1">+{resume.experience.length - 1} ещё</span>
@@ -824,7 +822,7 @@ export default function Dashboard() {
                                     );
                                   } else {
                                     return (
-                                      <div className="text-gray-600 dark:text-gray-300">
+                                      <div className="text-gray-600">
                                         Резюме #{application.resumeId} (информация недоступна)
                                       </div>
                                     );
@@ -832,14 +830,14 @@ export default function Dashboard() {
                                 })()}
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Сообщение</div>
-                                <div className="text-gray-600 dark:text-gray-300">{application.message}</div>
+                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
+                                <div className="text-gray-600">{application.message}</div>
                               </div>
                             </div>
                           </CardContent>
                           <CardFooter className="flex justify-end">
                             <Link href={`/projects/${application.projectId}`}>
-                              <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50">Просмотреть проект</Button>
+                              <Button variant="outline">Просмотреть проект</Button>
                             </Link>
                           </CardFooter>
                         </Card>
