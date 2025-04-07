@@ -458,13 +458,6 @@ export default function HomePage() {
         
         {/* How It Works Section */}
         <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
-          {/* Декоративные элементы */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-20 right-[5%] w-48 h-48 rounded-full border-4 border-primary animate-pulse"></div>
-            <div className="absolute bottom-40 left-[10%] w-32 h-32 rounded-full border-2 border-blue-600 animate-float"></div>
-            <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full bg-primary/5"></div>
-          </div>
-          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             {/* Заголовок максимально вправо, как в карусели - более компактный */}
             <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
@@ -477,93 +470,41 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Горизонтальная схема с изгибами вместо вертикальной */}
+            {/* Простая схема без лишних декоративных элементов */}
             <div className="mt-16 relative">
-              {/* Фоновая изогнутая линия */}
-              <div className="hidden lg:block absolute left-0 right-0 h-2 top-20 bg-gradient-to-r from-blue-500/20 via-primary/40 to-blue-600/20"></div>
-              
-              {/* Волнистая линия вместо прямой */}
-              <div className="hidden lg:block absolute h-12 top-16 left-[10%] right-[10%]">
-                <svg className="w-full h-full text-primary/40" viewBox="0 0 1200 50" preserveAspectRatio="none">
-                  <path d="M0,25 C300,5 600,45 900,25 C1050,10 1150,25 1200,25" 
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    fill="none" 
-                    strokeDasharray="5,5" />
-                </svg>
-              </div>
-              
-              {/* Схема с вертикальными поворотами в виде зигзага */}
-              <div className="hidden md:block relative mt-20 mb-8">
-                {/* Основной путь в виде зигзага */}
-                <div className="hidden lg:block absolute top-[50%] left-0 right-0 h-1 bg-blue-500/30"></div>
-                
-                {/* SVG-путь с вертикальными поворотами */}
-                <div className="hidden lg:block absolute top-0 left-[5%] right-[5%] h-40">
-                  <svg className="w-full h-full text-primary/40" viewBox="0 0 1000 80" preserveAspectRatio="none">
-                    <path d="M0,40 L100,40 L100,10 L300,10 L300,70 L500,70 L500,10 L700,10 L700,40 L900,40" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      fill="none" 
-                      strokeDasharray="3,3" 
-                      className="path-animation"/>
-                  </svg>
-                </div>
-                
-                {/* Шаги расположены вдоль зигзагообразного пути */}
-                <div className="flex flex-col lg:flex-row justify-between relative">
-                  {steps.map((step, index) => {
-                    // Определяем вертикальное положение каждого шага
-                    const topPosition = index % 2 === 0 ? "top-0" : "top-20";
-                    
-                    return (
-                      <div 
-                        key={step.number} 
-                        className={`relative lg:w-1/4 px-4 animate-fade-in lg:${topPosition}`}
-                        style={{ animationDelay: `${300 + index * 200}ms` }}
-                      >
-                        {/* Цифра шага */}
-                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10">
-                          <div className="relative">
-                            <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-primary/20 to-blue-600/20 blur-lg opacity-70"></div>
-                            <div className="flex items-center justify-center h-14 w-14 rounded-full bg-white dark:bg-gray-800 shadow-md border border-primary/40">
-                              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">{step.number}</span>
-                            </div>
-                          </div>
-                        </div>
-                        
-                        {/* Содержимое шага */}
-                        <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md p-5 border border-blue-100 dark:border-blue-900/30 transition-all duration-300 mt-7 mb-8">
-                          <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-2 text-center pt-3">{step.title}</h3>
-                          <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                            {step.description}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-              
-              {/* Мобильный вариант (простые карточки одна под другой) */}
-              <div className="md:hidden space-y-8 mt-14">
+              {/* Шаги расположены чередующимися колонками */}
+              <div className="flex flex-wrap">
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className="relative animate-fade-in group"
+                    className={`w-full md:w-1/2 lg:w-1/4 p-4 flex ${index % 2 === 0 ? 'md:mt-0' : 'md:mt-32'} animate-fade-in`}
                     style={{ animationDelay: `${300 + index * 200}ms` }}
                   >
-                    <div className="absolute -top-7 left-4 z-10">
-                      <div className="flex items-center justify-center h-14 w-14 rounded-full bg-white dark:bg-gray-800 shadow-md border border-primary/40">
-                        <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">{step.number}</span>
+                    <div className="flex flex-col w-full">
+                      {/* Цифра и содержимое объединены в одну карточку */}
+                      <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md border border-blue-100 dark:border-blue-900/30 overflow-hidden h-full flex flex-col">
+                        {/* Цифра шага в верхней части карточки */}
+                        <div className="bg-primary/10 p-3 flex justify-center">
+                          <span className="text-2xl font-bold text-primary">{step.number}</span>
+                        </div>
+                        
+                        {/* Содержимое шага */}
+                        <div className="p-5 flex-1 flex flex-col">
+                          <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-3">{step.title}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 flex-1">
+                            {step.description}
+                          </p>
+                          
+                          {/* Стрелка указывающая на следующий шаг (только между карточками) */}
+                          {index < steps.length - 1 && (
+                            <div className="hidden md:flex justify-center mt-4">
+                              <svg className="h-6 w-6 text-primary transform rotate-90 md:rotate-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                              </svg>
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md p-5 pt-10 border border-blue-100 dark:border-blue-900/30">
-                      <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-2">{step.title}</h3>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {step.description}
-                      </p>
                     </div>
                   </div>
                 ))}
