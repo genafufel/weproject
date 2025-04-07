@@ -458,17 +458,6 @@ export default function HomePage() {
         
         {/* How It Works Section */}
         <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative fullscreen-section section-animate overflow-hidden">
-          {/* Декоративный фон */}
-          <div className="absolute inset-0 overflow-hidden opacity-10">
-            <svg className="absolute w-full h-full" viewBox="0 0 1000 1000" preserveAspectRatio="none">
-              <pattern id="topo-pattern" x="0" y="0" width="200" height="200" patternUnits="userSpaceOnUse">
-                <path d="M0,100 C20,140 50,150 100,100 C150,50 180,60 200,100 C220,140 250,150 300,100 C350,50 380,60 400,100" fill="none" stroke="currentColor" strokeWidth="1"></path>
-                <path d="M0,200 C50,150 100,150 150,200 C200,250 250,250 300,200 C350,150 400,150 450,200" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(0, -100)"></path>
-                <path d="M0,300 C50,250 100,250 150,300 C200,350 250,350 300,300 C350,250 400,250 450,300" fill="none" stroke="currentColor" strokeWidth="1" transform="translate(0, -200)"></path>
-              </pattern>
-              <rect x="0" y="0" width="100%" height="100%" fill="url(#topo-pattern)" />
-            </svg>
-          </div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24">
             {/* Заголовок максимально вправо, как в карусели - более компактный */}
