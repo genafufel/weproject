@@ -152,33 +152,49 @@ export default function HomePage() {
       emblaApi.reInit();
     };
     
-    // Обработчик перехода между первым и последним слайдом (плавность при зацикливании)
-    const onLoopPoints = () => {
-      // Добавляем плавную анимацию при переходе через точку зацикливания
-      emblaApi.containerNode().style.transition = 'transform 500ms ease-out';
+    // Более надежная обработка зацикливания
+    const handleLoopTransition = () => {
+      // Получаем контейнер слайдов
+      const container = emblaApi.containerNode();
+      // Сбрасываем любые предыдущие стили, которые могли быть добавлены
+      container.style.transition = '';
       
-      // Восстанавливаем обычную анимацию через некоторое время
-      setTimeout(() => {
-        emblaApi.containerNode().style.transition = '';
-      }, 600);
+      // Оптимизируем перерисовку при нескольких быстрых прокрутках
+      requestAnimationFrame(() => {
+        container.style.transition = 'transform 300ms ease-out';
+        
+        // Очищаем стиль после завершения анимации
+        const cleanup = () => {
+          container.style.transition = '';
+          container.removeEventListener('transitionend', cleanup);
+        };
+        
+        container.addEventListener('transitionend', cleanup);
+      });
     };
     
-    // Подписываемся на событие достижения границы
-    emblaApi.on('reInit', onLoopPoints);
-    emblaApi.on('settle', () => {
-      // Проверяем, если карусель находится на границе (первый или последний слайд)
-      if (emblaApi.slideNodes().length > 0 && 
-         (emblaApi.selectedScrollSnap() === 0 || emblaApi.selectedScrollSnap() === emblaApi.slideNodes().length - 1)) {
-        onLoopPoints();
-      }
-    });
+    // Обрабатываем все события, связанные с навигацией
+    const setupCarouselEvents = () => {
+      // При инициализации настраиваем правильные переходы
+      handleLoopTransition();
+      
+      // Слушаем события выбора слайда
+      emblaApi.on('select', () => {
+        // При выборе нового слайда убедимся, что переходы плавные
+        requestAnimationFrame(handleLoopTransition);
+      });
+    };
+    
+    // Настраиваем события при первой загрузке и при изменениях
+    emblaApi.on('reInit', setupCarouselEvents);
+    setupCarouselEvents();
     
     window.addEventListener('resize', onResize);
     
     return () => {
       window.removeEventListener('resize', onResize);
-      emblaApi.off('reInit', onLoopPoints);
-      emblaApi.off('settle', () => {});
+      emblaApi.off('reInit', setupCarouselEvents);
+      emblaApi.off('select');
     };
   }, [emblaApi]);
 
