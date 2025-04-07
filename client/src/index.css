@@ -208,6 +208,19 @@
   animation: bounceX 1.5s infinite;
 }
 
+@keyframes dashOffset {
+  from {
+    stroke-dashoffset: 20;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.path-animation {
+  animation: dashOffset 2s linear infinite;
+}
+
 .animate-fade-in-right {
   animation: fadeInRight 0.6s ease-out forwards;
 }

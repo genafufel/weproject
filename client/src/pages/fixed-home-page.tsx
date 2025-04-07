@@ -493,60 +493,77 @@ export default function HomePage() {
                 </svg>
               </div>
               
-              {/* Шаги в горизонтальном виде с вертикальными компонентами */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4">
+              {/* Схема с вертикальными поворотами в виде зигзага */}
+              <div className="hidden md:block relative mt-20 mb-8">
+                {/* Основной путь в виде зигзага */}
+                <div className="hidden lg:block absolute top-[50%] left-0 right-0 h-1 bg-blue-500/30"></div>
+                
+                {/* SVG-путь с вертикальными поворотами */}
+                <div className="hidden lg:block absolute top-0 left-[5%] right-[5%] h-40">
+                  <svg className="w-full h-full text-primary/40" viewBox="0 0 1000 80" preserveAspectRatio="none">
+                    <path d="M0,40 L100,40 L100,10 L300,10 L300,70 L500,70 L500,10 L700,10 L700,40 L900,40" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      fill="none" 
+                      strokeDasharray="3,3" 
+                      className="path-animation"/>
+                  </svg>
+                </div>
+                
+                {/* Шаги расположены вдоль зигзагообразного пути */}
+                <div className="flex flex-col lg:flex-row justify-between relative">
+                  {steps.map((step, index) => {
+                    // Определяем вертикальное положение каждого шага
+                    const topPosition = index % 2 === 0 ? "top-0" : "top-20";
+                    
+                    return (
+                      <div 
+                        key={step.number} 
+                        className={`relative lg:w-1/4 px-4 animate-fade-in lg:${topPosition}`}
+                        style={{ animationDelay: `${300 + index * 200}ms` }}
+                      >
+                        {/* Цифра шага */}
+                        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-10">
+                          <div className="relative">
+                            <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-primary/20 to-blue-600/20 blur-lg opacity-70"></div>
+                            <div className="flex items-center justify-center h-14 w-14 rounded-full bg-white dark:bg-gray-800 shadow-md border border-primary/40">
+                              <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">{step.number}</span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Содержимое шага */}
+                        <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md p-5 border border-blue-100 dark:border-blue-900/30 transition-all duration-300 mt-7 mb-8">
+                          <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-2 text-center pt-3">{step.title}</h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Мобильный вариант (простые карточки одна под другой) */}
+              <div className="md:hidden space-y-8 mt-14">
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
                     className="relative animate-fade-in group"
                     style={{ animationDelay: `${300 + index * 200}ms` }}
                   >
-                    {/* Вертикальная линия, соединяющая шаги (добавлены вертикальные компоненты) */}
-                    <div className={`absolute h-14 w-px bg-gradient-to-b from-primary/50 to-transparent 
-                      ${index % 2 === 0 ? 'left-1/2 bottom-full' : 'left-1/2 top-full'}`}>
-                    </div>
-                    
-                    {/* Цифра шага с пульсацией сверху */}
-                    <div className="absolute -top-10 lg:top-0 left-1/2 transform -translate-x-1/2 z-10">
-                      <div className="relative">
-                        <div className="absolute -inset-3 rounded-full bg-gradient-to-r from-primary/20 to-blue-600/20 blur-xl opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-white dark:bg-gray-800 shadow-lg border-2 border-primary/30 group-hover:border-primary/60 transition-colors relative">
-                          <span className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">{step.number}</span>
-                          {/* Вертикальные декоративные элементы вокруг номера */}
-                          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 h-4 w-1 bg-primary/30 rounded-full"></div>
-                          <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 h-4 w-1 bg-primary/30 rounded-full"></div>
-                        </div>
+                    <div className="absolute -top-7 left-4 z-10">
+                      <div className="flex items-center justify-center h-14 w-14 rounded-full bg-white dark:bg-gray-800 shadow-md border border-primary/40">
+                        <span className="text-2xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">{step.number}</span>
                       </div>
                     </div>
                     
-                    {/* Содержимое шага с вертикальными акцентами */}
-                    <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-blue-100 dark:border-blue-900/30 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-300 mt-8 transform hover:-translate-y-1 hover:shadow-xl relative overflow-hidden">
-                      {/* Вертикальный акцент слева */}
-                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-primary/70 via-blue-500/30 to-primary/10"></div>
-                      
-                      <h3 className="text-xl leading-6 font-medium text-gray-900 dark:text-gray-100 mb-3 text-center pt-4">{step.title}</h3>
-                      <p className="text-base text-gray-600 dark:text-gray-400 text-center">
+                    <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md p-5 pt-10 border border-blue-100 dark:border-blue-900/30">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100 mb-2">{step.title}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
                         {step.description}
                       </p>
-                      
-                      {/* Вертикальные точки снизу карточки */}
-                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex flex-col items-center">
-                        <div className="w-1 h-1 rounded-full bg-primary/40 mb-1"></div>
-                        <div className="w-1 h-1 rounded-full bg-primary/70"></div>
-                      </div>
-                      
-                      {/* Индикатор направления (горизонтальный + вертикальный компонент) */}
-                      {index < steps.length - 1 && (
-                        <div className="absolute top-16 -right-3 lg:block hidden">
-                          <div className="relative">
-                            <svg className="h-6 w-6 text-primary animate-bounce-x" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                            </svg>
-                            {/* Вертикальная линия над стрелкой */}
-                            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 h-3 w-px bg-primary/50"></div>
-                          </div>
-                        </div>
-                      )}
                     </div>
                   </div>
                 ))}
