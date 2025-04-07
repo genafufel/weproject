@@ -271,7 +271,7 @@ export default function HomePage() {
           {/* Добавляем кнопку прокрутки к следующему разделу */}
           <div className="absolute bottom-6 left-0 right-0 flex justify-center">
             <button 
-              onClick={() => scrollToNextSection('categories')}
+              onClick={() => scrollToNextSection('steps')}
               className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
             >
               <ChevronDownIcon className="h-6 w-6 animate-bounce" />
@@ -367,6 +367,87 @@ export default function HomePage() {
           </div>
         </section>
         
+        {/* How It Works Section */}
+        <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative fullscreen-section section-animate overflow-hidden">
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24">
+            {/* Заголовок максимально вправо, как в карусели - более компактный */}
+            <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
+              <div className="lg:max-w-sm ml-0 lg:ml-auto lg:pr-0">
+                <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
+                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block whitespace-nowrap">Четыре шага к цели</p>
+                <p className="mt-4 text-lg text-gray-500 dark:text-gray-400 leading-snug">
+                  Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
+                </p>
+              </div>
+            </div>
+            
+            {/* Новый дизайн с горизонтальной "рекой" прогресса */}
+            <div className="mt-24 relative">
+              {/* Линия прогресса */}
+              <div className="hidden md:block absolute left-0 right-0 top-1/2 transform -translate-y-1/2 h-1 bg-gradient-to-r from-blue-200 via-primary to-blue-400 dark:from-blue-900 dark:via-primary dark:to-blue-700 opacity-60 rounded-full"></div>
+              
+              {/* Карточки */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-4 relative">
+                {steps.map((step, index) => (
+                  <div 
+                    key={step.number}
+                    className="relative animate-fade-in"
+                    style={{ animationDelay: `${200 + index * 150}ms` }}
+                  >
+                    {/* Соединительные линии между шагами (только между карточками) */}
+                    {index < steps.length - 1 && (
+                      <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 w-8 h-1 bg-gradient-to-r from-blue-400 to-blue-300 dark:from-blue-700 dark:to-blue-600 z-10"></div>
+                    )}
+                    
+                    {/* Карточка шага */}
+                    <div className={`
+                      bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl 
+                      border border-blue-100 dark:border-blue-800/30 p-6
+                      transform transition-all duration-300 hover:-translate-y-1
+                      relative overflow-hidden flex flex-col h-full
+                      ${index % 2 === 0 ? 'md:mt-16' : 'md:-mt-16'}
+                    `}>
+                      {/* Номер шага в виде круга с градиентом */}
+                      <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-primary dark:from-blue-600 dark:to-primary opacity-10"></div>
+                      
+                      <div className="flex items-center mb-4">
+                        {/* Круг с номером */}
+                        <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-primary text-white font-bold text-xl shadow-md">
+                          {step.number}
+                        </div>
+                        
+                        {/* Заголовок шага */}
+                        <h3 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white">
+                          {step.title}
+                        </h3>
+                      </div>
+                      
+                      {/* Описание шага */}
+                      <p className="text-gray-600 dark:text-gray-300 mt-2 flex-grow text-base">
+                        {step.description}
+                      </p>
+                      
+                      {/* Декоративный элемент внизу карточки */}
+                      <div className="h-1 w-1/3 bg-gradient-to-r from-primary to-blue-400 dark:from-primary dark:to-blue-600 rounded-full mt-6"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Кнопка прокрутки к следующему разделу */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+              <button 
+                onClick={() => scrollToNextSection('categories')}
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+              >
+                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
+              </button>
+            </div>
+          </div>
+        </section>
+        
         {/* Categories Section */}
         <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
           
@@ -441,87 +522,6 @@ export default function HomePage() {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
-            
-            {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-              <button 
-                onClick={() => scrollToNextSection('steps')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
-              >
-                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
-              </button>
-            </div>
-          </div>
-        </section>
-        
-        {/* How It Works Section */}
-        <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative fullscreen-section section-animate overflow-hidden">
-
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24">
-            {/* Заголовок максимально вправо, как в карусели - более компактный */}
-            <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
-              <div className="lg:max-w-sm ml-0 lg:ml-auto lg:pr-0">
-                <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
-                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block whitespace-nowrap">Четыре шага к цели</p>
-                <p className="mt-4 text-lg text-gray-500 dark:text-gray-400 leading-snug">
-                  Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
-                </p>
-              </div>
-            </div>
-            
-            {/* Новый дизайн с горизонтальной "рекой" прогресса */}
-            <div className="mt-24 relative">
-              {/* Линия прогресса */}
-              <div className="hidden md:block absolute left-0 right-0 top-1/2 transform -translate-y-1/2 h-1 bg-gradient-to-r from-blue-200 via-primary to-blue-400 dark:from-blue-900 dark:via-primary dark:to-blue-700 opacity-60 rounded-full"></div>
-              
-              {/* Карточки */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 md:gap-4 relative">
-                {steps.map((step, index) => (
-                  <div 
-                    key={step.number}
-                    className="relative animate-fade-in"
-                    style={{ animationDelay: `${200 + index * 150}ms` }}
-                  >
-                    {/* Соединительные линии между шагами (только между карточками) */}
-                    {index < steps.length - 1 && (
-                      <div className="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 w-8 h-1 bg-gradient-to-r from-blue-400 to-blue-300 dark:from-blue-700 dark:to-blue-600 z-10"></div>
-                    )}
-                    
-                    {/* Карточка шага */}
-                    <div className={`
-                      bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl 
-                      border border-blue-100 dark:border-blue-800/30 p-6
-                      transform transition-all duration-300 hover:-translate-y-1
-                      relative overflow-hidden flex flex-col h-full
-                      ${index % 2 === 0 ? 'md:mt-16' : 'md:-mt-16'}
-                    `}>
-                      {/* Номер шага в виде круга с градиентом */}
-                      <div className="absolute -top-10 -right-10 w-20 h-20 rounded-full bg-gradient-to-br from-blue-400 to-primary dark:from-blue-600 dark:to-primary opacity-10"></div>
-                      
-                      <div className="flex items-center mb-4">
-                        {/* Круг с номером */}
-                        <div className="flex-shrink-0 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-primary text-white font-bold text-xl shadow-md">
-                          {step.number}
-                        </div>
-                        
-                        {/* Заголовок шага */}
-                        <h3 className="ml-4 text-xl font-semibold text-gray-900 dark:text-white">
-                          {step.title}
-                        </h3>
-                      </div>
-                      
-                      {/* Описание шага */}
-                      <p className="text-gray-600 dark:text-gray-300 mt-2 flex-grow text-base">
-                        {step.description}
-                      </p>
-                      
-                      {/* Декоративный элемент внизу карточки */}
-                      <div className="h-1 w-1/3 bg-gradient-to-r from-primary to-blue-400 dark:from-primary dark:to-blue-600 rounded-full mt-6"></div>
-                    </div>
-                  </div>
-                ))}
               </div>
             </div>
             
