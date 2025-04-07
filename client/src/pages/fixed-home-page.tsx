@@ -497,27 +497,7 @@ export default function HomePage() {
                       relative overflow-hidden flex flex-col h-full
                       ${index === 0 || index === 2 ? 'md:mt-0' : 'md:mt-24'} pb-4
                     `}>
-                      {/* Декоративные элементы в углу карточки */}
-                      {index === 0 && (
-                        <div className="absolute -top-2 -right-2 w-28 h-28 overflow-hidden rounded-lg">
-                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
-                        </div>
-                      )}
-                      {index === 1 && (
-                        <div className="absolute -top-2 -right-2 w-24 h-24 overflow-hidden rounded-lg rotate-3">
-                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
-                        </div>
-                      )}
-                      {index === 2 && (
-                        <div className="absolute -top-2 -right-2 w-24 h-24 overflow-hidden rounded-lg -rotate-3">
-                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
-                        </div>
-                      )}
-                      {index === 3 && (
-                        <div className="absolute -top-2 -right-2 w-24 h-24 overflow-hidden rounded-lg rotate-6">
-                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
-                        </div>
-                      )}
+                      {/* Карточки без декоративных элементов в углах */}
                       
                       <div className="flex items-center mb-4">
                         {/* Круг с номером */}
