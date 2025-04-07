@@ -212,7 +212,7 @@ export default function HomePage() {
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="hero" className="relative overflow-hidden bg-gray-50 fullscreen-section">
+        <section id="hero" className="relative overflow-hidden bg-gray-50 dark:bg-gray-900 fullscreen-section">
           {/* Анимированный фон */}
           <div className="absolute inset-0 overflow-hidden animate-fade-in">
             <img 
@@ -222,7 +222,7 @@ export default function HomePage() {
               style={{ transformOrigin: 'center center' }}
             />
             {/* Затемнение с эффектом пульсации */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 animate-[slowFade_8s_ease-in-out_infinite]"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 dark:from-black/70 dark:via-black/60 dark:to-black/50 animate-[slowFade_8s_ease-in-out_infinite]"></div>
             
             {/* Только затемняющий градиент для фона, без декоративных элементов */}
           </div>
@@ -230,13 +230,13 @@ export default function HomePage() {
           {/* Контейнер для контента */}
           <div className="relative h-full z-10 pt-28">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-              <div className="bg-white/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
+              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
                 <div className="text-left">
-                  <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl animate-fade-in">
+                  <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-gray-50 sm:text-5xl md:text-6xl animate-fade-in">
                     <span className="block gradient-text">Соедини идею</span>
                     <span className="block gradient-text">и реализацию</span>
                   </h1>
-                  <p className="mt-6 text-lg text-gray-600 animate-fade-in animate-delay-200">
+                  <p className="mt-6 text-lg text-gray-600 dark:text-gray-300 animate-fade-in animate-delay-200">
                     Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in animate-delay-300">
@@ -246,7 +246,7 @@ export default function HomePage() {
                       </Button>
                     </Link>
                     <Link href={user ? "/create-project" : "/auth"}>
-                      <Button size="lg" variant="outline" className="px-8 bg-white/80 backdrop-blur-sm hover:bg-white/100 text-gray-800 border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                         Разместить проект
                       </Button>
                     </Link>
@@ -258,7 +258,7 @@ export default function HomePage() {
             <div className="absolute bottom-6 left-0 right-0 flex justify-center animate-fade-in animate-delay-500">
               <button 
                 onClick={() => scrollToNextSection('categories')}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110"
+                className="bg-white/20 dark:bg-blue-600/40 backdrop-blur-md hover:bg-white/30 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-transparent dark:border-blue-500/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
@@ -267,7 +267,7 @@ export default function HomePage() {
         </section>
         
         {/* Разделитель между секциями */}
-        <div className="h-4 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
+        <div className="h-4 bg-white/70 dark:bg-blue-900/30 backdrop-blur-md shadow-md relative z-20"></div>
         
         {/* Categories Section */}
         <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
@@ -288,14 +288,14 @@ export default function HomePage() {
               <div className="flex justify-end mb-4 gap-2">
                 <button 
                   onClick={scrollPrev}
-                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  className="p-2 rounded-full bg-primary/10 dark:bg-blue-500/20 hover:bg-primary/20 dark:hover:bg-blue-500/30 text-primary dark:text-blue-400 transition-all"
                   aria-label="Предыдущий слайд"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={scrollNext}
-                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  className="p-2 rounded-full bg-primary/10 dark:bg-blue-500/20 hover:bg-primary/20 dark:hover:bg-blue-500/30 text-primary dark:text-blue-400 transition-all"
                   aria-label="Следующий слайд"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
@@ -329,12 +329,12 @@ export default function HomePage() {
                           {field.description}
                         </p>
                         <div className="mt-4 flex justify-between items-center">
-                          <span className="text-sm font-medium text-primary">
+                          <span className="text-sm font-medium text-primary dark:text-blue-400">
                             {field.count} активных проектов
                           </span>
                           <Link 
                             href={`/projects?field=${encodeURIComponent(field.title)}`}
-                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
+                            className="text-sm font-medium text-primary dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 hover:translate-x-1 group flex items-center"
                           >
                             Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
                           </Link>
