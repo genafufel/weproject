@@ -432,13 +432,13 @@ export default function CreateResume() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
               {isEditMode ? "Редактирование резюме" : "Создать резюме"}
             </h1>
-            <p className="mt-1 text-gray-600">
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
               {isEditMode 
                 ? "Обновите своё резюме, чтобы отразить актуальные навыки и опыт."
                 : "Создайте подробное резюме, чтобы продемонстрировать свои навыки и опыт владельцам проектов."
@@ -446,10 +446,10 @@ export default function CreateResume() {
             </p>
           </div>
           
-          <Card>
+          <Card className="dark:bg-gray-800 dark:border-gray-700">
             <CardHeader>
-              <CardTitle>Детали резюме</CardTitle>
-              <CardDescription>
+              <CardTitle className="dark:text-gray-100">Детали резюме</CardTitle>
+              <CardDescription className="dark:text-gray-400">
                 Предоставьте информацию о вашем образовании, навыках и опыте.
               </CardDescription>
             </CardHeader>
@@ -548,7 +548,7 @@ export default function CreateResume() {
                     </div>
                     
                     {educationFields.map((field, index) => (
-                      <Card key={field.id} className="border border-gray-200">
+                      <Card key={field.id} className="border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                         <CardContent className="pt-6">
                           <div className="flex justify-between items-start mb-4">
                             <FormLabel className="text-base font-medium">Образование #{index + 1}</FormLabel>
@@ -682,7 +682,7 @@ export default function CreateResume() {
                     </div>
                     
                     {experienceFields.map((field, index) => (
-                      <Card key={field.id} className="border border-gray-200">
+                      <Card key={field.id} className="border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
                         <CardContent className="pt-6">
                           <div className="flex justify-between items-start mb-4">
                             <FormLabel className="text-base font-medium">Опыт #{index + 1}</FormLabel>

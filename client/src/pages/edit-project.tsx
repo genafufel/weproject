@@ -410,19 +410,19 @@ export default function EditProject() {
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1 bg-gray-50 py-8">
+      <main className="flex-1 bg-gray-50 dark:bg-gray-900 py-8">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-900">Редактировать проект</h1>
-            <p className="mt-1 text-gray-600">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Редактировать проект</h1>
+            <p className="mt-1 text-gray-600 dark:text-gray-400">
               Обновите информацию о вашем проекте, чтобы привлечь подходящих кандидатов.
             </p>
           </div>
           
-          <Card>
+          <Card className="dark:bg-gray-800 dark:border-gray-700">
             <CardHeader>
-              <CardTitle>Детали проекта</CardTitle>
-              <CardDescription>
+              <CardTitle className="dark:text-gray-100">Детали проекта</CardTitle>
+              <CardDescription className="dark:text-gray-400">
                 Внесите необходимые изменения в информацию о вашем проекте.
               </CardDescription>
             </CardHeader>
@@ -490,7 +490,7 @@ export default function EditProject() {
                   </div>
                   
                   {positions.map((position) => (
-                    <div key={position.id} className="rounded-md border p-4 space-y-3">
+                    <div key={position.id} className="rounded-md border p-4 space-y-3 dark:bg-gray-800 dark:border-gray-700">
                       <div className="flex items-center justify-between">
                         <h3 className="font-medium text-lg">{position.title}</h3>
                         <Button
@@ -571,7 +571,7 @@ export default function EditProject() {
                       Добавить новую должность
                     </Button>
                   ) : (
-                    <div className="rounded-md border p-4 space-y-3">
+                    <div className="rounded-md border p-4 space-y-3 dark:bg-gray-800 dark:border-gray-700">
                       <Label>Новая должность</Label>
                       <div className="flex gap-2">
                         <Input
@@ -635,7 +635,7 @@ export default function EditProject() {
                   </div>
                   
                   {isAddingPhoto && (
-                    <div className="flex flex-col gap-4 mb-4 p-4 border rounded-md">
+                    <div className="flex flex-col gap-4 mb-4 p-4 border rounded-md dark:bg-gray-800 dark:border-gray-700">
                       <div>
                         <h3 className="text-lg font-medium mb-2">Загрузить фото проекта</h3>
                         <p className="text-sm text-gray-500 mb-4">
