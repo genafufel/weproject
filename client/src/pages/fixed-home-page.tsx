@@ -460,14 +460,15 @@ export default function HomePage() {
         <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
           {/* Декоративные элементы */}
           <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-20 right-[10%] w-48 h-48 rounded-full border-4 border-primary animate-pulse"></div>
-            <div className="absolute bottom-40 left-[15%] w-32 h-32 rounded-full border-2 border-blue-600 animate-float"></div>
+            <div className="absolute top-20 right-[5%] w-48 h-48 rounded-full border-4 border-primary animate-pulse"></div>
+            <div className="absolute bottom-40 left-[10%] w-32 h-32 rounded-full border-2 border-blue-600 animate-float"></div>
             <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full bg-primary/5"></div>
           </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            {/* Заголовок максимально вправо, как в карусели */}
             <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
-              <div className="max-w-xl lg:ml-auto">
+              <div className="lg:max-w-md ml-0 lg:ml-auto lg:pr-0">
                 <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
                 <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
                   Четыре простых шага к достижению цели
@@ -478,40 +479,55 @@ export default function HomePage() {
               </div>
             </div>
             
-            <div className="mt-12 relative">
-              {/* Соединительная линия заднего плана */}
-              <div className="absolute hidden lg:block left-1/2 top-24 bottom-12 w-1 -ml-0.5 bg-gradient-to-b from-primary/80 via-blue-500/50 to-primary/20"></div>
+            {/* Горизонтальная схема с изгибами вместо вертикальной */}
+            <div className="mt-16 relative">
+              {/* Фоновая изогнутая линия */}
+              <div className="hidden lg:block absolute left-0 right-0 h-2 top-20 bg-gradient-to-r from-blue-500/20 via-primary/40 to-blue-600/20"></div>
               
-              <div className="space-y-12 lg:space-y-0">
+              {/* Волнистая линия вместо прямой */}
+              <div className="hidden lg:block absolute h-12 top-16 left-[10%] right-[10%]">
+                <svg className="w-full h-full text-primary/40" viewBox="0 0 1200 50" preserveAspectRatio="none">
+                  <path d="M0,25 C300,5 600,45 900,25 C1050,10 1150,25 1200,25" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    fill="none" 
+                    strokeDasharray="5,5" />
+                </svg>
+              </div>
+              
+              {/* Шаги в горизонтальном виде */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-4">
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className={`relative flex flex-col lg:flex-row ${index % 2 === 0 ? 'lg:flex-row-reverse text-left lg:text-right' : 'text-left'} items-center lg:items-start gap-8 animate-fade-in`}
+                    className="relative animate-fade-in group"
                     style={{ animationDelay: `${300 + index * 200}ms` }}
                   >
-                    {/* Цифра шага с пульсацией */}
-                    <div className="lg:w-1/2 flex lg:justify-center z-10">
+                    {/* Цифра шага с пульсацией сверху */}
+                    <div className="absolute -top-10 lg:top-0 left-1/2 transform -translate-x-1/2 z-10">
                       <div className="relative">
-                        <div className="absolute -inset-3 rounded-full bg-gradient-to-r from-primary/20 to-blue-600/20 blur-xl opacity-70 animate-pulse"></div>
-                        <div className="flex items-center justify-center h-20 w-20 rounded-full bg-white dark:bg-gray-800 shadow-lg border-2 border-primary/30 relative">
+                        <div className="absolute -inset-3 rounded-full bg-gradient-to-r from-primary/20 to-blue-600/20 blur-xl opacity-70 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="flex items-center justify-center h-16 w-16 rounded-full bg-white dark:bg-gray-800 shadow-lg border-2 border-primary/30 group-hover:border-primary/60 transition-colors relative">
                           <span className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">{step.number}</span>
                         </div>
                       </div>
                     </div>
                     
                     {/* Содержимое шага */}
-                    <div className="lg:w-1/2 max-w-lg">
-                      <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-blue-100 dark:border-blue-900/30 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
-                        <h3 className="text-xl leading-6 font-medium text-gray-900 dark:text-gray-100 mb-3">{step.title}</h3>
-                        <p className="text-base text-gray-600 dark:text-gray-400">
-                          {step.description}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {/* Соединительная точка */}
-                    <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2" style={{ top: `${24 + (index * 25)}%` }}>
-                      <div className="h-4 w-4 bg-primary rounded-full"></div>
+                    <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-blue-100 dark:border-blue-900/30 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-300 mt-8 transform hover:-translate-y-1 hover:shadow-xl">
+                      <h3 className="text-xl leading-6 font-medium text-gray-900 dark:text-gray-100 mb-3 text-center pt-4">{step.title}</h3>
+                      <p className="text-base text-gray-600 dark:text-gray-400 text-center">
+                        {step.description}
+                      </p>
+                      
+                      {/* Индикатор направления */}
+                      {index < steps.length - 1 && (
+                        <div className="absolute top-16 -right-3 lg:block hidden">
+                          <svg className="h-6 w-6 text-primary animate-bounce-x" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                          </svg>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ))}
