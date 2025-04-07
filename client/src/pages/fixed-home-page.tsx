@@ -562,9 +562,9 @@ export default function HomePage() {
           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-blue-600/50 to-transparent pointer-events-none"></div>
           <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-primary/70 to-transparent pointer-events-none"></div>
           
-          <div className="max-w-7xl mx-auto py-28 px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between relative z-10">
-            <div className="cta-element">
-              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+          <div className="max-w-7xl mx-auto py-28 lg:flex lg:items-center lg:justify-between relative z-10 pl-0">
+            <div className="cta-element ml-0 pl-0">
+              <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl ml-0 pl-0">
                 <span className="block text-left">Ваше будущее начинается здесь</span>
                 <span className="block text-blue-100 text-left">Станьте частью сообщества<br />профессионалов и новаторов</span>
               </h2>
