@@ -228,9 +228,6 @@ export default function HomePage() {
           </div>
         </section>
         
-        {/* Разделитель между секциями */}
-        <div className="h-4 bg-blue-600/70 backdrop-blur-md shadow-md relative z-20"></div>
-            
         {/* How It Works Section */}
         <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
           
