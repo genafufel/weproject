@@ -32,31 +32,31 @@ const fields = [
   {
     title: "Финансы и бизнес",
     description: "Бизнес-анализ, финансовое планирование, бухгалтерский учет и консалтинг.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='100' y='140' width='40' height='40' fill='%234A89DC' opacity='0.2'/%3E%3Crect x='150' y='120' width='40' height='60' fill='%234A89DC' opacity='0.4'/%3E%3Crect x='200' y='100' width='40' height='80' fill='%234A89DC' opacity='0.6'/%3E%3Crect x='250' y='80' width='40' height='100' fill='%234A89DC' opacity='0.8'/%3E%3Cpath d='M100,80 L280,80' stroke='%234A89DC' stroke-width='2' stroke-dasharray='5,5'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23FFF8E1'/%3E%3Crect x='100' y='140' width='40' height='40' fill='%23FFA000' opacity='0.2'/%3E%3Crect x='150' y='120' width='40' height='60' fill='%23FFA000' opacity='0.4'/%3E%3Crect x='200' y='100' width='40' height='80' fill='%23FFA000' opacity='0.6'/%3E%3Crect x='250' y='80' width='40' height='100' fill='%23FFA000' opacity='0.8'/%3E%3Cpath d='M100,80 L280,80' stroke='%23FFA000' stroke-width='2' stroke-dasharray='5,5'/%3E%3C/svg%3E",
     count: 124,
   },
   {
     title: "Маркетинг и реклама",
     description: "SMM, контент-маркетинг, PR, таргетированная и контекстная реклама.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M200,60 L200,140 M150,90 L250,90' stroke='%234A89DC' stroke-width='8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='200' cy='170' r='10' fill='%234A89DC'/%3E%3Cpath d='M130,60 A70,70 0 0 1 270,60' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23FFEBEE'/%3E%3Cpath d='M200,60 L200,140 M150,90 L250,90' stroke='%23F44336' stroke-width='8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='200' cy='170' r='10' fill='%23F44336'/%3E%3Cpath d='M130,60 A70,70 0 0 1 270,60' stroke='%23F44336' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
     count: 112,
   },
   {
     title: "Образование и наука",
     description: "Обучающие проекты, исследования, педагогика, воркшопы и тренинги.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='120' y='80' width='160' height='100' fill='%234A89DC' opacity='0.1' rx='5'/%3E%3Cpath d='M150,80 L150,40 L250,40 L250,80' stroke='%234A89DC' stroke-width='4' fill='none'/%3E%3Cpath d='M130,60 L270,60' stroke='%234A89DC' stroke-width='2' stroke-dasharray='5,5'/%3E%3Ccircle cx='200' cy='130' r='25' fill='%234A89DC' opacity='0.3'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E8F5E9'/%3E%3Crect x='120' y='80' width='160' height='100' fill='%234CAF50' opacity='0.1' rx='5'/%3E%3Cpath d='M150,80 L150,40 L250,40 L250,80' stroke='%234CAF50' stroke-width='4' fill='none'/%3E%3Cpath d='M130,60 L270,60' stroke='%234CAF50' stroke-width='2' stroke-dasharray='5,5'/%3E%3Ccircle cx='200' cy='130' r='25' fill='%234CAF50' opacity='0.3'/%3E%3C/svg%3E",
     count: 95,
   },
   {
     title: "Музыка и аудио",
     description: "Создание музыки, звукозапись, подкасты, аранжировка и звуковой дизайн.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M140,60 L140,140 M160,70 L160,130 M180,90 L180,110 M220,80 L220,120 M240,70 L240,130 M260,60 L260,140' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='140' cy='150' r='10' fill='%234A89DC' opacity='0.2'/%3E%3Ccircle cx='260' cy='150' r='10' fill='%234A89DC' opacity='0.2'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23EDE7F6'/%3E%3Cpath d='M140,60 L140,140 M160,70 L160,130 M180,90 L180,110 M220,80 L220,120 M240,70 L240,130 M260,60 L260,140' stroke='%239C27B0' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='140' cy='150' r='10' fill='%239C27B0' opacity='0.2'/%3E%3Ccircle cx='260' cy='150' r='10' fill='%239C27B0' opacity='0.2'/%3E%3C/svg%3E",
     count: 78,
   },
   {
     title: "Медиа и журналистика",
     description: "Создание контента, журналистика, блоггинг, социальные медиа.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='120' y='70' width='160' height='100' rx='5' fill='%234A89DC' opacity='0.1'/%3E%3Cpath d='M140,90 L260,90 M140,110 L200,110 M140,130 L220,130' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='230' cy='50' r='15' fill='%234A89DC' opacity='0.3'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E3F2FD'/%3E%3Crect x='120' y='70' width='160' height='100' rx='5' fill='%23039BE5' opacity='0.1'/%3E%3Cpath d='M140,90 L260,90 M140,110 L200,110 M140,130 L220,130' stroke='%23039BE5' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='230' cy='50' r='15' fill='%23039BE5' opacity='0.3'/%3E%3C/svg%3E",
     count: 67,
   },
 ];
