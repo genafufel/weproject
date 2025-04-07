@@ -349,8 +349,8 @@ export default function HomePage() {
             {/* Кнопка прокрутки к следующему разделу */}
             <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
-                onClick={() => scrollToNextSection('steps')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+                onClick={() => scrollToNextSection('mission')}
+                className="bg-blue-500/40 dark:bg-blue-600/40 backdrop-blur-md hover:bg-blue-500/60 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30 dark:border-blue-500/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
@@ -359,58 +359,61 @@ export default function HomePage() {
         </section>
         
         {/* Mission Section */}
-        <section id="mission" className="bg-white py-20 relative section-animate overflow-hidden">
+        <section id="mission" className="bg-white dark:bg-gray-900 py-20 relative section-animate overflow-hidden">
+          {/* Фоновый элемент для темной темы */}
+          <div className="hidden dark:block absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 opacity-40"></div>
+          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
-              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
+              <h2 className="text-base text-primary dark:text-blue-400 font-semibold tracking-wide uppercase">Наша миссия</h2>
+              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-50 sm:text-4xl gradient-text inline-block">
                 Соединяем таланты и идеи для успешного будущего
               </p>
-              <p className="mt-4 max-w-3xl text-xl text-gray-600 dark:text-gray-400 lg:mx-auto">
+              <p className="mt-4 max-w-3xl text-xl text-gray-600 dark:text-gray-300 lg:mx-auto">
                 WeProject создан для решения двух ключевых проблем: помочь студентам и молодым специалистам без опыта получить первые профессиональные проекты в портфолио, и помочь стартапам найти талантливых исполнителей без больших бюджетов.
               </p>
             </div>
             
             <div className="mt-12 grid md:grid-cols-2 gap-10">
-              <div className="bg-blue-50 dark:bg-gray-700/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Для студентов и талантов</h3>
+              <div className="bg-blue-50 dark:bg-gray-800/70 rounded-xl p-8 shadow-md backdrop-blur-sm transform transition-all duration-300 hover:scale-105 hover:shadow-lg border border-transparent dark:border-blue-800/30">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Для студентов и талантов</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Получите реальный опыт работы для вашего резюме</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Развивайте профессиональные навыки в проектах</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Создайте портфолио, которое привлечет будущих работодателей</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Расширьте профессиональную сеть контактов</span>
                   </li>
                 </ul>
               </div>
               
-              <div className="bg-blue-50 dark:bg-gray-700/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Для проектов и стартапов</h3>
+              <div className="bg-blue-50 dark:bg-gray-800/70 rounded-xl p-8 shadow-md backdrop-blur-sm transform transition-all duration-300 hover:scale-105 hover:shadow-lg border border-transparent dark:border-blue-800/30">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Для проектов и стартапов</h3>
                 <ul className="space-y-3">
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Найдите мотивированных исполнителей для своих идей</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Соберите команду без огромного бюджета</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Реализуйте креативные и инновационные идеи</span>
                   </li>
                   <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
                     <span className="text-gray-600 dark:text-gray-300">Обеспечьте быстрый старт вашим проектам</span>
                   </li>
                 </ul>
@@ -421,7 +424,7 @@ export default function HomePage() {
             <div className="mt-16 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('steps')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+                className="bg-blue-500/40 dark:bg-blue-600/40 backdrop-blur-md hover:bg-blue-500/60 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30 dark:border-blue-500/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
@@ -434,7 +437,7 @@ export default function HomePage() {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
+              <h2 className="text-base text-primary dark:text-blue-400 font-semibold tracking-wide uppercase">Путь к успеху</h2>
               <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
                 Четыре простых шага к достижению цели
               </p>
@@ -451,7 +454,7 @@ export default function HomePage() {
                     className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 text-primary mx-auto animate-pulse">
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 dark:bg-blue-400/20 text-primary dark:text-blue-400 mx-auto animate-pulse">
                       <span className="text-xl font-bold">{step.number}</span>
                     </div>
                     <h3 className="text-base leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-2">{step.title}</h3>
@@ -459,7 +462,7 @@ export default function HomePage() {
                       {step.description}
                     </p>
                     {index < steps.length - 1 && (
-                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 transform -translate-x-6"></div>
+                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 dark:border-blue-400/50 transform -translate-x-6"></div>
                     )}
                   </div>
                 ))}
@@ -470,7 +473,7 @@ export default function HomePage() {
             <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+                className="bg-blue-500/40 dark:bg-blue-600/40 backdrop-blur-md hover:bg-blue-500/60 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30 dark:border-blue-500/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
