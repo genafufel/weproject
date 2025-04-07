@@ -146,9 +146,9 @@ export default function HomePage() {
     if (!emblaApi) return;
     
     // Состояние прокрутки и флаги
-    let isScrolling = false;
     let lastWheelTimestamp = 0;
     let carouselElement: HTMLElement | null = null;
+    let wheelStartedOverCarousel = false;
     
     // Находим элемент карусели один раз
     const getCarouselElement = () => {
@@ -175,13 +175,23 @@ export default function HomePage() {
       );
     };
     
+    // Обработчик начала события колеса мыши
+    const handleWheelStart = (event: WheelEvent) => {
+      // Запоминаем, было ли событие начато над каруселью
+      wheelStartedOverCarousel = isMouseOverCarousel(event);
+    };
+    
     // Обработчик события колеса мыши
     const handleWheel = (event: WheelEvent) => {
-      // Проверяем, находится ли мышь над каруселью в момент события wheel
-      const mouseIsOver = isMouseOverCarousel(event);
+      // Если прокрутка не была начата над каруселью, ничего не делаем
+      if (!wheelStartedOverCarousel) return;
       
-      // Если мышь НЕ над каруселью, пропускаем дальнейшую обработку
-      if (!mouseIsOver) return;
+      // Если мышь убрали с карусели во время прокрутки, возвращаем управление странице
+      const mouseIsStillOver = isMouseOverCarousel(event);
+      if (!mouseIsStillOver) {
+        wheelStartedOverCarousel = false;
+        return;
+      }
       
       // Предотвращаем стандартное поведение прокрутки страницы
       event.preventDefault();
@@ -208,12 +218,21 @@ export default function HomePage() {
       setLastWheelTime(now);
     };
     
-    // Добавляем обработчик события
-    document.addEventListener('wheel', handleWheel, { passive: false });
+    // Обработчик окончания прокрутки
+    const handleWheelEnd = () => {
+      wheelStartedOverCarousel = false;
+    };
     
-    // Удаляем обработчик при размонтировании компонента
+    // Добавляем обработчики событий
+    document.addEventListener('wheel', handleWheelStart, { passive: true, capture: true });
+    document.addEventListener('wheel', handleWheel, { passive: false });
+    document.addEventListener('mouseout', handleWheelEnd, { passive: true });
+    
+    // Удаляем обработчики при размонтировании компонента
     return () => {
+      document.removeEventListener('wheel', handleWheelStart, { capture: true });
       document.removeEventListener('wheel', handleWheel);
+      document.removeEventListener('mouseout', handleWheelEnd);
     };
   }, [emblaApi, setLastWheelTime]);
 
@@ -319,7 +338,7 @@ export default function HomePage() {
                   {fields.map((field, index) => (
                     <div 
                       key={field.title} 
-                      className="flex-[0_0_calc(100%-2rem)] sm:flex-[0_0_calc(45%-2rem)] md:flex-[0_0_calc(30%-2rem)] xl:flex-[0_0_calc(23%-2rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-4"
+                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
                     >
                       <div className="aspect-w-3 aspect-h-2 overflow-hidden">
                         <img 
