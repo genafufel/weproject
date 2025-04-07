@@ -565,8 +565,8 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto py-28 px-4 sm:px-6 lg:px-8 lg:flex lg:items-center lg:justify-between relative z-10">
             <div className="cta-element">
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                <span className="block">Ваше будущее начинается здесь</span>
-                <span className="block text-blue-100">Станьте частью сообщества<br />профессионалов и новаторов</span>
+                <span className="block text-left">Ваше будущее начинается здесь</span>
+                <span className="block text-blue-100 text-left">Станьте частью сообщества<br />профессионалов и новаторов</span>
               </h2>
               <p className="mt-4 text-lg text-white/80 max-w-xl">
                 Присоединяйтесь к сотням студентов и проектов уже сегодня для создания успешных историй сотрудничества.
