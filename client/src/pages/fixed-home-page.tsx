@@ -494,7 +494,7 @@ export default function HomePage() {
                       bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-xl 
                       border border-blue-100 dark:border-blue-800/30 p-6
                       transform transition-all duration-300 hover:-translate-y-1
-                      relative overflow-hidden flex flex-col h-full
+                      relative overflow-hidden flex flex-col h-full group
                       ${index === 0 || index === 2 ? 'md:mt-0' : 'md:mt-24'} pb-4
                     `}>
                       {/* Карточки без декоративных элементов в углах */}
@@ -524,8 +524,8 @@ export default function HomePage() {
                         {step.description}
                       </p>
                       
-                      {/* Декоративный элемент внизу карточки */}
-                      <div className="h-1 w-1/3 bg-gradient-to-r from-primary to-blue-400 dark:from-primary dark:to-blue-600 rounded-full mt-6"></div>
+                      {/* Декоративный элемент внизу карточки с анимацией при наведении */}
+                      <div className="h-1 w-1/3 bg-gradient-to-r from-primary to-blue-400 dark:from-primary dark:to-blue-600 rounded-full mt-6 transition-all duration-300 group-hover:w-full"></div>
                     </div>
                   </div>
                 ))}
