@@ -458,36 +458,61 @@ export default function HomePage() {
         
         {/* How It Works Section */}
         <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
+          {/* Декоративные элементы */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-20 right-[10%] w-48 h-48 rounded-full border-4 border-primary animate-pulse"></div>
+            <div className="absolute bottom-40 left-[15%] w-32 h-32 rounded-full border-2 border-blue-600 animate-float"></div>
+            <div className="absolute top-1/3 left-1/2 transform -translate-x-1/2 w-24 h-24 rounded-full bg-primary/5"></div>
+          </div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
-              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
-                Четыре простых шага к достижению цели
-              </p>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
-                Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
-              </p>
+            <div className="flex flex-col items-start lg:items-end text-left lg:text-right">
+              <div className="max-w-xl lg:ml-auto">
+                <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
+                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
+                  Четыре простых шага к достижению цели
+                </p>
+                <p className="mt-4 text-xl text-gray-500 dark:text-gray-400">
+                  Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
+                </p>
+              </div>
             </div>
             
-            <div className="mt-8">
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+            <div className="mt-12 relative">
+              {/* Соединительная линия заднего плана */}
+              <div className="absolute hidden lg:block left-1/2 top-24 bottom-12 w-1 -ml-0.5 bg-gradient-to-b from-primary/80 via-blue-500/50 to-primary/20"></div>
+              
+              <div className="space-y-12 lg:space-y-0">
                 {steps.map((step, index) => (
                   <div 
                     key={step.number} 
-                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
-                    style={{ animationDelay: `${300 + index * 150}ms` }}
+                    className={`relative flex flex-col lg:flex-row ${index % 2 === 0 ? 'lg:flex-row-reverse text-left lg:text-right' : 'text-left'} items-center lg:items-start gap-8 animate-fade-in`}
+                    style={{ animationDelay: `${300 + index * 200}ms` }}
                   >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 text-primary mx-auto animate-pulse">
-                      <span className="text-xl font-bold">{step.number}</span>
+                    {/* Цифра шага с пульсацией */}
+                    <div className="lg:w-1/2 flex lg:justify-center z-10">
+                      <div className="relative">
+                        <div className="absolute -inset-3 rounded-full bg-gradient-to-r from-primary/20 to-blue-600/20 blur-xl opacity-70 animate-pulse"></div>
+                        <div className="flex items-center justify-center h-20 w-20 rounded-full bg-white dark:bg-gray-800 shadow-lg border-2 border-primary/30 relative">
+                          <span className="text-3xl font-bold bg-gradient-to-r from-primary to-blue-600 text-transparent bg-clip-text">{step.number}</span>
+                        </div>
+                      </div>
                     </div>
-                    <h3 className="text-base leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-2">{step.title}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                      {step.description}
-                    </p>
-                    {index < steps.length - 1 && (
-                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 transform -translate-x-6"></div>
-                    )}
+                    
+                    {/* Содержимое шага */}
+                    <div className="lg:w-1/2 max-w-lg">
+                      <div className="bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-lg p-6 border border-blue-100 dark:border-blue-900/30 hover:border-primary/30 dark:hover:border-primary/30 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
+                        <h3 className="text-xl leading-6 font-medium text-gray-900 dark:text-gray-100 mb-3">{step.title}</h3>
+                        <p className="text-base text-gray-600 dark:text-gray-400">
+                          {step.description}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    {/* Соединительная точка */}
+                    <div className="hidden lg:block absolute left-1/2 transform -translate-x-1/2" style={{ top: `${24 + (index * 25)}%` }}>
+                      <div className="h-4 w-4 bg-primary rounded-full"></div>
+                    </div>
                   </div>
                 ))}
               </div>
