@@ -107,8 +107,8 @@ export function setupScrollAnimations() {
         autoScrollTimeout = setTimeout(() => {
           // Плавно прокручиваем к CTA секции
           smoothScrollTo(ctaSection, 800, () => {
-            // После завершения прокрутки блокируем на 2.5 секунды
-            lockScroll(2500);
+            // Больше не блокируем прокрутку для улучшения UX
+            // lockScroll(2500);
             
             // Добавляем класс для запуска анимации
             ctaSection.classList.add('animate-visible');
