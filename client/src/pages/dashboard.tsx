@@ -308,25 +308,25 @@ export default function Dashboard() {
                   <CardContent>
                     <div className="space-y-4">
                       <Link href="/create-project">
-                        <Button className="w-full justify-start" variant="outline">
+                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
                           <PlusIcon className="mr-2 h-4 w-4" />
                           Создать новый проект
                         </Button>
                       </Link>
                       <Link href="/create-resume">
-                        <Button className="w-full justify-start" variant="outline">
+                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
                           <PlusIcon className="mr-2 h-4 w-4" />
                           Создать новое резюме
                         </Button>
                       </Link>
                       <Link href="/projects">
-                        <Button className="w-full justify-start" variant="outline">
+                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
                           <Briefcase className="mr-2 h-4 w-4" />
                           Просмотреть проекты
                         </Button>
                       </Link>
                       <Link href="/messages">
-                        <Button className="w-full justify-start" variant="outline">
+                        <Button className="w-full justify-start dark:text-gray-100" variant="outline">
                           <Inbox className="mr-2 h-4 w-4" />
                           Проверить сообщения
                         </Button>
@@ -422,10 +422,10 @@ export default function Dashboard() {
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
-                        <p className="font-medium text-gray-900 mb-2">Направление: {resume.direction}</p>
+                        <p className="font-medium text-gray-900 dark:text-gray-100 mb-2">Направление: {resume.direction}</p>
                         <Separator className="my-4" />
                         <div className="mb-4">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Навыки</h4>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Навыки</h4>
                           <div className="flex flex-wrap gap-2">
                             {(resume.skills || []).map((skill: string, index: number) => (
                               <Badge key={index} variant="outline">{skill}</Badge>
@@ -433,17 +433,17 @@ export default function Dashboard() {
                           </div>
                         </div>
                         <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Образование</h4>
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Образование</h4>
                           <div className="space-y-2">
                             {(resume.education || []).slice(0, 1).map((edu: any, index: number) => (
                               <div key={index}>
-                                <p className="font-medium">{edu.institution}</p>
+                                <p className="font-medium dark:text-gray-100">{edu.institution}</p>
                                 <p className="text-sm text-gray-600 dark:text-gray-300">{edu.degree}, {edu.fieldOfStudy}</p>
-                                <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
+                                <p className="text-sm text-gray-500 dark:text-gray-400">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
                               </div>
                             ))}
                             {resume.education?.length > 1 && (
-                              <p className="text-sm text-gray-500">+{resume.education.length - 1} еще</p>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">+{resume.education.length - 1} еще</p>
                             )}
                           </div>
                         </div>
