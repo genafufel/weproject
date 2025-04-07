@@ -536,7 +536,7 @@ export default function HomePage() {
             <div className="mt-16"></div>
             
             {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
                 className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-2 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
