@@ -495,7 +495,7 @@ export default function HomePage() {
                       border border-blue-100 dark:border-blue-800/30 p-6
                       transform transition-all duration-300 hover:-translate-y-1
                       relative overflow-hidden flex flex-col h-full
-                      ${index === 0 || index === 2 ? 'md:mt-0' : index === 1 ? 'md:mt-24' : 'md:-mt-24'} pb-4
+                      ${index === 0 || index === 2 ? 'md:mt-0' : 'md:mt-24'} pb-4
                     `}>
                       {/* Декоративные элементы в углу карточки */}
                       {index === 0 && (
