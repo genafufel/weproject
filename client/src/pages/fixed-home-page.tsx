@@ -459,7 +459,7 @@ export default function HomePage() {
         {/* How It Works Section */}
         <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative fullscreen-section section-animate overflow-hidden">
 
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-20">
             {/* Заголовок слева */}
             <div className="flex flex-col items-start text-left">
               <div className="max-w-md">
@@ -552,8 +552,11 @@ export default function HomePage() {
               </div>
             </div>
             
+            {/* Отступ для раздела кнопок */}
+            <div className="mt-24"></div>
+            
             {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+            <div className="absolute bottom-16 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
                 className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
