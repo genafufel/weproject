@@ -500,22 +500,22 @@ export default function HomePage() {
                       {/* Фон с фотографией/иллюстрацией для каждого шага */}
                       {index === 0 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg">
-                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900 bg-[url('/uploads/d4e994e94cad8a28a2a319a84920de77.jpeg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900 bg-[url('/uploads/step1-register.jpg')] bg-cover bg-center"></div>
                         </div>
                       )}
                       {index === 1 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg rotate-3">
-                          <div className="w-full h-full bg-[url('/uploads/concrete.jpeg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-[url('/uploads/step2-create-resume.jpg')] bg-cover bg-center"></div>
                         </div>
                       )}
                       {index === 2 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg -rotate-3">
-                          <div className="w-full h-full bg-[url('/uploads/bankster.jpeg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-[url('/uploads/step3-find-projects.jpg')] bg-cover bg-center"></div>
                         </div>
                       )}
                       {index === 3 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg rotate-6">
-                          <div className="w-full h-full bg-[url('/uploads/upscalemedia-transformed.jpeg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-[url('/uploads/step4-collaboration.jpg')] bg-cover bg-center"></div>
                         </div>
                       )}
                       
@@ -532,11 +532,11 @@ export default function HomePage() {
                       </div>
                       
                       {/* Изображение под заголовком */}
-                      <div className="w-full h-32 mb-4 rounded-md overflow-hidden">
-                        {index === 0 && <img src="/uploads/бетон1.jpg" alt={step.title} className="w-full h-full object-cover" />}
-                        {index === 1 && <img src="/uploads/concrete.jpeg" alt={step.title} className="w-full h-full object-cover" />}
-                        {index === 2 && <img src="/uploads/d4e994e94cad8a28a2a319a84920de77.jpeg" alt={step.title} className="w-full h-full object-cover" />}
-                        {index === 3 && <img src="/uploads/upscalemedia-transformed.jpeg" alt={step.title} className="w-full h-full object-cover" />}
+                      <div className="w-full h-40 mb-4 rounded-md overflow-hidden shadow-md">
+                        {index === 0 && <img src="/uploads/step1-register.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 1 && <img src="/uploads/step2-create-resume.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 2 && <img src="/uploads/step3-find-projects.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 3 && <img src="/uploads/step4-collaboration.jpg" alt={step.title} className="w-full h-full object-cover" />}
                       </div>
                       
                       {/* Описание шага */}
