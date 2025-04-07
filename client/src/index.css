@@ -187,7 +187,7 @@
 }
 
 .chevron-animate {
-  animation: chevron-bounce 1s ease-in-out infinite;
+  animation: chevron-bounce 1.5s ease-in-out infinite;
 }
 
 .section-animate {
