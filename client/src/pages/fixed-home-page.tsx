@@ -16,72 +16,48 @@ const fields = [
     description: "Веб-разработка, мобильные приложения, программная инженерия и многое другое.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E1F5FE'/%3E%3Cpath d='M140,100 L100,140 L140,180 M260,100 L300,140 L260,180 M220,60 L180,180' stroke='%232196F3' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
     count: 287,
-    color: "#2196F3", // Синий
-    bgColor: "#E3F2FD",
-    borderColor: "#90CAF9"
   },
   {
     title: "Искусство и дизайн",
     description: "Графический дизайн, UX/UI, анимация, иллюстрация и визуальное искусство.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E1F8F8'/%3E%3Ccircle cx='120' cy='100' r='40' fill='%2300BCD4' opacity='0.8'/%3E%3Ccircle cx='200' cy='100' r='40' fill='%2300BCD4' opacity='0.6'/%3E%3Ccircle cx='280' cy='100' r='40' fill='%2300BCD4' opacity='0.4'/%3E%3C/svg%3E",
     count: 145,
-    color: "#9C27B0", // Фиолетовый
-    bgColor: "#F3E5F5",
-    borderColor: "#CE93D8"
   },
   {
     title: "Организация мероприятий",
     description: "Планирование мероприятий, координация, маркетинг и продюсирование.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23F3E5F5'/%3E%3Cpath d='M100,150 L170,90 L230,120 L300,70' stroke='%239C27B0' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='100' cy='150' r='8' fill='%239C27B0'/%3E%3Ccircle cx='170' cy='90' r='8' fill='%239C27B0'/%3E%3Ccircle cx='230' cy='120' r='8' fill='%239C27B0'/%3E%3Ccircle cx='300' cy='70' r='8' fill='%239C27B0'/%3E%3C/svg%3E",
     count: 89,
-    color: "#FF5722", // Оранжево-красный
-    bgColor: "#FBE9E7",
-    borderColor: "#FFCCBC"
   },
   {
     title: "Финансы и бизнес",
     description: "Бизнес-анализ, финансовое планирование, бухгалтерский учет и консалтинг.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='100' y='140' width='40' height='40' fill='%234A89DC' opacity='0.2'/%3E%3Crect x='150' y='120' width='40' height='60' fill='%234A89DC' opacity='0.4'/%3E%3Crect x='200' y='100' width='40' height='80' fill='%234A89DC' opacity='0.6'/%3E%3Crect x='250' y='80' width='40' height='100' fill='%234A89DC' opacity='0.8'/%3E%3Cpath d='M100,80 L280,80' stroke='%234A89DC' stroke-width='2' stroke-dasharray='5,5'/%3E%3C/svg%3E",
     count: 124,
-    color: "#607D8B", // Серо-синий
-    bgColor: "#ECEFF1",
-    borderColor: "#B0BEC5"
   },
   {
     title: "Маркетинг и реклама",
     description: "SMM, контент-маркетинг, PR, таргетированная и контекстная реклама.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M200,60 L200,140 M150,90 L250,90' stroke='%234A89DC' stroke-width='8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='200' cy='170' r='10' fill='%234A89DC'/%3E%3Cpath d='M130,60 A70,70 0 0 1 270,60' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
     count: 112,
-    color: "#FF9800", // Оранжевый
-    bgColor: "#FFF3E0", 
-    borderColor: "#FFCC80"
   },
   {
     title: "Образование и наука",
     description: "Обучающие проекты, исследования, педагогика, воркшопы и тренинги.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='120' y='80' width='160' height='100' fill='%234A89DC' opacity='0.1' rx='5'/%3E%3Cpath d='M150,80 L150,40 L250,40 L250,80' stroke='%234A89DC' stroke-width='4' fill='none'/%3E%3Cpath d='M130,60 L270,60' stroke='%234A89DC' stroke-width='2' stroke-dasharray='5,5'/%3E%3Ccircle cx='200' cy='130' r='25' fill='%234A89DC' opacity='0.3'/%3E%3C/svg%3E",
     count: 95,
-    color: "#4CAF50", // Зеленый
-    bgColor: "#E8F5E9",
-    borderColor: "#A5D6A7"
   },
   {
     title: "Музыка и аудио",
     description: "Создание музыки, звукозапись, подкасты, аранжировка и звуковой дизайн.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M140,60 L140,140 M160,70 L160,130 M180,90 L180,110 M220,80 L220,120 M240,70 L240,130 M260,60 L260,140' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='140' cy='150' r='10' fill='%234A89DC' opacity='0.2'/%3E%3Ccircle cx='260' cy='150' r='10' fill='%234A89DC' opacity='0.2'/%3E%3C/svg%3E",
     count: 78,
-    color: "#E91E63", // Розовый
-    bgColor: "#FCE4EC",
-    borderColor: "#F48FB1"
   },
   {
     title: "Медиа и журналистика",
     description: "Создание контента, журналистика, блоггинг, социальные медиа.",
     image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Crect x='120' y='70' width='160' height='100' rx='5' fill='%234A89DC' opacity='0.1'/%3E%3Cpath d='M140,90 L260,90 M140,110 L200,110 M140,130 L220,130' stroke='%234A89DC' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='230' cy='50' r='15' fill='%234A89DC' opacity='0.3'/%3E%3C/svg%3E",
     count: 67,
-    color: "#3F51B5", // Индиго
-    bgColor: "#E8EAF6",
-    borderColor: "#9FA8DA"
   },
 ];
 
@@ -285,20 +261,7 @@ export default function HomePage() {
                   {fields.map((field, index) => (
                     <div 
                       key={field.title} 
-                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border dark:border-blue-900 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
-                      style={{
-                        borderColor: field.borderColor || 'rgb(219 234 254)', // border-blue-100
-                        backgroundColor: field.bgColor ? `${field.bgColor}99` : undefined,
-                        '--hover-border-color': field.color ? `${field.color}99` : 'rgba(59, 130, 246, 0.6)' // primary/60
-                      } as React.CSSProperties}
-                      onMouseOver={(e) => {
-                        const el = e.currentTarget as HTMLDivElement;
-                        el.style.borderColor = 'var(--hover-border-color)';
-                      }}
-                      onMouseOut={(e) => {
-                        const el = e.currentTarget as HTMLDivElement;
-                        el.style.borderColor = field.borderColor || 'rgb(219 234 254)';
-                      }}
+                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
                     >
                       <div className="aspect-w-3 aspect-h-2 overflow-hidden">
                         <img 
@@ -307,18 +270,11 @@ export default function HomePage() {
                           className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                         {/* Синее выделение по краям и снизу вместо затемнения */}
-                        <div className="absolute inset-0 border-b-2 border-transparent group-hover:border-primary/80 transition-all duration-300" style={{borderColor: field.color ? `${field.color}00` : 'transparent', borderBottomColor: field.color ? `${field.color}cc` : undefined}}></div>
+                        <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
                       </div>
                       <div className="p-4 relative">
                         <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                          <Link 
-                            href={`/projects?field=${encodeURIComponent(field.title)}`} 
-                            className="focus:outline-none gradient-border inline-block"
-                            style={{ 
-                              textShadow: field.color ? `0 0 0.5px ${field.color}33` : undefined,
-                              fontWeight: 600
-                            }}
-                          >
+                          <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
                             {field.title}
                           </Link>
                         </h3>
@@ -326,18 +282,12 @@ export default function HomePage() {
                           {field.description}
                         </p>
                         <div className="mt-4 flex justify-between items-center">
-                          <span className="text-sm font-medium" style={{ color: field.color || 'var(--primary)' }}>
+                          <span className="text-sm font-medium text-primary">
                             {field.count} активных проектов
                           </span>
                           <Link 
                             href={`/projects?field=${encodeURIComponent(field.title)}`}
-                            className="text-sm font-medium transition-all duration-300 hover:translate-x-1 group flex items-center"
-                            style={{ 
-                              color: field.color || 'var(--primary)',
-                              '--hover-color': field.color ? `${field.color}ee` : 'var(--blue-700)'
-                            } as React.CSSProperties}
-                            onMouseOver={(e) => e.currentTarget.style.color = 'var(--hover-color)'}
-                            onMouseOut={(e) => e.currentTarget.style.color = field.color || 'var(--primary)'}
+                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
                           >
                             Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
                           </Link>
