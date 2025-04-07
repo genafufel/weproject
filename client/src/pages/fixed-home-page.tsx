@@ -364,53 +364,54 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="order-1 md:order-2 hidden md:block relative">
-                {/* Используем absolute позиционирование, чтобы точно выровнять блок к нужной строке */}
-                <div className="absolute top-[87px] left-0 right-0 w-full max-w-md mx-auto">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl opacity-70"></div>
-                  <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                <div className="absolute" style={{ top: '87px' }}>
+                  <div className="w-full max-w-md mx-auto">
+                    <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl opacity-70"></div>
+                    <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex space-x-2">
+                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
-                    </div>
-                    <div className="space-y-4">
-                      <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">S</div>
-                          <div className="ml-3">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Студент</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">Ищет первый опыт</div>
+                      <div className="space-y-4">
+                        <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">S</div>
+                            <div className="ml-3">
+                              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Студент</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">Ищет первый опыт</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="h-8 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                        </svg>
-                      </div>
-                      <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">W</div>
-                          <div className="ml-3">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">weproject</div>
-                            <div className="text-xs text-primary">Соединяет таланты и идеи</div>
+                        <div className="h-8 flex items-center justify-center">
+                          <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                          </svg>
+                        </div>
+                        <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">W</div>
+                            <div className="ml-3">
+                              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">weproject</div>
+                              <div className="text-xs text-primary">Соединяет таланты и идеи</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="h-8 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                        </svg>
-                      </div>
-                      <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-600 font-bold">P</div>
-                          <div className="ml-3">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Проект</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">Нуждается в талантах</div>
+                        <div className="h-8 flex items-center justify-center">
+                          <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                          </svg>
+                        </div>
+                        <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-600 font-bold">P</div>
+                            <div className="ml-3">
+                              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Проект</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">Нуждается в талантах</div>
+                            </div>
                           </div>
                         </div>
                       </div>
