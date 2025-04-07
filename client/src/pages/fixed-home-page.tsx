@@ -112,8 +112,7 @@ export default function HomePage() {
   
   // Инициализируем анимации при прокрутке
   useEffect(() => {
-    const sections = ['hero', 'mission', 'steps', 'categories', 'cta'];
-    const cleanup = setupScrollAnimations(sections);
+    const cleanup = setupScrollAnimations();
     return cleanup;
   }, []);
 
@@ -124,8 +123,6 @@ export default function HomePage() {
       section.scrollIntoView({ behavior: 'smooth' });
     }
   };
-  
-  // Эффект добавлен в инициализацию выше
   
   // Используем простую функцию прокрутки без перехвата событий колеса мыши
   useEffect(() => {
@@ -208,21 +205,21 @@ export default function HomePage() {
 
   return (
     <div className="flex flex-col min-h-screen">
-      <Navbar className="bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg border-b border-gray-200 dark:border-gray-800 shadow-sm z-50" />
+      <Navbar />
       
       <main className="flex-1">
         {/* Hero Section */}
-        <section id="hero" className="relative overflow-hidden bg-gray-50 dark:bg-gray-900 fullscreen-section">
+        <section id="hero" className="relative overflow-hidden bg-gray-50 fullscreen-section">
           {/* Анимированный фон */}
           <div className="absolute inset-0 overflow-hidden animate-fade-in">
             <img 
-              src="/background.jpeg" 
+              src="/images/hero-background-new.jpeg" 
               alt="Фоновое изображение" 
               className="w-full h-full object-cover animate-[zoomPan_30s_ease-in-out_infinite]"
               style={{ transformOrigin: 'center center' }}
             />
             {/* Затемнение с эффектом пульсации */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 dark:from-black/70 dark:via-black/60 dark:to-black/50 animate-[slowFade_8s_ease-in-out_infinite]"></div>
+            <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 animate-[slowFade_8s_ease-in-out_infinite]"></div>
             
             {/* Только затемняющий градиент для фона, без декоративных элементов */}
           </div>
@@ -230,13 +227,13 @@ export default function HomePage() {
           {/* Контейнер для контента */}
           <div className="relative h-full z-10 pt-28">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
+              <div className="bg-white/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
                 <div className="text-left">
-                  <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-gray-50 sm:text-5xl md:text-6xl animate-fade-in">
+                  <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl animate-fade-in">
                     <span className="block gradient-text">Соедини идею</span>
                     <span className="block gradient-text">и реализацию</span>
                   </h1>
-                  <p className="mt-6 text-lg text-gray-600 dark:text-gray-300 animate-fade-in animate-delay-200">
+                  <p className="mt-6 text-lg text-gray-600 animate-fade-in animate-delay-200">
                     Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in animate-delay-300">
@@ -246,7 +243,7 @@ export default function HomePage() {
                       </Button>
                     </Link>
                     <Link href={user ? "/create-project" : "/auth"}>
-                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                      <Button size="lg" variant="outline" className="px-8 bg-white/80 backdrop-blur-sm hover:bg-white/100 text-gray-800 border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                         Разместить проект
                       </Button>
                     </Link>
@@ -258,7 +255,7 @@ export default function HomePage() {
             <div className="absolute bottom-6 left-0 right-0 flex justify-center animate-fade-in animate-delay-500">
               <button 
                 onClick={() => scrollToNextSection('categories')}
-                className="bg-white/20 dark:bg-blue-600/40 backdrop-blur-md hover:bg-white/30 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-transparent dark:border-blue-500/30"
+                className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
@@ -267,7 +264,7 @@ export default function HomePage() {
         </section>
         
         {/* Разделитель между секциями */}
-        <div className="h-4 bg-white/70 dark:bg-blue-900/30 backdrop-blur-md shadow-md relative z-20"></div>
+        <div className="h-4 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
         
         {/* Categories Section */}
         <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
@@ -288,14 +285,14 @@ export default function HomePage() {
               <div className="flex justify-end mb-4 gap-2">
                 <button 
                   onClick={scrollPrev}
-                  className="p-2 rounded-full bg-primary/10 dark:bg-blue-500/20 hover:bg-primary/20 dark:hover:bg-blue-500/30 text-primary dark:text-blue-400 transition-all"
+                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
                   aria-label="Предыдущий слайд"
                 >
                   <ChevronLeftIcon className="w-5 h-5" />
                 </button>
                 <button 
                   onClick={scrollNext}
-                  className="p-2 rounded-full bg-primary/10 dark:bg-blue-500/20 hover:bg-primary/20 dark:hover:bg-blue-500/30 text-primary dark:text-blue-400 transition-all"
+                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
                   aria-label="Следующий слайд"
                 >
                   <ChevronRightIcon className="w-5 h-5" />
@@ -329,12 +326,12 @@ export default function HomePage() {
                           {field.description}
                         </p>
                         <div className="mt-4 flex justify-between items-center">
-                          <span className="text-sm font-medium text-primary dark:text-blue-400">
+                          <span className="text-sm font-medium text-primary">
                             {field.count} активных проектов
                           </span>
                           <Link 
                             href={`/projects?field=${encodeURIComponent(field.title)}`}
-                            className="text-sm font-medium text-primary dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-all duration-300 hover:translate-x-1 group flex items-center"
+                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
                           >
                             Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
                           </Link>
@@ -349,82 +346,8 @@ export default function HomePage() {
             {/* Кнопка прокрутки к следующему разделу */}
             <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
-                onClick={() => scrollToNextSection('mission')}
-                className="bg-blue-500/40 dark:bg-blue-600/40 backdrop-blur-md hover:bg-blue-500/60 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30 dark:border-blue-500/30"
-              >
-                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
-              </button>
-            </div>
-          </div>
-        </section>
-        
-        {/* Mission Section */}
-        <section id="mission" className="bg-white dark:bg-gray-900 py-20 relative section-animate overflow-hidden">
-          {/* Фоновый элемент для темной темы */}
-          <div className="hidden dark:block absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 opacity-40"></div>
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="lg:text-center">
-              <h2 className="text-base text-primary dark:text-blue-400 font-semibold tracking-wide uppercase">Наша миссия</h2>
-              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-50 sm:text-4xl gradient-text inline-block">
-                Соединяем таланты и идеи для успешного будущего
-              </p>
-              <p className="mt-4 max-w-3xl text-xl text-gray-600 dark:text-gray-300 lg:mx-auto">
-                WeProject создан для решения двух ключевых проблем: помочь студентам и молодым специалистам без опыта получить первые профессиональные проекты в портфолио, и помочь стартапам найти талантливых исполнителей без больших бюджетов.
-              </p>
-            </div>
-            
-            <div className="mt-12 grid md:grid-cols-2 gap-10">
-              <div className="bg-blue-50 dark:bg-gray-800/70 rounded-xl p-8 shadow-md backdrop-blur-sm transform transition-all duration-300 hover:scale-105 hover:shadow-lg border border-transparent dark:border-blue-800/30">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Для студентов и талантов</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Получите реальный опыт работы для вашего резюме</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Развивайте профессиональные навыки в проектах</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Создайте портфолио, которое привлечет будущих работодателей</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Расширьте профессиональную сеть контактов</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-blue-50 dark:bg-gray-800/70 rounded-xl p-8 shadow-md backdrop-blur-sm transform transition-all duration-300 hover:scale-105 hover:shadow-lg border border-transparent dark:border-blue-800/30">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Для проектов и стартапов</h3>
-                <ul className="space-y-3">
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Найдите мотивированных исполнителей для своих идей</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Соберите команду без огромного бюджета</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Реализуйте креативные и инновационные идеи</span>
-                  </li>
-                  <li className="flex items-start">
-                    <CheckIcon className="h-5 w-5 text-primary dark:text-blue-400 mt-1 mr-2 flex-shrink-0" />
-                    <span className="text-gray-600 dark:text-gray-300">Обеспечьте быстрый старт вашим проектам</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-            
-            {/* Кнопка прокрутки к следующему разделу */}
-            <div className="mt-16 flex justify-center">
-              <button 
                 onClick={() => scrollToNextSection('steps')}
-                className="bg-blue-500/40 dark:bg-blue-600/40 backdrop-blur-md hover:bg-blue-500/60 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30 dark:border-blue-500/30"
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>
@@ -437,7 +360,7 @@ export default function HomePage() {
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
-              <h2 className="text-base text-primary dark:text-blue-400 font-semibold tracking-wide uppercase">Путь к успеху</h2>
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
               <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
                 Четыре простых шага к достижению цели
               </p>
@@ -454,7 +377,7 @@ export default function HomePage() {
                     className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
                     style={{ animationDelay: `${300 + index * 150}ms` }}
                   >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 dark:bg-blue-400/20 text-primary dark:text-blue-400 mx-auto animate-pulse">
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 text-primary mx-auto animate-pulse">
                       <span className="text-xl font-bold">{step.number}</span>
                     </div>
                     <h3 className="text-base leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-2">{step.title}</h3>
@@ -462,7 +385,7 @@ export default function HomePage() {
                       {step.description}
                     </p>
                     {index < steps.length - 1 && (
-                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 dark:border-blue-400/50 transform -translate-x-6"></div>
+                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 transform -translate-x-6"></div>
                     )}
                   </div>
                 ))}
@@ -473,7 +396,7 @@ export default function HomePage() {
             <div className="absolute bottom-6 left-0 right-0 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('cta')}
-                className="bg-blue-500/40 dark:bg-blue-600/40 backdrop-blur-md hover:bg-blue-500/60 dark:hover:bg-blue-600/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30 dark:border-blue-500/30"
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
               >
                 <ChevronDownIcon className="h-6 w-6 animate-bounce" />
               </button>

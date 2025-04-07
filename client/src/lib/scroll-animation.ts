@@ -2,19 +2,9 @@
  * Утилита для анимации элементов при прокрутке страницы
  */
 
-export function setupScrollAnimations(sectionIds?: string[]) {
+export function setupScrollAnimations() {
   // Получаем все элементы с классом section-animate
   const animatedSections = document.querySelectorAll('.section-animate');
-  
-  // Если переданы ID секций, добавим им класс для анимации
-  if (sectionIds && sectionIds.length > 0) {
-    sectionIds.forEach(id => {
-      const section = document.getElementById(id);
-      if (section && !section.classList.contains('section-animate')) {
-        section.classList.add('section-animate');
-      }
-    });
-  }
   let scrollTimeout: ReturnType<typeof setTimeout>;
   
   // Функция для проверки видимости элемента
