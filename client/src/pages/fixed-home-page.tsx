@@ -195,24 +195,43 @@ export default function HomePage() {
       }, 50);
     };
     
-    // Находим элемент карусели и добавляем прямой слушатель событий
-    const carouselElement = document.getElementById('categories');
-    if (carouselElement) {
-      const emblaNode = carouselElement.querySelector('.overflow-hidden');
-      if (emblaNode) {
-        emblaNode.addEventListener('wheel', handleDirectWheelOnCarousel, { passive: false });
-      }
+    // Находим элемент секции с категориями и добавляем прямой слушатель событий
+    // ко всей секции, чтобы захватить и пространство между карточками
+    const categoriesSection = document.getElementById('categories');
+    if (categoriesSection) {
+      // Добавляем обработчик ко всей секции, а не только к карусели
+      // Исправление типов: используем EventListener и приводим event к WheelEvent внутри
+      const wheelHandler: EventListener = (evt: Event) => {
+        const event = evt as WheelEvent;
+        handleDirectWheelOnCarousel(event);
+      };
+      
+      categoriesSection.addEventListener('wheel', wheelHandler, { passive: false });
+      
+      // CSS-стилизация для предотвращения стандартной прокрутки
+      // Создаем стиль, который будет предотвращать прокрутку в секции категорий
+      const styleElement = document.createElement('style');
+      styleElement.textContent = `
+        #categories {
+          overscroll-behavior: contain; /* Предотвращает "проскальзывание" прокрутки на родительский элемент */
+        }
+      `;
+      document.head.appendChild(styleElement);
+      
+      // Очистка при размонтировании
+      return () => {
+        categoriesSection.removeEventListener('wheel', wheelHandler);
+        
+        // Удаляем стилевой элемент при размонтировании компонента
+        const style = document.head.querySelector('style:last-child');
+        if (style) {
+          document.head.removeChild(style);
+        }
+      };
     }
     
-    // Очистка при размонтировании
-    return () => {
-      if (carouselElement) {
-        const emblaNode = carouselElement.querySelector('.overflow-hidden');
-        if (emblaNode) {
-          emblaNode.removeEventListener('wheel', handleDirectWheelOnCarousel);
-        }
-      }
-    };
+    // Если секция категорий не найдена
+    return () => {};
   }, [emblaApi, lastWheelTime, setLastWheelTime]);
 
   return (
