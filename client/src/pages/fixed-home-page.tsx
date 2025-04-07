@@ -94,10 +94,9 @@ export default function HomePage() {
   // Карусель для категорий
   // Явно указываем тип align как 'start' вместо строки для корректной типизации
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false, // Отключаем зацикливание для предотвращения анимации перемещения карточек
+    loop: true, // Возвращаем зацикливание для лучшего UX
     dragFree: true, // Более плавная прокрутка
-    containScroll: 'keepSnaps', // Предотвращает перемещение слайдов из конца в начало
-    watchDrag: false  // Только программная навигация
+    skipSnaps: true // Разрешаем прокрутку до любой позиции
   });
   
   const scrollPrev = useCallback(() => {
@@ -143,100 +142,22 @@ export default function HomePage() {
     handleInitialScroll();
   }, []);
   
-  // Добавляем обработчик колеса мыши для карусели
+  // Добавляем специальный обработчик скролла только для кнопок
+  // Полностью убираем обработку колеса мыши для карусели
   useEffect(() => {
     if (!emblaApi) return;
     
-    // Состояние прокрутки и флаги
-    let lastWheelTimestamp = 0;
-    let carouselElement: HTMLElement | null = null;
-    let wheelStartedOverCarousel = false;
-    
-    // Находим элемент карусели один раз
-    const getCarouselElement = () => {
-      if (carouselElement) return carouselElement;
-      
-      const container = document.getElementById('categories');
-      if (!container) return null;
-      
-      carouselElement = container.querySelector('.overflow-hidden') as HTMLElement | null;
-      return carouselElement;
+    // Сделаем автоматическую адаптацию под количество видимых слайдов
+    const onResize = () => {
+      emblaApi.reInit();
     };
     
-    // Проверяем, находится ли курсор в области карусели
-    const isMouseOverCarousel = (event: WheelEvent): boolean => {
-      const carousel = getCarouselElement();
-      if (!carousel) return false;
-      
-      const rect = carousel.getBoundingClientRect();
-      return (
-        event.clientX >= rect.left && 
-        event.clientX <= rect.right && 
-        event.clientY >= rect.top && 
-        event.clientY <= rect.bottom
-      );
-    };
+    window.addEventListener('resize', onResize);
     
-    // Обработчик начала события колеса мыши
-    const handleWheelStart = (event: WheelEvent) => {
-      // Запоминаем, было ли событие начато над каруселью
-      wheelStartedOverCarousel = isMouseOverCarousel(event);
-    };
-    
-    // Обработчик события колеса мыши
-    const handleWheel = (event: WheelEvent) => {
-      // Если прокрутка не была начата над каруселью, ничего не делаем
-      if (!wheelStartedOverCarousel) return;
-      
-      // Если мышь убрали с карусели во время прокрутки, возвращаем управление странице
-      const mouseIsStillOver = isMouseOverCarousel(event);
-      if (!mouseIsStillOver) {
-        wheelStartedOverCarousel = false;
-        return;
-      }
-      
-      // Предотвращаем стандартное поведение прокрутки страницы
-      event.preventDefault();
-      
-      // Тротлинг событий - минимальный интервал 500 мс
-      const now = Date.now();
-      if (now - lastWheelTimestamp < 500) {
-        return;
-      }
-      
-      // Пороговое значение для отфильтровывания слабых движений колеса
-      const threshold = 8;
-      if (Math.abs(event.deltaY) < threshold) return;
-      
-      // Определяем направление прокрутки и выполняем соответствующее действие
-      if (event.deltaY > 0) {
-        emblaApi.scrollNext();
-      } else {
-        emblaApi.scrollPrev();
-      }
-      
-      // Обновляем время последнего события
-      lastWheelTimestamp = now;
-      setLastWheelTime(now);
-    };
-    
-    // Обработчик окончания прокрутки
-    const handleWheelEnd = () => {
-      wheelStartedOverCarousel = false;
-    };
-    
-    // Добавляем обработчики событий
-    document.addEventListener('wheel', handleWheelStart, { passive: true, capture: true });
-    document.addEventListener('wheel', handleWheel, { passive: false });
-    document.addEventListener('mouseout', handleWheelEnd, { passive: true });
-    
-    // Удаляем обработчики при размонтировании компонента
     return () => {
-      document.removeEventListener('wheel', handleWheelStart, { capture: true });
-      document.removeEventListener('wheel', handleWheel);
-      document.removeEventListener('mouseout', handleWheelEnd);
+      window.removeEventListener('resize', onResize);
     };
-  }, [emblaApi, setLastWheelTime]);
+  }, [emblaApi]);
 
   return (
     <div className="flex flex-col min-h-screen">
