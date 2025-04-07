@@ -143,13 +143,13 @@
 
 @keyframes float {
   0% { transform: translateY(0px); }
-  50% { transform: translateY(-20px); }
+  50% { transform: translateY(-12px); }
   100% { transform: translateY(0px); }
 }
 
 @keyframes pulse {
   0% { transform: scale(1); opacity: 0.8; }
-  50% { transform: scale(1.15); opacity: 1; }
+  50% { transform: scale(1.08); opacity: 1; }
   100% { transform: scale(1); opacity: 0.8; }
 }
 
@@ -160,14 +160,14 @@
 
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
-  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-  20%, 40%, 60%, 80% { transform: translateX(5px); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-3px); }
+  20%, 40%, 60%, 80% { transform: translateX(3px); }
 }
 
 @keyframes bounce {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-30px); }
-  60% { transform: translateY(-15px); }
+  40% { transform: translateY(-15px); }
+  60% { transform: translateY(-8px); }
 }
 
 .section-animate {
@@ -241,33 +241,33 @@
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 4s ease-in-out infinite;
 }
 
 .animate-float-slow {
-  animation: float 6s ease-in-out infinite;
+  animation: float 7s ease-in-out infinite;
 }
 
 .animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
+  animation: pulse 3s ease-in-out infinite;
 }
 
 .animate-rotate {
-  animation: rotate 10s linear infinite;
+  animation: rotate 15s linear infinite;
 }
 
 .animate-fade-in-left {
-  animation: fadeInLeft 0.6s ease-out forwards;
+  animation: fadeInLeft 0.8s ease-out forwards;
 }
 
 @keyframes bounceX {
   0%, 20%, 50%, 80%, 100% { transform: translateX(0); }
-  40% { transform: translateX(10px); }
-  60% { transform: translateX(5px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(3px); }
 }
 
 .animate-bounce-x {
-  animation: bounceX 1.5s infinite;
+  animation: bounceX 3s ease-in-out infinite;
 }
 
 @keyframes dashOffset {
@@ -280,23 +280,23 @@
 }
 
 .path-animation {
-  animation: dashOffset 2s linear infinite;
+  animation: dashOffset 3s linear infinite;
 }
 
 .animate-fade-in-right {
-  animation: fadeInRight 0.6s ease-out forwards;
+  animation: fadeInRight 0.8s ease-out forwards;
 }
 
 .animate-fade-in-scale {
-  animation: fadeInScale 0.6s ease-out forwards;
+  animation: fadeInScale 0.8s ease-out forwards;
 }
 
 .animate-shake {
-  animation: shake 1s ease-in-out infinite;
+  animation: shake 2s ease-in-out infinite;
 }
 
 .animate-bounce-custom {
-  animation: bounce 2s ease-in-out infinite;
+  animation: bounce 3s ease-in-out infinite;
 }
 
 /* Стили для полноэкранных секций */
