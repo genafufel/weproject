@@ -451,11 +451,11 @@ export default function Dashboard() {
                       <CardFooter className="flex flex-wrap gap-2 justify-between">
                         <div className="flex gap-2">
                           <Link href={`/talent/${resume.id}`}>
-                            <Button variant="outline" className="dark:text-gray-100">Просмотреть</Button>
+                            <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950">Просмотреть</Button>
                           </Link>
                           <Button 
                             variant={resume.isPublic !== false ? "outline" : "destructive"}
-                            className={resume.isPublic !== false ? "dark:text-gray-100" : ""}
+                            className={resume.isPublic !== false ? "dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950" : ""}
                             onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
                           >
                             {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
@@ -520,7 +520,7 @@ export default function Dashboard() {
                             <Badge key={index} variant="outline">{position.title}</Badge>
                           )) : null}
                         </div>
-                        <div className="flex items-center text-sm text-gray-500">
+                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                           <span className="mr-4">
                             {project.remote ? "Удаленно" : project.location || "Расположение не указано"}
                           </span>
@@ -529,7 +529,7 @@ export default function Dashboard() {
                       </CardContent>
                       <CardFooter className="flex justify-between">
                         <Link href={`/projects/${project.id}`}>
-                          <Button variant="outline" className="dark:text-gray-100">Просмотреть</Button>
+                          <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950">Просмотреть</Button>
                         </Link>
                         <Link href={`/projects/${project.id}/edit`}>
                           <Button>Редактировать</Button>
@@ -600,7 +600,7 @@ export default function Dashboard() {
                           <CardContent>
                             <div className="space-y-4">
                               <div>
-                                <div className="text-sm text-gray-500 mb-1">Проект</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Проект</div>
                                 <div className="font-medium">
                                   <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
                                     {projects?.find(p => p.id === application.projectId)?.title || `Проект #${application.projectId}`}
@@ -608,7 +608,7 @@ export default function Dashboard() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 mb-1">Кандидат</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Кандидат</div>
                                 <div className="font-medium">
                                   <Link href={`/talent/${application.resume?.id}`} className="hover:text-primary hover:underline">
                                     {application.user?.fullName || application.user?.username || `Пользователь #${application.userId}`}
@@ -616,7 +616,7 @@ export default function Dashboard() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 mb-1">Резюме кандидата</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Резюме кандидата</div>
                                 {application.resume ? (
                                   <div>
                                     <div className="font-medium">
@@ -703,6 +703,7 @@ export default function Dashboard() {
                             </div>
                             <Button 
                               variant="outline"
+                              className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950"
                               onClick={() => {
                                 // Здесь будет логика отправки сообщения
                                 console.log("Отправить сообщение", application.userId);
@@ -765,7 +766,7 @@ export default function Dashboard() {
                           <CardContent>
                             <div className="space-y-4">
                               <div>
-                                <div className="text-sm text-gray-500 mb-1">Проект</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Проект</div>
                                 <div className="font-medium">
                                   <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
                                     {application.project?.title || `Проект #${application.projectId}`}
@@ -773,7 +774,7 @@ export default function Dashboard() {
                                 </div>
                               </div>
                               <div>
-                                <div className="text-sm text-gray-500 mb-1">Резюме</div>
+                                <div className="text-sm text-gray-500 dark:text-gray-400 mb-1">Резюме</div>
                                 {(() => {
                                   const resume = resumes?.find(r => r.id === application.resumeId) || application.resume;
                                   if (resume) {
@@ -784,13 +785,13 @@ export default function Dashboard() {
                                             {resume.title}
                                           </Link>
                                         </div>
-                                        <div className="text-sm text-gray-600 mt-1">
+                                        <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                                           <span className="font-medium">Направление:</span> {resume.direction}
                                         </div>
                                         
                                         {/* Образование */}
                                         {Array.isArray(resume.education) && resume.education.length > 0 && (
-                                          <div className="text-sm text-gray-600 mt-1">
+                                          <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                                             <span className="font-medium">Образование:</span> {resume.education[0].institution}
                                             {resume.education.length > 1 && (
                                               <span className="text-xs text-gray-400 ml-1">+{resume.education.length - 1} ещё</span>
@@ -800,7 +801,7 @@ export default function Dashboard() {
                                         
                                         {/* Опыт работы */}
                                         {Array.isArray(resume.experience) && resume.experience.length > 0 && (
-                                          <div className="text-sm text-gray-600 mt-1">
+                                          <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                                             <span className="font-medium">Опыт:</span> {resume.experience[0].position} в {resume.experience[0].company}
                                             {resume.experience.length > 1 && (
                                               <span className="text-xs text-gray-400 ml-1">+{resume.experience.length - 1} ещё</span>
@@ -823,7 +824,7 @@ export default function Dashboard() {
                                     );
                                   } else {
                                     return (
-                                      <div className="text-gray-600">
+                                      <div className="text-gray-600 dark:text-gray-300">
                                         Резюме #{application.resumeId} (информация недоступна)
                                       </div>
                                     );
@@ -838,7 +839,7 @@ export default function Dashboard() {
                           </CardContent>
                           <CardFooter className="flex justify-end">
                             <Link href={`/projects/${application.projectId}`}>
-                              <Button variant="outline" className="dark:text-gray-100">Просмотреть проект</Button>
+                              <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950">Просмотреть проект</Button>
                             </Link>
                           </CardFooter>
                         </Card>
