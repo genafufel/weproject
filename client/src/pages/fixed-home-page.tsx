@@ -495,27 +495,27 @@ export default function HomePage() {
                       border border-blue-100 dark:border-blue-800/30 p-6
                       transform transition-all duration-300 hover:-translate-y-1
                       relative overflow-hidden flex flex-col h-full
-                      md:mt-0 pb-4
+                      ${index === 0 || index === 2 ? 'md:mt-0' : 'md:mt-24'} pb-4
                     `}>
-                      {/* Фон с фотографией/иллюстрацией для каждого шага */}
+                      {/* Декоративные элементы в углу карточки */}
                       {index === 0 && (
                         <div className="absolute -top-2 -right-2 w-28 h-28 opacity-20 overflow-hidden rounded-lg">
-                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900 bg-[url('/uploads/step1-portfolio.jpg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
                         </div>
                       )}
                       {index === 1 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-20 overflow-hidden rounded-lg rotate-3">
-                          <div className="w-full h-full bg-[url('/uploads/step2-font-design.jpg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
                         </div>
                       )}
                       {index === 2 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-20 overflow-hidden rounded-lg -rotate-3">
-                          <div className="w-full h-full bg-[url('/uploads/step3-architects.jpg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
                         </div>
                       )}
                       {index === 3 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-20 overflow-hidden rounded-lg rotate-6">
-                          <div className="w-full h-full bg-[url('/uploads/step4-team-collaboration.jpg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900"></div>
                         </div>
                       )}
                       
