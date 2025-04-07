@@ -195,42 +195,52 @@ export default function HomePage() {
       }, 50);
     };
     
-    // Находим элемент секции с категориями и добавляем прямой слушатель событий
-    // ко всей секции, чтобы захватить и пространство между карточками
-    const categoriesSection = document.getElementById('categories');
-    if (categoriesSection) {
-      // Добавляем обработчик ко всей секции, а не только к карусели
-      // Исправление типов: используем EventListener и приводим event к WheelEvent внутри
-      const wheelHandler: EventListener = (evt: Event) => {
-        const event = evt as WheelEvent;
-        handleDirectWheelOnCarousel(event);
-      };
+    // Находим элемент карусели и добавляем прямой слушатель событий
+    // конкретно для окна карусели, чтобы перехватывать все события колесика на ней
+    const carouselElement = document.getElementById('categories');
+    if (carouselElement) {
+      // Находим непосредственно окно карусели
+      const emblaNode = carouselElement.querySelector('.overflow-hidden');
       
-      categoriesSection.addEventListener('wheel', wheelHandler, { passive: false });
-      
-      // CSS-стилизация для предотвращения стандартной прокрутки
-      // Создаем стиль, который будет предотвращать прокрутку в секции категорий
-      const styleElement = document.createElement('style');
-      styleElement.textContent = `
-        #categories {
-          overscroll-behavior: contain; /* Предотвращает "проскальзывание" прокрутки на родительский элемент */
-        }
-      `;
-      document.head.appendChild(styleElement);
-      
-      // Очистка при размонтировании
-      return () => {
-        categoriesSection.removeEventListener('wheel', wheelHandler);
+      if (emblaNode) {
+        // Исправление типов: используем EventListener и приводим event к WheelEvent внутри
+        const wheelHandler: EventListener = (evt: Event) => {
+          const event = evt as WheelEvent;
+          handleDirectWheelOnCarousel(event);
+        };
         
-        // Удаляем стилевой элемент при размонтировании компонента
-        const style = document.head.querySelector('style:last-child');
-        if (style) {
-          document.head.removeChild(style);
-        }
-      };
+        // Добавляем обработчик к элементу карусели
+        emblaNode.addEventListener('wheel', wheelHandler, { passive: false });
+        
+        // CSS-стилизация для предотвращения стандартной прокрутки
+        // Создаем стиль, который будет корректировать поведение карусели
+        const styleElement = document.createElement('style');
+        styleElement.textContent = `
+          #categories .overflow-hidden {
+            overscroll-behavior: contain; /* Предотвращает "проскальзывание" прокрутки */
+          }
+          
+          /* Расширяем область карусели, делая её шире содержимого */
+          #categories .flex.gap-4 {
+            padding: 1rem 0; /* Добавляем отступы сверху и снизу для большей области захвата */
+          }
+        `;
+        document.head.appendChild(styleElement);
+        
+        // Очистка при размонтировании
+        return () => {
+          emblaNode.removeEventListener('wheel', wheelHandler);
+          
+          // Удаляем стилевой элемент при размонтировании компонента
+          const style = document.head.querySelector('style:last-child');
+          if (style) {
+            document.head.removeChild(style);
+          }
+        };
+      }
     }
     
-    // Если секция категорий не найдена
+    // Если карусель не найдена
     return () => {};
   }, [emblaApi, lastWheelTime, setLastWheelTime]);
 
