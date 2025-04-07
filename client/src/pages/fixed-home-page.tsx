@@ -500,7 +500,7 @@ export default function HomePage() {
                       {/* Фон с фотографией/иллюстрацией для каждого шага */}
                       {index === 0 && (
                         <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg">
-                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900 bg-[url('/uploads/step1-register.jpg')] bg-cover bg-center"></div>
+                          <div className="w-full h-full bg-blue-100 dark:bg-blue-900 bg-[url('/uploads/step1-portfolio.jpg')] bg-cover bg-center"></div>
                         </div>
                       )}
                       {index === 1 && (
@@ -533,7 +533,7 @@ export default function HomePage() {
                       
                       {/* Изображение под заголовком */}
                       <div className="w-full h-40 mb-4 rounded-md overflow-hidden shadow-md">
-                        {index === 0 && <img src="/uploads/step1-register.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 0 && <img src="/uploads/step1-portfolio.jpg" alt={step.title} className="w-full h-full object-cover" />}
                         {index === 1 && <img src="/uploads/step2-create-resume.jpg" alt={step.title} className="w-full h-full object-cover" />}
                         {index === 2 && <img src="/uploads/step3-find-projects.jpg" alt={step.title} className="w-full h-full object-cover" />}
                         {index === 3 && <img src="/uploads/step4-collaboration.jpg" alt={step.title} className="w-full h-full object-cover" />}
