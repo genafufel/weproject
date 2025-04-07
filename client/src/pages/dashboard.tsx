@@ -451,11 +451,11 @@ export default function Dashboard() {
                       <CardFooter className="flex flex-wrap gap-2 justify-between">
                         <div className="flex gap-2">
                           <Link href={`/talent/${resume.id}`}>
-                            <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950">Просмотреть</Button>
+                            <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50">Просмотреть</Button>
                           </Link>
                           <Button 
                             variant={resume.isPublic !== false ? "outline" : "destructive"}
-                            className={resume.isPublic !== false ? "dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950" : ""}
+                            className={resume.isPublic !== false ? "dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50" : ""}
                             onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
                           >
                             {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
@@ -529,7 +529,7 @@ export default function Dashboard() {
                       </CardContent>
                       <CardFooter className="flex justify-between">
                         <Link href={`/projects/${project.id}`}>
-                          <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950">Просмотреть</Button>
+                          <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50">Просмотреть</Button>
                         </Link>
                         <Link href={`/projects/${project.id}/edit`}>
                           <Button>Редактировать</Button>
@@ -703,7 +703,7 @@ export default function Dashboard() {
                             </div>
                             <Button 
                               variant="outline"
-                              className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950"
+                              className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50"
                               onClick={() => {
                                 // Здесь будет логика отправки сообщения
                                 console.log("Отправить сообщение", application.userId);
@@ -839,7 +839,7 @@ export default function Dashboard() {
                           </CardContent>
                           <CardFooter className="flex justify-end">
                             <Link href={`/projects/${application.projectId}`}>
-                              <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-950">Просмотреть проект</Button>
+                              <Button variant="outline" className="dark:text-blue-400 dark:border-blue-400 dark:hover:bg-blue-900/50">Просмотреть проект</Button>
                             </Link>
                           </CardFooter>
                         </Card>
