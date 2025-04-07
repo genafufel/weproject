@@ -315,11 +315,11 @@ export default function HomePage() {
               
               {/* Карусель */}
               <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex gap-6">
+                <div className="flex">
                   {fields.map((field, index) => (
                     <div 
                       key={field.title} 
-                      className="flex-[0_0_100%] sm:flex-[0_0_45%] md:flex-[0_0_30%] xl:flex-[0_0_23%] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mr-2"
+                      className="flex-[0_0_calc(100%-2rem)] sm:flex-[0_0_calc(45%-2rem)] md:flex-[0_0_calc(30%-2rem)] xl:flex-[0_0_calc(23%-2rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-4"
                     >
                       <div className="aspect-w-3 aspect-h-2 overflow-hidden">
                         <img 
