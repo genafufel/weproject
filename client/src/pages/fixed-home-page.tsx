@@ -566,7 +566,7 @@ export default function HomePage() {
             <div className="cta-element">
               <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 <span className="block">Ваше будущее начинается здесь</span>
-                <span className="block text-blue-100">Станьте частью сообщества профессионалов и новаторов</span>
+                <span className="block text-blue-100">Станьте частью сообщества<br />профессионалов и новаторов</span>
               </h2>
               <p className="mt-4 text-lg text-white/80 max-w-xl">
                 Присоединяйтесь к сотням студентов и проектов уже сегодня для создания успешных историй сотрудничества.
@@ -575,14 +575,14 @@ export default function HomePage() {
             <div className="mt-8 flex flex-col sm:flex-row gap-3 lg:mt-0 lg:flex-shrink-0 cta-element">
               <div className="inline-flex rounded-md shadow">
                 <Link href={user ? "/dashboard" : "/auth"}>
-                  <Button variant="secondary" size="lg" className="bg-white/95 backdrop-blur-sm text-gray-800 hover:bg-white/100 transform transition-all duration-300 hover:scale-105">
+                  <Button variant="secondary" size="lg" className="bg-white/95 backdrop-blur-sm text-gray-800 hover:bg-white/100 transform transition-all duration-300 hover:scale-105 animate-button-pulse">
                     {user ? "В личный кабинет" : "Создать аккаунт"}
                   </Button>
                 </Link>
               </div>
               <div className="inline-flex rounded-md shadow">
                 <Link href="/projects">
-                  <Button variant="default" size="lg" className="bg-blue-600/60 backdrop-blur-sm border-2 border-white/30 hover:bg-blue-700/80 hover:border-white/60 transform transition-all duration-300 hover:scale-105">
+                  <Button variant="default" size="lg" className="bg-blue-600/60 backdrop-blur-sm border-2 border-white/30 hover:bg-blue-700/80 hover:border-white/60 transform transition-all duration-300 hover:scale-105 animate-button-pulse">
                     Узнать больше
                   </Button>
                 </Link>
