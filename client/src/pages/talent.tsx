@@ -431,7 +431,7 @@ export default function Talent() {
                 const hasPhoto = photos.length > 0;
                 
                 return (
-                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block ${hasPhoto ? 'h-[584px] flex flex-col' : 'flex flex-col h-[280px] card-no-photo'}`}>
+                  <Card key={resume.id} className={`overflow-hidden hover:shadow-md transition-all w-full inline-block dark:bg-gray-700/70 ${hasPhoto ? 'h-[584px] flex flex-col' : 'flex flex-col h-[280px] card-no-photo'}`}>
                     {hasPhoto && (
                       <Link href={`/talent/${resume.id}`} className="cursor-pointer block">
                         <div className="aspect-[16/9] max-h-[320px] w-full overflow-hidden">

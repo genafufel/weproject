@@ -419,7 +419,7 @@ export default function EditProject() {
             </p>
           </div>
           
-          <Card className="dark:bg-gray-800 dark:border-gray-700">
+          <Card className="dark:bg-gray-700/70 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="dark:text-gray-100">Детали проекта</CardTitle>
               <CardDescription className="dark:text-gray-400">
@@ -490,7 +490,7 @@ export default function EditProject() {
                   </div>
                   
                   {positions.map((position) => (
-                    <div key={position.id} className="rounded-md border p-4 space-y-3 dark:bg-gray-800 dark:border-gray-700">
+                    <div key={position.id} className="rounded-md border p-4 space-y-3 dark:bg-gray-700/70 dark:border-gray-700">
                       <div className="flex items-center justify-between">
                         <h3 className="font-medium text-lg">{position.title}</h3>
                         <Button
@@ -571,7 +571,7 @@ export default function EditProject() {
                       Добавить новую должность
                     </Button>
                   ) : (
-                    <div className="rounded-md border p-4 space-y-3 dark:bg-gray-800 dark:border-gray-700">
+                    <div className="rounded-md border p-4 space-y-3 dark:bg-gray-700/70 dark:border-gray-700">
                       <Label>Новая должность</Label>
                       <div className="flex gap-2">
                         <Input
@@ -635,7 +635,7 @@ export default function EditProject() {
                   </div>
                   
                   {isAddingPhoto && (
-                    <div className="flex flex-col gap-4 mb-4 p-4 border rounded-md dark:bg-gray-800 dark:border-gray-700">
+                    <div className="flex flex-col gap-4 mb-4 p-4 border rounded-md dark:bg-gray-700/70 dark:border-gray-700">
                       <div>
                         <h3 className="text-lg font-medium mb-2">Загрузить фото проекта</h3>
                         <p className="text-sm text-gray-500 mb-4">

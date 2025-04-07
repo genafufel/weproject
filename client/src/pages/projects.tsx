@@ -336,7 +336,7 @@ export default function Projects() {
                 return (
                   <Card 
                     key={project.id} 
-                    className={`overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col group ${hasPhotos ? 'h-full' : 'h-[280px] card-no-photo'}`}
+                    className={`overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col group dark:bg-gray-700/70 ${hasPhotos ? 'h-full' : 'h-[280px] card-no-photo'}`}
                   >
                     {hasPhotos && (
                       <Link href={`/projects/${project.id}`}>

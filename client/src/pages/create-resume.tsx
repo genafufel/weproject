@@ -446,7 +446,7 @@ export default function CreateResume() {
             </p>
           </div>
           
-          <Card className="dark:bg-gray-800 dark:border-gray-700">
+          <Card className="dark:bg-gray-700/70 dark:border-gray-700">
             <CardHeader>
               <CardTitle className="dark:text-gray-100">Детали резюме</CardTitle>
               <CardDescription className="dark:text-gray-400">
@@ -548,7 +548,7 @@ export default function CreateResume() {
                     </div>
                     
                     {educationFields.map((field, index) => (
-                      <Card key={field.id} className="border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                      <Card key={field.id} className="border border-gray-200 dark:bg-gray-700/70 dark:border-gray-700">
                         <CardContent className="pt-6">
                           <div className="flex justify-between items-start mb-4">
                             <FormLabel className="text-base font-medium">Образование #{index + 1}</FormLabel>
@@ -682,7 +682,7 @@ export default function CreateResume() {
                     </div>
                     
                     {experienceFields.map((field, index) => (
-                      <Card key={field.id} className="border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                      <Card key={field.id} className="border border-gray-200 dark:bg-gray-700/70 dark:border-gray-700">
                         <CardContent className="pt-6">
                           <div className="flex justify-between items-start mb-4">
                             <FormLabel className="text-base font-medium">Опыт #{index + 1}</FormLabel>
