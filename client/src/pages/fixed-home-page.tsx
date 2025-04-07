@@ -92,12 +92,11 @@ export default function HomePage() {
   const [lastWheelTime, setLastWheelTime] = useState(0);
   
   // Карусель для категорий
-  const options = { 
-    loop: true, 
-    align: 'start',
+  // Явно указываем тип align как 'start' вместо строки для корректной типизации
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
     dragFree: true // Более плавная прокрутка
-  };
-  const [emblaRef, emblaApi] = useEmblaCarousel(options);
+  });
   
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -146,7 +145,13 @@ export default function HomePage() {
   useEffect(() => {
     if (!emblaApi) return;
     
-    const handleWheel = (event: WheelEvent) => {
+    // Состояние прокрутки страницы
+    let isPageScrolling = false;
+    let mouseOverCarousel = false;
+    let wheelEventStartedOverCarousel = false;
+    
+    // Обработчик для отслеживания движения мыши над каруселью
+    const handleMouseMove = (event: MouseEvent) => {
       // Получаем карусель по селектору
       const container = document.getElementById('categories');
       if (!container) return;
@@ -157,14 +162,35 @@ export default function HomePage() {
       const rect = emblaNode.getBoundingClientRect();
       
       // Проверяем, находится ли курсор мыши над каруселью
-      const isMouseOverCarousel = 
+      mouseOverCarousel = 
         event.clientX >= rect.left && 
         event.clientX <= rect.right && 
         event.clientY >= rect.top && 
         event.clientY <= rect.bottom;
+    };
+    
+    // Обработчик начала прокрутки колесом мыши
+    const handleWheelStart = (event: WheelEvent) => {
+      // Запоминаем, где началась прокрутка
+      wheelEventStartedOverCarousel = mouseOverCarousel;
+      isPageScrolling = !wheelEventStartedOverCarousel;
+    };
+    
+    // Обработчик прокрутки колесом мыши
+    const handleWheel = (event: WheelEvent) => {
+      // Если прокрутка началась не над каруселью, не перехватываем её
+      if (!wheelEventStartedOverCarousel) return;
       
-      if (isMouseOverCarousel) {
-        // Предотвращаем стандартное поведение прокрутки страницы
+      // Получаем карусель по селектору
+      const container = document.getElementById('categories');
+      if (!container) return;
+      
+      const emblaNode = container.querySelector('.overflow-hidden') as HTMLElement | null;
+      if (!emblaNode) return;
+      
+      // Проверяем, находится ли курсор мыши над каруселью
+      if (mouseOverCarousel) {
+        // Предотвращаем стандартное поведение прокрутки страницы только если прокрутка началась над каруселью
         event.preventDefault();
         
         // Добавляем проверку на силу прокрутки и используем дебаунс
@@ -188,12 +214,25 @@ export default function HomePage() {
       }
     };
     
-    // Добавляем обработчик события
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    // Обработчик окончания прокрутки (при отпускании мыши с колеса)
+    const handleWheelEnd = () => {
+      // Сбрасываем состояние после завершения прокрутки
+      wheelEventStartedOverCarousel = false;
+      isPageScrolling = false;
+    };
     
-    // Удаляем обработчик при размонтировании компонента
+    // Добавляем обработчики событий
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('wheel', handleWheelStart, { passive: true, capture: true });
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('mouseup', handleWheelEnd, { passive: true });
+    
+    // Удаляем обработчики при размонтировании компонента
     return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('wheel', handleWheelStart, { capture: true });
       window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('mouseup', handleWheelEnd);
     };
   }, [emblaApi, lastWheelTime, setLastWheelTime]);
 
