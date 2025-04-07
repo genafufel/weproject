@@ -94,10 +94,10 @@ export default function HomePage() {
   // Карусель для категорий
   // Явно указываем тип align как 'start' вместо строки для корректной типизации
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true, // Возвращаем зацикливание для лучшего UX
-    dragFree: true, // Более плавная прокрутка
-    skipSnaps: true, // Разрешаем прокрутку до любой позиции
-    duration: 30 // Увеличиваем время анимации для более плавных переходов
+    loop: true, // Включаем зацикливание
+    duration: 0, // Длительность анимации = 0 для мгновенного переключения
+    skipSnaps: false, // Отключаем промежуточные позиции для мгновенного перехода
+    dragFree: false // Отключаем свободное перетаскивание
   });
   
   const scrollPrev = useCallback(() => {
@@ -143,7 +143,7 @@ export default function HomePage() {
     handleInitialScroll();
   }, []);
   
-  // Добавляем специальный обработчик скролла и события перехода на новый круг
+  // Упрощенный обработчик для карусели без анимации зацикливания
   useEffect(() => {
     if (!emblaApi) return;
     
@@ -151,50 +151,40 @@ export default function HomePage() {
     const onResize = () => {
       emblaApi.reInit();
     };
-    
-    // Более надежная обработка зацикливания
-    const handleLoopTransition = () => {
-      // Получаем контейнер слайдов
+
+    // Полностью отключаем анимацию при зацикливании
+    const disableLoopAnimation = () => {
+      // Отключаем все анимации на контейнере карусели
       const container = emblaApi.containerNode();
-      // Сбрасываем любые предыдущие стили, которые могли быть добавлены
-      container.style.transition = '';
+      container.style.transition = 'none';
       
-      // Оптимизируем перерисовку при нескольких быстрых прокрутках
-      requestAnimationFrame(() => {
-        container.style.transition = 'transform 300ms ease-out';
-        
-        // Очищаем стиль после завершения анимации
-        const cleanup = () => {
-          container.style.transition = '';
-          container.removeEventListener('transitionend', cleanup);
-        };
-        
-        container.addEventListener('transitionend', cleanup);
+      // Отключаем анимацию на вложенных элементах
+      const slideNodes = emblaApi.slideNodes();
+      slideNodes.forEach(node => {
+        node.style.transition = 'none';
       });
     };
     
-    // Обрабатываем все события, связанные с навигацией
-    const setupCarouselEvents = () => {
-      // При инициализации настраиваем правильные переходы
-      handleLoopTransition();
+    // Настраиваем карусель при инициализации
+    const setupCarousel = () => {
+      disableLoopAnimation();
       
-      // Слушаем события выбора слайда
+      // Настраиваем моментальный переход при достижении границы
       emblaApi.on('select', () => {
-        // При выборе нового слайда убедимся, что переходы плавные
-        requestAnimationFrame(handleLoopTransition);
+        disableLoopAnimation();
       });
     };
     
-    // Настраиваем события при первой загрузке и при изменениях
-    emblaApi.on('reInit', setupCarouselEvents);
-    setupCarouselEvents();
+    // Инициализируем настройки
+    setupCarousel();
+    emblaApi.on('reInit', setupCarousel);
     
     window.addEventListener('resize', onResize);
     
     return () => {
       window.removeEventListener('resize', onResize);
-      emblaApi.off('reInit', setupCarouselEvents);
-      emblaApi.off('select');
+      emblaApi.off('reInit', setupCarousel);
+      emblaApi.off('select', disableLoopAnimation);
     };
   }, [emblaApi]);
 
