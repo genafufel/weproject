@@ -14,19 +14,19 @@ const fields = [
   {
     title: "IT и технологии",
     description: "Веб-разработка, мобильные приложения, программная инженерия и многое другое.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M140,100 L100,140 L140,180 M260,100 L300,140 L260,180 M220,60 L180,180' stroke='%234A89DC' stroke-width='8' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E1F5FE'/%3E%3Cpath d='M140,100 L100,140 L140,180 M260,100 L300,140 L260,180 M220,60 L180,180' stroke='%232196F3' stroke-width='10' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E",
     count: 287,
   },
   {
     title: "Искусство и дизайн",
     description: "Графический дизайн, UX/UI, анимация, иллюстрация и визуальное искусство.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Ccircle cx='120' cy='100' r='40' fill='%234A89DC' opacity='0.6'/%3E%3Ccircle cx='200' cy='100' r='40' fill='%234A89DC' opacity='0.4'/%3E%3Ccircle cx='280' cy='100' r='40' fill='%234A89DC' opacity='0.2'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E1F8F8'/%3E%3Ccircle cx='120' cy='100' r='40' fill='%2300BCD4' opacity='0.8'/%3E%3Ccircle cx='200' cy='100' r='40' fill='%2300BCD4' opacity='0.6'/%3E%3Ccircle cx='280' cy='100' r='40' fill='%2300BCD4' opacity='0.4'/%3E%3C/svg%3E",
     count: 145,
   },
   {
     title: "Организация мероприятий",
     description: "Планирование мероприятий, координация, маркетинг и продюсирование.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E6F0FB'/%3E%3Cpath d='M100,150 L170,90 L230,120 L300,70' stroke='%234A89DC' stroke-width='4' fill='none'/%3E%3Ccircle cx='100' cy='150' r='6' fill='%234A89DC'/%3E%3Ccircle cx='170' cy='90' r='6' fill='%234A89DC'/%3E%3Ccircle cx='230' cy='120' r='6' fill='%234A89DC'/%3E%3Ccircle cx='300' cy='70' r='6' fill='%234A89DC'/%3E%3C/svg%3E",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23F3E5F5'/%3E%3Cpath d='M100,150 L170,90 L230,120 L300,70' stroke='%239C27B0' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='100' cy='150' r='8' fill='%239C27B0'/%3E%3Ccircle cx='170' cy='90' r='8' fill='%239C27B0'/%3E%3Ccircle cx='230' cy='120' r='8' fill='%239C27B0'/%3E%3Ccircle cx='300' cy='70' r='8' fill='%239C27B0'/%3E%3C/svg%3E",
     count: 89,
   },
   {
@@ -88,6 +88,21 @@ const steps = [
 export default function HomePage() {
   const { user } = useAuth();
   
+  // Карусель для категорий
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true, 
+    align: 'start',
+    dragFree: true // Более плавная прокрутка
+  });
+  
+  const scrollPrev = useCallback(() => {
+    if (emblaApi) emblaApi.scrollPrev();
+  }, [emblaApi]);
+  
+  const scrollNext = useCallback(() => {
+    if (emblaApi) emblaApi.scrollNext();
+  }, [emblaApi]);
+  
   // Инициализируем анимации при прокрутке
   useEffect(() => {
     const cleanup = setupScrollAnimations();
@@ -121,15 +136,47 @@ export default function HomePage() {
     handleInitialScroll();
   }, []);
   
-  // Карусель для категорий
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, align: 'start' });
-  
-  const scrollPrev = useCallback(() => {
-    if (emblaApi) emblaApi.scrollPrev();
-  }, [emblaApi]);
-  
-  const scrollNext = useCallback(() => {
-    if (emblaApi) emblaApi.scrollNext();
+  // Добавляем обработчик колеса мыши для карусели
+  useEffect(() => {
+    if (!emblaApi) return;
+    
+    const handleWheel = (event: WheelEvent) => {
+      // Получаем карусель по селектору
+      const container = document.getElementById('categories');
+      if (!container) return;
+      
+      const emblaNode = container.querySelector('.overflow-hidden') as HTMLElement | null;
+      if (!emblaNode) return;
+      
+      const rect = emblaNode.getBoundingClientRect();
+      
+      // Проверяем, находится ли курсор мыши над каруселью
+      const isMouseOverCarousel = 
+        event.clientX >= rect.left && 
+        event.clientX <= rect.right && 
+        event.clientY >= rect.top && 
+        event.clientY <= rect.bottom;
+      
+      if (isMouseOverCarousel) {
+        // Предотвращаем стандартное поведение прокрутки страницы
+        event.preventDefault();
+        
+        // Определяем направление прокрутки
+        if (event.deltaX > 0 || event.deltaY > 0) {
+          emblaApi.scrollNext();
+        } else {
+          emblaApi.scrollPrev();
+        }
+      }
+    };
+    
+    // Добавляем обработчик события
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    
+    // Удаляем обработчик при размонтировании компонента
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+    };
   }, [emblaApi]);
 
   return (
