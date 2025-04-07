@@ -95,9 +95,9 @@ export default function HomePage() {
   // Явно указываем тип align как 'start' вместо строки для корректной типизации
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true, // Включаем зацикливание
-    duration: 0, // Длительность анимации = 0 для мгновенного переключения
-    skipSnaps: false, // Отключаем промежуточные позиции для мгновенного перехода
-    dragFree: false // Отключаем свободное перетаскивание
+    duration: 30, // Длительность анимации для плавного перемещения (но зацикливание будет мгновенным)
+    skipSnaps: false, // Включаем привязку к слайдам для более плавного скролла
+    dragFree: true // Включаем свободную прокрутку для плавности
   });
   
   const scrollPrev = useCallback(() => {
@@ -152,17 +152,32 @@ export default function HomePage() {
       emblaApi.reInit();
     };
 
-    // Полностью отключаем анимацию при зацикливании
+    // Обнаруживаем момент перехода через границу при зацикливании и отключаем анимацию
     const disableLoopAnimation = () => {
-      // Отключаем все анимации на контейнере карусели
-      const container = emblaApi.containerNode();
-      container.style.transition = 'none';
+      // Проверяем, находимся ли мы на границе (первый или последний слайд)
+      const index = emblaApi.selectedScrollSnap();
+      const count = emblaApi.slideNodes().length;
+      const isAtBoundary = index === 0 || index === count - 1;
       
-      // Отключаем анимацию на вложенных элементах
-      const slideNodes = emblaApi.slideNodes();
-      slideNodes.forEach(node => {
-        node.style.transition = 'none';
-      });
+      // Если мы на границе, отключаем анимацию для мгновенного перехода
+      if (isAtBoundary) {
+        const container = emblaApi.containerNode();
+        container.style.transition = 'none';
+        
+        // Только для границы отключаем анимацию, чтобы обычная прокрутка оставалась плавной
+        const slideNodes = emblaApi.slideNodes();
+        slideNodes.forEach(node => {
+          node.style.transition = 'none';
+        });
+        
+        // Через небольшую задержку восстанавливаем плавную анимацию
+        setTimeout(() => {
+          container.style.transition = '';
+          slideNodes.forEach(node => {
+            node.style.transition = '';
+          });
+        }, 50);
+      }
     };
     
     // Настраиваем карусель при инициализации
