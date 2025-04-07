@@ -244,6 +244,15 @@
   animation: gradientFlow 3s ease infinite;
 }
 
+.gradient-text-white-blue {
+  background: linear-gradient(90deg, white, #60a5fa, #3b82f6, white);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientFlow 4s linear infinite;
+}
+
 .gradient-border {
   position: relative;
 }
