@@ -514,7 +514,7 @@ export default function HomePage() {
                       {/* Изображение под заголовком */}
                       <div className="w-full h-56 mb-4 rounded-md overflow-hidden shadow-md">
                         {index === 0 && <img src="/uploads/step1-portfolio.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
-                        {index === 1 && <img src="/uploads/step2-font-design.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
+                        {index === 1 && <img src="/uploads/step2-artisan-work.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                         {index === 2 && <img src="/uploads/step3-architects.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                         {index === 3 && <img src="/uploads/step4-team-collaboration.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                       </div>
