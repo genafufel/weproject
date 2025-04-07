@@ -112,7 +112,8 @@ export default function HomePage() {
   
   // Инициализируем анимации при прокрутке
   useEffect(() => {
-    const cleanup = setupScrollAnimations();
+    const sections = ['hero', 'mission', 'steps', 'categories', 'cta'];
+    const cleanup = setupScrollAnimations(sections);
     return cleanup;
   }, []);
 
@@ -123,6 +124,8 @@ export default function HomePage() {
       section.scrollIntoView({ behavior: 'smooth' });
     }
   };
+  
+  // Эффект добавлен в инициализацию выше
   
   // Используем простую функцию прокрутки без перехвата событий колеса мыши
   useEffect(() => {
@@ -345,6 +348,77 @@ export default function HomePage() {
             
             {/* Кнопка прокрутки к следующему разделу */}
             <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+              <button 
+                onClick={() => scrollToNextSection('steps')}
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+              >
+                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
+              </button>
+            </div>
+          </div>
+        </section>
+        
+        {/* Mission Section */}
+        <section id="mission" className="bg-white py-20 relative section-animate overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="lg:text-center">
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
+              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
+                Соединяем таланты и идеи для успешного будущего
+              </p>
+              <p className="mt-4 max-w-3xl text-xl text-gray-600 dark:text-gray-400 lg:mx-auto">
+                WeProject создан для решения двух ключевых проблем: помочь студентам и молодым специалистам без опыта получить первые профессиональные проекты в портфолио, и помочь стартапам найти талантливых исполнителей без больших бюджетов.
+              </p>
+            </div>
+            
+            <div className="mt-12 grid md:grid-cols-2 gap-10">
+              <div className="bg-blue-50 dark:bg-gray-700/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Для студентов и талантов</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Получите реальный опыт работы для вашего резюме</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Развивайте профессиональные навыки в проектах</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Создайте портфолио, которое привлечет будущих работодателей</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Расширьте профессиональную сеть контактов</span>
+                  </li>
+                </ul>
+              </div>
+              
+              <div className="bg-blue-50 dark:bg-gray-700/60 rounded-xl p-8 shadow-md transform transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-4">Для проектов и стартапов</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Найдите мотивированных исполнителей для своих идей</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Соберите команду без огромного бюджета</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Реализуйте креативные и инновационные идеи</span>
+                  </li>
+                  <li className="flex items-start">
+                    <CheckIcon className="h-5 w-5 text-primary mt-1 mr-2 flex-shrink-0" />
+                    <span className="text-gray-600 dark:text-gray-300">Обеспечьте быстрый старт вашим проектам</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            {/* Кнопка прокрутки к следующему разделу */}
+            <div className="mt-16 flex justify-center">
               <button 
                 onClick={() => scrollToNextSection('steps')}
                 className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
