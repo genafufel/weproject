@@ -161,11 +161,6 @@ export default function HomePage() {
         
         {/* Categories Section */}
         <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
-          {/* Декоративный элемент градиентной тени сверху */}
-          <div className="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-blue-100/80 dark:from-blue-900/30 to-transparent pointer-events-none"></div>
-          
-          {/* Декоративные элементы */}
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-gray-50/80 dark:from-gray-900/80 to-transparent"></div>
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
@@ -237,10 +232,7 @@ export default function HomePage() {
         <div className="h-4 bg-blue-600/70 backdrop-blur-md shadow-md relative z-20"></div>
             
         {/* How It Works Section */}
-        <section id="steps" className="bg-gray-50 dark:bg-gray-900 py-20 relative fullscreen-section section-animate overflow-hidden">
-          {/* Декоративные элементы */}
-          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-white/80 dark:from-gray-900/80 to-transparent"></div>
-          <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-gray-100/80 dark:from-gray-800/50 to-transparent"></div>
+        <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
           
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
