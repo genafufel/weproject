@@ -145,95 +145,73 @@ export default function HomePage() {
   useEffect(() => {
     if (!emblaApi) return;
     
-    // Состояние прокрутки страницы
-    let isPageScrolling = false;
-    let mouseOverCarousel = false;
-    let wheelEventStartedOverCarousel = false;
-    
-    // Обработчик для отслеживания движения мыши над каруселью
-    const handleMouseMove = (event: MouseEvent) => {
-      // Получаем карусель по селектору
-      const container = document.getElementById('categories');
-      if (!container) return;
-      
-      const emblaNode = container.querySelector('.overflow-hidden') as HTMLElement | null;
-      if (!emblaNode) return;
-      
-      const rect = emblaNode.getBoundingClientRect();
-      
-      // Проверяем, находится ли курсор мыши над каруселью
-      mouseOverCarousel = 
-        event.clientX >= rect.left && 
-        event.clientX <= rect.right && 
-        event.clientY >= rect.top && 
-        event.clientY <= rect.bottom;
-    };
-    
-    // Обработчик начала прокрутки колесом мыши
-    const handleWheelStart = (event: WheelEvent) => {
-      // Запоминаем, где началась прокрутка
-      wheelEventStartedOverCarousel = mouseOverCarousel;
-      isPageScrolling = !wheelEventStartedOverCarousel;
-    };
-    
-    // Обработчик прокрутки колесом мыши
-    const handleWheel = (event: WheelEvent) => {
-      // Если прокрутка началась не над каруселью, не перехватываем её
-      if (!wheelEventStartedOverCarousel) return;
-      
-      // Получаем карусель по селектору
-      const container = document.getElementById('categories');
-      if (!container) return;
-      
-      const emblaNode = container.querySelector('.overflow-hidden') as HTMLElement | null;
-      if (!emblaNode) return;
-      
-      // Проверяем, находится ли курсор мыши над каруселью
-      if (mouseOverCarousel) {
-        // Предотвращаем стандартное поведение прокрутки страницы только если прокрутка началась над каруселью
+    // Состояние прокрутки
+    let isScrollingCarousel = false;
+    let lastScrollTime = 0;
+
+    // Прямое управление каруселью через элемент
+    const handleDirectWheelOnCarousel = (event: WheelEvent) => {
+      // Важно! Используем свой флаг прокрутки, а не тот, что перехватывается браузером
+      if (isScrollingCarousel) {
         event.preventDefault();
-        event.stopPropagation(); // Останавливаем распространение события, чтобы предотвратить дальнейшую прокрутку страницы
-        
-        // Добавляем проверку на силу прокрутки и используем дебаунс
-        const now = Date.now();
-        if (now - lastWheelTime < 500) {
-          return; // Игнорируем слишком частые события прокрутки
-        }
-        
-        // Определяем направление прокрутки с порогом для предотвращения случайных срабатываний
-        const threshold = 5;
-        if (Math.abs(event.deltaY) < threshold) return;
-        
-        if (event.deltaX > threshold || event.deltaY > threshold) {
-          emblaApi.scrollNext();
-        } else if (event.deltaX < -threshold || event.deltaY < -threshold) {
-          emblaApi.scrollPrev();
-        }
-        
-        // Обновляем время последней прокрутки
-        setLastWheelTime(now);
+        return;
       }
+        
+      // Получаем текущее время для дебаунсинга
+      const now = Date.now();
+      if (now - lastScrollTime < 500) {
+        // Если прошло меньше 500мс, игнорируем событие
+        event.preventDefault();
+        return;
+      }
+      
+      // Определяем направление прокрутки с порогом
+      const threshold = 5;
+      if (Math.abs(event.deltaY) < threshold) {
+        return;
+      }
+      
+      // Устанавливаем флаг, что карусель прокручивается
+      isScrollingCarousel = true;
+      
+      // Прокручиваем карусель в нужном направлении
+      if (event.deltaY > 0) {
+        emblaApi.scrollNext();
+      } else {
+        emblaApi.scrollPrev();
+      }
+      
+      // Обновляем время последней прокрутки
+      lastScrollTime = now;
+      setLastWheelTime(now);
+      
+      // Предотвращаем стандартное поведение прокрутки страницы
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Сбрасываем флаг прокрутки через небольшой промежуток времени
+      setTimeout(() => {
+        isScrollingCarousel = false;
+      }, 50);
     };
     
-    // Обработчик окончания прокрутки (при отпускании мыши с колеса)
-    const handleWheelEnd = () => {
-      // Сбрасываем состояние после завершения прокрутки
-      wheelEventStartedOverCarousel = false;
-      isPageScrolling = false;
-    };
+    // Находим элемент карусели и добавляем прямой слушатель событий
+    const carouselElement = document.getElementById('categories');
+    if (carouselElement) {
+      const emblaNode = carouselElement.querySelector('.overflow-hidden');
+      if (emblaNode) {
+        emblaNode.addEventListener('wheel', handleDirectWheelOnCarousel, { passive: false });
+      }
+    }
     
-    // Добавляем обработчики событий
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('wheel', handleWheelStart, { passive: true, capture: true });
-    window.addEventListener('wheel', handleWheel, { passive: false });
-    window.addEventListener('mouseup', handleWheelEnd, { passive: true });
-    
-    // Удаляем обработчики при размонтировании компонента
+    // Очистка при размонтировании
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('wheel', handleWheelStart, { capture: true });
-      window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('mouseup', handleWheelEnd);
+      if (carouselElement) {
+        const emblaNode = carouselElement.querySelector('.overflow-hidden');
+        if (emblaNode) {
+          emblaNode.removeEventListener('wheel', handleDirectWheelOnCarousel);
+        }
+      }
     };
   }, [emblaApi, lastWheelTime, setLastWheelTime]);
 
