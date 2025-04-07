@@ -94,8 +94,10 @@ export default function HomePage() {
   // Карусель для категорий
   // Явно указываем тип align как 'start' вместо строки для корректной типизации
   const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: true,
-    dragFree: true // Более плавная прокрутка
+    loop: false, // Отключаем зацикливание для предотвращения анимации перемещения карточек
+    dragFree: true, // Более плавная прокрутка
+    containScroll: 'keepSnaps', // Предотвращает перемещение слайдов из конца в начало
+    watchDrag: false  // Только программная навигация
   });
   
   const scrollPrev = useCallback(() => {
