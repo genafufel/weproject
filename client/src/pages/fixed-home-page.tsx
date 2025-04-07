@@ -355,60 +355,12 @@ export default function HomePage() {
           </div>
         </section>
         
-        {/* How It Works Section */}
-        <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
-          {/* Добавляем кнопку прокрутки к следующему разделу */}
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-            <button 
-              onClick={() => scrollToNextSection('concept')}
-              className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
-            >
-              <ChevronDownIcon className="h-6 w-6 animate-bounce" />
-            </button>
-          </div>
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
-              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
-                Четыре простых шага к достижению цели
-              </p>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
-                Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
-              </p>
-            </div>
-            
-            <div className="mt-8">
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
-                {steps.map((step, index) => (
-                  <div 
-                    key={step.number} 
-                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
-                    style={{ animationDelay: `${300 + index * 150}ms` }}
-                  >
-                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 text-primary mx-auto animate-pulse">
-                      <span className="text-xl font-bold">{step.number}</span>
-                    </div>
-                    <h3 className="text-base leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-2">{step.title}</h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
-                      {step.description}
-                    </p>
-                    {index < steps.length - 1 && (
-                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 transform -translate-x-6"></div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-        
         {/* Concept Section - Секция с описанием концепции */}
         <section id="concept" className="bg-white dark:bg-gray-900 py-20 relative fullscreen-section section-animate overflow-hidden">
           {/* Добавляем кнопку прокрутки к следующему разделу */}
           <div className="absolute bottom-6 left-0 right-0 flex justify-center">
             <button 
-              onClick={() => scrollToNextSection('cta')}
+              onClick={() => scrollToNextSection('steps')}
               className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
             >
               <ChevronDownIcon className="h-6 w-6 animate-bounce" />
@@ -500,6 +452,55 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* How It Works Section */}
+        <section id="steps" className="bg-gray-100 dark:bg-gray-800 py-20 relative fullscreen-section section-animate overflow-hidden">
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="lg:text-center">
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
+              <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
+                Четыре простых шага к достижению цели
+              </p>
+              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
+                Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
+              </p>
+            </div>
+            
+            <div className="mt-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5">
+                {steps.map((step, index) => (
+                  <div 
+                    key={step.number} 
+                    className="relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm rounded-xl shadow-md hover:shadow-lg p-4 hover-card animate-fade-in border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 transition-all duration-300"
+                    style={{ animationDelay: `${300 + index * 150}ms` }}
+                  >
+                    <div className="flex items-center justify-center h-14 w-14 rounded-full mb-4 bg-primary/10 text-primary mx-auto animate-pulse">
+                      <span className="text-xl font-bold">{step.number}</span>
+                    </div>
+                    <h3 className="text-base leading-6 font-medium text-gray-900 dark:text-gray-100 text-center mb-2">{step.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                      {step.description}
+                    </p>
+                    {index < steps.length - 1 && (
+                      <div className="hidden lg:block absolute top-12 left-full w-12 h-2 border-t-2 border-dashed border-primary/50 transform -translate-x-6"></div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            {/* Кнопка прокрутки к следующему разделу */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+              <button 
+                onClick={() => scrollToNextSection('cta')}
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+              >
+                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
+              </button>
             </div>
           </div>
         </section>
