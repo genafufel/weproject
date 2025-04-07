@@ -266,101 +266,12 @@ export default function HomePage() {
         {/* Разделитель между секциями */}
         <div className="h-4 bg-white/70 backdrop-blur-md shadow-md relative z-20"></div>
         
-        {/* Categories Section */}
-        <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="lg:text-center">
-              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
-              <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
-                Откройте мир возможностей
-              </p>
-              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
-                Исследуйте разнообразные проекты и найдите именно то, что соответствует вашим интересам.
-              </p>
-            </div>
-            
-            <div className="mt-6 relative">
-              {/* Кнопки навигации */}
-              <div className="flex justify-end mb-4 gap-2">
-                <button 
-                  onClick={scrollPrev}
-                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
-                  aria-label="Предыдущий слайд"
-                >
-                  <ChevronLeftIcon className="w-5 h-5" />
-                </button>
-                <button 
-                  onClick={scrollNext}
-                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
-                  aria-label="Следующий слайд"
-                >
-                  <ChevronRightIcon className="w-5 h-5" />
-                </button>
-              </div>
-              
-              {/* Карусель */}
-              <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex">
-                  {fields.map((field, index) => (
-                    <div 
-                      key={field.title} 
-                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
-                    >
-                      <div className="aspect-w-3 aspect-h-2 overflow-hidden">
-                        <img 
-                          src={field.image} 
-                          alt={field.title} 
-                          className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        {/* Синее выделение по краям и снизу вместо затемнения */}
-                        <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
-                      </div>
-                      <div className="p-4 relative">
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                          <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
-                            {field.title}
-                          </Link>
-                        </h3>
-                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                          {field.description}
-                        </p>
-                        <div className="mt-4 flex justify-between items-center">
-                          <span className="text-sm font-medium text-primary">
-                            {field.count} активных проектов
-                          </span>
-                          <Link 
-                            href={`/projects?field=${encodeURIComponent(field.title)}`}
-                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
-                          >
-                            Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-            
-            {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-              <button 
-                onClick={() => scrollToNextSection('concept')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
-              >
-                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
-              </button>
-            </div>
-          </div>
-        </section>
-        
         {/* Concept Section - Секция с описанием концепции */}
         <section id="concept" className="bg-white dark:bg-gray-900 py-20 relative fullscreen-section section-animate overflow-hidden">
           {/* Добавляем кнопку прокрутки к следующему разделу */}
           <div className="absolute bottom-6 left-0 right-0 flex justify-center">
             <button 
-              onClick={() => scrollToNextSection('steps')}
+              onClick={() => scrollToNextSection('categories')}
               className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
             >
               <ChevronDownIcon className="h-6 w-6 animate-bounce" />
@@ -452,6 +363,95 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+        
+        {/* Categories Section */}
+        <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="lg:text-center">
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
+              <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
+                Откройте мир возможностей
+              </p>
+              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
+                Исследуйте разнообразные проекты и найдите именно то, что соответствует вашим интересам.
+              </p>
+            </div>
+            
+            <div className="mt-6 relative">
+              {/* Кнопки навигации */}
+              <div className="flex justify-end mb-4 gap-2">
+                <button 
+                  onClick={scrollPrev}
+                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  aria-label="Предыдущий слайд"
+                >
+                  <ChevronLeftIcon className="w-5 h-5" />
+                </button>
+                <button 
+                  onClick={scrollNext}
+                  className="p-2 rounded-full bg-primary/10 hover:bg-primary/20 text-primary transition-all"
+                  aria-label="Следующий слайд"
+                >
+                  <ChevronRightIcon className="w-5 h-5" />
+                </button>
+              </div>
+              
+              {/* Карусель */}
+              <div className="overflow-hidden" ref={emblaRef}>
+                <div className="flex">
+                  {fields.map((field, index) => (
+                    <div 
+                      key={field.title} 
+                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
+                    >
+                      <div className="aspect-w-3 aspect-h-2 overflow-hidden">
+                        <img 
+                          src={field.image} 
+                          alt={field.title} 
+                          className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                        {/* Синее выделение по краям и снизу вместо затемнения */}
+                        <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
+                      </div>
+                      <div className="p-4 relative">
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                          <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
+                            {field.title}
+                          </Link>
+                        </h3>
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                          {field.description}
+                        </p>
+                        <div className="mt-4 flex justify-between items-center">
+                          <span className="text-sm font-medium text-primary">
+                            {field.count} активных проектов
+                          </span>
+                          <Link 
+                            href={`/projects?field=${encodeURIComponent(field.title)}`}
+                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
+                          >
+                            Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Кнопка прокрутки к следующему разделу */}
+            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
+              <button 
+                onClick={() => scrollToNextSection('steps')}
+                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
+              >
+                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
+              </button>
             </div>
           </div>
         </section>
