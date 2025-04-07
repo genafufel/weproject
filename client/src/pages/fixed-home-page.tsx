@@ -365,7 +365,7 @@ export default function HomePage() {
               </div>
               <div className="order-1 md:order-2 hidden md:block relative">
                 {/* Используем absolute позиционирование, чтобы точно выровнять блок к нужной строке */}
-                <div className="absolute top-[118px] left-0 right-0 w-full max-w-md mx-auto">
+                <div className="absolute top-[87px] left-0 right-0 w-full max-w-md mx-auto">
                   <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl opacity-70"></div>
                   <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
                     <div className="flex items-center justify-between mb-6">
