@@ -84,6 +84,12 @@
   100% { background-position: 0% 50%; }
 }
 
+@keyframes pulsateGlow {
+  0% { text-shadow: 0 0 0px rgba(120, 180, 255, 0); }
+  50% { text-shadow: 0 0 15px rgba(120, 180, 255, 0.7); }
+  100% { text-shadow: 0 0 0px rgba(120, 180, 255, 0); }
+}
+
 @keyframes zoomPan {
   0% { transform: scale(1.0); }
   50% { transform: scale(1.05); }
@@ -242,6 +248,15 @@
   color: transparent;
   background-size: 200% 200%;
   animation: gradientFlow 3s ease infinite;
+}
+
+.dark .gradient-text {
+  background: linear-gradient(90deg, #ffffff, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 200%;
+  animation: gradientFlow 3s ease infinite, pulsateGlow 2s ease-in-out infinite;
 }
 
 .gradient-border {
