@@ -216,7 +216,7 @@ export default function HomePage() {
           {/* Анимированный фон */}
           <div className="absolute inset-0 overflow-hidden animate-fade-in">
             <img 
-              src="/images/hero-background-new.jpeg" 
+              src="./images/hero-background-new.jpeg" 
               alt="Фоновое изображение" 
               className="w-full h-full object-cover animate-[zoomPan_30s_ease-in-out_infinite]"
               style={{ transformOrigin: 'center center' }}

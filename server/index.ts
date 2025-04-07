@@ -49,9 +49,19 @@ app.use((req, res, next) => {
       // Для NeonDB используем импортированные функции из db.ts
       const { db } = await import("./db");
       
-      // Выполняем миграции
-      await migrate(db, { migrationsFolder: 'migrations' });
-      console.log("Миграции выполнены успешно");
+      try {
+        // Выполняем миграции
+        await migrate(db, { migrationsFolder: 'migrations' });
+        console.log("Миграции выполнены успешно");
+      } catch (migrateError: any) {
+        // Игнорируем ошибку о существующих таблицах
+        if (migrateError.code === '42P07') {
+          console.log("Таблицы уже существуют, пропускаем миграцию");
+        } else {
+          // Другие ошибки миграции выводим в консоль
+          console.error("Ошибка миграции:", migrateError);
+        }
+      }
       
       // Вызываем метод createTestUserData в DatabaseStorage напрямую
       if (typeof storage === 'object' && 'createTestUserData' in storage) {
