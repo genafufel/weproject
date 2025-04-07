@@ -541,7 +541,9 @@ export default function HomePage() {
                 onClick={() => scrollToNextSection('cta')}
                 className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-2 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
               >
-                <ChevronDownIcon className="h-5 w-5 animate-bounce" />
+                <div className="chevron-container">
+                  <ChevronDownIcon className="h-5 w-5 chevron-animate" />
+                </div>
               </button>
             </div>
           </div>
