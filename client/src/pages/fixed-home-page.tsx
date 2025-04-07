@@ -495,7 +495,7 @@ export default function HomePage() {
                       border border-blue-100 dark:border-blue-800/30 p-6
                       transform transition-all duration-300 hover:-translate-y-1
                       relative overflow-hidden flex flex-col h-full
-                      ${index === 3 ? 'md:mt-24' : 'md:mt-0 pb-4'}
+                      md:mt-0 pb-4
                     `}>
                       {/* Фон с фотографией/иллюстрацией для каждого шага */}
                       {index === 0 && (
@@ -514,8 +514,8 @@ export default function HomePage() {
                         </div>
                       )}
                       {index === 3 && (
-                        <div className="absolute -top-2 -right-2 w-24 h-24 opacity-10 overflow-hidden rounded-lg rotate-6">
-                          <div className="w-full h-full bg-[url('/uploads/step4-collaboration.jpg')] bg-cover bg-center"></div>
+                        <div className="absolute -top-2 -right-2 w-24 h-24 opacity-20 overflow-hidden rounded-lg rotate-6">
+                          <div className="w-full h-full bg-[url('/uploads/step4-team-collaboration.jpg')] bg-cover bg-center"></div>
                         </div>
                       )}
                       
@@ -532,11 +532,11 @@ export default function HomePage() {
                       </div>
                       
                       {/* Изображение под заголовком */}
-                      <div className={`w-full ${index === 3 ? 'h-40' : 'h-56'} mb-4 rounded-md overflow-hidden shadow-md`}>
+                      <div className="w-full h-56 mb-4 rounded-md overflow-hidden shadow-md">
                         {index === 0 && <img src="/uploads/step1-portfolio.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                         {index === 1 && <img src="/uploads/step2-architect-drawing.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                         {index === 2 && <img src="/uploads/step3-architects.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
-                        {index === 3 && <img src="/uploads/step4-collaboration.jpg" alt={step.title} className="w-full h-full object-cover" />}
+                        {index === 3 && <img src="/uploads/step4-team-collaboration.jpg" alt={step.title} className="w-full h-full object-cover object-center" />}
                       </div>
                       
                       {/* Описание шага */}
