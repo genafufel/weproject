@@ -95,8 +95,7 @@ export default function HomePage() {
   // Явно указываем тип align как 'start' вместо строки для корректной типизации
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
-    dragFree: true, // Более плавная прокрутка
-    containScroll: "trimSnaps" // Предотвращает "выход" карусели за пределы
+    dragFree: true // Более плавная прокрутка
   });
   
   const scrollPrev = useCallback(() => {
@@ -197,52 +196,23 @@ export default function HomePage() {
     };
     
     // Находим элемент карусели и добавляем прямой слушатель событий
-    // конкретно для окна карусели, чтобы перехватывать все события колесика на ней
     const carouselElement = document.getElementById('categories');
     if (carouselElement) {
-      // Находим непосредственно окно карусели
       const emblaNode = carouselElement.querySelector('.overflow-hidden');
-      
       if (emblaNode) {
-        // Исправление типов: используем EventListener и приводим event к WheelEvent внутри
-        const wheelHandler: EventListener = (evt: Event) => {
-          const event = evt as WheelEvent;
-          handleDirectWheelOnCarousel(event);
-        };
-        
-        // Добавляем обработчик к элементу карусели
-        emblaNode.addEventListener('wheel', wheelHandler, { passive: false });
-        
-        // CSS-стилизация для предотвращения стандартной прокрутки
-        // Создаем стиль, который будет корректировать поведение карусели
-        const styleElement = document.createElement('style');
-        styleElement.textContent = `
-          #categories .overflow-hidden {
-            overscroll-behavior: contain; /* Предотвращает "проскальзывание" прокрутки */
-          }
-          
-          /* Расширяем область карусели, делая её шире содержимого */
-          #categories .flex.gap-4 {
-            padding: 1rem 0; /* Добавляем отступы сверху и снизу для большей области захвата */
-          }
-        `;
-        document.head.appendChild(styleElement);
-        
-        // Очистка при размонтировании
-        return () => {
-          emblaNode.removeEventListener('wheel', wheelHandler);
-          
-          // Удаляем стилевой элемент при размонтировании компонента
-          const style = document.head.querySelector('style:last-child');
-          if (style) {
-            document.head.removeChild(style);
-          }
-        };
+        emblaNode.addEventListener('wheel', handleDirectWheelOnCarousel, { passive: false });
       }
     }
     
-    // Если карусель не найдена
-    return () => {};
+    // Очистка при размонтировании
+    return () => {
+      if (carouselElement) {
+        const emblaNode = carouselElement.querySelector('.overflow-hidden');
+        if (emblaNode) {
+          emblaNode.removeEventListener('wheel', handleDirectWheelOnCarousel);
+        }
+      }
+    };
   }, [emblaApi, lastWheelTime, setLastWheelTime]);
 
   return (
