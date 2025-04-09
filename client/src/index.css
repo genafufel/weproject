@@ -358,6 +358,25 @@
   animation: gradientFlow 3s ease infinite;
 }
 
+/* Специальный стиль для "Соединяем таланты и возможности" */
+.talents-connect-text {
+  background: linear-gradient(90deg, #000000, #3b82f6, #1e40af);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 200%;
+  animation: gradientFlow 3s ease infinite;
+}
+
+.dark .talents-connect-text {
+  background: linear-gradient(90deg, #ffffff, #60a5fa, #93c5fd);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 200%;
+  animation: gradientFlow 3s ease infinite;
+}
+
 .gradient-border {
   position: relative;
 }
