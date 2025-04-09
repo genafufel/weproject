@@ -306,10 +306,10 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="mt-8">
-                  <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-dark transition-colors">
+                  <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border-2 border-primary rounded-md text-white bg-primary hover:bg-primary-dark text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all">
                     Найти проект
                   </Link>
-                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary dark:text-blue-300 bg-white dark:bg-gray-700 border-primary dark:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
+                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border-2 border-primary dark:border-blue-400 rounded-md text-primary dark:text-white bg-white dark:bg-blue-600/80 hover:bg-gray-50 dark:hover:bg-blue-700 text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all">
                     Найти таланты
                   </Link>
                 </div>
@@ -566,16 +566,16 @@ export default function HomePage() {
               </p>
             </div>
             <div className="mt-8 flex flex-col sm:flex-row gap-3 lg:mt-0 lg:flex-shrink-0 cta-element">
-              <div className="inline-flex rounded-md shadow">
+              <div className="inline-flex rounded-md shadow-xl">
                 <Link href={user ? "/dashboard" : "/auth"}>
-                  <Button variant="secondary" size="lg" className="bg-white/95 backdrop-blur-sm text-gray-800 hover:bg-white/100 transform transition-all duration-300 hover:scale-105 animate-button-pulse">
+                  <Button variant="secondary" size="lg" className="bg-white backdrop-blur-sm text-gray-900 hover:bg-white/90 text-base font-bold tracking-wide transform transition-all duration-300 hover:scale-105 border-2 border-white shadow-inner hover:shadow-xl py-6 px-8 animate-button-pulse">
                     {user ? "В личный кабинет" : "Создать аккаунт"}
                   </Button>
                 </Link>
               </div>
-              <div className="inline-flex rounded-md shadow">
+              <div className="inline-flex rounded-md shadow-xl">
                 <Link href="/projects">
-                  <Button variant="default" size="lg" className="bg-blue-600/60 backdrop-blur-sm border-2 border-white/30 hover:bg-blue-700/80 hover:border-white/60 transform transition-all duration-300 hover:scale-105 animate-button-pulse">
+                  <Button variant="default" size="lg" className="bg-blue-600/90 backdrop-blur-sm border-2 border-white/50 hover:bg-blue-700 hover:border-white/80 text-white text-base font-bold tracking-wide transform transition-all duration-300 hover:scale-105 shadow-inner hover:shadow-xl py-6 px-8 animate-button-pulse">
                     Узнать больше
                   </Button>
                 </Link>
