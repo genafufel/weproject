@@ -540,20 +540,8 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Отступ для раздела кнопок */}
+            {/* Отступ для раздела */}
             <div className="mt-16"></div>
-            
-            {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-2 left-0 right-0 flex justify-center">
-              <button 
-                onClick={() => scrollToNextSection('cta')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-2 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
-              >
-                <div className="chevron-container">
-                  <ChevronDownIcon className="h-5 w-5 chevron-animate" />
-                </div>
-              </button>
-            </div>
           </div>
         </section>
         
