@@ -281,8 +281,8 @@ export default function HomePage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
               <div className="order-2 md:order-1">
                 <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
-                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
-                  Соединяем таланты и возможности
+                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl">
+                  <span className="gradient-text">Соединяем таланты и возможности</span>
                 </p>
                 <div className="mt-6 prose prose-lg dark:prose-invert">
                   <p>
