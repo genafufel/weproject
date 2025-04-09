@@ -309,7 +309,7 @@ export default function HomePage() {
                   <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border-2 border-primary rounded-md text-white bg-primary hover:bg-primary-dark text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all">
                     Найти проект
                   </Link>
-                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border-2 border-primary dark:border-blue-400 rounded-md text-primary dark:text-white bg-white dark:bg-blue-600/80 hover:bg-gray-50 dark:hover:bg-blue-700 text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all">
+                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border-2 border-primary dark:border-blue-400 rounded-md text-white bg-primary hover:bg-primary-dark text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all">
                     Найти таланты
                   </Link>
                 </div>
