@@ -67,10 +67,10 @@ function isElementNearViewport(el: Element, threshold = 0.2) {
   const rect = el.getBoundingClientRect();
   const windowHeight = window.innerHeight || document.documentElement.clientHeight;
   
-  // Значительно снижаем порог срабатывания, чтобы элемент уже был виден на экране
-  // Теперь элемент считается близким когда его верхняя часть уже видна
-  // и находится в нижней трети экрана (немного выше нижнего края)
-  return rect.top <= windowHeight * 0.85 && rect.top > 0;
+  // Увеличиваем порог срабатывания, чтобы элемент был больше виден на экране перед прокруткой
+  // Элемент считается близким когда его верхняя часть уже хорошо видна
+  // и находится в нижней четверти экрана (намного ниже, чем раньше)
+  return rect.top <= windowHeight * 0.75 && rect.top > 0;
 }
 
 // Функция для проверки видимости элемента
@@ -108,22 +108,24 @@ export function setupScrollAnimations() {
       if (isElementNearViewport(ctaSection)) {
         hasTriggeredAutoScroll = true;
         
-        // Моментально начинаем прокрутку без задержки
+        // Добавляем задержку перед началом прокрутки (600мс)
         clearTimeout(autoScrollTimeout);
-        // Плавно прокручиваем к CTA секции
-        smoothScrollTo(ctaSection, 800, () => {
-          // Больше не блокируем прокрутку для улучшения UX
-          // lockScroll(2500);
-          
-          // Добавляем класс для запуска анимации
-          ctaSection.classList.add('animate-visible');
-          ctaSection.classList.add('animate-highlight');
-          
-          // Удаляем класс выделения через некоторое время
-          setTimeout(() => {
-            ctaSection.classList.remove('animate-highlight');
-          }, 2500);
-        });
+        autoScrollTimeout = setTimeout(() => {
+          // Плавно прокручиваем к CTA секции с увеличенной продолжительностью (1200мс)
+          smoothScrollTo(ctaSection, 1200, () => {
+            // Больше не блокируем прокрутку для улучшения UX
+            // lockScroll(2500);
+            
+            // Добавляем класс для запуска анимации
+            ctaSection.classList.add('animate-visible');
+            ctaSection.classList.add('animate-highlight');
+            
+            // Удаляем класс выделения через некоторое время
+            setTimeout(() => {
+              ctaSection.classList.remove('animate-highlight');
+            }, 2500);
+          });
+        }, 600);
       }
     }
   };
