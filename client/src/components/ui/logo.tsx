@@ -31,7 +31,7 @@ export function Logo({ size = "default" }: { size?: "small" | "default" | "large
           />
           <circle cx="47.5" cy="50" r="10" stroke="white" strokeWidth="6" />
         </svg>
-        <span className={`ml-2 ${textSizes[size]} font-bold text-primary`}>weproject</span>
+        <span className={`ml-2 ${textSizes[size]} font-bold text-blue-600 dark:text-blue-400`}>weproject</span>
     </Link>
   );
 }
