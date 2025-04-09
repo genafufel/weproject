@@ -12,7 +12,10 @@ let lockScrollTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 export function smoothScrollTo(element: Element | null, duration = 800, callback?: () => void) {
   if (!element) return;
   
-  const targetPosition = element.getBoundingClientRect().top + window.pageYOffset;
+  // Добавляем смещение, чтобы текст карточек был примерно в центре экрана
+  // Вычитаем 15% от высоты экрана, чтобы элемент оказался немного выше центра
+  const offset = window.innerHeight * 0.15;
+  const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - offset;
   const startPosition = window.pageYOffset;
   const distance = targetPosition - startPosition;
   let startTime: number | null = null;
@@ -65,7 +68,7 @@ function isElementNearViewport(el: Element, threshold = 0.2) {
   const windowHeight = window.innerHeight || document.documentElement.clientHeight;
   
   // Элемент считается близким к зоне видимости, когда до его верхней части
-  // осталось 20% от высоты экрана
+  // осталось 20% от высоты экрана (изменено с 0.2 на 0.5 для более позднего срабатывания)
   return rect.top <= windowHeight * (1 + threshold) && rect.top > 0;
 }
 
@@ -99,7 +102,8 @@ export function setupScrollAnimations() {
     
     // Проверка для автоматической прокрутки к CTA секции
     if (ctaSection && !hasTriggeredAutoScroll && !isScrollLocked) {
-      if (isElementNearViewport(ctaSection, 0.2)) {
+      // Увеличиваем порог с 0.2 до 0.5, чтобы триггер срабатывал, когда контент будет ближе к середине экрана
+      if (isElementNearViewport(ctaSection, 0.5)) {
         hasTriggeredAutoScroll = true;
         
         // Отложим прокрутку на короткий промежуток времени
