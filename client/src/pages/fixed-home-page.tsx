@@ -291,7 +291,7 @@ export default function HomePage() {
                 </p>
                 <div className="mt-6 prose prose-lg dark:prose-invert">
                   <p>
-                    Платформа <span className="font-semibold text-primary">weproject</span> создана для решения двух ключевых проблем:
+                    Платформа <span className="font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded-md">weproject</span> создана для решения двух ключевых проблем:
                   </p>
                   <ul>
                     <li className="dark:text-gray-300">
@@ -343,9 +343,9 @@ export default function HomePage() {
                       </div>
                       <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold shadow-sm">W</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center text-white font-bold shadow-md">W</div>
                           <div className="ml-3">
-                            <div className="text-sm font-bold text-gray-900 dark:text-white">weproject</div>
+                            <div className="text-sm font-bold text-blue-600 dark:text-blue-400">weproject</div>
                             <div className="text-xs font-medium text-blue-700 dark:text-blue-300">Соединяет таланты и идеи</div>
                           </div>
                         </div>
