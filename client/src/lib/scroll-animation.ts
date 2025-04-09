@@ -67,10 +67,10 @@ function isElementNearViewport(el: Element, threshold = 0.2) {
   const rect = el.getBoundingClientRect();
   const windowHeight = window.innerHeight || document.documentElement.clientHeight;
   
-  // Увеличиваем порог срабатывания, чтобы элемент был больше виден на экране перед прокруткой
+  // Дополнительно увеличиваем порог срабатывания, чтобы элемент был хорошо виден на экране
   // Элемент считается близким когда его верхняя часть уже хорошо видна
-  // и находится в нижней четверти экрана (намного ниже, чем раньше)
-  return rect.top <= windowHeight * 0.75 && rect.top > 0;
+  // и находится в нижней части экрана (примерно треть экрана от нижнего края)
+  return rect.top <= windowHeight * 0.65 && rect.top > 0;
 }
 
 // Функция для проверки видимости элемента
@@ -108,11 +108,11 @@ export function setupScrollAnimations() {
       if (isElementNearViewport(ctaSection)) {
         hasTriggeredAutoScroll = true;
         
-        // Добавляем задержку перед началом прокрутки (600мс)
+        // Добавляем задержку перед началом прокрутки (1000мс)
         clearTimeout(autoScrollTimeout);
         autoScrollTimeout = setTimeout(() => {
-          // Плавно прокручиваем к CTA секции с увеличенной продолжительностью (1200мс)
-          smoothScrollTo(ctaSection, 1200, () => {
+          // Плавно прокручиваем к CTA секции с увеличенной продолжительностью (1500мс)
+          smoothScrollTo(ctaSection, 1500, () => {
             // Больше не блокируем прокрутку для улучшения UX
             // lockScroll(2500);
             
@@ -125,7 +125,7 @@ export function setupScrollAnimations() {
               ctaSection.classList.remove('animate-highlight');
             }, 2500);
           });
-        }, 600);
+        }, 1000);
       }
     }
   };
