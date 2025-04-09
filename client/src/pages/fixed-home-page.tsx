@@ -286,7 +286,7 @@ export default function HomePage() {
                 <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
                 <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl">
                   <span className="inline-block gradient-text text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-blue-600 dark:from-white dark:via-blue-300 dark:to-primary">
-                    Соединяем таланты и возможности
+                    Соединяем таланты<br />и возможности
                   </span>
                 </p>
                 <div className="mt-6 prose prose-lg dark:prose-invert">
