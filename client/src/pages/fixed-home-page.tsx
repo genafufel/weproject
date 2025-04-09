@@ -448,15 +448,7 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-              <button 
-                onClick={() => scrollToNextSection('steps')}
-                className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
-              >
-                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
-              </button>
-            </div>
+
           </div>
         </section>
         
