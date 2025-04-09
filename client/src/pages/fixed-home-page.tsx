@@ -227,7 +227,7 @@ export default function HomePage() {
           {/* Контейнер для контента */}
           <div className="relative h-full z-10 pt-28">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-              <div className="bg-white/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
+              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
                 <div className="text-left">
                   <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl animate-fade-in">
                     <span className="block gradient-text">Соедини идею</span>
@@ -243,7 +243,7 @@ export default function HomePage() {
                       </Button>
                     </Link>
                     <Link href={user ? "/create-project" : "/auth"}>
-                      <Button size="lg" variant="outline" className="px-8 bg-white/80 backdrop-blur-sm hover:bg-white/100 text-gray-800 border-gray-300 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                         Разместить проект
                       </Button>
                     </Link>
@@ -304,7 +304,7 @@ export default function HomePage() {
                   <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-dark transition-colors">
                     Найти проект
                   </Link>
-                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary bg-white border-primary hover:bg-gray-50 transition-colors">
+                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary dark:text-blue-300 bg-white dark:bg-gray-700 border-primary dark:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
                     Найти таланты
                   </Link>
                 </div>

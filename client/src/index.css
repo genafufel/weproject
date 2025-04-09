@@ -349,6 +349,15 @@
   animation: gradientFlow 3s ease infinite;
 }
 
+.dark .gradient-text {
+  background: linear-gradient(90deg, #ffffff, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-size: 200% 200%;
+  animation: gradientFlow 3s ease infinite;
+}
+
 .gradient-border {
   position: relative;
 }
