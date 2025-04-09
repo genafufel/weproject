@@ -282,7 +282,21 @@ export default function HomePage() {
               <div className="order-2 md:order-1">
                 <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
                 <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl">
-                  <span className="talents-connect-text inline-block">Соединяем таланты и возможности</span>
+                  <span 
+                    style={{
+                      background: 'linear-gradient(90deg, var(--tw-gradient-from), var(--tw-gradient-to))',
+                      WebkitBackgroundClip: 'text',
+                      backgroundClip: 'text',
+                      color: 'transparent',
+                      backgroundSize: '200% 200%',
+                      animation: 'gradientFlow 3s ease infinite',
+                      '--tw-gradient-from': 'rgb(0, 0, 0)',
+                      '--tw-gradient-to': 'rgb(59, 130, 246)',
+                    }}
+                    className="dark:text-transparent dark:bg-gradient-to-r dark:from-white dark:to-blue-400 dark:bg-clip-text inline-block"
+                  >
+                    Соединяем таланты и возможности
+                  </span>
                 </p>
                 <div className="mt-6 prose prose-lg dark:prose-invert">
                   <p>
