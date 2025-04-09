@@ -338,12 +338,12 @@ export default function HomePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                         </svg>
                       </div>
-                      <div className="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+                      <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold">W</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold shadow-sm">W</div>
                           <div className="ml-3">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">weproject</div>
-                            <div className="text-xs text-primary">Соединяет таланты и идеи</div>
+                            <div className="text-sm font-bold text-gray-900 dark:text-white">weproject</div>
+                            <div className="text-xs font-medium text-blue-700 dark:text-blue-300">Соединяет таланты и идеи</div>
                           </div>
                         </div>
                       </div>
@@ -352,12 +352,12 @@ export default function HomePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                         </svg>
                       </div>
-                      <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                      <div className="p-3 bg-gray-100 dark:bg-gray-700/80 rounded-lg border border-gray-200 dark:border-gray-600 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center text-green-600 font-bold">P</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-bold shadow-sm">P</div>
                           <div className="ml-3">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Проект</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">Нуждается в талантах</div>
+                            <div className="text-sm font-bold text-gray-900 dark:text-white">Проект</div>
+                            <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
                           </div>
                         </div>
                       </div>
