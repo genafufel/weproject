@@ -108,24 +108,22 @@ export function setupScrollAnimations() {
       if (isElementNearViewport(ctaSection)) {
         hasTriggeredAutoScroll = true;
         
-        // Добавляем задержку перед началом прокрутки (1000мс)
+        // Убираем задержку перед началом прокрутки по запросу пользователя
         clearTimeout(autoScrollTimeout);
-        autoScrollTimeout = setTimeout(() => {
-          // Плавно прокручиваем к CTA секции с увеличенной продолжительностью (1500мс)
-          smoothScrollTo(ctaSection, 1500, () => {
-            // Больше не блокируем прокрутку для улучшения UX
-            // lockScroll(2500);
-            
-            // Добавляем класс для запуска анимации
-            ctaSection.classList.add('animate-visible');
-            ctaSection.classList.add('animate-highlight');
-            
-            // Удаляем класс выделения через некоторое время
-            setTimeout(() => {
-              ctaSection.classList.remove('animate-highlight');
-            }, 2500);
-          });
-        }, 1000);
+        // Плавно прокручиваем к CTA секции с ускоренной продолжительностью (900мс)
+        smoothScrollTo(ctaSection, 900, () => {
+          // Больше не блокируем прокрутку для улучшения UX
+          // lockScroll(2500);
+          
+          // Добавляем класс для запуска анимации
+          ctaSection.classList.add('animate-visible');
+          ctaSection.classList.add('animate-highlight');
+          
+          // Удаляем класс выделения через некоторое время
+          setTimeout(() => {
+            ctaSection.classList.remove('animate-highlight');
+          }, 2500);
+        });
       }
     }
   };
