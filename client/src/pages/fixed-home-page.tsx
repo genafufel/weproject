@@ -18,70 +18,70 @@ const fields = [
     count: 287,
   },
   {
-    title: "Искусство и дизайн",
-    description: "Графический дизайн, UX/UI, анимация, иллюстрация и визуальное искусство.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E1F8F8'/%3E%3Ccircle cx='120' cy='100' r='40' fill='%2300BCD4' opacity='0.8'/%3E%3Ccircle cx='200' cy='100' r='40' fill='%2300BCD4' opacity='0.6'/%3E%3Ccircle cx='280' cy='100' r='40' fill='%2300BCD4' opacity='0.4'/%3E%3C/svg%3E",
-    count: 145,
+    title: "Дизайн",
+    description: "UI/UX, графический дизайн, иллюстрации, брендинг, 3D-моделирование.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23FFEBEE'/%3E%3Ccircle cx='150' cy='100' r='40' fill='%23E91E63'/%3E%3Crect x='210' y='60' width='80' height='80' fill='%239C27B0'/%3E%3Cpath d='M150,60 L150,140 M130,100 L170,100' stroke='white' stroke-width='6'/%3E%3Cpath d='M210,60 L290,140 M210,140 L290,60' stroke='white' stroke-width='6'/%3E%3C/svg%3E",
+    count: 164,
   },
   {
-    title: "Организация мероприятий",
-    description: "Планирование мероприятий, координация, маркетинг и продюсирование.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23F3E5F5'/%3E%3Cpath d='M100,150 L170,90 L230,120 L300,70' stroke='%239C27B0' stroke-width='5' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='100' cy='150' r='8' fill='%239C27B0'/%3E%3Ccircle cx='170' cy='90' r='8' fill='%239C27B0'/%3E%3Ccircle cx='230' cy='120' r='8' fill='%239C27B0'/%3E%3Ccircle cx='300' cy='70' r='8' fill='%239C27B0'/%3E%3C/svg%3E",
-    count: 89,
+    title: "Маркетинг",
+    description: "Цифровой маркетинг, SMM, контент-маркетинг, SEO, аналитика.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E8F5E9'/%3E%3Cpath d='M100,140 L100,180 L140,180 L140,120 L180,120 L180,180 L220,180 L220,100 L260,100 L260,180 L300,180 L300,60' stroke='%234CAF50' stroke-width='10' fill='none'/%3E%3C/svg%3E",
+    count: 126,
   },
   {
-    title: "Финансы и бизнес",
-    description: "Бизнес-анализ, финансовое планирование, бухгалтерский учет и консалтинг.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23FFF8E1'/%3E%3Crect x='100' y='140' width='40' height='40' fill='%23FFA000' opacity='0.2'/%3E%3Crect x='150' y='120' width='40' height='60' fill='%23FFA000' opacity='0.4'/%3E%3Crect x='200' y='100' width='40' height='80' fill='%23FFA000' opacity='0.6'/%3E%3Crect x='250' y='80' width='40' height='100' fill='%23FFA000' opacity='0.8'/%3E%3Cpath d='M100,80 L280,80' stroke='%23FFA000' stroke-width='2' stroke-dasharray='5,5'/%3E%3C/svg%3E",
-    count: 124,
+    title: "Бизнес",
+    description: "Стартапы, управление проектами, финансы, бизнес-аналитика.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23FFF3E0'/%3E%3Crect x='100' y='120' width='40' height='60' fill='%23FF9800'/%3E%3Crect x='160' y='80' width='40' height='100' fill='%23FF9800'/%3E%3Crect x='220' y='60' width='40' height='120' fill='%23FF9800'/%3E%3Crect x='280' y='100' width='40' height='80' fill='%23FF9800'/%3E%3Cpath d='M100,80 L300,80' stroke='%23FF9800' stroke-width='4' stroke-dasharray='10,5'/%3E%3C/svg%3E",
+    count: 98,
   },
   {
-    title: "Маркетинг и реклама",
-    description: "SMM, контент-маркетинг, PR, таргетированная и контекстная реклама.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23FFEBEE'/%3E%3Cpath d='M200,60 L200,140 M150,90 L250,90' stroke='%23F44336' stroke-width='8' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='200' cy='170' r='10' fill='%23F44336'/%3E%3Cpath d='M130,60 A70,70 0 0 1 270,60' stroke='%23F44336' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E",
+    title: "Образование",
+    description: "Онлайн-курсы, обучающие платформы, менторство, образовательные технологии.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E3F2FD'/%3E%3Cpath d='M200,60 L280,100 L200,140 L120,100 Z' fill='%232962FF'/%3E%3Cpath d='M150,120 L150,160 L250,160 L250,120' stroke='%232962FF' stroke-width='8' fill='none'/%3E%3Cpath d='M200,140 L200,160' stroke='%232962FF' stroke-width='8'/%3E%3C/svg%3E",
     count: 112,
   },
   {
-    title: "Образование и наука",
-    description: "Обучающие проекты, исследования, педагогика, воркшопы и тренинги.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E8F5E9'/%3E%3Crect x='120' y='80' width='160' height='100' fill='%234CAF50' opacity='0.1' rx='5'/%3E%3Cpath d='M150,80 L150,40 L250,40 L250,80' stroke='%234CAF50' stroke-width='4' fill='none'/%3E%3Cpath d='M130,60 L270,60' stroke='%234CAF50' stroke-width='2' stroke-dasharray='5,5'/%3E%3Ccircle cx='200' cy='130' r='25' fill='%234CAF50' opacity='0.3'/%3E%3C/svg%3E",
-    count: 95,
+    title: "Исследования",
+    description: "Научные исследования, R&D проекты, инновации, ИИ и машинное обучение.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23EDE7F6'/%3E%3Ccircle cx='200' cy='90' r='30' fill='none' stroke='%236200EA' stroke-width='6'/%3E%3Ccircle cx='150' cy='140' r='20' fill='none' stroke='%236200EA' stroke-width='6'/%3E%3Ccircle cx='250' cy='140' r='20' fill='none' stroke='%236200EA' stroke-width='6'/%3E%3Cpath d='M200,120 L200,140 M250,140 L170,140 M150,140 L130,140' stroke='%236200EA' stroke-width='6'/%3E%3C/svg%3E",
+    count: 73,
   },
   {
-    title: "Музыка и аудио",
-    description: "Создание музыки, звукозапись, подкасты, аранжировка и звуковой дизайн.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23EDE7F6'/%3E%3Cpath d='M140,60 L140,140 M160,70 L160,130 M180,90 L180,110 M220,80 L220,120 M240,70 L240,130 M260,60 L260,140' stroke='%239C27B0' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='140' cy='150' r='10' fill='%239C27B0' opacity='0.2'/%3E%3Ccircle cx='260' cy='150' r='10' fill='%239C27B0' opacity='0.2'/%3E%3C/svg%3E",
-    count: 78,
+    title: "Медицина",
+    description: "Здравоохранение, медицинские технологии, телемедицина, биотехнологии.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E1F5FE'/%3E%3Ccircle cx='200' cy='100' r='60' fill='none' stroke='%2300B0FF' stroke-width='8'/%3E%3Cpath d='M200,70 L200,130 M170,100 L230,100' stroke='%2300B0FF' stroke-width='8'/%3E%3C/svg%3E",
+    count: 86,
   },
   {
-    title: "Медиа и журналистика",
-    description: "Создание контента, журналистика, блоггинг, социальные медиа.",
-    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23E3F2FD'/%3E%3Crect x='120' y='70' width='160' height='100' rx='5' fill='%23039BE5' opacity='0.1'/%3E%3Cpath d='M140,90 L260,90 M140,110 L200,110 M140,130 L220,130' stroke='%23039BE5' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Ccircle cx='230' cy='50' r='15' fill='%23039BE5' opacity='0.3'/%3E%3C/svg%3E",
-    count: 67,
-  },
+    title: "Архитектура",
+    description: "Архитектурное проектирование, городское планирование, дизайн интерьеров.",
+    image: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'%3E%3Crect width='400' height='200' fill='%23FAFAFA'/%3E%3Cpath d='M150,160 L200,70 L250,160 Z' fill='none' stroke='%23607D8B' stroke-width='6'/%3E%3Cpath d='M130,160 L270,160' stroke='%23607D8B' stroke-width='6'/%3E%3Crect x='190' y='130' width='20' height='30' fill='%23607D8B'/%3E%3C/svg%3E",
+    count: 59,
+  }
 ];
 
-// Steps for How It Works section
+// Steps for how it works section
 const steps = [
   {
     number: "1",
-    title: "Расскажите о себе",
-    description: "Создайте яркий профиль, который выделит ваши таланты, достижения и стремления."
+    title: "Создайте профиль",
+    description: "Зарегистрируйте аккаунт и заполните свой профиль, указав навыки, опыт и интересы. Загрузите портфолио для большей привлекательности."
   },
   {
     number: "2",
-    title: "Найдите свой путь",
-    description: "Используйте удобный поиск, чтобы найти проекты или специалистов, идеально соответствующих вашим требованиям."
+    title: "Разместите проект",
+    description: "Создайте описание вашего проекта, укажите требуемые навыки и условия сотрудничества. Или найдите интересный проект среди опубликованных."
   },
   {
     number: "3",
-    title: "Начните диалог",
-    description: "Обсудите детали, задайте вопросы и определите условия сотрудничества через встроенный мессенджер."
+    title: "Подберите команду",
+    description: "Получайте отклики от заинтересованных специалистов или отправляйте заявки на участие в интересующих вас проектах."
   },
   {
     number: "4",
-    title: "Реализуйте потенциал",
-    description: "Совместными усилиями воплотите идеи в реальность, развивая свои навыки и расширяя портфолио."
+    title: "Начните сотрудничество",
+    description: "Общайтесь с выбранными кандидатами, обсуждайте детали и начинайте совместную работу над проектом."
   }
 ];
 
@@ -103,266 +103,270 @@ export default function HomePage() {
     inViewThreshold: 0.5 // Половина видимости слайда для определения активности
   });
   
+  // Функции для карусели
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
-    setLastWheelTime(Date.now());
   }, [emblaApi]);
   
   const scrollNext = useCallback(() => {
     if (emblaApi) emblaApi.scrollNext();
-    setLastWheelTime(Date.now());
   }, [emblaApi]);
   
-  // Инициализируем анимации при прокрутке
-  useEffect(() => {
-    const cleanup = setupScrollAnimations();
-    return cleanup;
-  }, []);
-
-  // Функция для плавной прокрутки к следующей секции
-  const scrollToNextSection = (sectionId: string) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-  
-  // Используем простую функцию прокрутки без перехвата событий колеса мыши
-  useEffect(() => {
-    // Обработка хэша URL для прокрутки к секции при загрузке страницы
-    const handleInitialScroll = () => {
-      const hash = window.location.hash.substring(1);
-      if (hash) {
-        const section = document.getElementById(hash);
-        if (section) {
-          setTimeout(() => {
-            section.scrollIntoView({ behavior: 'smooth' });
-          }, 100);
+  // Функция для обработки прокрутки колесиком с троттлингом
+  const handleWheel = useCallback((e: WheelEvent) => {
+    const now = Date.now();
+    
+    if (now - lastWheelTime > 500) {
+      // Получаем текущую секцию
+      const sections = document.querySelectorAll('section.fullscreen-section');
+      let currentSectionIndex = -1;
+      
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 100 && rect.bottom >= 100) {
+          currentSectionIndex = index;
+        }
+      });
+      
+      if (currentSectionIndex !== -1) {
+        // Определяем следующую секцию в зависимости от направления прокрутки
+        let targetIndex = currentSectionIndex;
+        
+        if (e.deltaY > 0 && currentSectionIndex < sections.length - 1) {
+          targetIndex = currentSectionIndex + 1;
+        } else if (e.deltaY < 0 && currentSectionIndex > 0) {
+          targetIndex = currentSectionIndex - 1;
+        }
+        
+        if (targetIndex !== currentSectionIndex) {
+          e.preventDefault();
+          sections[targetIndex].scrollIntoView({ behavior: 'smooth' });
+          setLastWheelTime(now);
         }
       }
-    };
-    
-    // Выполняем начальную прокрутку
-    handleInitialScroll();
-  }, []);
+    }
+  }, [lastWheelTime]);
   
-  // Упрощенный обработчик для карусели без анимации зацикливания
   useEffect(() => {
-    if (!emblaApi) return;
+    // Инициализируем анимации при скролле
+    const cleanup = setupScrollAnimations();
     
-    // Сделаем автоматическую адаптацию под количество видимых слайдов
-    const onResize = () => {
-      emblaApi.reInit();
-    };
-
-    // Обнаруживаем момент перехода через границу при зацикливании и отключаем анимацию
-    const disableLoopAnimation = () => {
-      // Проверяем, находимся ли мы на границе (первый или последний слайд)
-      const index = emblaApi.selectedScrollSnap();
-      const count = emblaApi.slideNodes().length;
-      const isAtBoundary = index === 0 || index === count - 1;
-      
-      // Если мы на границе, отключаем анимацию для мгновенного перехода
-      if (isAtBoundary) {
-        const container = emblaApi.containerNode();
-        container.style.transition = 'none';
-        
-        // Только для границы отключаем анимацию, чтобы обычная прокрутка оставалась плавной
-        const slideNodes = emblaApi.slideNodes();
-        slideNodes.forEach(node => {
-          node.style.transition = 'none';
-        });
-        
-        // Через небольшую задержку восстанавливаем плавную анимацию
-        setTimeout(() => {
-          container.style.transition = '';
-          slideNodes.forEach(node => {
-            node.style.transition = '';
-          });
-        }, 50);
-      }
-    };
-    
-    // Настраиваем карусель при инициализации
-    const setupCarousel = () => {
-      disableLoopAnimation();
-      
-      // Настраиваем моментальный переход при достижении границы
-      emblaApi.on('select', () => {
-        disableLoopAnimation();
-      });
-    };
-    
-    // Инициализируем настройки
-    setupCarousel();
-    emblaApi.on('reInit', setupCarousel);
-    
-    window.addEventListener('resize', onResize);
+    // Добавляем обработчик прокрутки колесиком
+    window.addEventListener('wheel', handleWheel, { passive: false });
     
     return () => {
-      window.removeEventListener('resize', onResize);
-      emblaApi.off('reInit', setupCarousel);
-      emblaApi.off('select', disableLoopAnimation);
+      cleanup();
+      window.removeEventListener('wheel', handleWheel);
     };
-  }, [emblaApi]);
-
+  }, [handleWheel]);
+  
   return (
     <div className="flex flex-col min-h-screen">
       <Navbar />
       
-      <main className="flex-1">
+      <main className="flex-grow">
         {/* Hero Section */}
         <section id="hero" className="relative overflow-hidden bg-gray-50 fullscreen-section">
-          {/* Анимированный фон */}
-          <div className="absolute inset-0 overflow-hidden animate-fade-in">
-            <img 
-              src="/images/hero-background-new.jpeg" 
-              alt="Фоновое изображение" 
-              className="w-full h-full object-cover animate-[zoomPan_30s_ease-in-out_infinite]"
-              style={{ transformOrigin: 'center center' }}
-            />
-            {/* Затемнение с эффектом пульсации */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 animate-[slowFade_8s_ease-in-out_infinite]"></div>
-            
-            {/* Только затемняющий градиент для фона, без декоративных элементов */}
+          {/* Видео-фон с наложением градиента для темной темы */}
+          <div className="absolute inset-0 bg-cover bg-center bg-opacity-50 dark:bg-opacity-30 overflow-hidden">
+            <div className="w-full h-full">
+              {/* Видео-фон с уменьшенной яркостью для светлой темы */}
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full h-full object-cover dark:opacity-70 light:opacity-30"
+                style={{ filter: 'brightness(0.9) contrast(1.1)' }}
+              >
+                <source src="/uploads/White gray topographic texture wave background animation in 4K _ Unwind Free Stock Video.mp4" type="video/mp4" />
+              </video>
+              {/* Градиентное наложение для улучшения контраста с контентом */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/30 via-black/20 to-black/10 animate-[slowFade_8s_ease-in-out_infinite]"></div>
+            </div>
           </div>
           
-          {/* Контейнер для контента */}
-          <div className="relative h-full z-10 pt-28">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-              <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
-                <div className="text-left">
-                  <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl animate-fade-in">
-                    <span className="block gradient-text">Соедини идею</span>
-                    <span className="block gradient-text">и реализацию</span>
-                  </h1>
-                  <p className="mt-6 text-lg text-gray-600 animate-fade-in animate-delay-200">
-                    Раскройте свой потенциал на платформе, соединяющей талантливых людей и инновационные проекты. Получите ценный опыт или найдите единомышленников для воплощения самых смелых идей.
-                  </p>
-                  <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in animate-delay-300">
+          {/* Основной контент героя */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div className="min-h-screen flex flex-col items-center justify-center text-center relative z-10 py-28">
+              <div className="animate-appear">
+                <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white sm:text-5xl md:text-6xl">
+                  <span className="inline-block text-gray-900 dark:text-white">
+                    Современная платформа<br />для поиска
+                  </span>
+                  <span className="inline-block mt-3 animate-gradient-text text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-blue-600 dark:from-white dark:via-blue-300 dark:to-primary">
+                    талантов и проектов
+                  </span>
+                </h1>
+                <p className="mt-3 max-w-md mx-auto text-base text-gray-600 dark:text-gray-200 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+                  Находите идеальные проекты для развития своих навыков
+                  или талантливых специалистов для реализации ваших идей
+                </p>
+                <div className="mt-10 flex flex-col sm:flex-row justify-center gap-3">
+                  <div className="rounded-md shadow cta-element">
                     <Link href="/projects">
-                      <Button size="lg" className="px-8 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
-                        Проекты
+                      <Button variant="default" size="lg" className="bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-primary text-white font-semibold hover:shadow-lg hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto animate-button-pulse">
+                        Найти проект
                       </Button>
                     </Link>
-                    <Link href={user ? "/create-project" : "/auth"}>
-                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
-                        Разместить проект
+                  </div>
+                  <div className="mt-3 sm:mt-0 cta-element">
+                    <Link href="/talent">
+                      <Button variant="secondary" size="lg" className="font-semibold hover:shadow-lg hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto animate-button-pulse">
+                        Найти таланты
                       </Button>
                     </Link>
                   </div>
                 </div>
               </div>
-            </div>
-            {/* Кнопка прокрутки к следующему разделу */}
-            <div className="absolute bottom-6 left-0 right-0 flex justify-center animate-fade-in animate-delay-500">
-              <button 
-                onClick={() => scrollToNextSection('categories')}
-                className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110"
-              >
-                <ChevronDownIcon className="h-6 w-6 animate-bounce" />
-              </button>
+              
+              {/* Индикатор прокрутки */}
+              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+                <ChevronDownIcon className="h-8 w-8 text-primary opacity-70" />
+              </div>
             </div>
           </div>
         </section>
         
-        {/* Разделитель между секциями */}
         <div className="h-4 bg-blue-500/40 backdrop-blur-md shadow-md relative z-20"></div>
         
-        {/* Concept Section - Секция с описанием концепции */}
+        {/* Concept Section */}
         <section id="concept" className="bg-white dark:bg-gray-900 py-20 relative fullscreen-section section-animate overflow-hidden">
-          {/* Добавляем кнопку прокрутки к следующему разделу */}
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center">
-            <button 
-              onClick={() => scrollToNextSection('categories')}
-              className="bg-blue-500/40 backdrop-blur-md hover:bg-blue-500/60 text-white rounded-full p-3 shadow-lg transition-all hover:shadow-xl hover:scale-110 border border-blue-200/30"
-            >
-              <ChevronDownIcon className="h-6 w-6 animate-bounce" />
-            </button>
+          {/* Декоративные элементы для фона */}
+          <div className="absolute left-0 right-0 top-0 bottom-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 left-1/4 w-64 h-64 bg-primary/5 rounded-full filter blur-3xl"></div>
+            <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-400/5 rounded-full filter blur-3xl"></div>
           </div>
+          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div className="order-2 md:order-1">
-                <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
-                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl">
-                  <span className="inline-block gradient-text text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-blue-600 dark:from-white dark:via-blue-300 dark:to-primary">
-                    Соединяем таланты и возможности
-                  </span>
-                </p>
-                <div className="mt-6 prose prose-lg dark:prose-invert">
-                  <p>
-                    Платформа <span className="font-semibold text-primary">weproject</span> создана для решения двух ключевых проблем:
-                  </p>
-                  <ul>
-                    <li className="dark:text-gray-300">
-                      <span className="font-medium">Для студентов и специалистов без опыта</span> — возможность получить реальный опыт работы, создать портфолио и развить навыки в реальных проектах.
-                    </li>
-                    <li className="dark:text-gray-300">
-                      <span className="font-medium">Для стартапов и проектов с ограниченным бюджетом</span> — возможность найти талантливых сотрудников и собрать команду единомышленников для реализации идей.
-                    </li>
-                  </ul>
-                  <p className="dark:text-gray-300">
-                    Мы верим, что каждый начинающий специалист заслуживает шанса проявить себя, а каждый инновационный проект — найти свою команду. Наша задача — создать экосистему, где энтузиазм и креативность встречаются с возможностями и идеями.
-                  </p>
-                </div>
-                <div className="mt-8">
-                  <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary-dark transition-colors">
-                    Найти проект
-                  </Link>
-                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-primary dark:text-blue-300 bg-white dark:bg-gray-700 border-primary dark:border-blue-500 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors">
-                    Найти таланты
-                  </Link>
+            <div className="text-center mb-12">
+              <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наши преимущества</h2>
+              <p className="mt-2 text-3xl leading-8 font-bold tracking-tight sm:text-4xl">
+                <span className="inline-block gradient-text text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-blue-600 dark:from-white dark:via-blue-300 dark:to-primary">
+                  Эффективная платформа для совместной работы
+                </span>
+              </p>
+              <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 mx-auto">
+                Мы облегчаем взаимодействие между талантами и инновационными проектами
+              </p>
+            </div>
+            
+            <div className="mt-16 lg:grid lg:grid-cols-2 lg:gap-8 lg:items-center">
+              {/* Иллюстрация (визуализация концепции платформы) */}
+              <div className="relative animate-float-slow">
+                <div className="relative lg:aspect-w-16 lg:aspect-h-9">
+                  {/* Эффектная карточка с подсветкой */}
+                  <div className="p-4 md:p-6 backdrop-blur-md rounded-2xl">
+                    <div className="relative">
+                      {/* Gradient blur effect */}
+                      <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl opacity-70"></div>
+                      {/* Terminal-like UI */}
+                      <div className="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+                        {/* Terminal header */}
+                        <div className="bg-gray-100 dark:bg-gray-700 px-4 py-2 border-b border-gray-200 dark:border-gray-600 flex items-center">
+                          <div className="flex space-x-2 mr-4">
+                            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
+                        </div>
+                        {/* Terminal content */}
+                        <div className="p-4 text-sm">
+                          <div className="animate-fade-in space-y-4">
+                            <div className="flex items-start space-x-4">
+                              <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">S</div>
+                              <div>
+                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Студент</div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">Ищет первый опыт</div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <div className="animate-fade-in delay-150 space-y-4">
+                              <div className="flex items-start space-x-4">
+                                <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold shadow-sm">W</div>
+                                <div>
+                                  <div className="text-sm font-bold text-gray-900 dark:text-white">weproject</div>
+                                  <div className="text-xs font-medium text-blue-700 dark:text-blue-300">Соединяет таланты и идеи</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="mt-4 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <div className="animate-fade-in delay-300 space-y-4">
+                              <div className="flex items-start space-x-4">
+                                <div className="flex-shrink-0 w-10 h-10 bg-green-500/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-bold shadow-sm">P</div>
+                                <div>
+                                  <div className="text-sm font-bold text-gray-900 dark:text-white">Проект</div>
+                                  <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="order-1 md:order-2 flex justify-center">
-                <div className="relative w-full max-w-md">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-primary/20 to-blue-600/20 rounded-lg blur-xl opacity-70"></div>
-                  <div className="relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex space-x-2">
-                        <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              
+              {/* Текстовое описание и особенности */}
+              <div className="mt-10 -mx-4 lg:mt-0">
+                <div className="space-y-6 sm:space-y-8">
+                  {/* Feature 1 */}
+                  <div className="animate-fade-in-up">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-md bg-primary/10 dark:bg-primary/20 text-primary">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
+                          </svg>
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
+                      <div className="ml-4">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Прямое взаимодействие</h3>
+                        <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
+                          Мгновенная связь между талантами и проектами через встроенную систему сообщений. Прямое общение без посредников.
+                        </p>
+                      </div>
                     </div>
-                    <div className="space-y-4">
-                      <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">S</div>
-                          <div className="ml-3">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Студент</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400">Ищет первый опыт</div>
-                          </div>
+                  </div>
+                  
+                  {/* Feature 2 */}
+                  <div className="animate-fade-in-up delay-150">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-md bg-primary/10 dark:bg-primary/20 text-primary">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          </svg>
                         </div>
                       </div>
-                      <div className="h-8 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                        </svg>
+                      <div className="ml-4">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Безопасность и надежность</h3>
+                        <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
+                          Проверенные проекты и пользователи. Безопасные сделки и прозрачные условия сотрудничества.
+                        </p>
                       </div>
-                      <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold shadow-sm">W</div>
-                          <div className="ml-3">
-                            <div className="text-sm font-bold text-gray-900 dark:text-white">weproject</div>
-                            <div className="text-xs font-medium text-blue-700 dark:text-blue-300">Соединяет таланты и идеи</div>
-                          </div>
+                    </div>
+                  </div>
+                  
+                  {/* Feature 3 */}
+                  <div className="animate-fade-in-up delay-300">
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <div className="flex items-center justify-center h-12 w-12 rounded-md bg-primary/10 dark:bg-primary/20 text-primary">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
                         </div>
                       </div>
-                      <div className="h-8 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                        </svg>
-                      </div>
-                      <div className="p-3 bg-gray-100 dark:bg-gray-700/80 rounded-lg border border-gray-200 dark:border-gray-600 shadow-md">
-                        <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-bold shadow-sm">P</div>
-                          <div className="ml-3">
-                            <div className="text-sm font-bold text-gray-900 dark:text-white">Проект</div>
-                            <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
-                          </div>
-                        </div>
+                      <div className="ml-4">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">Быстрый старт</h3>
+                        <p className="mt-2 text-base text-gray-500 dark:text-gray-400">
+                          Удобный интерфейс и интуитивный процесс поиска. Начните сотрудничество за считанные минуты.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -374,7 +378,6 @@ export default function HomePage() {
         
         {/* Categories Section */}
         <section id="categories" className="bg-white dark:bg-gray-900 py-8 fullscreen-section section-animate relative overflow-hidden">
-          
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
               <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
@@ -407,57 +410,62 @@ export default function HomePage() {
                 </button>
               </div>
               
-              {/* Карусель */}
-              <div className="overflow-hidden" ref={emblaRef}>
-                <div className="flex">
-                  {fields.map((field, index) => (
-                    <div 
-                      key={field.title} 
-                      className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
-                    >
-                      <div className="aspect-w-3 aspect-h-2 overflow-hidden">
-                        <img 
-                          src={field.image} 
-                          alt={field.title} 
-                          className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                        {/* Синее выделение по краям и снизу вместо затемнения */}
-                        <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
-                      </div>
-                      <div className="p-4 relative">
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                          <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
-                            {field.title}
-                          </Link>
-                        </h3>
-                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                          {field.description}
-                        </p>
-                        <div className="mt-4 flex justify-between items-center">
-                          <span className="text-sm font-medium text-primary">
-                            {field.count} активных проектов
-                          </span>
-                          <Link 
-                            href={`/projects?field=${encodeURIComponent(field.title)}`}
-                            className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
-                          >
-                            Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
-                          </Link>
+              {/* Карусель с маскированием для скрытия переходящих элементов */}
+              <div className="relative">
+                {/* Маска слева - более широкая для уверенного маскирования переходящих карточек */}
+                <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white via-white/90 dark:from-gray-900 dark:via-gray-900/90 to-transparent z-10 pointer-events-none"></div>
+                {/* Маска справа - более широкая для уверенного маскирования переходящих карточек */}
+                <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white via-white/90 dark:from-gray-900 dark:via-gray-900/90 to-transparent z-10 pointer-events-none"></div>
+                
+                {/* Карусель */}
+                <div className="overflow-hidden" ref={emblaRef}>
+                  <div className="flex">
+                    {fields.map((field, index) => (
+                      <div 
+                        key={field.title} 
+                        className="flex-[0_0_calc(100%-1rem)] sm:flex-[0_0_calc(45%-1rem)] md:flex-[0_0_calc(30%-1rem)] xl:flex-[0_0_calc(23%-1rem)] group relative bg-white/80 dark:bg-gray-800/90 backdrop-blur-sm border border-blue-100 dark:border-blue-900 hover:border-primary/60 dark:hover:border-primary/60 rounded-xl shadow-md hover:shadow-lg overflow-hidden hover-card transition-all duration-300 mx-2"
+                      >
+                        <div className="aspect-w-3 aspect-h-2 overflow-hidden">
+                          <img 
+                            src={field.image} 
+                            alt={field.title} 
+                            className="w-full h-40 object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          {/* Синее выделение по краям и снизу вместо затемнения */}
+                          <div className="absolute inset-0 border-b-2 border-primary/0 group-hover:border-primary/80 transition-all duration-300"></div>
+                        </div>
+                        <div className="p-4 relative">
+                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            <Link href={`/projects?field=${encodeURIComponent(field.title)}`} className="focus:outline-none gradient-border inline-block">
+                              {field.title}
+                            </Link>
+                          </h3>
+                          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                            {field.description}
+                          </p>
+                          <div className="mt-4 flex justify-between items-center">
+                            <span className="text-sm font-medium text-primary">
+                              {field.count} активных проектов
+                            </span>
+                            <Link 
+                              href={`/projects?field=${encodeURIComponent(field.title)}`}
+                              className="text-sm font-medium text-primary hover:text-blue-700 transition-all duration-300 hover:translate-x-1 group flex items-center"
+                            >
+                              Показать все <span aria-hidden="true" className="ml-1 transform transition-transform duration-300 group-hover:translate-x-1">→</span>
+                            </Link>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-            
-
           </div>
         </section>
         
         {/* How It Works Section */}
         <section id="steps" className="bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 relative section-animate overflow-hidden py-16">
-
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 py-12">
             {/* Заголовок слева */}
             <div className="flex flex-col items-start text-left">
