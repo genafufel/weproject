@@ -246,7 +246,7 @@ export default function HomePage() {
                       </Button>
                     </Link>
                     <Link href={user ? "/create-project" : "/auth"}>
-                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-white border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                         Разместить проект
                       </Button>
                     </Link>
@@ -306,10 +306,10 @@ export default function HomePage() {
                   </p>
                 </div>
                 <div className="mt-8">
-                  <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border-2 border-primary rounded-md text-white bg-primary hover:bg-primary-dark text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all">
+                  <Link href="/projects" className="inline-flex items-center justify-center px-6 py-3 border-2 border-primary rounded-md text-white bg-primary hover:bg-primary-dark text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all dark:text-white">
                     Найти проект
                   </Link>
-                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border-2 border-primary dark:border-blue-400 rounded-md text-white bg-primary hover:bg-primary-dark text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all">
+                  <Link href="/talent" className="ml-4 inline-flex items-center justify-center px-6 py-3 border-2 border-primary dark:border-blue-400 rounded-md text-white bg-primary hover:bg-primary-dark text-base font-bold tracking-wide shadow-md hover:shadow-lg transition-all dark:text-white">
                     Найти таланты
                   </Link>
                 </div>
