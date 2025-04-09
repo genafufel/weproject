@@ -12,9 +12,9 @@ let lockScrollTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 export function smoothScrollTo(element: Element | null, duration = 800, callback?: () => void) {
   if (!element) return;
   
-  // Добавляем смещение, чтобы текст карточек был примерно в центре экрана
-  // Вычитаем 15% от высоты экрана, чтобы элемент оказался немного выше центра
-  const offset = window.innerHeight * 0.15;
+  // Значительно увеличиваем смещение для выравнивания
+  // Вычитаем 25% от высоты экрана, чтобы синий фон следующего раздела был виден целиком
+  const offset = window.innerHeight * 0.25;
   const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - offset;
   const startPosition = window.pageYOffset;
   const distance = targetPosition - startPosition;
@@ -67,9 +67,10 @@ function isElementNearViewport(el: Element, threshold = 0.2) {
   const rect = el.getBoundingClientRect();
   const windowHeight = window.innerHeight || document.documentElement.clientHeight;
   
-  // Элемент считается близким к зоне видимости, когда до его верхней части
-  // осталось 20% от высоты экрана (изменено с 0.2 на 0.5 для более позднего срабатывания)
-  return rect.top <= windowHeight * (1 + threshold) && rect.top > 0;
+  // Значительно снижаем порог срабатывания, чтобы элемент уже был виден на экране
+  // Теперь элемент считается близким когда его верхняя часть уже видна
+  // и находится в нижней трети экрана (немного выше нижнего края)
+  return rect.top <= windowHeight * 0.85 && rect.top > 0;
 }
 
 // Функция для проверки видимости элемента
@@ -102,8 +103,9 @@ export function setupScrollAnimations() {
     
     // Проверка для автоматической прокрутки к CTA секции
     if (ctaSection && !hasTriggeredAutoScroll && !isScrollLocked) {
-      // Увеличиваем порог с 0.2 до 0.5, чтобы триггер срабатывал, когда контент будет ближе к середине экрана
-      if (isElementNearViewport(ctaSection, 0.5)) {
+      // Теперь порог не передаем, так как логика срабатывания полностью изменена
+      // Срабатывает когда верхняя часть синего фона видна в нижней части экрана
+      if (isElementNearViewport(ctaSection)) {
         hasTriggeredAutoScroll = true;
         
         // Отложим прокрутку на короткий промежуток времени
