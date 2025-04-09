@@ -67,10 +67,10 @@ function isElementNearViewport(el: Element, threshold = 0.2) {
   const rect = el.getBoundingClientRect();
   const windowHeight = window.innerHeight || document.documentElement.clientHeight;
   
-  // Дополнительно увеличиваем порог срабатывания, чтобы элемент был хорошо виден на экране
-  // Элемент считается близким когда его верхняя часть уже хорошо видна
-  // и находится в нижней части экрана (примерно треть экрана от нижнего края)
-  return rect.top <= windowHeight * 0.65 && rect.top > 0;
+  // Устанавливаем порог срабатывания на 15% экрана от верхнего края,
+  // как запросил пользователь. Это значит, что элемент будет считаться близким,
+  // когда верхняя часть секции будет видна в нижних 15% экрана
+  return rect.top <= windowHeight * 0.85 && rect.top > 0;
 }
 
 // Функция для проверки видимости элемента
