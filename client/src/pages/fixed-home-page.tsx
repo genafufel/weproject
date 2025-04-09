@@ -537,7 +537,7 @@ export default function HomePage() {
           </div>
         </section>
         
-        {/* CTA Section */}
+        {/* CTA Section - Always blue gradient background */}
         <section id="cta" className="bg-gradient-to-r from-primary to-blue-600 dark:from-primary dark:to-blue-800 relative overflow-hidden py-0 section-animate fullscreen-section h-screen min-h-screen flex items-center justify-center">
           {/* Декоративные элементы */}
           <div className="absolute top-0 left-0 w-full h-full opacity-20 pointer-events-none">

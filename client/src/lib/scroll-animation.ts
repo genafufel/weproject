@@ -12,9 +12,9 @@ let lockScrollTimeout: ReturnType<typeof setTimeout> | undefined = undefined;
 export function smoothScrollTo(element: Element | null, duration = 800, callback?: () => void) {
   if (!element) return;
   
-  // Значительно увеличиваем смещение для выравнивания
-  // Вычитаем 25% от высоты экрана, чтобы синий фон следующего раздела был виден целиком
-  const offset = window.innerHeight * 0.25;
+  // Убираем смещение смещение совсем, чтобы синий раздел был виден полностью
+  // При срабатывании триггера синий раздел должен открыться на весь экран
+  const offset = 0;
   const targetPosition = element.getBoundingClientRect().top + window.pageYOffset - offset;
   const startPosition = window.pageYOffset;
   const distance = targetPosition - startPosition;
@@ -108,24 +108,22 @@ export function setupScrollAnimations() {
       if (isElementNearViewport(ctaSection)) {
         hasTriggeredAutoScroll = true;
         
-        // Отложим прокрутку на короткий промежуток времени
+        // Моментально начинаем прокрутку без задержки
         clearTimeout(autoScrollTimeout);
-        autoScrollTimeout = setTimeout(() => {
-          // Плавно прокручиваем к CTA секции
-          smoothScrollTo(ctaSection, 800, () => {
-            // Больше не блокируем прокрутку для улучшения UX
-            // lockScroll(2500);
-            
-            // Добавляем класс для запуска анимации
-            ctaSection.classList.add('animate-visible');
-            ctaSection.classList.add('animate-highlight');
-            
-            // Удаляем класс выделения через некоторое время
-            setTimeout(() => {
-              ctaSection.classList.remove('animate-highlight');
-            }, 2500);
-          });
-        }, 200);
+        // Плавно прокручиваем к CTA секции
+        smoothScrollTo(ctaSection, 800, () => {
+          // Больше не блокируем прокрутку для улучшения UX
+          // lockScroll(2500);
+          
+          // Добавляем класс для запуска анимации
+          ctaSection.classList.add('animate-visible');
+          ctaSection.classList.add('animate-highlight');
+          
+          // Удаляем класс выделения через некоторое время
+          setTimeout(() => {
+            ctaSection.classList.remove('animate-highlight');
+          }, 2500);
+        });
       }
     }
   };

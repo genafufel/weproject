@@ -198,6 +198,13 @@
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
+/* Специальные стили для CTA секции, чтобы она всегда была синей */
+#cta {
+  opacity: 1; /* Всегда видима */
+  z-index: 10; /* Приоритет над другими секциями */
+  background-color: var(--primary); /* Запасной цвет, если градиент не загрузится */
+}
+
 /* Эффект выделения для CTA секции */
 @keyframes highlight-pulse {
   0% {
