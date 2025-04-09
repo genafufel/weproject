@@ -282,19 +282,7 @@ export default function HomePage() {
               <div className="order-2 md:order-1">
                 <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Наша миссия</h2>
                 <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl">
-                  <span 
-                    style={{
-                      background: 'linear-gradient(90deg, var(--tw-gradient-from), var(--tw-gradient-to))',
-                      WebkitBackgroundClip: 'text',
-                      backgroundClip: 'text',
-                      color: 'transparent',
-                      backgroundSize: '200% 200%',
-                      animation: 'gradientFlow 3s ease infinite',
-                      '--tw-gradient-from': 'rgb(0, 0, 0)',
-                      '--tw-gradient-to': 'rgb(59, 130, 246)',
-                    }}
-                    className="dark:text-transparent dark:bg-gradient-to-r dark:from-white dark:to-blue-400 dark:bg-clip-text inline-block"
-                  >
+                  <span className="inline-block gradient-text text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-blue-600 dark:from-white dark:via-blue-300 dark:to-primary">
                     Соединяем таланты и возможности
                   </span>
                 </p>
@@ -387,8 +375,10 @@ export default function HomePage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="lg:text-center">
               <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Сферы деятельности</h2>
-              <p className="mt-2 text-3xl leading-8 font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block">
-                Откройте мир возможностей
+              <p className="mt-2 text-3xl leading-8 font-bold tracking-tight sm:text-4xl">
+                <span className="inline-block gradient-text text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-blue-600 dark:from-white dark:via-blue-300 dark:to-primary">
+                  Откройте мир возможностей
+                </span>
               </p>
               <p className="mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-400 lg:mx-auto">
                 Исследуйте разнообразные проекты и найдите именно то, что соответствует вашим интересам.
@@ -478,7 +468,11 @@ export default function HomePage() {
             <div className="flex flex-col items-start text-left">
               <div className="max-w-md">
                 <h2 className="text-base text-primary font-semibold tracking-wide uppercase">Путь к успеху</h2>
-                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl gradient-text inline-block whitespace-nowrap">Четыре шага к цели</p>
+                <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight sm:text-4xl whitespace-nowrap">
+                  <span className="inline-block gradient-text text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-primary to-blue-600 dark:from-white dark:via-blue-300 dark:to-primary">
+                    Четыре шага к цели
+                  </span>
+                </p>
                 <p className="mt-4 text-lg text-gray-500 dark:text-gray-400 leading-snug">
                   Начните своё путешествие прямо сейчас - будь вы талантливый специалист или создатель проекта.
                 </p>
