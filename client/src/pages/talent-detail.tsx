@@ -341,7 +341,7 @@ export default function TalentDetail() {
                     <div className="mt-6 w-full space-y-2">
                       {/* Если пользователь владелец резюме, показываем кнопку редактирования */}
                       {isResumeOwner && (
-                        <Button className="w-full" asChild>
+                        <Button className="w-full dark:text-white" asChild>
                           <Link href={`/create-resume?id=${resume.id}`}>
                             <Edit className="mr-2 h-4 w-4" />
                             Редактировать резюме
@@ -353,7 +353,7 @@ export default function TalentDetail() {
                       {!isResumeOwner && user && (
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button className="w-full">
+                            <Button className="w-full dark:text-white">
                               <Mail className="mr-2 h-4 w-4" />
                               Связаться
                             </Button>
@@ -380,6 +380,7 @@ export default function TalentDetail() {
                               <Button 
                                 onClick={handleSendMessage} 
                                 disabled={sendingMessage || !messageText.trim()}
+                                className="dark:text-white"
                               >
                                 {sendingMessage ? (
                                   <>
@@ -398,7 +399,7 @@ export default function TalentDetail() {
                       {/* Если пользователь не авторизован */}
                       {!user && (
                         <Button 
-                          className="w-full"
+                          className="w-full dark:text-white"
                           onClick={() => {
                             saveReturnUrl(location);
                             navigate("/auth");
@@ -578,7 +579,7 @@ export default function TalentDetail() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <Button asChild>
+                    <Button asChild className="dark:text-white">
                       <Link href="/create-project">Создать проект</Link>
                     </Button>
                   </CardContent>
