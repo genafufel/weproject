@@ -1,57 +1,21 @@
-import { useState, useEffect } from "react";
-import { SunIcon, MoonIcon } from "lucide-react";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-
-// Простая функция переключения темы без зависимости от ThemeProvider
-function useSimpleTheme() {
-  const [theme, setThemeState] = useState<"light" | "dark">(
-    () => {
-      // Получаем текущую тему из локального хранилища
-      const savedTheme = localStorage.getItem("ui-theme");
-      
-      // Если значение 'system' или некорректное, используем 'light' по умолчанию
-      if (!savedTheme || savedTheme === "system" || (savedTheme !== "light" && savedTheme !== "dark")) {
-        return "light";
-      }
-      return savedTheme as "light" | "dark";
-    }
-  );
-
-  const setTheme = (newTheme: "light" | "dark") => {
-    const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
-    
-    localStorage.setItem("ui-theme", newTheme);
-    root.classList.add(newTheme);
-    
-    setThemeState(newTheme);
-  };
-
-  // Применяем тему при монтировании компонента
-  useEffect(() => {
-    setTheme(theme);
-  }, []);
-
-  return { theme, setTheme };
-}
+import React from "react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
+import { Button } from "@/components/ui/button";
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useSimpleTheme();
-  const isDark = theme === "dark";
+  const { theme, setTheme } = useTheme();
 
   return (
-    <div className="flex items-center space-x-2">
-      <SunIcon className={`h-4 w-4 ${!isDark ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
-      <Switch 
-        checked={isDark}
-        onCheckedChange={(checked) => {
-          setTheme(checked ? "dark" : "light");
-        }}
-        className="data-[state=checked]:bg-primary"
-        aria-label="Переключить тему"
-      />
-      <MoonIcon className={`h-4 w-4 ${isDark ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
-    </div>
+    <Button
+      variant="ghost"
+      size="icon"
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      aria-label={theme === "dark" ? "Включить светлую тему" : "Включить темную тему"}
+      className="relative h-8 w-8 rounded-md border dark:border-gray-700"
+    >
+      <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+      <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+    </Button>
   );
 }

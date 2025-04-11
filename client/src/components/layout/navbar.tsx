@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NotificationDropdown } from "@/components/notifications/notification-dropdown";
-import { ThemeSwitcher } from "@/components/theme-switcher";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Navbar() {
@@ -85,10 +84,6 @@ export function Navbar() {
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-            <div className="mr-2">
-              <ThemeToggle />
-            </div>
-            
             {user ? (
               <>
                 <Link href="/messages">
@@ -158,6 +153,10 @@ export function Navbar() {
                     </Button>
                   </Link>
                   <div className="invisible group-hover:visible absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:delay-0 delay-200">
+                </div>
+                
+                <div className="ml-2">
+                  <ThemeToggle />
                     <div className="py-1">
                       <div className="flex flex-col space-y-1 p-2">
                         <p className="text-sm font-medium leading-none dark:text-gray-200">{user.fullName}</p>
