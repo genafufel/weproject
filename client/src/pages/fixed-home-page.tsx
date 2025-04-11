@@ -348,8 +348,8 @@ export default function HomePage() {
                         <div className="flex items-center">
                           <div className="flex-shrink-0 w-10 h-10 bg-primary/30 dark:bg-primary/40 rounded-full flex items-center justify-center text-primary dark:text-primary font-bold shadow-sm">W</div>
                           <div className="ml-3">
-                            <div className="text-sm font-bold text-primary dark:text-primary">weproject</div>
-                            <div className="text-xs font-medium text-primary/80 dark:text-primary/80">Соединяет таланты и идеи</div>
+                            <div className="text-sm font-bold text-gray-900 dark:text-white">weproject</div>
+                            <div className="text-xs font-medium text-gray-700 dark:text-gray-200">Соединяет таланты и идеи</div>
                           </div>
                         </div>
                       </div>
