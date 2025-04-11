@@ -228,7 +228,7 @@ export default function HomePage() {
           </div>
           
           {/* Контейнер для контента */}
-          <div className="relative h-full z-10 pt-28">
+          <div className="relative h-full z-10 pt-20">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
               <div className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-md rounded-lg shadow-xl overflow-hidden py-10 px-12 max-w-2xl animate-[scaleIn_0.7s_ease-out_forwards] origin-bottom-left">
                 <div className="text-left">
