@@ -358,11 +358,11 @@ export default function HomePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                         </svg>
                       </div>
-                      <div className="p-3 bg-gray-100 dark:bg-gray-700/80 rounded-lg border border-gray-200 dark:border-gray-600 shadow-md">
+                      <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-100 dark:border-green-700/40 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-green-500/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-bold shadow-sm">P</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-800/40 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 font-bold shadow-sm">P</div>
                           <div className="ml-3">
-                            <div className="text-sm font-bold text-gray-900 dark:text-white">Проект</div>
+                            <div className="text-sm font-bold text-green-700 dark:text-green-300">Проект</div>
                             <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
                           </div>
                         </div>
