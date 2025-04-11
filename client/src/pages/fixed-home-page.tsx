@@ -364,46 +364,46 @@ export default function HomePage() {
                       
                       {/* Три блока ниже weproject */}
                       <div className="grid grid-cols-1 gap-6 relative">
-                        {/* Блок студента/соискателя */}
-                        <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg relative">
+                        {/* Блок студента/соискателя - светло-розовый */}
+                        <div className="p-3 bg-pink-50 dark:bg-pink-900/30 rounded-lg border border-pink-100 dark:border-pink-800/30 relative">
                           {/* Круглый индикатор в углу */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center text-primary font-semibold text-xs shadow-sm">
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-pink-100/80 dark:bg-pink-800/30 rounded-full flex items-center justify-center text-pink-600 dark:text-pink-300 font-semibold text-xs shadow-sm">
                             <UserIcon className="w-3 h-3" />
                           </div>
                           <div className="flex items-center">
-                            <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">С</div>
+                            <div className="flex-shrink-0 w-10 h-10 bg-pink-100 dark:bg-pink-800/40 rounded-full flex items-center justify-center text-pink-600 dark:text-pink-300 font-bold shadow-sm">С</div>
                             <div className="ml-3">
-                              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Соискатель</div>
-                              <div className="text-xs text-gray-500 dark:text-gray-400">Ищет опыт и проекты</div>
+                              <div className="text-sm font-bold text-pink-700 dark:text-pink-300">Соискатель</div>
+                              <div className="text-xs font-medium text-pink-600 dark:text-pink-400">Ищет опыт и проекты</div>
                             </div>
                           </div>
                           
                           {/* Стрелка к проекту */}
-                          <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex justify-center text-primary">
+                          <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex justify-center text-pink-500">
                             <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
                             </svg>
                           </div>
                         </div>
                         
-                        {/* Блок проекта */}
-                        <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-100 dark:border-green-700/40 relative z-10 shadow-md">
+                        {/* Блок проекта - бирюзовый */}
+                        <div className="p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg border border-teal-100 dark:border-teal-700/40 relative z-10 shadow-md">
                           {/* Круглый индикатор в углу */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-green-100/80 dark:bg-green-800/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-semibold text-xs shadow-sm">
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-teal-100/80 dark:bg-teal-800/30 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-400 font-semibold text-xs shadow-sm">
                             <BriefcaseIcon className="w-3 h-3" />
                           </div>
                           
                           {/* Индикатор получения от соискателя и инвестора */}
-                          <div className="absolute -top-2 right-2 px-2 py-0.5 bg-green-100 dark:bg-green-800/60 rounded-full text-xs text-green-700 dark:text-green-200 font-medium flex items-center">
+                          <div className="absolute -top-2 right-2 px-2 py-0.5 bg-teal-100 dark:bg-teal-800/60 rounded-full text-xs text-teal-700 dark:text-teal-200 font-medium flex items-center">
                             <CheckIcon className="w-3 h-3 mr-1" />
                             <span>Центр взаимодействия</span>
                           </div>
                           
                           <div className="flex items-center">
-                            <div className="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-800/40 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 font-bold shadow-sm">П</div>
+                            <div className="flex-shrink-0 w-10 h-10 bg-teal-100 dark:bg-teal-800/40 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-300 font-bold shadow-sm">П</div>
                             <div className="ml-3">
-                              <div className="text-sm font-bold text-green-700 dark:text-green-300">Проект</div>
-                              <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
+                              <div className="text-sm font-bold text-teal-700 dark:text-teal-300">Проект</div>
+                              <div className="text-xs font-medium text-teal-600 dark:text-teal-400">Нуждается в талантах</div>
                             </div>
                           </div>
                         </div>
