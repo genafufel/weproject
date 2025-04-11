@@ -241,12 +241,12 @@ export default function HomePage() {
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in animate-delay-300">
                     <Link href="/projects">
-                      <Button size="lg" className="px-8 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-gray-600 dark:text-gray-300">
+                      <Button size="lg" className="px-8 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-white">
                         Проекты
                       </Button>
                     </Link>
                     <Link href={user ? "/create-project" : "/auth"}>
-                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-primary dark:text-primary border-2 border-primary hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-white border-2 border-primary hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                         Разместить проект
                       </Button>
                     </Link>
