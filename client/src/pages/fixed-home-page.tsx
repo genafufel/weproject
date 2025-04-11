@@ -368,16 +368,16 @@ export default function HomePage() {
                         </div>
                       </div>
                       <div className="h-8 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-primary animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-6 h-6 text-purple-500 animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                         </svg>
                       </div>
-                      <div className="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-lg border border-amber-200 dark:border-amber-800/30 shadow-md">
+                      <div className="p-3 bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/40 dark:to-pink-900/40 rounded-lg border border-purple-200 dark:border-purple-800/30 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-amber-500/30 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold shadow-sm">I</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold shadow-sm">I</div>
                           <div className="ml-3">
-                            <div className="text-sm font-bold text-amber-700 dark:text-amber-400">Инвестор</div>
-                            <div className="text-xs font-medium text-amber-600 dark:text-amber-300">Ищет перспективные проекты</div>
+                            <div className="text-sm font-bold text-purple-700 dark:text-purple-400">Инвестор</div>
+                            <div className="text-xs font-medium text-pink-600 dark:text-pink-300">Ищет перспективные проекты</div>
                           </div>
                         </div>
                       </div>
