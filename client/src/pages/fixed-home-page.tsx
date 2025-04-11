@@ -11,7 +11,7 @@ import {
   ChevronRightIcon, 
   UserIcon, 
   BriefcaseIcon, 
-  CurrencyDollarIcon,
+  CoinsIcon,
   GlobeIcon,
   PlusIcon,
   CheckCircleIcon 
@@ -390,7 +390,7 @@ export default function HomePage() {
                           <div className="p-3 bg-[#FFFDE7] dark:bg-[#F9A825]/20 rounded-lg border border-yellow-100/80 dark:border-[#FFD600]/20 relative">
                             {/* Круглый индикатор в углу */}
                             <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-100 dark:bg-yellow-800/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400 font-semibold text-xs shadow-sm">
-                              <CurrencyDollarIcon className="w-3 h-3" />
+                              <CoinsIcon className="w-3 h-3" />
                             </div>
                             <div className="flex items-center">
                               <div className="flex-shrink-0 w-10 h-10 bg-[#FFF9C4] dark:bg-[#FFD600]/30 rounded-full flex items-center justify-center text-[#F9A825] dark:text-yellow-200 font-bold shadow-sm">И</div>
