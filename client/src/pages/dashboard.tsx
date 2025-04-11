@@ -14,7 +14,6 @@ import { useToast } from "@/hooks/use-toast";
 import { useNotifications } from "@/hooks/use-notifications";
 import { apiRequest } from "@/lib/queryClient";
 
-// Типы для данных
 interface Project {
   id: number;
   title: string;
@@ -23,6 +22,11 @@ interface Project {
   updatedAt: string;
   status: string;
   userId: number;
+  field: string;
+  remote?: boolean;
+  location?: string;
+  positions?: any[];
+  applications?: any[];
   [key: string]: any;
 }
 
@@ -149,7 +153,7 @@ export default function Dashboard() {
     const updateTabFromUrl = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const tab = urlParams.get('tab');
-      if (tab && ['profile', 'work', 'applications'].includes(tab)) {
+      if (tab && ['profile', 'applicant', 'project', 'investor'].includes(tab)) {
         setActiveTab(tab);
       }
     };
@@ -251,15 +255,9 @@ export default function Dashboard() {
           >
             <TabsList className="mb-8 flex justify-center">
               <TabsTrigger value="profile">Профиль</TabsTrigger>
-              <TabsTrigger value="work">Работа</TabsTrigger>
-              <TabsTrigger value="applications" className="relative">
-                Заявки
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
-                    {unreadCount}
-                  </span>
-                )}
-              </TabsTrigger>
+              <TabsTrigger value="applicant">Соискатель</TabsTrigger>
+              <TabsTrigger value="project">Проект</TabsTrigger>
+              <TabsTrigger value="investor">Инвестор</TabsTrigger>
             </TabsList>
             
             {/* Вкладка Профиль */}
@@ -383,91 +381,31 @@ export default function Dashboard() {
               </div>
             </TabsContent>
             
-            {/* Вкладка Работа */}
-            <TabsContent value="work">
+            {/* Вкладка Соискатель */}
+            <TabsContent value="applicant">
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Работа</h2>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Соискатель</h2>
               </div>
               
-              {/* Таб для подраздела "Проекты и резюме" */}
-              <Tabs defaultValue="projects" className="mb-6">
-                <TabsList className="flex justify-center mb-6">
-                  <TabsTrigger value="projects">Мои проекты</TabsTrigger>
-                  <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
-                </TabsList>
-                
-                {/* Проекты */}
-                <TabsContent value="projects">
-                  <div className="flex justify-between items-center mb-6">
-                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Мои проекты</h3>
-                    <Link href="/create-project">
-                      <Button>
-                        <PlusIcon className="mr-2 h-4 w-4" />
-                        Создать проект
-                      </Button>
+              {resumesLoading ? (
+                <div className="flex justify-center p-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : !Array.isArray(resumes) || resumes.length === 0 ? (
+                <Card>
+                  <CardContent className="flex flex-col items-center justify-center p-12">
+                    <FileText className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет резюме</h3>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
+                      У вас еще нет резюме. Создайте ваше первое резюме, чтобы откликаться на проекты!
+                    </p>
+                    <Link href="/create-resume">
+                      <Button>Создать первое резюме</Button>
                     </Link>
-                  </div>
-                  
-                  {projectsLoading ? (
-                    <div className="flex justify-center p-12">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
-                  ) : !Array.isArray(projects) || projects.length === 0 ? (
-                    <Card>
-                      <CardContent className="flex flex-col items-center justify-center p-12">
-                        <Briefcase className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет проектов</h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                          У вас еще нет проектов. Создайте ваш первый проект, чтобы найти талантливых людей!
-                        </p>
-                        <Link href="/create-project">
-                          <Button>Создать первый проект</Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <div className="grid gap-6">
-                      {projects.map((project: any) => (
-                        <Card key={project.id}>
-                          <CardHeader>
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <CardTitle>{project.title}</CardTitle>
-                                <CardDescription>Создано: {new Date(project.createdAt).toLocaleDateString('ru-RU')}</CardDescription>
-                              </div>
-                              <Badge>{project.field}</Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">{project.description}</p>
-                            <div className="flex flex-wrap gap-2 mb-4">
-                              {Array.isArray(project.positions) ? project.positions.map((position: any, index: number) => (
-                                <Badge key={index} variant="outline">{position.title}</Badge>
-                              )) : null}
-                            </div>
-                            <div className="flex items-center text-sm text-gray-500">
-                              <span className="mr-4">
-                                {project.remote ? "Удаленно" : project.location || "Расположение не указано"}
-                              </span>
-                              <span>{(project.applications || []).length} заявок</span>
-                            </div>
-                          </CardContent>
-                          <CardFooter className="flex justify-between">
-                            <Link href={`/projects/${project.id}`}>
-                              <Button variant="outline">Просмотреть</Button>
-                            </Link>
-                            <Link href={`/projects/${project.id}/edit`}>
-                              <Button>Редактировать</Button>
-                            </Link>
-                          </CardFooter>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-                
-                {/* Резюме */}
-                <TabsContent value="resumes">
+                  </CardContent>
+                </Card>
+              ) : (
+                <div>
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Мои резюме</h3>
                     <Link href="/create-resume">
@@ -477,409 +415,152 @@ export default function Dashboard() {
                       </Button>
                     </Link>
                   </div>
-                  
-                  {resumesLoading ? (
-                    <div className="flex justify-center p-12">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
-                  ) : !Array.isArray(resumes) || resumes.length === 0 ? (
-                    <Card>
-                      <CardContent className="flex flex-col items-center justify-center p-12">
-                        <FileText className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет резюме</h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                          У вас еще нет резюме. Создайте ваше первое резюме, чтобы откликаться на проекты!
-                        </p>
-                        <Link href="/create-resume">
-                          <Button>Создать первое резюме</Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <div className="grid gap-6">
-                      {resumes.map((resume: any) => (
-                        <Card key={resume.id}>
-                          <CardHeader>
-                            <CardTitle>{resume.title}</CardTitle>
-                            <CardDescription>
-                              Создано: {new Date(resume.createdAt).toLocaleDateString('ru-RU')} • Обновлено: {new Date(resume.updatedAt).toLocaleDateString('ru-RU')}
-                            </CardDescription>
-                          </CardHeader>
-                          <CardContent>
-                            <p className="font-medium text-gray-900 mb-2">Направление: {resume.direction}</p>
-                            <Separator className="my-4" />
-                            <div className="mb-4">
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">Навыки</h4>
-                              <div className="flex flex-wrap gap-2">
-                                {(resume.skills || []).map((skill: string, index: number) => (
-                                  <Badge key={index} variant="outline">{skill}</Badge>
-                                ))}
-                              </div>
+                  <div className="grid gap-6">
+                    {resumes.map((resume: any) => (
+                      <Card key={resume.id}>
+                        <CardHeader>
+                          <CardTitle>{resume.title}</CardTitle>
+                          <CardDescription>
+                            Создано: {new Date(resume.createdAt).toLocaleDateString('ru-RU')} • Обновлено: {new Date(resume.updatedAt).toLocaleDateString('ru-RU')}
+                          </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="font-medium text-gray-900 mb-2">Направление: {resume.direction}</p>
+                          <Separator className="my-4" />
+                          <div className="mb-4">
+                            <h4 className="text-sm font-medium text-gray-700 mb-2">Навыки</h4>
+                            <div className="flex flex-wrap gap-2">
+                              {(resume.skills || []).map((skill: string, index: number) => (
+                                <Badge key={index} variant="outline">{skill}</Badge>
+                              ))}
                             </div>
-                            <div>
-                              <h4 className="text-sm font-medium text-gray-700 mb-2">Образование</h4>
-                              <div className="space-y-2">
-                                {(resume.education || []).slice(0, 1).map((edu: any, index: number) => (
-                                  <div key={index}>
-                                    <p className="font-medium">{edu.institution}</p>
-                                    <p className="text-sm text-gray-600 dark:text-gray-300">{edu.degree}, {edu.fieldOfStudy}</p>
-                                    <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
-                                  </div>
-                                ))}
-                                {resume.education?.length > 1 && (
-                                  <p className="text-sm text-gray-500">+{resume.education.length - 1} еще</p>
-                                )}
-                              </div>
-                            </div>
-                          </CardContent>
-                          <CardFooter className="flex flex-wrap gap-2 justify-between">
-                            <div className="flex gap-2">
-                              <Link href={`/talent/${resume.id}`}>
-                                <Button variant="outline">Просмотреть</Button>
-                              </Link>
-                              <Button 
-                                variant={resume.isPublic !== false ? "outline" : "destructive"} 
-                                onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
-                              >
-                                {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
-                              </Button>
-                            </div>
-                            <Link href={`/edit-resume/${resume.id}`}>
-                              <Button>Редактировать</Button>
-                            </Link>
-                          </CardFooter>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-              </Tabs>
-            </TabsContent>
-            
-            {/* Вкладка Заявки */}
-            <TabsContent value="applications">
-              <div className="mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Мои заявки</h2>
-              </div>
-              
-              {/* Вкладки для переключения между полученными и отправленными заявками */}
-              <Tabs defaultValue="received" className="mb-6">
-                <TabsList className="flex justify-center mb-6">
-                  <TabsTrigger value="received">Полученные заявки</TabsTrigger>
-                  <TabsTrigger value="sent">Отправленные заявки</TabsTrigger>
-                </TabsList>
-                
-                {/* Полученные заявки */}
-                <TabsContent value="received">
-                  {receivedApplicationsLoading ? (
-                    <div className="flex justify-center p-12">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
-                  ) : !Array.isArray(receivedApplications) || receivedApplications.length === 0 ? (
-                    <Card>
-                      <CardContent className="flex flex-col items-center justify-center p-12">
-                        <Inbox className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет полученных заявок</h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                          Вы еще не получили заявок на ваши проекты. Убедитесь, что ваши проекты видны в поиске.
-                        </p>
-                        <Link href="/projects">
-                          <Button>Просмотреть ваши проекты</Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <div className="grid gap-6">
-                      {Array.isArray(receivedApplications) && receivedApplications.map((application: Application) => (
-                        <Card key={application.id}>
-                          <CardHeader>
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <CardTitle>Заявка от {application.user?.username || `пользователя #${application.userId}`}</CardTitle>
-                                <CardDescription>
-                                  Создана: {new Date(application.createdAt).toLocaleDateString('ru-RU')}
-                                </CardDescription>
-                              </div>
-                              <Badge 
-                                variant={
-                                  application.status === "accepted" ? "default" : 
-                                  application.status === "rejected" ? "destructive" : 
-                                  "outline"
-                                }
-                              >
-                                {application.status === "pending" ? "На рассмотрении" : 
-                                 application.status === "accepted" ? "Принята" : 
-                                 application.status === "rejected" ? "Отклонена" : 
-                                 application.status}
-                              </Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-4">
-                              <div>
-                                <div className="text-sm text-gray-500 mb-1">Проект</div>
-                                <div className="font-medium">
-                                  <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
-                                    {projects?.find(p => p.id === application.projectId)?.title || `Проект #${application.projectId}`}
-                                  </Link>
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-medium text-gray-700 mb-2">Образование</h4>
+                            <div className="space-y-2">
+                              {(resume.education || []).slice(0, 1).map((edu: any, index: number) => (
+                                <div key={index}>
+                                  <p className="font-medium">{edu.institution}</p>
+                                  <p className="text-sm text-gray-600 dark:text-gray-300">{edu.degree}, {edu.fieldOfStudy}</p>
+                                  <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
                                 </div>
-                              </div>
-                              <div>
-                                <div className="text-sm text-gray-500 mb-1">Кандидат</div>
-                                <div className="font-medium">
-                                  <Link href={`/talent/${application.resume?.id}`} className="hover:text-primary hover:underline">
-                                    {application.user?.fullName || application.user?.username || `Пользователь #${application.userId}`}
-                                  </Link>
-                                </div>
-                              </div>
-                              <div>
-                                <div className="text-sm text-gray-500 mb-1">Резюме кандидата</div>
-                                {application.resume ? (
-                                  <div>
-                                    <div className="font-medium">
-                                      <Link href={`/talent/${application.resume.id}`} className="hover:text-primary hover:underline">
-                                        {application.resume.title}
-                                      </Link>
-                                    </div>
-                                    <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                      <span className="font-medium">Направление:</span> {application.resume.direction}
-                                    </div>
-                                    
-                                    {/* Образование */}
-                                    {Array.isArray(application.resume.education) && application.resume.education.length > 0 && (
-                                      <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                        <span className="font-medium">Образование:</span> {application.resume.education[0].institution}
-                                        {application.resume.education.length > 1 && (
-                                          <span className="text-xs text-gray-400 ml-1">+{application.resume.education.length - 1} ещё</span>
-                                        )}
-                                      </div>
-                                    )}
-                                    
-                                    {/* Опыт работы */}
-                                    {Array.isArray(application.resume.experience) && application.resume.experience.length > 0 && (
-                                      <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                                        <span className="font-medium">Опыт:</span> {application.resume.experience[0].position} в {application.resume.experience[0].company}
-                                        {application.resume.experience.length > 1 && (
-                                          <span className="text-xs text-gray-400 ml-1">+{application.resume.experience.length - 1} ещё</span>
-                                        )}
-                                      </div>
-                                    )}
-                                    
-                                    {/* Навыки */}
-                                    {Array.isArray(application.resume.skills) && application.resume.skills.length > 0 && (
-                                      <div className="flex flex-wrap gap-1 mt-2">
-                                        {application.resume.skills.slice(0, 3).map((skill, idx) => (
-                                          <Badge key={idx} variant="outline" className="text-xs">{skill}</Badge>
-                                        ))}
-                                        {application.resume.skills.length > 3 && (
-                                          <span className="text-xs text-gray-400">+{application.resume.skills.length - 3} ещё</span>
-                                        )}
-                                      </div>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <div className="text-gray-600 dark:text-gray-300">
-                                    Резюме #{application.resumeId} (информация недоступна)
-                                  </div>
-                                )}
-                              </div>
-                              <div>
-                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
-                                <div className="text-gray-600">{application.message}</div>
-                              </div>
-                            </div>
-                          </CardContent>
-                          <CardFooter className="flex justify-between">
-                            <div className="flex gap-2">
-                              {application.status === "pending" && (
-                                <>
-                                  <Button 
-                                    variant="default" 
-                                    onClick={() => {
-                                      updateApplicationStatusMutation.mutate({ 
-                                        id: application.id, 
-                                        status: "accepted" 
-                                      });
-                                    }}
-                                  >
-                                    Принять
-                                  </Button>
-                                  <Button 
-                                    variant="destructive"
-                                    onClick={() => {
-                                      updateApplicationStatusMutation.mutate({ 
-                                        id: application.id, 
-                                        status: "rejected" 
-                                      });
-                                    }}
-                                  >
-                                    Отклонить
-                                  </Button>
-                                </>
+                              ))}
+                              {resume.education?.length > 1 && (
+                                <p className="text-sm text-gray-500">+{resume.education.length - 1} еще</p>
                               )}
                             </div>
-                            <Button 
-                              variant="outline"
-                              onClick={() => {
-                                // Здесь будет логика отправки сообщения
-                                console.log("Отправить сообщение", application.userId);
-                              }}
-                            >
-                              Написать сообщение
-                            </Button>
-                          </CardFooter>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-                
-                {/* Отправленные заявки */}
-                <TabsContent value="sent">
-                  {sentApplicationsLoading ? (
-                    <div className="flex justify-center p-12">
-                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                    </div>
-                  ) : !Array.isArray(sentApplications) || sentApplications.length === 0 ? (
-                    <Card>
-                      <CardContent className="flex flex-col items-center justify-center p-12">
-                        <Inbox className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет отправленных заявок</h3>
-                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                          Вы еще не отправили заявки на проекты. Просмотрите доступные проекты и найдите подходящие.
-                        </p>
-                        <Link href="/projects">
-                          <Button>Просмотреть проекты</Button>
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <div className="grid gap-6">
-                      {Array.isArray(sentApplications) && sentApplications.map((application: Application) => (
-                        <Card key={application.id}>
-                          <CardHeader>
-                            <div className="flex items-center justify-between">
-                              <div>
-                                <CardTitle>Заявка на проект {application.project?.title || `#${application.projectId}`}</CardTitle>
-                                <CardDescription>
-                                  Отправлена: {new Date(application.createdAt).toLocaleDateString('ru-RU')}
-                                </CardDescription>
-                              </div>
-                              <Badge 
-                                variant={
-                                  application.status === "accepted" ? "default" : 
-                                  application.status === "rejected" ? "destructive" : 
-                                  "outline"
-                                }
-                              >
-                                {application.status === "pending" ? "На рассмотрении" : 
-                                 application.status === "accepted" ? "Принята" : 
-                                 application.status === "rejected" ? "Отклонена" : 
-                                 application.status}
-                              </Badge>
-                            </div>
-                          </CardHeader>
-                          <CardContent>
-                            <div className="space-y-4">
-                              <div>
-                                <div className="text-sm text-gray-500 mb-1">Проект</div>
-                                <div className="font-medium">
-                                  <Link href={`/projects/${application.projectId}`} className="hover:text-primary hover:underline">
-                                    {application.project?.title || `Проект #${application.projectId}`}
-                                  </Link>
-                                </div>
-                              </div>
-                              <div>
-                                <div className="text-sm text-gray-500 mb-1">Резюме</div>
-                                {(() => {
-                                  const resume = resumes?.find(r => r.id === application.resumeId) || application.resume;
-                                  if (resume) {
-                                    return (
-                                      <div>
-                                        <div className="font-medium">
-                                          <Link href={`/talent/${resume.id}`} className="hover:text-primary hover:underline">
-                                            {resume.title}
-                                          </Link>
-                                        </div>
-                                        <div className="text-sm text-gray-600 mt-1">
-                                          <span className="font-medium">Направление:</span> {resume.direction}
-                                        </div>
-                                        
-                                        {/* Образование */}
-                                        {Array.isArray(resume.education) && resume.education.length > 0 && (
-                                          <div className="text-sm text-gray-600 mt-1">
-                                            <span className="font-medium">Образование:</span> {resume.education[0].institution}
-                                            {resume.education.length > 1 && (
-                                              <span className="text-xs text-gray-400 ml-1">+{resume.education.length - 1} ещё</span>
-                                            )}
-                                          </div>
-                                        )}
-                                        
-                                        {/* Опыт работы */}
-                                        {Array.isArray(resume.experience) && resume.experience.length > 0 && (
-                                          <div className="text-sm text-gray-600 mt-1">
-                                            <span className="font-medium">Опыт:</span> {resume.experience[0].position} в {resume.experience[0].company}
-                                            {resume.experience.length > 1 && (
-                                              <span className="text-xs text-gray-400 ml-1">+{resume.experience.length - 1} ещё</span>
-                                            )}
-                                          </div>
-                                        )}
-                                        
-                                        {/* Навыки */}
-                                        {Array.isArray(resume.skills) && resume.skills.length > 0 && (
-                                          <div className="flex flex-wrap gap-1 mt-2">
-                                            {resume.skills.slice(0, 3).map((skill, idx) => (
-                                              <Badge key={idx} variant="outline" className="text-xs">{skill}</Badge>
-                                            ))}
-                                            {resume.skills.length > 3 && (
-                                              <span className="text-xs text-gray-400">+{resume.skills.length - 3} ещё</span>
-                                            )}
-                                          </div>
-                                        )}
-                                      </div>
-                                    );
-                                  } else {
-                                    return (
-                                      <div className="text-gray-600">
-                                        Резюме #{application.resumeId} (информация недоступна)
-                                      </div>
-                                    );
-                                  }
-                                })()}
-                              </div>
-                              <div>
-                                <div className="text-sm text-gray-500 mb-1">Сообщение</div>
-                                <div className="text-gray-600">{application.message}</div>
-                              </div>
-                            </div>
-                          </CardContent>
-                          <CardFooter className="flex justify-end">
-                            <Link href={`/projects/${application.projectId}`}>
-                              <Button variant="outline">Просмотреть проект</Button>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="flex flex-wrap gap-2 justify-between">
+                          <div className="flex gap-2">
+                            <Link href={`/talent/${resume.id}`}>
+                              <Button variant="outline">Просмотреть</Button>
                             </Link>
-                          </CardFooter>
-                        </Card>
-                      ))}
-                    </div>
-                  )}
-                </TabsContent>
-              </Tabs>
+                            <Button 
+                              variant={resume.isPublic !== false ? "outline" : "destructive"} 
+                              onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
+                            >
+                              {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
+                            </Button>
+                          </div>
+                          <Link href={`/edit-resume/${resume.id}`}>
+                            <Button>Редактировать</Button>
+                          </Link>
+                        </CardFooter>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
             </TabsContent>
             
-            {/* Вкладка сообщений */}
-            <TabsContent value="messages">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Сообщения</h2>
+            {/* Вкладка Проект */}
+            <TabsContent value="project">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Проект</h2>
+              </div>
+              
+              {projectsLoading ? (
+                <div className="flex justify-center p-12">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              ) : !Array.isArray(projects) || projects.length === 0 ? (
+                <Card>
+                  <CardContent className="flex flex-col items-center justify-center p-12">
+                    <Briefcase className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет проектов</h3>
+                    <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
+                      У вас еще нет проектов. Создайте ваш первый проект, чтобы найти талантливых людей!
+                    </p>
+                    <Link href="/create-project">
+                      <Button>Создать первый проект</Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div>
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Мои проекты</h3>
+                    <Link href="/create-project">
+                      <Button>
+                        <PlusIcon className="mr-2 h-4 w-4" />
+                        Создать проект
+                      </Button>
+                    </Link>
+                  </div>
+                  <div className="grid gap-6">
+                    {projects.map((project: any) => (
+                      <Card key={project.id}>
+                        <CardHeader>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <CardTitle>{project.title}</CardTitle>
+                              <CardDescription>Создано: {new Date(project.createdAt).toLocaleDateString('ru-RU')}</CardDescription>
+                            </div>
+                            <Badge>{project.field}</Badge>
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">{project.description}</p>
+                          <div className="flex flex-wrap gap-2 mb-4">
+                            {Array.isArray(project.positions) ? project.positions.map((position: any, index: number) => (
+                              <Badge key={index} variant="outline">{position.title}</Badge>
+                            )) : null}
+                          </div>
+                          <div className="flex items-center text-sm text-gray-500">
+                            <span className="mr-4">
+                              {project.remote ? "Удаленно" : project.location || "Расположение не указано"}
+                            </span>
+                            <span>{(project.applications || []).length} заявок</span>
+                          </div>
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                          <Link href={`/projects/${project.id}`}>
+                            <Button variant="outline">Просмотреть</Button>
+                          </Link>
+                          <Link href={`/projects/${project.id}/edit`}>
+                            <Button>Редактировать</Button>
+                          </Link>
+                        </CardFooter>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </TabsContent>
+            
+            {/* Вкладка Инвестор */}
+            <TabsContent value="investor">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Инвестор</h2>
+              </div>
               
               <Card>
                 <CardContent className="flex flex-col items-center justify-center p-12">
-                  <Inbox className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет сообщений</h3>
+                  <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Раздел в разработке</h3>
                   <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                    У вас пока нет сообщений. Свяжитесь с владельцами проектов или соискателями, чтобы начать общение.
+                    Данный раздел находится в разработке и будет доступен в ближайшее время.
                   </p>
-                  <Link href="/projects">
-                    <Button>Просмотреть проекты</Button>
-                  </Link>
                 </CardContent>
               </Card>
             </TabsContent>
