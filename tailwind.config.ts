@@ -83,7 +83,7 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "reverse-bounce": "reverse-bounce 3s ease-in-out infinite",
+        "reverse-bounce": "reverse-bounce 1s ease-in-out infinite",
       },
     },
   },
