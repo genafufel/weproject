@@ -543,6 +543,16 @@ export default function Dashboard() {
                                     {application.project.description?.length > 150 ? "..." : ""}
                                   </div>
                                 )}
+                                {application.positionId && (
+                                  <div className="mt-2">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                      Позиция: {
+                                        application.project?.positions?.find((p: any) => p.id === application.positionId)?.title ||
+                                        `Позиция #${application.positionId}`
+                                      }
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Резюме</div>
@@ -715,6 +725,16 @@ export default function Dashboard() {
                                     {projects?.find(p => p.id === application.projectId)?.title || `Проект #${application.projectId}`}
                                   </Link>
                                 </div>
+                                {application.positionId && (
+                                  <div className="mt-2">
+                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
+                                      Позиция: {
+                                        projects?.find(p => p.id === application.projectId)?.positions?.find((pos: any) => pos.id === application.positionId)?.title ||
+                                        `Позиция #${application.positionId}`
+                                      }
+                                    </span>
+                                  </div>
+                                )}
                               </div>
                               <div>
                                 <div className="text-sm text-gray-500 mb-1">Кандидат</div>
