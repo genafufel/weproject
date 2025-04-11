@@ -4,18 +4,7 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent } from "@/components/ui/card";
-import { 
-  CheckIcon, 
-  ChevronDownIcon, 
-  ChevronLeftIcon, 
-  ChevronRightIcon, 
-  UserIcon, 
-  BriefcaseIcon, 
-  CoinsIcon,
-  GlobeIcon,
-  PlusIcon,
-  CheckCircleIcon 
-} from "lucide-react";
+import { CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { setupScrollAnimations } from "@/lib/scroll-animation";
 import useEmblaCarousel from 'embla-carousel-react';
@@ -341,92 +330,54 @@ export default function HomePage() {
                       <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
                     </div>
                     <div className="space-y-4">
-                      {/* Верхний блок weproject (такой же ширины как другие) */}
-                      <div className="mb-4">
-                        <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md flex items-center justify-between w-full">
-                          <div className="flex items-center space-x-3">
-                            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center text-white font-bold shadow-md">
-                              <span className="text-base">WP</span>
-                            </div>
-                            <div>
-                              <div className="text-sm font-bold text-blue-600 dark:text-blue-400">weproject</div>
-                              <div className="text-xs font-medium text-blue-700 dark:text-blue-300">
-                                Объединяет таланты и проекты
-                              </div>
-                            </div>
-                          </div>
-                          <div className="px-2 py-1 bg-blue-200 dark:bg-blue-700/40 rounded-md text-xs text-blue-800 dark:text-blue-200 font-medium flex items-center">
-                            <GlobeIcon className="w-3 h-3 mr-1" />
-                            <span>Платформа взаимодействия</span>
+                      <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">S</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Студент</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">Ищет первый опыт</div>
                           </div>
                         </div>
                       </div>
-                      
-                      {/* Три блока ниже weproject */}
-                      <div className="grid grid-cols-1 gap-6 relative">
-                        {/* Блок студента/соискателя - светло-розовый */}
-                        <div className="p-3 bg-pink-50 dark:bg-pink-900/30 rounded-lg border border-pink-100 dark:border-pink-800/30 relative">
-                          {/* Круглый индикатор в углу */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-pink-100/80 dark:bg-pink-800/30 rounded-full flex items-center justify-center text-pink-600 dark:text-pink-300 font-semibold text-xs shadow-sm">
-                            <UserIcon className="w-3 h-3" />
-                          </div>
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 w-10 h-10 bg-pink-100 dark:bg-pink-800/40 rounded-full flex items-center justify-center text-pink-600 dark:text-pink-300 font-bold shadow-sm">С</div>
-                            <div className="ml-3">
-                              <div className="text-sm font-bold text-pink-700 dark:text-pink-300">Соискатель</div>
-                              <div className="text-xs font-medium text-pink-600 dark:text-pink-400">Ищет опыт и проекты</div>
-                            </div>
-                          </div>
-                          
-                          {/* Стрелка к проекту */}
-                          <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex justify-center text-pink-500">
-                            <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                            </svg>
+                      <div className="h-8 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                      </div>
+                      <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center text-white font-bold shadow-md">W</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-bold text-blue-600 dark:text-blue-400">weproject</div>
+                            <div className="text-xs font-medium text-blue-700 dark:text-blue-300">Соединяет таланты и идеи</div>
                           </div>
                         </div>
-                        
-                        {/* Блок проекта - фиолетовый */}
-                        <div className="p-3 bg-purple-50 dark:bg-purple-900/30 rounded-lg border border-purple-100 dark:border-purple-700/40 relative z-10 shadow-md">
-                          {/* Круглый индикатор в углу */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-purple-100/80 dark:bg-purple-800/30 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-400 font-semibold text-xs shadow-sm">
-                            <BriefcaseIcon className="w-3 h-3" />
-                          </div>
-                          
-                          {/* Индикатор получения от соискателя и инвестора */}
-                          <div className="absolute -top-2 right-2 px-2 py-0.5 bg-purple-100 dark:bg-purple-800/60 rounded-full text-xs text-purple-700 dark:text-purple-200 font-medium flex items-center">
-                            <CheckIcon className="w-3 h-3 mr-1" />
-                            <span>Центр взаимодействия</span>
-                          </div>
-                          
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 w-10 h-10 bg-purple-100 dark:bg-purple-800/40 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-300 font-bold shadow-sm">П</div>
-                            <div className="ml-3">
-                              <div className="text-sm font-bold text-purple-700 dark:text-purple-300">Проект</div>
-                              <div className="text-xs font-medium text-purple-600 dark:text-purple-400">Нуждается в талантах</div>
-                            </div>
+                      </div>
+                      <div className="h-8 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                      </div>
+                      <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-100 dark:border-green-700/40 shadow-md">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-800/40 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 font-bold shadow-sm">P</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-bold text-green-700 dark:text-green-300">Проект</div>
+                            <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
                           </div>
                         </div>
-                        
-                        {/* Блок инвестора */}
-                        <div className="p-3 bg-[#FFFDE7] dark:bg-[#F9A825]/20 rounded-lg border border-yellow-100/80 dark:border-[#FFD600]/20 relative">
-                          {/* Стрелка к проекту (направлена вверх) */}
-                          <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 flex justify-center text-[#F9A825]">
-                            <svg className="w-4 h-4 animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                            </svg>
-                          </div>
-                          
-                          {/* Круглый индикатор в углу */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-100 dark:bg-yellow-800/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400 font-semibold text-xs shadow-sm">
-                            <CoinsIcon className="w-3 h-3" />
-                          </div>
-                          <div className="flex items-center">
-                            <div className="flex-shrink-0 w-10 h-10 bg-[#FFF9C4] dark:bg-[#FFD600]/30 rounded-full flex items-center justify-center text-[#F9A825] dark:text-yellow-200 font-bold shadow-sm">И</div>
-                            <div className="ml-3">
-                              <div className="text-sm font-bold text-[#F9A825] dark:text-yellow-300">Инвестор</div>
-                              <div className="text-xs font-medium text-[#FBC02D] dark:text-yellow-200">Ищет перспективные проекты</div>
-                            </div>
+                      </div>
+                      <div className="h-8 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-[#F9A825] animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                        </svg>
+                      </div>
+                      <div className="p-3 bg-[#FFFDE7] dark:bg-[#F9A825]/20 rounded-lg border border-yellow-100/80 dark:border-[#FFD600]/20 shadow-md">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-[#FFF9C4] dark:bg-[#FFD600]/30 rounded-full flex items-center justify-center text-[#F9A825] dark:text-yellow-200 font-bold shadow-sm">I</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-bold text-[#F9A825] dark:text-yellow-300">Инвестор</div>
+                            <div className="text-xs font-medium text-[#FBC02D] dark:text-yellow-200">Ищет перспективные проекты</div>
                           </div>
                         </div>
                       </div>
