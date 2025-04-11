@@ -291,7 +291,7 @@ export default function HomePage() {
                 </p>
                 <div className="mt-6 prose prose-lg dark:prose-invert">
                   <p>
-                    Платформа <span className="font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded-md border border-blue-100 dark:border-blue-800/30">weproject</span> создана для решения трех ключевых проблем:
+                    Платформа <span className="font-bold text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded-md border border-blue-100 dark:border-blue-800/30">weproject</span> создана для решения трех ключевых проблем:
                   </p>
                   <ul>
                     <li className="dark:text-gray-300">
