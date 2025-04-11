@@ -246,7 +246,7 @@ export default function HomePage() {
                       </Button>
                     </Link>
                     <Link href={user ? "/create-project" : "/auth"}>
-                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-white border-2 border-primary hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
+                      <Button size="lg" variant="outline" className="px-8 bg-white/80 dark:bg-gray-700/80 backdrop-blur-sm hover:bg-white/100 dark:hover:bg-gray-700/100 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105">
                         Разместить проект
                       </Button>
                     </Link>
