@@ -20,7 +20,7 @@ export function Logo({ size = "default" }: { size?: "small" | "default" | "large
           alt="weproject logo"
           className={`w-auto ${sizeClasses[size]}`}
         />
-        <span className={`ml-2 ${textSizes[size]} font-bold text-primary dark:text-primary animate-[slideInFromLeft_0.8s_ease-out_forwards] origin-left`}>weproject</span>
+        <span className={`ml-2 ${textSizes[size]} font-bold text-primary dark:text-primary animate-[slideInFromLeft_1.2s_cubic-bezier(0.25,0.1,0.25,1.0)_forwards] origin-left`}>weproject</span>
     </Link>
   );
 }

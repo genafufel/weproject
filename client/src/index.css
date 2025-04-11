@@ -414,11 +414,15 @@
 /* Анимация для текста логотипа */
 @keyframes slideInFromLeft {
   0% {
-    transform: translateX(-30px);
+    transform: translateX(-50px) scale(0.9);
     opacity: 0;
   }
+  30% {
+    transform: translateX(-20px) scale(0.95);
+    opacity: 0.5;
+  }
   100% {
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
     opacity: 1;
   }
 }
