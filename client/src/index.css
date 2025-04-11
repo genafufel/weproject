@@ -170,6 +170,12 @@
   60% { transform: translateY(-8px); }
 }
 
+@keyframes reverse-bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(15px); }
+  60% { transform: translateY(8px); }
+}
+
 /* Специальная анимация для ChevronDownIcon, с меньшей амплитудой и плавными переходами */
 @keyframes chevron-bounce {
   0%, 100% { transform: translateY(0); }
