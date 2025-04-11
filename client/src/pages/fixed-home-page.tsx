@@ -368,16 +368,16 @@ export default function HomePage() {
                         </div>
                       </div>
                       <div className="h-8 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-[#FF1A75] animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-6 h-6 text-[#F9A825] animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                         </svg>
                       </div>
-                      <div className="p-3 bg-[#FFF5F9] dark:bg-[#b3004c]/20 rounded-lg border border-pink-100/80 dark:border-[#FF4081]/20 shadow-md">
+                      <div className="p-3 bg-[#FFFDE7] dark:bg-[#F9A825]/20 rounded-lg border border-yellow-100/80 dark:border-[#FFD600]/20 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-[#FFDFEC] dark:bg-[#FF4081]/30 rounded-full flex items-center justify-center text-[#FF1A75] dark:text-pink-200 font-bold shadow-sm">I</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-[#FFF9C4] dark:bg-[#FFD600]/30 rounded-full flex items-center justify-center text-[#F9A825] dark:text-yellow-200 font-bold shadow-sm">I</div>
                           <div className="ml-3">
-                            <div className="text-sm font-bold text-[#FF1A75] dark:text-pink-300">Инвестор</div>
-                            <div className="text-xs font-medium text-[#FF4D94] dark:text-pink-200">Ищет перспективные проекты</div>
+                            <div className="text-sm font-bold text-[#F9A825] dark:text-yellow-300">Инвестор</div>
+                            <div className="text-xs font-medium text-[#FBC02D] dark:text-yellow-200">Ищет перспективные проекты</div>
                           </div>
                         </div>
                       </div>
