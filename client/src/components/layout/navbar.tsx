@@ -122,18 +122,18 @@ export function Navbar() {
                   Мои проекты
                 </Button>
                 
+                <NotificationDropdown />
+                
                 <Link href="/messages">
                   <Button 
                     variant="ghost" 
                     size="icon"
                     aria-label="Сообщения"
-                    className="relative h-8 w-8 rounded-md text-gray-700 dark:text-gray-300"
+                    className="relative h-8 w-8 rounded-md text-gray-700 dark:text-gray-300 ml-1"
                   >
                     <MessageSquare className="h-5 w-5" />
                   </Button>
                 </Link>
-                
-                <NotificationDropdown />
                 
                 <div className="relative group">
                   <Link href="/dashboard">
