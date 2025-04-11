@@ -500,7 +500,7 @@ export default function TalentDetail() {
                     <CardTitle>О себе</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-gray-700 dark:text-gray-200 whitespace-pre-wrap">{resume.about}</p>
+                    <p className="text-gray-700 dark:text-gray-100 whitespace-pre-wrap">{resume.about}</p>
                   </CardContent>
                 </Card>
               )}
@@ -527,7 +527,7 @@ export default function TalentDetail() {
                           {edu.degree} по направлению {edu.fieldOfStudy}
                         </p>
                         {edu.description && (
-                          <p className="mt-2 text-gray-600 dark:text-gray-400">{edu.description}</p>
+                          <p className="mt-2 text-gray-600 dark:text-gray-300">{edu.description}</p>
                         )}
                       </div>
                     ))
@@ -557,7 +557,7 @@ export default function TalentDetail() {
                         </div>
                         <p className="text-primary dark:text-primary">{exp.position}</p>
                         {exp.description && (
-                          <p className="mt-2 text-gray-600 dark:text-gray-400">{exp.description}</p>
+                          <p className="mt-2 text-gray-600 dark:text-gray-300">{exp.description}</p>
                         )}
                       </div>
                     ))
