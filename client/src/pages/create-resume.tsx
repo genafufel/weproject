@@ -967,8 +967,19 @@ export default function CreateResume() {
                                   {photoFields.length === 0 ? 'Загрузите фотографии работ' : 'Добавить еще'}
                                 </h3>
                                 <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-                                  Перетащите изображение сюда или выберите файл с компьютера
+                                  Перетащите изображение сюда или используйте кнопку ниже
                                 </p>
+                                <Button 
+                                  type="button"
+                                  variant="outline"
+                                  size="sm"
+                                  className="mt-2 bg-primary/10 text-primary dark:text-white border-primary"
+                                  onClick={() => fileInputRef.current?.click()}
+                                  disabled={isUploading}
+                                >
+                                  <ImageIcon className="w-4 h-4 mr-2" />
+                                  Загрузить фото
+                                </Button>
                               </>
                             )}
                           </div>
