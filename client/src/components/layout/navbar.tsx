@@ -137,7 +137,7 @@ export function Navbar() {
                 
                 <div className="relative group">
                   <Link href="/dashboard">
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">
                       <Avatar className="h-8 w-8">
                         <AvatarImage 
                           src={user.avatar || undefined} 
@@ -274,15 +274,17 @@ export function Navbar() {
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
                     <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage 
-                          src={user.avatar || undefined} 
-                          alt={user.fullName || "Аватар пользователя"} 
-                        />
-                        <AvatarFallback>
-                          {user.fullName?.split(' ').map(n => n[0]).join('').toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
+                      <div className="rounded-full dark:bg-gray-700 p-1">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage 
+                            src={user.avatar || undefined} 
+                            alt={user.fullName || "Аватар пользователя"} 
+                          />
+                          <AvatarFallback>
+                            {user.fullName?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                      </div>
                     </Link>
                   </div>
                   <div className="ml-3">
