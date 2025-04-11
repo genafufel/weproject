@@ -137,7 +137,7 @@ export function Navbar() {
                 
                 <div className="relative group">
                   <Link href="/dashboard">
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600 p-0 border-2 border-gray-200 dark:border-gray-500">
                       <Avatar className="h-8 w-8">
                         <AvatarImage 
                           src={user.avatar || undefined} 
@@ -274,7 +274,7 @@ export function Navbar() {
                 <div className="flex items-center px-4">
                   <div className="flex-shrink-0">
                     <Link href="/dashboard" onClick={() => setMobileMenuOpen(false)}>
-                      <div className="rounded-full dark:bg-gray-700 p-1">
+                      <div className="rounded-full dark:bg-gray-700 p-1 border-2 border-gray-200 dark:border-gray-500">
                         <Avatar className="h-10 w-10">
                           <AvatarImage 
                             src={user.avatar || undefined} 
