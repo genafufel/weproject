@@ -15,6 +15,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NotificationDropdown } from "@/components/notifications/notification-dropdown";
 import { ThemeSwitcher } from "@/components/theme-switcher";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export function Navbar() {
   const [location, setLocation] = useLocation();
@@ -84,6 +85,10 @@ export function Navbar() {
           </div>
           
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
+            <div className="mr-2">
+              <ThemeToggle />
+            </div>
+            
             {user ? (
               <>
                 <Link href="/messages">
@@ -167,8 +172,9 @@ export function Navbar() {
                       <Link href="/messages" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                         Сообщения
                       </Link>
-                      <div className="theme-switcher-container">
-                        <ThemeSwitcher isMenuItem={true} />
+                      <div className="px-4 py-3 flex items-center justify-between">
+                        <span className="text-sm text-gray-700 dark:text-gray-300">Переключить тему</span>
+                        <ThemeToggle />
                       </div>
                       {user?.isAdmin && (
                         <Link href="/admin" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -333,8 +339,9 @@ export function Navbar() {
                   >
                     Мои проекты
                   </button>
-                  <div className="theme-switcher-container px-4 py-2">
-                    <ThemeSwitcher isMenuItem={true} />
+                  <div className="px-4 py-3 flex items-center justify-between">
+                    <span className="text-base font-medium text-gray-500 dark:text-gray-400">Переключить тему</span>
+                    <ThemeToggle />
                   </div>
                   <Link 
                     href="/messages"
