@@ -341,17 +341,23 @@ export default function HomePage() {
                       <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
                     </div>
                     <div className="space-y-4">
-                      {/* Верхний блок weproject (уменьшенный) */}
-                      <div className="mb-4 flex justify-center">
-                        <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md inline-flex items-center space-x-3">
-                          <div className="flex-shrink-0 w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center text-white font-bold shadow-md">
-                            <span className="text-base">WP</span>
-                          </div>
-                          <div>
-                            <div className="text-sm font-bold text-blue-600 dark:text-blue-400">weproject</div>
-                            <div className="text-xs font-medium text-blue-700 dark:text-blue-300">
-                              Объединяет таланты и проекты
+                      {/* Верхний блок weproject (такой же ширины как другие) */}
+                      <div className="mb-4">
+                        <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md flex items-center justify-between w-full">
+                          <div className="flex items-center space-x-3">
+                            <div className="flex-shrink-0 w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                              <span className="text-base">WP</span>
                             </div>
+                            <div>
+                              <div className="text-sm font-bold text-blue-600 dark:text-blue-400">weproject</div>
+                              <div className="text-xs font-medium text-blue-700 dark:text-blue-300">
+                                Объединяет таланты и проекты
+                              </div>
+                            </div>
+                          </div>
+                          <div className="px-2 py-1 bg-blue-200 dark:bg-blue-700/40 rounded-md text-xs text-blue-800 dark:text-blue-200 font-medium flex items-center">
+                            <GlobeIcon className="w-3 h-3 mr-1" />
+                            <span>Платформа взаимодействия</span>
                           </div>
                         </div>
                       </div>
