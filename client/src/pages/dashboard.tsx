@@ -82,7 +82,7 @@ export default function Dashboard() {
   const { toast } = useToast();
   const { unreadCount } = useNotifications();
   const queryClient = useQueryClient();
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("profile");
   
   // Получаем проекты пользователя
   const {
@@ -149,7 +149,7 @@ export default function Dashboard() {
     const updateTabFromUrl = () => {
       const urlParams = new URLSearchParams(window.location.search);
       const tab = urlParams.get('tab');
-      if (tab && ['overview', 'projects', 'resumes', 'applications', 'messages'].includes(tab)) {
+      if (tab && ['profile', 'work', 'applications'].includes(tab)) {
         setActiveTab(tab);
       }
     };
@@ -250,11 +250,10 @@ export default function Dashboard() {
             className="w-full"
           >
             <TabsList className="mb-8 flex justify-center">
-              <TabsTrigger value="overview">Обзор</TabsTrigger>
-              <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
-              <TabsTrigger value="projects">Мои проекты</TabsTrigger>
+              <TabsTrigger value="profile">Профиль</TabsTrigger>
+              <TabsTrigger value="work">Работа</TabsTrigger>
               <TabsTrigger value="applications" className="relative">
-                Мои заявки
+                Заявки
                 {unreadCount > 0 && (
                   <span className="absolute -top-1 -right-2 flex h-4 w-4 min-w-4 items-center justify-center rounded-full bg-destructive text-[10px] text-destructive-foreground">
                     {unreadCount}
@@ -263,8 +262,12 @@ export default function Dashboard() {
               </TabsTrigger>
             </TabsList>
             
-            {/* Вкладка обзора */}
-            <TabsContent value="overview">
+            {/* Вкладка Профиль */}
+            <TabsContent value="profile">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Мой профиль</h2>
+              </div>
+              
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Карточка со статистикой */}
                 <Card>
@@ -292,7 +295,6 @@ export default function Dashboard() {
                         <span className="text-gray-600 dark:text-gray-400">Отправленные заявки</span>
                         <span className="text-lg font-medium dark:text-gray-100">{sentApplicationsLoading ? "-" : Array.isArray(sentApplications) ? sentApplications.length : 0}</span>
                       </div>
-
                     </div>
                   </CardContent>
                 </Card>
@@ -331,7 +333,6 @@ export default function Dashboard() {
                           Проверить сообщения
                         </Button>
                       </Link>
-
                     </div>
                   </CardContent>
                 </Card>
@@ -382,171 +383,188 @@ export default function Dashboard() {
               </div>
             </TabsContent>
             
-            {/* Вкладка резюме */}
-            <TabsContent value="resumes">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Мои резюме</h2>
-                <Link href="/create-resume">
-                  <Button>
-                    <PlusIcon className="mr-2 h-4 w-4" />
-                    Создать резюме
-                  </Button>
-                </Link>
+            {/* Вкладка Работа */}
+            <TabsContent value="work">
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Работа</h2>
               </div>
               
-              {resumesLoading ? (
-                <div className="flex justify-center p-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
-              ) : !Array.isArray(resumes) || resumes.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center p-12">
-                    <FileText className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет резюме</h3>
-                    <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                      У вас еще нет резюме. Создайте ваше первое резюме, чтобы откликаться на проекты!
-                    </p>
-                    <Link href="/create-resume">
-                      <Button>Создать первое резюме</Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid gap-6">
-                  {resumes.map((resume: any) => (
-                    <Card key={resume.id}>
-                      <CardHeader>
-                        <CardTitle>{resume.title}</CardTitle>
-                        <CardDescription>
-                          Создано: {new Date(resume.createdAt).toLocaleDateString('ru-RU')} • Обновлено: {new Date(resume.updatedAt).toLocaleDateString('ru-RU')}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="font-medium text-gray-900 mb-2">Направление: {resume.direction}</p>
-                        <Separator className="my-4" />
-                        <div className="mb-4">
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Навыки</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {(resume.skills || []).map((skill: string, index: number) => (
-                              <Badge key={index} variant="outline">{skill}</Badge>
-                            ))}
-                          </div>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-700 mb-2">Образование</h4>
-                          <div className="space-y-2">
-                            {(resume.education || []).slice(0, 1).map((edu: any, index: number) => (
-                              <div key={index}>
-                                <p className="font-medium">{edu.institution}</p>
-                                <p className="text-sm text-gray-600 dark:text-gray-300">{edu.degree}, {edu.fieldOfStudy}</p>
-                                <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
-                              </div>
-                            ))}
-                            {resume.education?.length > 1 && (
-                              <p className="text-sm text-gray-500">+{resume.education.length - 1} еще</p>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="flex flex-wrap gap-2 justify-between">
-                        <div className="flex gap-2">
-                          <Link href={`/talent/${resume.id}`}>
-                            <Button variant="outline">Просмотреть</Button>
-                          </Link>
-                          <Button 
-                            variant={resume.isPublic !== false ? "outline" : "destructive"} 
-                            onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
-                          >
-                            {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
-                          </Button>
-                        </div>
-                        <Link href={`/edit-resume/${resume.id}`}>
-                          <Button>Редактировать</Button>
-                        </Link>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </TabsContent>
-            
-            {/* Вкладка проектов */}
-            <TabsContent value="projects">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Мои проекты</h2>
-                <Link href="/create-project">
-                  <Button>
-                    <PlusIcon className="mr-2 h-4 w-4" />
-                    Создать проект
-                  </Button>
-                </Link>
-              </div>
-              
-              {projectsLoading ? (
-                <div className="flex justify-center p-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
-              ) : !Array.isArray(projects) || projects.length === 0 ? (
-                <Card>
-                  <CardContent className="flex flex-col items-center justify-center p-12">
-                    <Briefcase className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
-                    <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет проектов</h3>
-                    <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
-                      У вас еще нет проектов. Создайте ваш первый проект, чтобы найти талантливых людей!
-                    </p>
+              {/* Таб для подраздела "Проекты и резюме" */}
+              <Tabs defaultValue="projects" className="mb-6">
+                <TabsList className="flex justify-center mb-6">
+                  <TabsTrigger value="projects">Мои проекты</TabsTrigger>
+                  <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
+                </TabsList>
+                
+                {/* Проекты */}
+                <TabsContent value="projects">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Мои проекты</h3>
                     <Link href="/create-project">
-                      <Button>Создать первый проект</Button>
+                      <Button>
+                        <PlusIcon className="mr-2 h-4 w-4" />
+                        Создать проект
+                      </Button>
                     </Link>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid gap-6">
-                  {projects.map((project: any) => (
-                    <Card key={project.id}>
-                      <CardHeader>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <CardTitle>{project.title}</CardTitle>
-                            <CardDescription>Создано: {new Date(project.createdAt).toLocaleDateString('ru-RU')}</CardDescription>
-                          </div>
-                          <Badge>{project.field}</Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">{project.description}</p>
-                        <div className="flex flex-wrap gap-2 mb-4">
-                          {Array.isArray(project.positions) ? project.positions.map((position: any, index: number) => (
-                            <Badge key={index} variant="outline">{position.title}</Badge>
-                          )) : null}
-                        </div>
-                        <div className="flex items-center text-sm text-gray-500">
-                          <span className="mr-4">
-                            {project.remote ? "Удаленно" : project.location || "Расположение не указано"}
-                          </span>
-                          <span>{(project.applications || []).length} заявок</span>
-                        </div>
+                  </div>
+                  
+                  {projectsLoading ? (
+                    <div className="flex justify-center p-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  ) : !Array.isArray(projects) || projects.length === 0 ? (
+                    <Card>
+                      <CardContent className="flex flex-col items-center justify-center p-12">
+                        <Briefcase className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет проектов</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
+                          У вас еще нет проектов. Создайте ваш первый проект, чтобы найти талантливых людей!
+                        </p>
+                        <Link href="/create-project">
+                          <Button>Создать первый проект</Button>
+                        </Link>
                       </CardContent>
-                      <CardFooter className="flex justify-between">
-                        <Link href={`/projects/${project.id}`}>
-                          <Button variant="outline">Просмотреть</Button>
-                        </Link>
-                        <Link href={`/projects/${project.id}/edit`}>
-                          <Button>Редактировать</Button>
-                        </Link>
-                      </CardFooter>
                     </Card>
-                  ))}
-                </div>
-              )}
+                  ) : (
+                    <div className="grid gap-6">
+                      {projects.map((project: any) => (
+                        <Card key={project.id}>
+                          <CardHeader>
+                            <div className="flex items-center justify-between">
+                              <div>
+                                <CardTitle>{project.title}</CardTitle>
+                                <CardDescription>Создано: {new Date(project.createdAt).toLocaleDateString('ru-RU')}</CardDescription>
+                              </div>
+                              <Badge>{project.field}</Badge>
+                            </div>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="text-gray-600 dark:text-gray-300 line-clamp-2 mb-4">{project.description}</p>
+                            <div className="flex flex-wrap gap-2 mb-4">
+                              {Array.isArray(project.positions) ? project.positions.map((position: any, index: number) => (
+                                <Badge key={index} variant="outline">{position.title}</Badge>
+                              )) : null}
+                            </div>
+                            <div className="flex items-center text-sm text-gray-500">
+                              <span className="mr-4">
+                                {project.remote ? "Удаленно" : project.location || "Расположение не указано"}
+                              </span>
+                              <span>{(project.applications || []).length} заявок</span>
+                            </div>
+                          </CardContent>
+                          <CardFooter className="flex justify-between">
+                            <Link href={`/projects/${project.id}`}>
+                              <Button variant="outline">Просмотреть</Button>
+                            </Link>
+                            <Link href={`/projects/${project.id}/edit`}>
+                              <Button>Редактировать</Button>
+                            </Link>
+                          </CardFooter>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+                
+                {/* Резюме */}
+                <TabsContent value="resumes">
+                  <div className="flex justify-between items-center mb-6">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100">Мои резюме</h3>
+                    <Link href="/create-resume">
+                      <Button>
+                        <PlusIcon className="mr-2 h-4 w-4" />
+                        Создать резюме
+                      </Button>
+                    </Link>
+                  </div>
+                  
+                  {resumesLoading ? (
+                    <div className="flex justify-center p-12">
+                      <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    </div>
+                  ) : !Array.isArray(resumes) || resumes.length === 0 ? (
+                    <Card>
+                      <CardContent className="flex flex-col items-center justify-center p-12">
+                        <FileText className="h-12 w-12 text-gray-400 dark:text-gray-600 mb-4" />
+                        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">Нет резюме</h3>
+                        <p className="text-gray-500 dark:text-gray-400 mb-6 text-center max-w-md">
+                          У вас еще нет резюме. Создайте ваше первое резюме, чтобы откликаться на проекты!
+                        </p>
+                        <Link href="/create-resume">
+                          <Button>Создать первое резюме</Button>
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <div className="grid gap-6">
+                      {resumes.map((resume: any) => (
+                        <Card key={resume.id}>
+                          <CardHeader>
+                            <CardTitle>{resume.title}</CardTitle>
+                            <CardDescription>
+                              Создано: {new Date(resume.createdAt).toLocaleDateString('ru-RU')} • Обновлено: {new Date(resume.updatedAt).toLocaleDateString('ru-RU')}
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent>
+                            <p className="font-medium text-gray-900 mb-2">Направление: {resume.direction}</p>
+                            <Separator className="my-4" />
+                            <div className="mb-4">
+                              <h4 className="text-sm font-medium text-gray-700 mb-2">Навыки</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {(resume.skills || []).map((skill: string, index: number) => (
+                                  <Badge key={index} variant="outline">{skill}</Badge>
+                                ))}
+                              </div>
+                            </div>
+                            <div>
+                              <h4 className="text-sm font-medium text-gray-700 mb-2">Образование</h4>
+                              <div className="space-y-2">
+                                {(resume.education || []).slice(0, 1).map((edu: any, index: number) => (
+                                  <div key={index}>
+                                    <p className="font-medium">{edu.institution}</p>
+                                    <p className="text-sm text-gray-600 dark:text-gray-300">{edu.degree}, {edu.fieldOfStudy}</p>
+                                    <p className="text-sm text-gray-500">{edu.startDate} - {edu.endDate || "По настоящее время"}</p>
+                                  </div>
+                                ))}
+                                {resume.education?.length > 1 && (
+                                  <p className="text-sm text-gray-500">+{resume.education.length - 1} еще</p>
+                                )}
+                              </div>
+                            </div>
+                          </CardContent>
+                          <CardFooter className="flex flex-wrap gap-2 justify-between">
+                            <div className="flex gap-2">
+                              <Link href={`/talent/${resume.id}`}>
+                                <Button variant="outline">Просмотреть</Button>
+                              </Link>
+                              <Button 
+                                variant={resume.isPublic !== false ? "outline" : "destructive"} 
+                                onClick={() => toggleResumeVisibility(resume.id, resume.isPublic)}
+                              >
+                                {resume.isPublic !== false ? "Скрыть из поиска" : "Показать в поиске"}
+                              </Button>
+                            </div>
+                            <Link href={`/edit-resume/${resume.id}`}>
+                              <Button>Редактировать</Button>
+                            </Link>
+                          </CardFooter>
+                        </Card>
+                      ))}
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </TabsContent>
             
-            {/* Вкладка заявок */}
+            {/* Вкладка Заявки */}
             <TabsContent value="applications">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Мои заявки</h2>
+              <div className="mb-6">
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">Мои заявки</h2>
+              </div>
               
               {/* Вкладки для переключения между полученными и отправленными заявками */}
               <Tabs defaultValue="received" className="mb-6">
-                <TabsList className="flex justify-center">
+                <TabsList className="flex justify-center mb-6">
                   <TabsTrigger value="received">Полученные заявки</TabsTrigger>
                   <TabsTrigger value="sent">Отправленные заявки</TabsTrigger>
                 </TabsList>
