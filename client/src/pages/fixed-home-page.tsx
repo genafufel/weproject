@@ -372,9 +372,9 @@ export default function HomePage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                         </svg>
                       </div>
-                      <div className="p-3 bg-[#FFEDF5] dark:bg-[#b3004c]/20 rounded-lg border border-pink-100/80 dark:border-[#FF4081]/20 shadow-md">
+                      <div className="p-3 bg-[#FFF5F9] dark:bg-[#b3004c]/20 rounded-lg border border-pink-100/80 dark:border-[#FF4081]/20 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-[#FFCCE1] dark:bg-[#FF4081]/30 rounded-full flex items-center justify-center text-[#FF1A75] dark:text-pink-200 font-bold shadow-sm">I</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-[#FFDFEC] dark:bg-[#FF4081]/30 rounded-full flex items-center justify-center text-[#FF1A75] dark:text-pink-200 font-bold shadow-sm">I</div>
                           <div className="ml-3">
                             <div className="text-sm font-bold text-[#FF1A75] dark:text-pink-300">Инвестор</div>
                             <div className="text-xs font-medium text-[#FF4D94] dark:text-pink-200">Ищет перспективные проекты</div>
