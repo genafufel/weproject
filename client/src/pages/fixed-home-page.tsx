@@ -241,7 +241,7 @@ export default function HomePage() {
                   </p>
                   <div className="mt-8 flex flex-col sm:flex-row gap-4 animate-fade-in animate-delay-300">
                     <Link href="/projects">
-                      <Button size="lg" className="px-8 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-white">
+                      <Button size="lg" className="px-8 hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-gray-600 dark:text-gray-300">
                         Проекты
                       </Button>
                     </Link>
