@@ -4,7 +4,18 @@ import { Footer } from "@/components/layout/footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { 
+  CheckIcon, 
+  ChevronDownIcon, 
+  ChevronLeftIcon, 
+  ChevronRightIcon, 
+  UserIcon, 
+  BriefcaseIcon, 
+  CurrencyDollarIcon,
+  GlobeIcon,
+  PlusIcon,
+  CheckCircleIcon 
+} from "lucide-react";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { setupScrollAnimations } from "@/lib/scroll-animation";
 import useEmblaCarousel from 'embla-carousel-react';
