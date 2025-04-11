@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
-import { Menu, X } from "lucide-react";
+import { Menu, X, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { saveReturnUrl } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -79,14 +79,6 @@ export function Navbar() {
           <div className="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
             {user ? (
               <>
-                <Link href="/messages">
-                  <Button 
-                    variant="ghost" 
-                    className="text-gray-700 dark:text-gray-300"
-                  >
-                    Сообщения
-                  </Button>
-                </Link>
                 <Button 
                   variant="ghost" 
                   className="text-gray-700 dark:text-gray-300"
@@ -129,6 +121,18 @@ export function Navbar() {
                 >
                   Мои проекты
                 </Button>
+                
+                <Link href="/messages">
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    aria-label="Сообщения"
+                    className="relative h-8 w-8 rounded-md text-gray-700 dark:text-gray-300"
+                  >
+                    <MessageSquare className="h-5 w-5" />
+                  </Button>
+                </Link>
+                
                 <NotificationDropdown />
                 
                 <div className="relative group">
@@ -158,7 +162,10 @@ export function Navbar() {
                         Личный кабинет
                       </Link>
                       <Link href="/messages" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
-                        Сообщения
+                        <div className="flex items-center">
+                          <MessageSquare className="h-4 w-4 mr-2" />
+                          <span>Сообщения</span>
+                        </div>
                       </Link>
                       <div className="px-4 py-3 flex items-center justify-between">
                         <span className="text-sm text-gray-700 dark:text-gray-300">Переключить тему</span>
@@ -345,7 +352,10 @@ export function Navbar() {
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Сообщения
+                    <div className="flex items-center">
+                      <MessageSquare className="h-5 w-5 mr-2" />
+                      <span>Сообщения</span>
+                    </div>
                   </Link>
 
                   {user?.isAdmin && (
