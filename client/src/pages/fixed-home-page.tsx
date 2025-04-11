@@ -368,16 +368,16 @@ export default function HomePage() {
                         </div>
                       </div>
                       <div className="h-8 flex items-center justify-center">
-                        <svg className="w-6 h-6 text-pink-400 animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg className="w-6 h-6 text-purple-600 animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
                         </svg>
                       </div>
-                      <div className="p-3 bg-pink-50/80 dark:bg-pink-900/20 rounded-lg border border-pink-100/80 dark:border-pink-800/10 shadow-md">
+                      <div className="p-3 bg-purple-50/90 dark:bg-purple-900/30 rounded-lg border border-purple-100/80 dark:border-purple-800/20 shadow-md">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-10 h-10 bg-pink-100/60 dark:bg-pink-800/20 rounded-full flex items-center justify-center text-pink-400 dark:text-pink-300/70 font-bold shadow-sm">I</div>
+                          <div className="flex-shrink-0 w-10 h-10 bg-purple-100/70 dark:bg-purple-800/30 rounded-full flex items-center justify-center text-purple-600 dark:text-purple-300 font-bold shadow-sm">I</div>
                           <div className="ml-3">
-                            <div className="text-sm font-bold text-pink-500 dark:text-pink-300/80">Инвестор</div>
-                            <div className="text-xs font-medium text-pink-400 dark:text-pink-200/80">Ищет перспективные проекты</div>
+                            <div className="text-sm font-bold text-purple-600 dark:text-purple-300">Инвестор</div>
+                            <div className="text-xs font-medium text-purple-500 dark:text-purple-200">Ищет перспективные проекты</div>
                           </div>
                         </div>
                       </div>
