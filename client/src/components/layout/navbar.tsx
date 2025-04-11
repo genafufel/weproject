@@ -167,10 +167,7 @@ export function Navbar() {
                           <span>Сообщения</span>
                         </div>
                       </Link>
-                      <div className="px-4 py-3 flex items-center justify-between">
-                        <span className="text-sm text-gray-700 dark:text-gray-300">Переключить тему</span>
-                        <ThemeToggle />
-                      </div>
+
                       {user?.isAdmin && (
                         <Link href="/admin" className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700">
                           Админ-панель
@@ -343,10 +340,7 @@ export function Navbar() {
                   >
                     Мои проекты
                   </button>
-                  <div className="px-4 py-3 flex items-center justify-between">
-                    <span className="text-base font-medium text-gray-500 dark:text-gray-400">Переключить тему</span>
-                    <ThemeToggle />
-                  </div>
+
                   <Link 
                     href="/messages"
                     className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -396,10 +390,7 @@ export function Navbar() {
                 >
                   Регистрация
                 </button>
-                <div className="py-3 flex items-center justify-between">
-                  <span className="text-base font-medium text-gray-500 dark:text-gray-400">Переключить тему</span>
-                  <ThemeToggle />
-                </div>
+
               </div>
             )}
           </div>
