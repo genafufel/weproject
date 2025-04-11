@@ -411,6 +411,18 @@
   transform: scaleX(1);
 }
 
+/* Анимация для текста логотипа */
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 @layer base {
   :root {
     --secondary: 220 90% 80%;
