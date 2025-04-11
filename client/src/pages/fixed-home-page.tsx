@@ -341,91 +341,88 @@ export default function HomePage() {
                       <div className="text-xs text-gray-500 dark:text-gray-400">Карьерные возможности</div>
                     </div>
                     <div className="space-y-4">
-                      {/* Центральный блок weproject */}
-                      <div className="p-4 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md relative overflow-hidden">
-                        <div className="text-center mb-3">
-                          <div className="flex-shrink-0 w-12 h-12 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center text-white font-bold shadow-md mx-auto">
-                            <span className="text-xl">WP</span>
+                      {/* Верхний блок weproject (уменьшенный) */}
+                      <div className="mb-4 flex justify-center">
+                        <div className="p-3 bg-blue-100 dark:bg-blue-800/60 rounded-lg border border-blue-200 dark:border-blue-600 shadow-md inline-flex items-center space-x-3">
+                          <div className="flex-shrink-0 w-10 h-10 bg-blue-600 dark:bg-blue-700 rounded-full flex items-center justify-center text-white font-bold shadow-md">
+                            <span className="text-base">WP</span>
                           </div>
-                          <div className="text-base font-bold text-blue-600 dark:text-blue-400 mt-1">weproject</div>
-                        </div>
-                        
-                        <div className="text-xs text-center font-medium text-blue-700 dark:text-blue-300 mb-4">
-                          Объединяет таланты, проекты и инвесторов
-                        </div>
-                        
-                        {/* Три блока внутри weproject */}
-                        <div className="grid grid-cols-1 gap-6 relative">
-                          {/* Блок студента/соискателя */}
-                          <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg relative">
-                            {/* Круглый индикатор в углу */}
-                            <div className="absolute -top-2 -left-2 w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center text-primary font-semibold text-xs shadow-sm">
-                              <UserIcon className="w-3 h-3" />
+                          <div>
+                            <div className="text-sm font-bold text-blue-600 dark:text-blue-400">weproject</div>
+                            <div className="text-xs font-medium text-blue-700 dark:text-blue-300">
+                              Объединяет таланты и проекты
                             </div>
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">С</div>
-                              <div className="ml-3">
-                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Соискатель</div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">Ищет опыт и проекты</div>
-                              </div>
-                            </div>
-                            
-                            {/* Стрелка к проекту */}
-                            <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex justify-center text-primary">
-                              <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                              </svg>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Три блока ниже weproject */}
+                      <div className="grid grid-cols-1 gap-6 relative">
+                        {/* Блок студента/соискателя */}
+                        <div className="p-3 bg-gray-100 dark:bg-gray-700 rounded-lg relative">
+                          {/* Круглый индикатор в углу */}
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-primary/20 rounded-full flex items-center justify-center text-primary font-semibold text-xs shadow-sm">
+                            <UserIcon className="w-3 h-3" />
+                          </div>
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">С</div>
+                            <div className="ml-3">
+                              <div className="text-sm font-medium text-gray-900 dark:text-gray-100">Соискатель</div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">Ищет опыт и проекты</div>
                             </div>
                           </div>
                           
-                          {/* Блок проекта */}
-                          <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-100 dark:border-green-700/40 relative z-10 shadow-md">
-                            {/* Круглый индикатор в углу */}
-                            <div className="absolute -top-2 -left-2 w-6 h-6 bg-green-100/80 dark:bg-green-800/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-semibold text-xs shadow-sm">
-                              <BriefcaseIcon className="w-3 h-3" />
-                            </div>
-                            
-                            {/* Индикатор получения от соискателя и инвестора */}
-                            <div className="absolute -top-2 right-2 px-2 py-0.5 bg-green-100 dark:bg-green-800/60 rounded-full text-xs text-green-700 dark:text-green-200 font-medium flex items-center">
-                              <CheckIcon className="w-3 h-3 mr-1" />
-                              <span>Центр взаимодействия</span>
-                            </div>
-                            
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-800/40 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 font-bold shadow-sm">П</div>
-                              <div className="ml-3">
-                                <div className="text-sm font-bold text-green-700 dark:text-green-300">Проект</div>
-                                <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
-                              </div>
-                            </div>
+                          {/* Стрелка к проекту */}
+                          <div className="absolute -bottom-5 left-1/2 transform -translate-x-1/2 flex justify-center text-primary">
+                            <svg className="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                            </svg>
+                          </div>
+                        </div>
+                        
+                        {/* Блок проекта */}
+                        <div className="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg border border-green-100 dark:border-green-700/40 relative z-10 shadow-md">
+                          {/* Круглый индикатор в углу */}
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-green-100/80 dark:bg-green-800/30 rounded-full flex items-center justify-center text-green-600 dark:text-green-400 font-semibold text-xs shadow-sm">
+                            <BriefcaseIcon className="w-3 h-3" />
                           </div>
                           
-                          {/* Блок инвестора */}
-                          <div className="p-3 bg-[#FFFDE7] dark:bg-[#F9A825]/20 rounded-lg border border-yellow-100/80 dark:border-[#FFD600]/20 relative">
-                            {/* Стрелка к проекту (направлена вверх) */}
-                            <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 flex justify-center text-[#F9A825]">
-                              <svg className="w-4 h-4 animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
-                              </svg>
-                            </div>
-                            
-                            {/* Круглый индикатор в углу */}
-                            <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-100 dark:bg-yellow-800/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400 font-semibold text-xs shadow-sm">
-                              <CoinsIcon className="w-3 h-3" />
-                            </div>
-                            <div className="flex items-center">
-                              <div className="flex-shrink-0 w-10 h-10 bg-[#FFF9C4] dark:bg-[#FFD600]/30 rounded-full flex items-center justify-center text-[#F9A825] dark:text-yellow-200 font-bold shadow-sm">И</div>
-                              <div className="ml-3">
-                                <div className="text-sm font-bold text-[#F9A825] dark:text-yellow-300">Инвестор</div>
-                                <div className="text-xs font-medium text-[#FBC02D] dark:text-yellow-200">Ищет перспективные проекты</div>
-                              </div>
+                          {/* Индикатор получения от соискателя и инвестора */}
+                          <div className="absolute -top-2 right-2 px-2 py-0.5 bg-green-100 dark:bg-green-800/60 rounded-full text-xs text-green-700 dark:text-green-200 font-medium flex items-center">
+                            <CheckIcon className="w-3 h-3 mr-1" />
+                            <span>Центр взаимодействия</span>
+                          </div>
+                          
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-10 h-10 bg-green-100 dark:bg-green-800/40 rounded-full flex items-center justify-center text-green-600 dark:text-green-300 font-bold shadow-sm">П</div>
+                            <div className="ml-3">
+                              <div className="text-sm font-bold text-green-700 dark:text-green-300">Проект</div>
+                              <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
                             </div>
                           </div>
                         </div>
                         
-                        {/* Декоративные соединительные линии */}
-                        <div className="absolute top-[40%] left-0 right-0 h-0.5 bg-blue-200 dark:bg-blue-600 opacity-40"></div>
-                        <div className="absolute bottom-[35%] left-0 right-0 h-0.5 bg-blue-200 dark:bg-blue-600 opacity-40"></div>
+                        {/* Блок инвестора */}
+                        <div className="p-3 bg-[#FFFDE7] dark:bg-[#F9A825]/20 rounded-lg border border-yellow-100/80 dark:border-[#FFD600]/20 relative">
+                          {/* Стрелка к проекту (направлена вверх) */}
+                          <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 flex justify-center text-[#F9A825]">
+                            <svg className="w-4 h-4 animate-reverse-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+                            </svg>
+                          </div>
+                          
+                          {/* Круглый индикатор в углу */}
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-100 dark:bg-yellow-800/30 rounded-full flex items-center justify-center text-yellow-600 dark:text-yellow-400 font-semibold text-xs shadow-sm">
+                            <CoinsIcon className="w-3 h-3" />
+                          </div>
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 w-10 h-10 bg-[#FFF9C4] dark:bg-[#FFD600]/30 rounded-full flex items-center justify-center text-[#F9A825] dark:text-yellow-200 font-bold shadow-sm">И</div>
+                            <div className="ml-3">
+                              <div className="text-sm font-bold text-[#F9A825] dark:text-yellow-300">Инвестор</div>
+                              <div className="text-xs font-medium text-[#FBC02D] dark:text-yellow-200">Ищет перспективные проекты</div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
