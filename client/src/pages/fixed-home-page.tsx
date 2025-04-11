@@ -291,7 +291,7 @@ export default function HomePage() {
                 </p>
                 <div className="mt-6 prose prose-lg dark:prose-invert">
                   <p>
-                    Платформа <span className="font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded-md border border-blue-100 dark:border-blue-800/30">weproject</span> создана для решения двух ключевых проблем:
+                    Платформа <span className="font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded-md border border-blue-100 dark:border-blue-800/30">weproject</span> создана для решения трех ключевых проблем:
                   </p>
                   <ul>
                     <li className="dark:text-gray-300">
@@ -300,9 +300,12 @@ export default function HomePage() {
                     <li className="dark:text-gray-300">
                       <span className="font-medium">Для стартапов и проектов с ограниченным бюджетом</span> — возможность найти талантливых сотрудников и собрать команду единомышленников для реализации идей.
                     </li>
+                    <li className="dark:text-gray-300">
+                      <span className="font-medium">Для инвесторов и бизнес-ангелов</span> — возможность находить перспективные проекты на ранних стадиях развития и оказывать финансовую поддержку на выгодных условиях.
+                    </li>
                   </ul>
                   <p className="dark:text-gray-300">
-                    Мы верим, что каждый начинающий специалист заслуживает шанса проявить себя, а каждый инновационный проект — найти свою команду. Наша задача — создать экосистему, где энтузиазм и креативность встречаются с возможностями и идеями.
+                    Мы верим, что каждый начинающий специалист заслуживает шанса проявить себя, инновационные проекты должны находить свою команду и инвестиции, а инвесторы — достойные проекты. Наша задача — создать экосистему, где талант, идеи и капитал встречаются для успешного сотрудничества.
                   </p>
                 </div>
                 <div className="mt-8">
@@ -361,6 +364,20 @@ export default function HomePage() {
                           <div className="ml-3">
                             <div className="text-sm font-bold text-gray-900 dark:text-white">Проект</div>
                             <div className="text-xs font-medium text-green-600 dark:text-green-400">Нуждается в талантах</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="h-8 flex items-center justify-center">
+                        <svg className="w-6 h-6 text-primary animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
+                        </svg>
+                      </div>
+                      <div className="p-3 bg-amber-100 dark:bg-amber-900/40 rounded-lg border border-amber-200 dark:border-amber-800/30 shadow-md">
+                        <div className="flex items-center">
+                          <div className="flex-shrink-0 w-10 h-10 bg-amber-500/30 rounded-full flex items-center justify-center text-amber-600 dark:text-amber-400 font-bold shadow-sm">I</div>
+                          <div className="ml-3">
+                            <div className="text-sm font-bold text-amber-700 dark:text-amber-400">Инвестор</div>
+                            <div className="text-xs font-medium text-amber-600 dark:text-amber-300">Ищет перспективные проекты</div>
                           </div>
                         </div>
                       </div>

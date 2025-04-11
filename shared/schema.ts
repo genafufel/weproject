@@ -1,9 +1,9 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp, pgEnum } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp, pgEnum, numeric } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
 // Перечисление для типов уведомлений
-export const notificationTypeEnum = pgEnum('notification_type', ['message', 'application', 'application_response', 'moderation_sent', 'moderation_approved']);
+export const notificationTypeEnum = pgEnum('notification_type', ['message', 'application', 'application_response', 'moderation_sent', 'moderation_approved', 'investment_request', 'investment_accepted']);
 
 // User model
 export const users = pgTable("users", {
@@ -16,6 +16,9 @@ export const users = pgTable("users", {
   bio: text("bio"),
   avatar: text("avatar"), // URL аватара пользователя
   userType: text("user_type").default("general").notNull(), // общий тип пользователя
+  isApplicant: boolean("is_applicant").default(true), // Флаг соискателя
+  isProject: boolean("is_project").default(false), // Флаг создателя проектов
+  isInvestor: boolean("is_investor").default(false), // Флаг инвестора
   authType: text("auth_type").notNull(), // "email" или "phone"
   verified: boolean("verified").default(false).notNull(), // Статус верификации
   verificationCode: text("verification_code"), // Код верификации
@@ -57,6 +60,12 @@ export const projects = pgTable("projects", {
   photos: jsonb("photos"), // Array of photo URLs
   startDate: timestamp("start_date"), // Project start date
   endDate: timestamp("end_date"), // Project end date
+  // Информация о финансировании
+  needsInvestment: boolean("needs_investment").default(false), // Нужно ли финансирование
+  investmentAmount: numeric("investment_amount"), // Требуемая сумма инвестиций
+  investmentCurrency: text("investment_currency").default("RUB"), // Валюта инвестиций
+  investmentConditions: text("investment_conditions"), // Условия инвестирования
+  investmentDetails: jsonb("investment_details"), // Детальная информация о инвестициях в JSON
   moderationStatus: text("moderation_status").default("pending").notNull(), // pending, approved, rejected
   moderationComment: text("moderation_comment"), // Комментарий модератора при отклонении
   createdAt: timestamp("created_at").defaultNow(),
@@ -87,6 +96,21 @@ export const messages = pgTable("messages", {
   attachments: jsonb("attachments"), // Массив вложений в JSON формате [{url, type, name}, ...]
   read: boolean("read").default(false),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Investment request model (когда инвестор хочет вложиться в проект)
+export const investmentRequests = pgTable("investment_requests", {
+  id: serial("id").primaryKey(),
+  projectId: integer("project_id").notNull(),
+  investorId: integer("investor_id").notNull(), // ID инвестора
+  amount: numeric("amount"), // Предлагаемая сумма инвестиций
+  currency: text("currency").default("RUB"), // Валюта инвестиций
+  conditions: text("conditions"), // Предлагаемые условия инвестирования
+  details: jsonb("details"), // Дополнительная информация в JSON
+  status: text("status").default("pending").notNull(), // "pending", "accepted", "rejected"
+  message: text("message"), // Сообщение от инвестора
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 // Notification model
@@ -124,6 +148,12 @@ export const insertApplicationSchema = createInsertSchema(applications).omit({
   createdAt: true 
 });
 
+export const insertInvestmentRequestSchema = createInsertSchema(investmentRequests).omit({ 
+  id: true, 
+  createdAt: true,
+  updatedAt: true 
+});
+
 export const insertMessageSchema = createInsertSchema(messages).omit({ 
   id: true, 
   createdAt: true 
@@ -146,6 +176,9 @@ export type InsertProject = z.infer<typeof insertProjectSchema>;
 
 export type Application = typeof applications.$inferSelect;
 export type InsertApplication = z.infer<typeof insertApplicationSchema>;
+
+export type InvestmentRequest = typeof investmentRequests.$inferSelect;
+export type InsertInvestmentRequest = z.infer<typeof insertInvestmentRequestSchema>;
 
 export type Message = typeof messages.$inferSelect;
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
