@@ -2,16 +2,9 @@ import { useState } from "react";
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Logo } from "@/components/ui/logo";
-import { Menu, X, Inbox } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { saveReturnUrl } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NotificationDropdown } from "@/components/notifications/notification-dropdown";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -147,16 +140,12 @@ export function Navbar() {
                           alt={user.fullName || "Аватар пользователя"} 
                         />
                         <AvatarFallback>
-                          {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          {user.fullName?.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
                   </Link>
                   <div className="invisible group-hover:visible absolute right-0 mt-2 w-56 origin-top-right rounded-md bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50 transition-all duration-300 opacity-0 group-hover:opacity-100 group-hover:delay-0 delay-200">
-                </div>
-                
-                <div className="ml-2">
-                  <ThemeToggle />
                     <div className="py-1">
                       <div className="flex flex-col space-y-1 p-2">
                         <p className="text-sm font-medium leading-none dark:text-gray-200">{user.fullName}</p>
@@ -191,6 +180,11 @@ export function Navbar() {
                     </div>
                   </div>
                 </div>
+                
+                {/* Переключатель темы */}
+                <div className="ml-2">
+                  <ThemeToggle />
+                </div>
               </>
             ) : (
               <>
@@ -207,6 +201,10 @@ export function Navbar() {
                 >
                   Регистрация
                 </Button>
+                {/* Переключатель темы для неавторизованного пользователя */}
+                <div className="ml-2">
+                  <ThemeToggle />
+                </div>
               </>
             )}
           </div>
@@ -278,7 +276,7 @@ export function Navbar() {
                           alt={user.fullName || "Аватар пользователя"} 
                         />
                         <AvatarFallback>
-                          {user.fullName.split(' ').map(n => n[0]).join('').toUpperCase()}
+                          {user.fullName?.split(' ').map(n => n[0]).join('').toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                     </Link>
@@ -388,6 +386,10 @@ export function Navbar() {
                 >
                   Регистрация
                 </button>
+                <div className="py-3 flex items-center justify-between">
+                  <span className="text-base font-medium text-gray-500 dark:text-gray-400">Переключить тему</span>
+                  <ThemeToggle />
+                </div>
               </div>
             )}
           </div>

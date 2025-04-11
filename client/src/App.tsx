@@ -22,6 +22,7 @@ import Notifications from "@/pages/notifications";
 import ImageTestPage from "@/pages/image-test-page";
 import DirectImageTest from "@/pages/direct-image-test";
 import { AuthProvider } from "@/hooks/use-auth";
+import { ThemeProvider } from "@/hooks/use-theme";
 import { ProtectedRoute } from "@/lib/protected-route";
 import { HelmetProvider } from "react-helmet-async";
 import { DebugLayout } from "@/components/debug-layout";
@@ -85,16 +86,18 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <HelmetProvider>
-          <DebugLayout>
-            <div className="app-container">
-              <Router />
-              <Toaster />
-            </div>
-          </DebugLayout>
-        </HelmetProvider>
-      </AuthProvider>
+      <ThemeProvider defaultTheme="system" storageKey="ui-theme">
+        <AuthProvider>
+          <HelmetProvider>
+            <DebugLayout>
+              <div className="app-container">
+                <Router />
+                <Toaster />
+              </div>
+            </DebugLayout>
+          </HelmetProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
