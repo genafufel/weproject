@@ -386,24 +386,24 @@ export default function HomePage() {
                           </div>
                         </div>
                         
-                        {/* Блок проекта - бирюзовый */}
-                        <div className="p-3 bg-teal-50 dark:bg-teal-900/30 rounded-lg border border-teal-100 dark:border-teal-700/40 relative z-10 shadow-md">
+                        {/* Блок проекта - салатовый */}
+                        <div className="p-3 bg-lime-50 dark:bg-lime-900/30 rounded-lg border border-lime-100 dark:border-lime-700/40 relative z-10 shadow-md">
                           {/* Круглый индикатор в углу */}
-                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-teal-100/80 dark:bg-teal-800/30 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-400 font-semibold text-xs shadow-sm">
+                          <div className="absolute -top-2 -left-2 w-6 h-6 bg-lime-100/80 dark:bg-lime-800/30 rounded-full flex items-center justify-center text-lime-600 dark:text-lime-400 font-semibold text-xs shadow-sm">
                             <BriefcaseIcon className="w-3 h-3" />
                           </div>
                           
                           {/* Индикатор получения от соискателя и инвестора */}
-                          <div className="absolute -top-2 right-2 px-2 py-0.5 bg-teal-100 dark:bg-teal-800/60 rounded-full text-xs text-teal-700 dark:text-teal-200 font-medium flex items-center">
+                          <div className="absolute -top-2 right-2 px-2 py-0.5 bg-lime-100 dark:bg-lime-800/60 rounded-full text-xs text-lime-700 dark:text-lime-200 font-medium flex items-center">
                             <CheckIcon className="w-3 h-3 mr-1" />
                             <span>Центр взаимодействия</span>
                           </div>
                           
                           <div className="flex items-center">
-                            <div className="flex-shrink-0 w-10 h-10 bg-teal-100 dark:bg-teal-800/40 rounded-full flex items-center justify-center text-teal-600 dark:text-teal-300 font-bold shadow-sm">П</div>
+                            <div className="flex-shrink-0 w-10 h-10 bg-lime-100 dark:bg-lime-800/40 rounded-full flex items-center justify-center text-lime-600 dark:text-lime-300 font-bold shadow-sm">П</div>
                             <div className="ml-3">
-                              <div className="text-sm font-bold text-teal-700 dark:text-teal-300">Проект</div>
-                              <div className="text-xs font-medium text-teal-600 dark:text-teal-400">Нуждается в талантах</div>
+                              <div className="text-sm font-bold text-lime-700 dark:text-lime-300">Проект</div>
+                              <div className="text-xs font-medium text-lime-600 dark:text-lime-400">Нуждается в талантах</div>
                             </div>
                           </div>
                         </div>
