@@ -267,19 +267,32 @@ export default function ProjectDetail() {
                   <CardContent>
                     <Carousel className="w-full">
                       <CarouselContent>
-                        {project.photos.map((photo: string, index: number) => (
-                          <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1">
-                              <div className="overflow-hidden rounded-lg">
-                                <ProjectImage 
-                                  src={photo} 
-                                  alt={`Фото проекта ${index + 1}`} 
-                                  className="h-52 w-full transition-all hover:scale-105"
-                                />
+                        {/* Добавляем отладочную информацию */}
+                        <div className="hidden">
+                          <pre className="text-xs text-red-500">
+                            {JSON.stringify(project.photos, null, 2)}
+                          </pre>
+                        </div>
+                        
+                        {project.photos.map((photo: string, index: number) => {
+                          console.log(`DEBUG Photo ${index}:`, photo, typeof photo);
+                          return (
+                            <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
+                              <div className="p-1">
+                                <div className="overflow-hidden rounded-lg">
+                                  <div className="text-xs text-red-500 break-all mb-1">
+                                    {`Photo ${index}: ${JSON.stringify(photo)}`}
+                                  </div>
+                                  <ProjectImage 
+                                    src={photo} 
+                                    alt={`Фото проекта ${index + 1}`} 
+                                    className="h-52 w-full transition-all hover:scale-105"
+                                  />
+                                </div>
                               </div>
-                            </div>
-                          </CarouselItem>
-                        ))}
+                            </CarouselItem>
+                          );
+                        })}
                       </CarouselContent>
                       <CarouselPrevious className="left-2" />
                       <CarouselNext className="right-2" />
