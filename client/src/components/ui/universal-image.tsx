@@ -30,15 +30,38 @@ export function UniversalImage({
   const [hasError, setHasError] = useState<boolean>(false);
   
   useEffect(() => {
-    // Используем сервис для получения правильного URL изображения
+    // Сразу отображаем исходное изображение, даже если сервис еще не инициализирован
+    let initialSrc = src;
+    
+    // Нормализуем путь, если это локальный путь
+    if (src && typeof src === 'string' && !src.startsWith('http') && !src.startsWith('/uploads/')) {
+      initialSrc = `/uploads/${src}`;
+    }
+    
+    // Устанавливаем исходное изображение сразу
+    setImgSrc(initialSrc);
+    
+    // Затем получаем оптимизированный URL из сервиса (для кэширования)
     const optimizedSrc = imageService.getImageUrl(src, type);
-    setImgSrc(optimizedSrc);
+    if (optimizedSrc !== initialSrc) {
+      setImgSrc(optimizedSrc);
+    }
+
     setIsLoading(true);
     setHasError(false);
   }, [src, type]);
   
   const handleError = () => {
-    console.warn("Ошибка загрузки изображения:", src);
+    console.warn("Ошибка загрузки изображения:", src, imgSrc);
+    
+    // Пробуем загрузить исходное изображение напрямую, игнорируя кэш
+    const rawSrc = src;
+    if (imgSrc !== rawSrc && !hasError) {
+      console.log("Попытка загрузки исходного изображения:", rawSrc);
+      setImgSrc(rawSrc);
+      setHasError(true);
+      return;
+    }
     
     // Если есть fallbackSrc, используем его
     if (fallbackSrc) {
@@ -54,8 +77,6 @@ export function UniversalImage({
       
       setImgSrc(defaultSrc);
     }
-    
-    setHasError(true);
     
     // Вызываем обработчик ошибки, если он передан
     if (onError) {

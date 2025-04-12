@@ -99,9 +99,21 @@ class ImageCache {
       return cleanUrl;
     }
     
-    // Если URL начинается просто с имени файла или директории
+    // Если URL начинается с "uploads/" (без слеша в начале)
+    if (cleanUrl.startsWith('uploads/')) {
+      return `/${cleanUrl}`;
+    }
+    
+    // Если URL начинается просто с имени файла или директории (без "uploads/")
     if (!cleanUrl.startsWith('/')) {
-      return `/uploads/${cleanUrl}`;
+      // Проверяем, содержит ли URL слеш вообще
+      if (cleanUrl.includes('/')) {
+        // Если это какой-то другой путь, просто добавляем / в начало
+        return `/${cleanUrl}`;
+      } else {
+        // Если это просто имя файла, добавляем путь к uploads
+        return `/uploads/${cleanUrl}`;
+      }
     }
     
     // Обрабатываем относительный путь
@@ -320,23 +332,8 @@ class ImageCache {
     // Нормализуем URL
     const normalizedUrl = this.normalizeUrl(url);
     
-    // Проверяем кэш
-    if (this.cache.has(normalizedUrl)) {
-      const cachedState = this.cache.get(normalizedUrl)!;
-      
-      // Если изображение загружено с ошибкой, возвращаем дефолтное
-      if (cachedState.error) {
-        return defaultImageForType;
-      }
-      
-      // Возвращаем URL из кэша
-      return cachedState.url;
-    }
-    
-    // Добавляем в очередь предзагрузки
-    this.preloadImage(normalizedUrl);
-    
-    // Возвращаем исходный URL
+    // ВАЖНЫЙ ФИХ: Всегда возвращаем исходный URL, чтобы React мог попытаться загрузить реальное изображение,
+    // даже если оно не в кэше. Только если изображение явно не загрузилось, будет показано дефолтное
     return normalizedUrl;
   }
 
