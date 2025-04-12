@@ -949,14 +949,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const formattedProjects = filteredProjects.map(project => {
         const formatted = { ...project };
         
-        // Форматируем photos
+        // Форматируем photos (с отладочной информацией)
+        console.log(`Обработка проекта ID ${project.id} "${project.title}"`);
+        console.log(`  Photos (ДО обработки): ${typeof project.photos}, значение: ${JSON.stringify(project.photos)}`);
+        
         if (!formatted.photos) {
+          console.log(`  Photos: NULL или UNDEFINED -> пустой массив []`);
           formatted.photos = [];
         } else if (!Array.isArray(formatted.photos)) {
           try {
+            console.log(`  Photos: не массив -> попытка parse JSON`);
             formatted.photos = JSON.parse(formatted.photos as any);
-          } catch {
+            console.log(`  Photos (ПОСЛЕ parse): ${typeof formatted.photos}, значение: ${JSON.stringify(formatted.photos)}`);
+          } catch (e) {
+            console.log(`  Photos: ошибка parse JSON -> пустой массив []`);
+            console.log(`  Ошибка: ${e.message}`);
             formatted.photos = [];
+          }
+        } else {
+          console.log(`  Photos: уже массив длиной ${formatted.photos.length}`);
+          if (formatted.photos.length > 0) {
+            console.log(`  Первый элемент: ${formatted.photos[0]}`);
           }
         }
         
