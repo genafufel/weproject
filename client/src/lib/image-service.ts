@@ -283,12 +283,40 @@ class ImageCache {
 
   /**
    * Предзагружает изображение, но не блокирует выполнение
-   * @param url URL изображения для предзагрузки
+   * @param url URL изображения для предзагрузки или массив URL
    */
-  public preloadImage(url: string): void {
+  public preloadImage(url: string | string[] | undefined | null): void {
     // Проверяем, является ли URL изображения валидным
-    if (!url || typeof url !== 'string' || url.trim() === '') {
+    if (!url) {
       return;
+    }
+    
+    // Обработка массива URL
+    if (Array.isArray(url)) {
+      url.forEach(urlItem => {
+        if (urlItem) this.preloadImage(urlItem);
+      });
+      return;
+    }
+    
+    // Если это не строка или пустая строка, ничего не делаем
+    if (typeof url !== 'string' || url.trim() === '') {
+      return;
+    }
+    
+    // Проверка на JSON-строку с массивом
+    if (url.startsWith('[') && url.endsWith(']')) {
+      try {
+        const parsedUrls = JSON.parse(url);
+        if (Array.isArray(parsedUrls)) {
+          parsedUrls.forEach(parsedUrl => {
+            if (parsedUrl) this.preloadImage(parsedUrl);
+          });
+          return;
+        }
+      } catch (e) {
+        // Если не удалось распарсить как JSON, продолжаем обработку как обычную строку
+      }
     }
     
     // Нормализуем URL

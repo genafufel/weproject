@@ -259,34 +259,65 @@ export default function ProjectDetail() {
               </div>
               
               {/* Project photos */}
-              {project?.photos && Array.isArray(project.photos) && project.photos.length > 0 && (
+              {project?.photos && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Фотографии проекта ({project.photos.length})</CardTitle>
+                    <CardTitle>
+                      Фотографии проекта
+                      {Array.isArray(project.photos) && project.photos.length > 0 && 
+                        ` (${project.photos.length})`
+                      }
+                    </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <Carousel className="w-full">
                       <CarouselContent>
-                        {project.photos.map((photo: any, index: number) => {
-                          // Фильтруем невалидные пути
-                          if (!photo || (typeof photo === 'string' && photo.trim() === '')) {
-                            return null;
+                        {(() => {
+                          // Преобразуем фотографии в массив, независимо от формата
+                          let photosArray = [];
+                          
+                          if (Array.isArray(project.photos)) {
+                            photosArray = project.photos;
+                          } else if (typeof project.photos === 'string') {
+                            // Проверяем, является ли строка JSON-массивом
+                            if (project.photos.trim().startsWith('[') && project.photos.trim().endsWith(']')) {
+                              try {
+                                const parsedPhotos = JSON.parse(project.photos);
+                                if (Array.isArray(parsedPhotos)) {
+                                  photosArray = parsedPhotos;
+                                  console.debug("🔄 Фотографии проекта преобразованы из JSON-строки:", photosArray);
+                                }
+                              } catch (e) {
+                                // Если не удалось разобрать JSON, считаем что это одиночное фото
+                                photosArray = [project.photos];
+                              }
+                            } else {
+                              // Одиночная строка с путем к фото
+                              photosArray = [project.photos];
+                            }
                           }
                           
-                          return (
-                            <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
-                              <div className="p-1">
-                                <div className="overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-                                  <ProjectImage 
-                                    src={photo} 
-                                    alt={`Фото проекта ${index + 1}`} 
-                                    className="h-52 w-full transition-all hover:scale-105"
-                                  />
+                          return photosArray.map((photo: any, index: number) => {
+                            // Фильтруем невалидные пути
+                            if (!photo || (typeof photo === 'string' && photo.trim() === '')) {
+                              return null;
+                            }
+                            
+                            return (
+                              <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1">
+                                  <div className="overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                                    <ProjectImage 
+                                      src={photo} 
+                                      alt={`Фото проекта ${index + 1}`} 
+                                      className="h-52 w-full transition-all hover:scale-105"
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                            </CarouselItem>
-                          );
-                        })}
+                              </CarouselItem>
+                            );
+                          });
+                        })()}
                       </CarouselContent>
                       <CarouselPrevious className="left-2" />
                       <CarouselNext className="right-2" />

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { imageService } from "@/lib/image-service";
 
-interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
+// Выделяем атрибут src в отдельный интерфейс, чтобы избежать конфликта типов
+type ImgAttributes = Omit<React.ImgHTMLAttributes<HTMLImageElement>, 'src' | 'onError' | 'onLoad'>;
+
+interface UniversalImageProps extends ImgAttributes {
   src: string | string[];
   fallbackSrc?: string;
   type?: 'avatar' | 'project' | 'resume' | 'default';
@@ -141,10 +144,13 @@ export function UserAvatar({
 
 /**
  * Изображение проекта с закругленными углами
+ * Добавлена специальная обработка массивов и JSON-строк для решения проблемы 
+ * с различными форматами хранения фотографий в БД
  */
 export function ProjectImage({
   className,
   size = 'md',
+  src,
   ...props
 }: UniversalImageProps) {
   const sizeClasses = {
@@ -154,6 +160,29 @@ export function ProjectImage({
     xl: "h-96",
   }[size] || "h-48";
   
+  // Специальная обработка массивов для проектов
+  let processedSrc = src;
+  
+  // Если src - строка, проверяем, не является ли она JSON-строкой с массивом
+  if (typeof src === 'string' && src.trim().startsWith('[') && src.trim().endsWith(']')) {
+    try {
+      const parsedArray = JSON.parse(src);
+      if (Array.isArray(parsedArray) && parsedArray.length > 0) {
+        console.debug("🔄 ProjectImage: Преобразована JSON-строка в массив:", parsedArray);
+        processedSrc = parsedArray[0]; // Берем первый элемент
+      }
+    } catch (error) {
+      console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON:", src);
+      // Если не удалось разобрать JSON, оставляем как есть
+    }
+  }
+  
+  // Если src - массив, берем первый элемент
+  if (Array.isArray(processedSrc) && processedSrc.length > 0) {
+    console.debug("🔄 ProjectImage: Использован первый элемент из массива:", processedSrc);
+    processedSrc = processedSrc[0];
+  }
+  
   return (
     <UniversalImage
       type="project"
@@ -162,6 +191,7 @@ export function ProjectImage({
         sizeClasses,
         className
       )}
+      src={processedSrc}
       {...props}
     />
   );
