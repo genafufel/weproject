@@ -54,6 +54,9 @@ class ImageCache {
   public normalizeUrl(url: string | undefined | null): string {
     if (!url) return this.defaultImage;
     
+    // Удаляем лишние кавычки, которые могут быть в JSON строках
+    url = url.replace(/^"(.*)"$/, '$1');
+    
     // Если URL уже содержит протокол, возвращаем как есть
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
