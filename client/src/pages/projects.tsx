@@ -364,7 +364,7 @@ export default function Projects() {
                     <div className="flex justify-between items-start gap-2">
                       <div>
                         <CardTitle className="text-xl">
-                          <Link href={`/projects/${project.id}`} className="hover:text-primary transition-colors">
+                          <Link href={`/projects/${project.id}`} className="text-primary hover:text-primary/80 transition-colors">
                             {project.title}
                           </Link>
                         </CardTitle>
