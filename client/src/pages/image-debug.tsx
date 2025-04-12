@@ -9,17 +9,17 @@ import { Button } from '@/components/ui/button';
 const TEST_CASES = [
   {
     type: 'Массив строк',
-    data: ['/uploads/1743605280228-572081855.jpg'],
-    description: 'Простой массив строк с путями'
+    data: ['/uploads/1744408001371-521291339.png', '/uploads/1744408008480-122786513.png'],
+    description: 'Массив строк с путями к нескольким фотографиям'
   },
   {
     type: 'JSON-строка с массивом',
-    data: JSON.stringify(['/uploads/1743605280228-572081855.jpg']),
+    data: JSON.stringify(['/uploads/1744408001371-521291339.png', '/uploads/1744408008480-122786513.png']),
     description: 'JSON-строка, представляющая массив с путями'
   },
   {
     type: 'Обычная строка',
-    data: '/uploads/1743605280228-572081855.jpg',
+    data: '/uploads/1744408001371-521291339.png',
     description: 'Обычная строка с путем'
   },
   {
@@ -38,9 +38,14 @@ const TEST_CASES = [
     description: 'Нулевое значение'
   },
   {
-    type: 'Внешняя ссылка',
-    data: 'https://example.com/image.jpg',
-    description: 'Внешняя ссылка на изображение'
+    type: 'Фото из проектов',
+    data: '/uploads/1743605280228-572081855.jpg',
+    description: 'Фото из предыдущих проектов'
+  },
+  {
+    type: 'Дефолтные фото',
+    data: '/uploads/default-project.jpg',
+    description: 'Дефолтное изображение проекта'
   }
 ];
 

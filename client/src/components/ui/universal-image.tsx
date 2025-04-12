@@ -144,8 +144,7 @@ export function UserAvatar({
 
 /**
  * Изображение проекта с закругленными углами
- * Добавлена специальная обработка массивов и JSON-строк для решения проблемы 
- * с различными форматами хранения фотографий в БД
+ * Универсальная обработка различных форматов данных изображений
  */
 export function ProjectImage({
   className,
@@ -160,27 +159,74 @@ export function ProjectImage({
     xl: "h-96",
   }[size] || "h-48";
   
-  // Специальная обработка массивов для проектов
-  let processedSrc = src;
+  // Улучшенная обработка различных форматов данных изображений
+  let processedSrc: string | string[] | null = src;
   
-  // Если src - строка, проверяем, не является ли она JSON-строкой с массивом
-  if (typeof src === 'string' && src.trim().startsWith('[') && src.trim().endsWith(']')) {
-    try {
-      const parsedArray = JSON.parse(src);
-      if (Array.isArray(parsedArray) && parsedArray.length > 0) {
-        console.debug("🔄 ProjectImage: Преобразована JSON-строка в массив:", parsedArray);
-        processedSrc = parsedArray[0]; // Берем первый элемент
+  // Шаг 1: Обрабатываем null и undefined
+  if (processedSrc === null || processedSrc === undefined) {
+    console.debug("⚠️ ProjectImage: Получен null или undefined, используем дефолтное изображение");
+    processedSrc = '/uploads/default-project.jpg';
+  }
+  
+  // Шаг 2: Обрабатываем JSON-строки
+  if (typeof processedSrc === 'string') {
+    // Проверяем, является ли строка JSON с массивом
+    if (processedSrc.trim().startsWith('[') && processedSrc.trim().endsWith(']')) {
+      try {
+        const parsedData = JSON.parse(processedSrc);
+        if (Array.isArray(parsedData)) {
+          console.debug("🔄 ProjectImage: Преобразована JSON-строка в массив:", parsedData);
+          processedSrc = parsedData.length > 0 ? parsedData : ['/uploads/default-project.jpg'];
+        }
+      } catch (error) {
+        console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON:", processedSrc);
+        // Если не удалось распарсить JSON, оставляем как есть
       }
-    } catch (error) {
-      console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON:", src);
-      // Если не удалось разобрать JSON, оставляем как есть
+    }
+    
+    // Проверяем, является ли строка JSON-объектом (например, {url: "..."})
+    if (processedSrc.trim().startsWith('{') && processedSrc.trim().endsWith('}')) {
+      try {
+        const parsedObject = JSON.parse(processedSrc);
+        console.debug("🔄 ProjectImage: Обрабатываем JSON-объект:", parsedObject);
+        
+        // Если у объекта есть свойство url, images или image, используем его
+        if (parsedObject.url) {
+          processedSrc = parsedObject.url;
+        } else if (parsedObject.images && Array.isArray(parsedObject.images)) {
+          processedSrc = parsedObject.images.length > 0 ? parsedObject.images[0] : '/uploads/default-project.jpg';
+        } else if (parsedObject.image) {
+          processedSrc = parsedObject.image;
+        }
+      } catch (error) {
+        console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON-объект:", processedSrc);
+        // Оставляем как есть
+      }
     }
   }
   
-  // Если src - массив, берем первый элемент
-  if (Array.isArray(processedSrc) && processedSrc.length > 0) {
-    console.debug("🔄 ProjectImage: Использован первый элемент из массива:", processedSrc);
-    processedSrc = processedSrc[0];
+  // Шаг 3: Обрабатываем массивы
+  if (Array.isArray(processedSrc)) {
+    if (processedSrc.length > 0) {
+      console.debug("🔄 ProjectImage: Использован первый элемент из массива:", processedSrc);
+      
+      // Дополнительная проверка, является ли первый элемент массива валидным
+      const firstItem = processedSrc[0];
+      if (firstItem === null || firstItem === undefined || firstItem === '') {
+        processedSrc = '/uploads/default-project.jpg';
+      } else {
+        processedSrc = firstItem;
+      }
+    } else {
+      console.debug("⚠️ ProjectImage: Получен пустой массив, используем дефолтное изображение");
+      processedSrc = '/uploads/default-project.jpg';
+    }
+  }
+  
+  // Шаг 4: Финальная проверка на пустую строку
+  if (typeof processedSrc === 'string' && processedSrc.trim() === '') {
+    console.debug("⚠️ ProjectImage: Получена пустая строка, используем дефолтное изображение");
+    processedSrc = '/uploads/default-project.jpg';
   }
   
   return (
