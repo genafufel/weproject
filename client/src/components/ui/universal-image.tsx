@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { imageService } from "@/lib/image-service";
 import { cn } from "@/lib/utils";
 
 interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -9,6 +8,38 @@ interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   onError?: () => void;
   onLoad?: () => void;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+}
+
+// Функция для нормализации URL изображения
+function normalizeImageUrl(url: string | undefined | null): string {
+  if (!url) return '';
+  
+  if (typeof url !== 'string') {
+    return '';
+  }
+  
+  // Удаляем кавычки (если есть)
+  let cleanUrl = url.replace(/^"+|"+$/g, '');
+  
+  // Возвращаем если это просто пустая строка
+  if (!cleanUrl.trim()) return '';
+  
+  // Если URL уже является абсолютным или начинается с "/uploads"
+  if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/uploads')) {
+    return cleanUrl;
+  }
+  
+  // Если URL начинается с "uploads/" (без слеша в начале)
+  if (cleanUrl.startsWith('uploads/')) {
+    return `/${cleanUrl}`;
+  }
+  
+  // Если URL не начинается со слеша, считаем что это файл в uploads
+  if (!cleanUrl.startsWith('/')) {
+    return `/uploads/${cleanUrl}`;
+  }
+  
+  return cleanUrl;
 }
 
 /**
@@ -29,56 +60,36 @@ export function UniversalImage({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
   
+  // Стандартные изображения для различных типов
+  const defaultSrcMap = {
+    'avatar': '/uploads/default-avatar.jpg',
+    'project': '/uploads/default-project.jpg',
+    'resume': '/uploads/default-resume.jpg',
+    'default': '/uploads/default.jpg'
+  };
+  
   useEffect(() => {
-    // Сразу отображаем исходное изображение, даже если сервис еще не инициализирован
-    let initialSrc = src;
-    
-    // Нормализуем путь, если это локальный путь
-    if (src && typeof src === 'string' && !src.startsWith('http') && !src.startsWith('/uploads/')) {
-      initialSrc = `/uploads/${src}`;
-    }
-    
-    // Устанавливаем исходное изображение сразу
-    setImgSrc(initialSrc);
-    
-    // Затем получаем оптимизированный URL из сервиса (для кэширования)
-    const optimizedSrc = imageService.getImageUrl(src, type);
-    if (optimizedSrc !== initialSrc) {
-      setImgSrc(optimizedSrc);
-    }
-
+    // Нормализуем URL изображения при каждом изменении src
+    const normalizedSrc = normalizeImageUrl(src);
+    setImgSrc(normalizedSrc);
     setIsLoading(true);
     setHasError(false);
-  }, [src, type]);
+  }, [src]);
   
   const handleError = () => {
-    console.warn("Ошибка загрузки изображения:", src, imgSrc);
+    console.warn("Ошибка загрузки изображения:", src);
     
-    // Пробуем загрузить исходное изображение напрямую, игнорируя кэш
-    const rawSrc = src;
-    if (imgSrc !== rawSrc && !hasError) {
-      console.log("Попытка загрузки исходного изображения:", rawSrc);
-      setImgSrc(rawSrc);
-      setHasError(true);
-      return;
-    }
-    
-    // Если есть fallbackSrc, используем его
+    // Если есть пользовательский fallbackSrc, используем его
     if (fallbackSrc) {
       setImgSrc(fallbackSrc);
     } else {
-      // Иначе используем запасной вариант по типу
-      const defaultSrc = {
-        'avatar': '/uploads/default-avatar.jpg',
-        'project': '/uploads/default-project.jpg',
-        'resume': '/uploads/default-resume.jpg',
-        'default': '/uploads/default.jpg'
-      }[type];
-      
-      setImgSrc(defaultSrc);
+      // Иначе используем запасное изображение по типу
+      setImgSrc(defaultSrcMap[type]);
     }
     
-    // Вызываем обработчик ошибки, если он передан
+    setHasError(true);
+    
+    // Вызываем пользовательский обработчик ошибки, если он передан
     if (onError) {
       onError();
     }
@@ -87,7 +98,7 @@ export function UniversalImage({
   const handleLoad = () => {
     setIsLoading(false);
     
-    // Вызываем обработчик загрузки, если он передан
+    // Вызываем пользовательский обработчик загрузки, если он передан
     if (onLoad) {
       onLoad();
     }
