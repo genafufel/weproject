@@ -341,10 +341,13 @@ export default function Projects() {
                   >
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative overflow-hidden">
-                        {/* Отладочная информация */}
-                        <div className="absolute top-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 z-50">
-                          Photos: {JSON.stringify(project.photos)}
-                        </div>
+                        {/* Отладочная информация - только при разработке */}
+                        {process.env.NODE_ENV === 'development' && (
+                          <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 z-10 truncate">
+                            ID: {project.id} / Photos: {JSON.stringify(project.photos).substring(0, 30)}
+                            {JSON.stringify(project.photos).length > 30 ? '...' : ''}
+                          </div>
+                        )}
                         
                         <ProjectCardImage 
                           photos={project.photos}
