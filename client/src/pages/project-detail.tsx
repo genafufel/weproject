@@ -259,35 +259,34 @@ export default function ProjectDetail() {
               </div>
               
               {/* Project photos */}
-              {project?.photos && project.photos.length > 0 && (
+              {project?.photos && Array.isArray(project.photos) && project.photos.length > 0 && (
                 <Card>
                   <CardHeader>
                     <CardTitle>Фотографии проекта ({project.photos.length})</CardTitle>
-                    <CardDescription className="text-xs">
-                      <pre className="bg-gray-100 dark:bg-gray-800 p-2 rounded mt-1 overflow-auto max-h-32">
-                        {JSON.stringify(project.photos, null, 2)}
-                      </pre>
-                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <Carousel className="w-full">
                       <CarouselContent>
-                        {project.photos.map((photo: any, index: number) => (
+                        {project.photos.map((photo: any, index: number) => {
+                          // Фильтруем невалидные пути
+                          if (!photo || (typeof photo === 'string' && photo.trim() === '')) {
+                            return null;
+                          }
+                          
+                          return (
                             <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
                               <div className="p-1">
-                                <div className="overflow-hidden rounded-lg">
+                                <div className="overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                                   <ProjectImage 
                                     src={photo} 
                                     alt={`Фото проекта ${index + 1}`} 
                                     className="h-52 w-full transition-all hover:scale-105"
                                   />
                                 </div>
-                                <div className="mt-1 text-xs text-gray-500">
-                                  Фото #{index + 1} ({typeof photo})
-                                </div>
                               </div>
                             </CarouselItem>
-                        ))}
+                          );
+                        })}
                       </CarouselContent>
                       <CarouselPrevious className="left-2" />
                       <CarouselNext className="right-2" />

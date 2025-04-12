@@ -94,8 +94,21 @@ class ImageCache {
     // Возвращаем если это просто пустая строка
     if (!cleanUrl.trim()) return '';
     
-    // Если URL уже является абсолютным или начинается с "/uploads"
-    if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/uploads')) {
+    // НОВАЯ ПРОВЕРКА: Удаляем любые кавычки и слеши, которые могут быть в начале и конце строки
+    // Это очень важно для случаев, когда URL хранится в JSON с экранированными слешами
+    // или когда данные фотографий проекта приходят с какими-то арефактами
+    cleanUrl = cleanUrl.replace(/^["'\/\\]+|["'\/\\]+$/g, '');
+    
+    // Если после очистки строка пустая, возвращаем пустую строку
+    if (!cleanUrl.trim()) return '';
+    
+    // Если URL уже является абсолютным
+    if (cleanUrl.startsWith('http')) {
+      return cleanUrl;
+    }
+    
+    // Если URL начинается с "/uploads" - наиболее распространенный случай для проектов
+    if (cleanUrl.startsWith('/uploads')) {
       return cleanUrl;
     }
     

@@ -45,7 +45,12 @@ export function UniversalImage({
   useEffect(() => {
     if (!src) return;
     
+    // Логгируем для отладки исходный URL
+    console.debug(`👁️ UniversalImage: обработка исходного URL [${type}]:`, src);
+    
     const processedSrc = imageService.normalizeUrl(src);
+    console.debug(`👁️ UniversalImage: нормализованный URL:`, processedSrc);
+    
     if (processedSrc) {
       setImgSrc(processedSrc);
       setIsLoading(true);
@@ -54,7 +59,7 @@ export function UniversalImage({
       // Предзагружаем изображение (не блокирует выполнение)
       imageService.preloadImage(processedSrc);
     }
-  }, [src]);
+  }, [src, type]);
   
   // Обработчик ошибки загрузки
   const handleError = () => {
