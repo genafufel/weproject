@@ -12,63 +12,49 @@ interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
 
 // Функция для нормализации URL изображения
 function normalizeImageUrl(url: string | undefined | null): string {
-  // Проверка на дефолтные изображения, чтобы не обрабатывать их повторно
-  const defaultPaths = [
-    '/uploads/default.jpg',
-    '/uploads/default-avatar.jpg',
-    '/uploads/default-project.jpg',
-    '/uploads/default-resume.jpg'
-  ];
+  // Если url отсутствует или не является строкой, возвращаем пустую строку
+  if (!url || typeof url !== 'string') {
+    return '';
+  }
   
-  // Если это дефолтное изображение, просто возвращаем как есть
-  if (url && typeof url === 'string' && defaultPaths.includes(url)) {
+  // Проверка на дефолтные изображения, чтобы не обрабатывать их повторно
+  if (url.startsWith('/uploads/default')) {
     return url;
   }
-  
-  if (!url) {
-    console.log("[normalizeImageUrl] URL пустой");
-    return '';
-  }
-  
-  if (typeof url !== 'string') {
-    console.log("[normalizeImageUrl] URL не строка:", typeof url);
-    return '';
-  }
-  
-  console.log("[normalizeImageUrl] Исходный URL:", url, typeof url);
   
   // Удаляем кавычки (если есть)
   let cleanUrl = url.replace(/^"+|"+$/g, '');
   
   // Возвращаем если это просто пустая строка
   if (!cleanUrl.trim()) {
-    console.log("[normalizeImageUrl] URL после очистки пустой");
     return '';
   }
   
   // Если URL уже является абсолютным или начинается с "/uploads"
   if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/uploads')) {
-    console.log("[normalizeImageUrl] URL является абсолютным или начинается с /uploads:", cleanUrl);
     return cleanUrl;
   }
   
   // Если URL начинается с "uploads/" (без слеша в начале)
   if (cleanUrl.startsWith('uploads/')) {
-    const result = `/${cleanUrl}`;
-    console.log("[normalizeImageUrl] URL начинается с uploads/. Результат:", result);
-    return result;
+    return `/${cleanUrl}`;
   }
   
   // Если URL не начинается со слеша, считаем что это файл в uploads
   if (!cleanUrl.startsWith('/')) {
-    const result = `/uploads/${cleanUrl}`;
-    console.log("[normalizeImageUrl] URL не начинается со /. Результат:", result);
-    return result;
+    return `/uploads/${cleanUrl}`;
   }
   
-  console.log("[normalizeImageUrl] URL не требует изменений:", cleanUrl);
   return cleanUrl;
 }
+
+// Стандартные изображения для различных типов
+const DEFAULT_IMAGES = {
+  'avatar': '/uploads/default-avatar.jpg',
+  'project': '/uploads/default-project.jpg',
+  'resume': '/uploads/default-resume.jpg',
+  'default': '/uploads/default.jpg'
+};
 
 /**
  * Универсальный компонент изображения с обработкой ошибок и запасными изображениями
@@ -84,28 +70,33 @@ export function UniversalImage({
   size = 'md',
   ...rest
 }: UniversalImageProps) {
-  const [imgSrc, setImgSrc] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  // Инициализируем с правильным значением в зависимости от наличия src
+  const initialSrc = src ? normalizeImageUrl(src) : DEFAULT_IMAGES[type];
+  
+  const [imgSrc, setImgSrc] = useState<string>(initialSrc);
+  const [isLoading, setIsLoading] = useState<boolean>(!!src); // Если src есть, то начинаем загрузку
   const [hasError, setHasError] = useState<boolean>(false);
   
-  // Стандартные изображения для различных типов
-  const defaultSrcMap = {
-    'avatar': '/uploads/default-avatar.jpg',
-    'project': '/uploads/default-project.jpg',
-    'resume': '/uploads/default-resume.jpg',
-    'default': '/uploads/default.jpg'
-  };
-  
   useEffect(() => {
+    // Не обрабатываем пустой src
+    if (!src) return;
+    
     // Нормализуем URL изображения при каждом изменении src
     const normalizedSrc = normalizeImageUrl(src);
-    setImgSrc(normalizedSrc);
-    setIsLoading(true);
-    setHasError(false);
+    
+    // Устанавливаем URL только если он не пустой
+    if (normalizedSrc) {
+      setImgSrc(normalizedSrc);
+      setIsLoading(true);
+      setHasError(false);
+    }
   }, [src]);
   
   const handleError = () => {
     console.warn("Ошибка загрузки изображения:", src);
+    
+    // Блокируем повторную обработку ошибки
+    if (hasError) return;
     
     // Если есть пользовательский fallbackSrc, используем его
     if (fallbackSrc) {
@@ -114,10 +105,13 @@ export function UniversalImage({
     } else {
       // Иначе используем запасное изображение по типу
       // Обращаемся напрямую к дефолтному изображению без повторной нормализации
-      setImgSrc(defaultSrcMap[type]);
+      const defaultImage = DEFAULT_IMAGES[type];
+      console.log("Использую дефолтное изображение:", defaultImage);
+      setImgSrc(defaultImage);
     }
     
     setHasError(true);
+    setIsLoading(false);
     
     // Вызываем пользовательский обработчик ошибки, если он передан
     if (onError) {
