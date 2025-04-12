@@ -333,24 +333,22 @@ export default function Projects() {
           ) : (
             <CardContainer>
               {projects.map((project: any) => {
-                const hasPhotos = project.photos && project.photos.length > 0;
+                // Всегда отображаем фото, независимо от проверки на наличие фотографий
                 return (
                   <Card 
                     key={project.id} 
-                    className={`overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col group dark:bg-gray-700/70 ${hasPhotos ? 'h-full' : 'h-[280px] card-no-photo'}`}
+                    className={`overflow-hidden hover:shadow-xl transition-all border border-gray-200 dark:border-gray-700 flex flex-col group dark:bg-gray-700/70 h-full`}
                   >
-                    {hasPhotos && (
-                      <Link href={`/projects/${project.id}`}>
-                        <div className="relative overflow-hidden">
-                          <ProjectCardImage 
-                            photos={project.photos}
-                            alt={project.title} 
-                            className="transition-transform duration-500 group-hover:scale-110"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </div>
-                      </Link>
-                    )}
+                    <Link href={`/projects/${project.id}`}>
+                      <div className="relative overflow-hidden">
+                        <ProjectCardImage 
+                          photos={project.photos}
+                          alt={project.title} 
+                          className="transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                      </div>
+                    </Link>
                   
                   <CardHeader className="pb-2 pt-4">
                     <div className="flex justify-between items-start gap-2">

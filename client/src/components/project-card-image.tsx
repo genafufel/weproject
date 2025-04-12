@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ProjectCardImageProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -8,103 +7,81 @@ interface ProjectCardImageProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * Максимально упрощенный компонент для отображения изображений проектов
- * Работает напрямую в DOM без лишних абстракций
+ * Предельно упрощенный компонент для отображения карточек
+ * со встроенной заглушкой по умолчанию
  */
 export function ProjectCardImage({ 
   photos, 
   alt = "Project image", 
-  className,
+  className, 
   ...props 
 }: ProjectCardImageProps) {
-  const [hasError, setHasError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
-  
-  // Получаем абсолютный URL к изображению
-  const getImageSrc = (photos: any): string => {
+  // Абсолютно минимальная обработка данных для обеспечения работы компонента
+  function getImageUrl(): string {
     try {
-      // Пустые данные
-      if (!photos) return window.location.origin + '/uploads/default-project.jpg';
+      // Стандартное изображение (всегда доступно)
+      const DEFAULT_IMAGE = window.location.origin + '/uploads/default-project.jpg';
       
-      // Массив изображений
+      // Если совсем ничего нет
+      if (!photos) return DEFAULT_IMAGE;
+      
+      // Если массив строк
       if (Array.isArray(photos) && photos.length > 0) {
-        let firstPhoto = photos[0];
-        console.log("🎯 Прямой URL: Использую изображение из массива:", firstPhoto);
-        if (!firstPhoto) return window.location.origin + '/uploads/default-project.jpg';
+        const url = photos[0];
+        if (!url) return DEFAULT_IMAGE;
         
-        // Добавляем протокол и хост к относительному URL
-        if (firstPhoto.startsWith('/')) {
-          return window.location.origin + firstPhoto;
+        if (url.startsWith('/')) {
+          return window.location.origin + url;
         }
-        return firstPhoto;
+        return url;
       }
-
-      // JSON строка с массивом
+      
+      // Если строка
       if (typeof photos === 'string') {
-        // Попытка парсинга JSON
+        // Это массив в формате JSON?
         if (photos.startsWith('[') && photos.endsWith(']')) {
           try {
-            const parsedPhotos = JSON.parse(photos);
-            if (Array.isArray(parsedPhotos) && parsedPhotos.length > 0) {
-              const firstPhoto = parsedPhotos[0];
-              console.log("🎯 Прямой URL: Использую изображение из JSON массива:", firstPhoto);
-              
-              // Добавляем протокол и хост к относительному URL
-              if (firstPhoto.startsWith('/')) {
-                return window.location.origin + firstPhoto;
+            const parsed = JSON.parse(photos);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              const url = parsed[0];
+              if (url.startsWith('/')) {
+                return window.location.origin + url;
               }
-              return firstPhoto;
+              return url;
             }
           } catch (e) {
-            // Если не удалось распарсить, продолжаем
+            // Нет, это не JSON
           }
         }
         
-        // Одиночная строка (путь к изображению)
-        if (photos.trim() !== '') {
-          console.log("🎯 Прямой URL: Использую строку как путь:", photos);
-          
-          // Добавляем протокол и хост к относительному URL
-          if (photos.startsWith('/')) {
-            return window.location.origin + photos;
-          }
-          return photos;
+        // Просто URL
+        if (photos.startsWith('/')) {
+          return window.location.origin + photos;
         }
+        return photos;
       }
-
-      // По умолчанию возвращаем дефолтное изображение с абсолютным URL
-      return window.location.origin + '/uploads/default-project.jpg';
+      
+      // В крайнем случае
+      return DEFAULT_IMAGE;
     } catch (e) {
-      console.error("Ошибка получения изображения:", e);
+      // Отображаем ошибку и используем запасной вариант
+      console.error('Ошибка при попытке получить URL изображения:', e);
       return window.location.origin + '/uploads/default-project.jpg';
     }
-  };
-
-  const handleError = () => {
-    console.log("❌ Ошибка загрузки изображения");
-    setHasError(true);
-  };
-
-  const handleLoad = () => {
-    console.log("✅ Изображение успешно загружено");
-    setIsLoaded(true);
-    setHasError(false);
-  };
-
+  }
+  
+  // Прямой рендер без лишних состояний и обработчиков
   return (
-    <div className={cn("relative h-48 w-full", className)} {...props}>
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse" />
-      )}
-      <img
-        src={getImageSrc(photos)}
-        alt={alt}
-        className={cn(
-          "w-full h-full object-cover transition-transform duration-500 group-hover:scale-110",
-          hasError && "opacity-0"
-        )}
-        onLoad={handleLoad}
-        onError={handleError}
+    <div className={cn("relative h-48 w-full overflow-hidden bg-gray-100 dark:bg-gray-800", className)} {...props}>
+      <img 
+        src={getImageUrl()} 
+        alt={alt} 
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          // Если ошибка загрузки - заменяем на дефолтную
+          console.error('Ошибка загрузки изображения');
+          e.currentTarget.src = window.location.origin + '/uploads/default-project.jpg';
+        }}
       />
     </div>
   );
