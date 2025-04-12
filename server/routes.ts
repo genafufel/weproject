@@ -1904,11 +1904,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const fileExists = async (filePath: string): Promise<boolean> => {
         const fs = await import('fs/promises');
         try {
-          // Удаляем первый слеш для правильного пути
-          const normalizedPath = filePath.startsWith('/') ? filePath.substring(1) : filePath;
+          // Приводим к правильному пути относительно корня проекта
+          const normalizedPath = filePath.startsWith('/uploads/')
+            ? `client/public${filePath}`
+            : filePath.startsWith('uploads/')
+              ? `client/public/${filePath}`
+              : filePath;
+              
+          console.log(`Проверка файла: ${filePath} -> ${normalizedPath}`);
+          
           await fs.access(normalizedPath);
           return true;
         } catch (error: unknown) {
+          console.warn(`Файл не найден: ${filePath}`);
           return false;
         }
       };

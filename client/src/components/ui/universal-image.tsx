@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { imageService } from '@/lib/image-service';
+import React, { useState, useEffect } from "react";
+import { imageService } from "@/lib/image-service";
+import { cn } from "@/lib/utils";
 
 interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
@@ -7,6 +8,7 @@ interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
   type?: 'avatar' | 'project' | 'resume' | 'default';
   onError?: () => void;
   onLoad?: () => void;
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 /**
@@ -14,96 +16,101 @@ interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
  */
 export function UniversalImage({
   src,
+  alt,
   fallbackSrc,
   type = 'default',
-  className = '',
-  alt = '',
+  className,
   onError,
   onLoad,
-  ...props
+  size = 'md',
+  ...rest
 }: UniversalImageProps) {
-  // Используем различные дефолтные изображения в зависимости от типа
-  const defaultImages = {
-    avatar: '/uploads/default-avatar.jpg',
-    project: '/uploads/default-project.jpg',
-    resume: '/uploads/default-resume.jpg',
-    default: '/uploads/default.jpg'
-  };
-  
-  // Определяем fallback, если не передан явно
-  const finalFallbackSrc = fallbackSrc || defaultImages[type];
-  
-  // Состояние для отслеживания ошибок загрузки
-  const [imgSrc, setImgSrc] = useState<string>(src);
+  const [imgSrc, setImgSrc] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [hasError, setHasError] = useState<boolean>(false);
   
-  // Сбросить состояние при изменении src
   useEffect(() => {
-    setImgSrc(src);
+    // Используем сервис для получения правильного URL изображения
+    const optimizedSrc = imageService.getImageUrl(src, type);
+    setImgSrc(optimizedSrc);
+    setIsLoading(true);
     setHasError(false);
-  }, [src]);
+  }, [src, type]);
   
-  // Функция для очистки путей от лишних кавычек
-  const cleanPath = (path: string) => {
-    if (typeof path !== 'string') return '';
-    return path.replace(/^"+|"+$/g, '');
-  };
-  
-  // Обработчик ошибки загрузки изображения
   const handleError = () => {
-    if (!hasError) {
-      console.warn(`Ошибка загрузки изображения: ${imgSrc}, переход на запасное: ${finalFallbackSrc}`);
-      setImgSrc(finalFallbackSrc);
-      setHasError(true);
-      onError?.();
+    console.warn("Ошибка загрузки изображения:", src);
+    
+    // Если есть fallbackSrc, используем его
+    if (fallbackSrc) {
+      setImgSrc(fallbackSrc);
+    } else {
+      // Иначе используем запасной вариант по типу
+      const defaultSrc = {
+        'avatar': '/uploads/default-avatar.jpg',
+        'project': '/uploads/default-project.jpg',
+        'resume': '/uploads/default-resume.jpg',
+        'default': '/uploads/default.jpg'
+      }[type];
+      
+      setImgSrc(defaultSrc);
+    }
+    
+    setHasError(true);
+    
+    // Вызываем обработчик ошибки, если он передан
+    if (onError) {
+      onError();
     }
   };
   
-  // Обработчик успешной загрузки
   const handleLoad = () => {
-    onLoad?.();
-  };
-  
-  // Гарантируем, что у нас всегда будет изображение
-  const renderImage = () => {
-    const cleanSrc = cleanPath(imgSrc);
+    setIsLoading(false);
     
-    return (
-      <img
-        src={cleanSrc}
-        alt={alt}
-        className={className}
-        onError={handleError}
-        onLoad={handleLoad}
-        {...props}
-      />
-    );
+    // Вызываем обработчик загрузки, если он передан
+    if (onLoad) {
+      onLoad();
+    }
   };
   
-  return renderImage();
+  return (
+    <img
+      src={imgSrc}
+      alt={alt || "Изображение"}
+      className={cn(
+        "transition-opacity",
+        isLoading ? "opacity-0" : "opacity-100",
+        className
+      )}
+      onError={handleError}
+      onLoad={handleLoad}
+      {...rest}
+    />
+  );
 }
 
 /**
  * Аватар пользователя с круглой формой
  */
 export function UserAvatar({
-  src,
-  className = '',
+  className,
   size = 'md',
   ...props
-}: UniversalImageProps & { size?: 'sm' | 'md' | 'lg' }) {
-  // Определяем размеры для разных вариантов
+}: UniversalImageProps) {
   const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-12 h-12',
-    lg: 'w-16 h-16'
-  };
+    sm: "h-8 w-8",
+    md: "h-10 w-10",
+    lg: "h-16 w-16",
+    xl: "h-24 w-24",
+  }[size] || "h-10 w-10";
   
   return (
     <UniversalImage
-      src={src}
       type="avatar"
-      className={`rounded-full object-cover border-2 border-border ${sizeClasses[size]} ${className}`}
+      className={cn(
+        "rounded-full object-cover border-2 border-gray-200 dark:border-gray-500",
+        sizeClasses,
+        className
+      )}
       {...props}
     />
   );
@@ -113,15 +120,25 @@ export function UserAvatar({
  * Изображение проекта с закругленными углами
  */
 export function ProjectImage({
-  src,
-  className = '',
+  className,
+  size = 'md',
   ...props
 }: UniversalImageProps) {
+  const sizeClasses = {
+    sm: "h-32",
+    md: "h-48",
+    lg: "h-64",
+    xl: "h-96",
+  }[size] || "h-48";
+  
   return (
     <UniversalImage
-      src={src}
       type="project"
-      className={`rounded-md object-cover ${className}`}
+      className={cn(
+        "rounded-md object-cover w-full",
+        sizeClasses,
+        className
+      )}
       {...props}
     />
   );
@@ -131,15 +148,25 @@ export function ProjectImage({
  * Изображение резюме с закругленными углами
  */
 export function ResumeImage({
-  src,
-  className = '',
+  className,
+  size = 'md',
   ...props
 }: UniversalImageProps) {
+  const sizeClasses = {
+    sm: "h-32",
+    md: "h-48",
+    lg: "h-64",
+    xl: "h-96",
+  }[size] || "h-48";
+  
   return (
     <UniversalImage
-      src={src}
       type="resume"
-      className={`rounded-md object-cover ${className}`}
+      className={cn(
+        "rounded-md object-cover w-full",
+        sizeClasses,
+        className
+      )}
       {...props}
     />
   );
