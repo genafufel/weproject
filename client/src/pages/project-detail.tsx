@@ -430,14 +430,12 @@ export default function ProjectDetail() {
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-center">
-                    <Avatar className="h-12 w-12 mr-4">
-                      <AvatarImage src={projectOwner?.avatar} alt={projectOwner?.fullName || "Владелец проекта"} />
-                      <AvatarFallback>
-                        {projectOwner?.fullName
-                          ? projectOwner.fullName.slice(0, 2).toUpperCase()
-                          : "ВП"}
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar 
+                      src={projectOwner?.avatar} 
+                      alt={projectOwner?.fullName || "Владелец проекта"} 
+                      className="h-12 w-12 mr-4"
+                      size="lg"
+                    />
                     <div>
                       <h3 className="font-medium text-gray-900 dark:text-gray-100">{projectOwner?.fullName || "Владелец проекта"}</h3>
                       <p className="text-sm text-gray-500 dark:text-gray-400">{projectOwner?.bio || "Информация отсутствует"}</p>

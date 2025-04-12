@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UniversalImage, UserAvatar, ResumeImage } from "@/components/ui/universal-image";
 import { ArrowLeft, Loader2, Mail, Calendar, Building, GraduationCap, Edit, Image } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Resume } from "@shared/schema";
@@ -325,12 +326,12 @@ export default function TalentDetail() {
               <Card>
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center text-center">
-                    <Avatar className="h-24 w-24 mb-4">
-                      <AvatarImage src={resumeUser?.avatar || undefined} alt={resumeUser?.fullName} />
-                      <AvatarFallback className="text-xl">
-                        {resumeUser?.fullName.split(' ').map((n: string) => n[0]).join('').toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
+                    <UserAvatar 
+                      src={resumeUser?.avatar || ''} 
+                      alt={resumeUser?.fullName || 'Пользователь'} 
+                      className="h-24 w-24 mb-4"
+                      size="lg"
+                    />
                     
                     <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{resumeUser?.fullName}</h1>
                     <p className="text-primary dark:text-primary font-medium">{resume.title}</p>
@@ -477,23 +478,10 @@ export default function TalentDetail() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {photos.map((photo, index) => (
                         <div key={index} className="overflow-hidden rounded-md aspect-video">
-                          <img 
-                            src={(photo && typeof photo === 'string') ? 
-                               (photo.startsWith('http') ? photo : 
-                                 (photo.startsWith('/uploads') 
-                                   ? photo.replace(/^"+|"+$/g, '') // Удаляем кавычки в начале и конце
-                                   : `/uploads/${photo.replace(/^"+|"+$/g, '').split('/').pop()}`
-                                 )
-                               ) 
-                               : '/uploads/default-resume.jpg'
-                            }
+                          <ResumeImage 
+                            src={photo} 
                             alt={`Портфолио ${index + 1}`} 
                             className="object-cover w-full h-full transition-transform hover:scale-105"
-                            onError={(e) => {
-                              console.warn("Ошибка загрузки изображения:", photo);
-                              // Устанавливаем изображение по умолчанию напрямую
-                              e.currentTarget.src = '/uploads/default-resume.jpg';
-                            }}
                           />
                         </div>
                       ))}
