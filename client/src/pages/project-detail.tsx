@@ -265,22 +265,12 @@ export default function ProjectDetail() {
                     <CardTitle>Фотографии проекта</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    {/* Отладочная информация о фотографиях */}
-                    <div className="bg-red-100 p-2 mb-4 rounded text-xs">
-                      <div>DEBUG Photos: {JSON.stringify(project.photos)}</div>
-                    </div>
-                    
                     <Carousel className="w-full">
                       <CarouselContent>
-                        {project.photos.map((photo: string, index: number) => {
-                          console.log(`Отображаем фото ${index}:`, photo);
-                          return (
+                        {project.photos.map((photo: string, index: number) => (
                             <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
                               <div className="p-1">
                                 <div className="overflow-hidden rounded-lg">
-                                  <div className="bg-blue-100 p-1 mb-1 text-xs">
-                                    Фото {index}: {photo}
-                                  </div>
                                   <ProjectImage 
                                     src={photo} 
                                     alt={`Фото проекта ${index + 1}`} 
@@ -289,8 +279,7 @@ export default function ProjectDetail() {
                                 </div>
                               </div>
                             </CarouselItem>
-                          );
-                        })}
+                        ))}
                       </CarouselContent>
                       <CarouselPrevious className="left-2" />
                       <CarouselNext className="right-2" />
