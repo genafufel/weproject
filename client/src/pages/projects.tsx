@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Loader2, Search, MapPin, ChevronDown } from "lucide-react";
 import { CardContainer } from "@/components/card-container";
 import { ProjectCardImage } from "@/components/project-card-image";
+import { SimplifiedProjectImage } from "@/components/simplified-project-image";
 import {
   Card,
   CardContent,
@@ -349,7 +350,7 @@ export default function Projects() {
                           </div>
                         )}
                         
-                        <ProjectCardImage 
+                        <SimplifiedProjectImage 
                           photos={project.photos}
                           alt={project.title} 
                           className="transition-transform duration-500 group-hover:scale-110"
