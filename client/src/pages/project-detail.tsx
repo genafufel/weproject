@@ -34,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UniversalImage, UserAvatar, ProjectImage } from "@/components/ui/universal-image";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   MapPin, 
@@ -270,23 +271,10 @@ export default function ProjectDetail() {
                           <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
                             <div className="p-1">
                               <div className="overflow-hidden rounded-lg">
-                                <img 
-                                  src={(photo && typeof photo === 'string') ? 
-                                    (photo.startsWith('http') ? photo : 
-                                      (photo.startsWith('/uploads') 
-                                        ? photo.replace(/^"+|"+$/g, '') // Удаляем кавычки в начале и конце
-                                        : `/uploads/${photo.replace(/^"+|"+$/g, '').split('/').pop()}`
-                                      )
-                                    ) 
-                                    : '/uploads/default-project.jpg'
-                                  } 
+                                <ProjectImage 
+                                  src={photo} 
                                   alt={`Фото проекта ${index + 1}`} 
-                                  className="h-52 w-full object-cover transition-all hover:scale-105"
-                                  onError={(e) => {
-                                    console.warn("Ошибка загрузки изображения:", photo);
-                                    // Устанавливаем изображение по умолчанию напрямую
-                                    e.currentTarget.src = '/uploads/default-project.jpg';
-                                  }}
+                                  className="h-52 w-full transition-all hover:scale-105"
                                 />
                               </div>
                             </div>
