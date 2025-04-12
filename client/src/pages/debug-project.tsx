@@ -7,13 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { ProjectImage } from "@/components/ui/universal-image";
+import { Project } from "@shared/schema";
 
 export default function DebugProject() {
   const { id } = useParams<{ id: string }>();
   const projectId = parseInt(id);
 
   // Получаем данные проекта
-  const { data: project, isLoading, error } = useQuery({
+  const { data: project, isLoading, error } = useQuery<Project>({
     queryKey: [`/api/projects/${projectId}`],
     enabled: !!projectId && !isNaN(projectId),
   });

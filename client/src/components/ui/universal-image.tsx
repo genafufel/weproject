@@ -12,33 +12,48 @@ interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
 
 // Функция для нормализации URL изображения
 function normalizeImageUrl(url: string | undefined | null): string {
-  if (!url) return '';
-  
-  if (typeof url !== 'string') {
+  if (!url) {
+    console.log("[normalizeImageUrl] URL пустой");
     return '';
   }
+  
+  if (typeof url !== 'string') {
+    console.log("[normalizeImageUrl] URL не строка:", typeof url);
+    return '';
+  }
+  
+  console.log("[normalizeImageUrl] Исходный URL:", url, typeof url);
   
   // Удаляем кавычки (если есть)
   let cleanUrl = url.replace(/^"+|"+$/g, '');
   
   // Возвращаем если это просто пустая строка
-  if (!cleanUrl.trim()) return '';
+  if (!cleanUrl.trim()) {
+    console.log("[normalizeImageUrl] URL после очистки пустой");
+    return '';
+  }
   
   // Если URL уже является абсолютным или начинается с "/uploads"
   if (cleanUrl.startsWith('http') || cleanUrl.startsWith('/uploads')) {
+    console.log("[normalizeImageUrl] URL является абсолютным или начинается с /uploads:", cleanUrl);
     return cleanUrl;
   }
   
   // Если URL начинается с "uploads/" (без слеша в начале)
   if (cleanUrl.startsWith('uploads/')) {
-    return `/${cleanUrl}`;
+    const result = `/${cleanUrl}`;
+    console.log("[normalizeImageUrl] URL начинается с uploads/. Результат:", result);
+    return result;
   }
   
   // Если URL не начинается со слеша, считаем что это файл в uploads
   if (!cleanUrl.startsWith('/')) {
-    return `/uploads/${cleanUrl}`;
+    const result = `/uploads/${cleanUrl}`;
+    console.log("[normalizeImageUrl] URL не начинается со /. Результат:", result);
+    return result;
   }
   
+  console.log("[normalizeImageUrl] URL не требует изменений:", cleanUrl);
   return cleanUrl;
 }
 

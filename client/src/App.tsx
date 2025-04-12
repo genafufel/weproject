@@ -21,6 +21,7 @@ import AdminPanel from "@/pages/admin-panel";
 import Notifications from "@/pages/notifications";
 import ImageTestPage from "@/pages/image-test-page";
 import DirectImageTest from "@/pages/direct-image-test";
+import DebugProject from "@/pages/debug-project";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -54,6 +55,7 @@ function Router() {
       {/* Тестовые страницы для изображений */}
       <Route path="/image-test" component={ImageTestPage} />
       <Route path="/direct-image-test" component={DirectImageTest} />
+      <Route path="/debug-project/:id" component={DebugProject} />
       
       {/* Страница верификации (доступна только для авторизованных пользователей) */}
       <ProtectedRoute path="/verification" component={VerificationPage} />
