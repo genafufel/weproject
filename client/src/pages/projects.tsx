@@ -341,6 +341,11 @@ export default function Projects() {
                   >
                     <Link href={`/projects/${project.id}`}>
                       <div className="relative overflow-hidden">
+                        {/* Отладочная информация */}
+                        <div className="absolute top-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 z-50">
+                          Photos: {JSON.stringify(project.photos)}
+                        </div>
+                        
                         <ProjectCardImage 
                           photos={project.photos}
                           alt={project.title} 
