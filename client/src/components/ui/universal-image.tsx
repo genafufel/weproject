@@ -160,7 +160,7 @@ export function ProjectImage({
   }[size] || "h-48";
   
   // Улучшенная обработка различных форматов данных изображений
-  let processedSrc: string | string[] | null = src;
+  let processedSrc: string | string[] = src || '/uploads/default-project.jpg';
   
   // Шаг 1: Обрабатываем null и undefined
   if (processedSrc === null || processedSrc === undefined) {
@@ -170,38 +170,46 @@ export function ProjectImage({
   
   // Шаг 2: Обрабатываем JSON-строки
   if (typeof processedSrc === 'string') {
-    // Проверяем, является ли строка JSON с массивом
-    if (processedSrc.trim().startsWith('[') && processedSrc.trim().endsWith(']')) {
-      try {
-        const parsedData = JSON.parse(processedSrc);
-        if (Array.isArray(parsedData)) {
-          console.debug("🔄 ProjectImage: Преобразована JSON-строка в массив:", parsedData);
-          processedSrc = parsedData.length > 0 ? parsedData : ['/uploads/default-project.jpg'];
+    try {
+      const trimmedSrc = processedSrc.trim();
+      
+      // Проверяем, является ли строка JSON с массивом
+      if (trimmedSrc.startsWith('[') && trimmedSrc.endsWith(']')) {
+        try {
+          const parsedData = JSON.parse(trimmedSrc);
+          if (Array.isArray(parsedData)) {
+            console.debug("🔄 ProjectImage: Преобразована JSON-строка в массив:", parsedData);
+            processedSrc = parsedData.length > 0 ? parsedData : ['/uploads/default-project.jpg'];
+          }
+        } catch (error) {
+          console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON:", processedSrc);
+          // Если не удалось распарсить JSON, оставляем как есть
         }
-      } catch (error) {
-        console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON:", processedSrc);
-        // Если не удалось распарсить JSON, оставляем как есть
       }
-    }
-    
-    // Проверяем, является ли строка JSON-объектом (например, {url: "..."})
-    if (processedSrc.trim().startsWith('{') && processedSrc.trim().endsWith('}')) {
-      try {
-        const parsedObject = JSON.parse(processedSrc);
-        console.debug("🔄 ProjectImage: Обрабатываем JSON-объект:", parsedObject);
-        
-        // Если у объекта есть свойство url, images или image, используем его
-        if (parsedObject.url) {
-          processedSrc = parsedObject.url;
-        } else if (parsedObject.images && Array.isArray(parsedObject.images)) {
-          processedSrc = parsedObject.images.length > 0 ? parsedObject.images[0] : '/uploads/default-project.jpg';
-        } else if (parsedObject.image) {
-          processedSrc = parsedObject.image;
+      
+      // Если processedSrc все еще строка, проверяем, является ли она JSON-объектом
+      if (typeof processedSrc === 'string' && trimmedSrc.startsWith('{') && trimmedSrc.endsWith('}')) {
+        try {
+          const parsedObject = JSON.parse(trimmedSrc);
+          console.debug("🔄 ProjectImage: Обрабатываем JSON-объект:", parsedObject);
+          
+          // Если у объекта есть свойство url, images или image, используем его
+          if (parsedObject.url) {
+            processedSrc = parsedObject.url;
+          } else if (parsedObject.images && Array.isArray(parsedObject.images)) {
+            processedSrc = parsedObject.images.length > 0 ? parsedObject.images[0] : '/uploads/default-project.jpg';
+          } else if (parsedObject.image) {
+            processedSrc = parsedObject.image;
+          }
+        } catch (error) {
+          console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON-объект:", processedSrc);
+          // Оставляем как есть
         }
-      } catch (error) {
-        console.debug("⚠️ ProjectImage: Не удалось преобразовать строку в JSON-объект:", processedSrc);
-        // Оставляем как есть
       }
+    } catch (error: any) {
+      console.debug("⚠️ ProjectImage: Ошибка при обработке строки:", error?.message || 'Неизвестная ошибка');
+      // Если возникла ошибка при вызове строковых методов, установим значение по умолчанию
+      processedSrc = '/uploads/default-project.jpg';
     }
   }
   
@@ -224,9 +232,16 @@ export function ProjectImage({
   }
   
   // Шаг 4: Финальная проверка на пустую строку
-  if (typeof processedSrc === 'string' && processedSrc.trim() === '') {
-    console.debug("⚠️ ProjectImage: Получена пустая строка, используем дефолтное изображение");
-    processedSrc = '/uploads/default-project.jpg';
+  if (typeof processedSrc === 'string') {
+    try {
+      if (processedSrc.trim() === '') {
+        console.debug("⚠️ ProjectImage: Получена пустая строка, используем дефолтное изображение");
+        processedSrc = '/uploads/default-project.jpg';
+      }
+    } catch (error: any) {
+      console.debug("⚠️ ProjectImage: Ошибка при проверке пустой строки:", error?.message || 'Неизвестная ошибка');
+      processedSrc = '/uploads/default-project.jpg';
+    }
   }
   
   return (
