@@ -12,6 +12,19 @@ interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> 
 
 // Функция для нормализации URL изображения
 function normalizeImageUrl(url: string | undefined | null): string {
+  // Проверка на дефолтные изображения, чтобы не обрабатывать их повторно
+  const defaultPaths = [
+    '/uploads/default.jpg',
+    '/uploads/default-avatar.jpg',
+    '/uploads/default-project.jpg',
+    '/uploads/default-resume.jpg'
+  ];
+  
+  // Если это дефолтное изображение, просто возвращаем как есть
+  if (url && typeof url === 'string' && defaultPaths.includes(url)) {
+    return url;
+  }
+  
   if (!url) {
     console.log("[normalizeImageUrl] URL пустой");
     return '';
@@ -96,9 +109,11 @@ export function UniversalImage({
     
     // Если есть пользовательский fallbackSrc, используем его
     if (fallbackSrc) {
+      // НЕ нормализуем fallbackSrc, чтобы избежать рекурсивного вызова normalizeImageUrl
       setImgSrc(fallbackSrc);
     } else {
       // Иначе используем запасное изображение по типу
+      // Обращаемся напрямую к дефолтному изображению без повторной нормализации
       setImgSrc(defaultSrcMap[type]);
     }
     
