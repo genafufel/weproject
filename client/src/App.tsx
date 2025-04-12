@@ -25,6 +25,7 @@ import DebugProject from "@/pages/debug-project";
 import ImageDebug from "@/pages/image-debug";
 import DebugProjects from "@/pages/debug-projects";
 import ImageTest from "@/pages/image-test";
+import DebugBombardiro from "@/pages/debug-bombardiro";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -62,6 +63,7 @@ function Router() {
       <Route path="/image-debug" component={ImageDebug} />
       <Route path="/debug-projects" component={DebugProjects} />
       <Route path="/image-test" component={ImageTest} />
+      <Route path="/debug-bombardiro" component={DebugBombardiro} />
       
       {/* Страница верификации (доступна только для авторизованных пользователей) */}
       <ProtectedRoute path="/verification" component={VerificationPage} />
