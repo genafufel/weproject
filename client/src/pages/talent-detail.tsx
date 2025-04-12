@@ -479,12 +479,18 @@ export default function TalentDetail() {
                         <div key={index} className="overflow-hidden rounded-md aspect-video">
                           <img 
                             src={photo ? (photo.startsWith('http') ? photo : 
-                              (photo.startsWith('/uploads') ? photo : `/uploads/${photo.split('/').pop()}`)) : '/uploads/default.jpg'}
+                              (photo.startsWith('/uploads') ? photo : `/uploads/${photo.replace(/"/g, '').split('/').pop()}`)) : '/uploads/default-resume.jpg'}
                             alt={`Портфолио ${index + 1}`} 
                             className="object-cover w-full h-full transition-transform hover:scale-105"
                             onError={(e) => {
-                              console.log("Ошибка загрузки изображения:", photo);
-                              e.currentTarget.src = '/uploads/default.jpg';
+                              console.warn("Ошибка загрузки изображения:", photo);
+                              // Используем imageService для получения соответствующего изображения по умолчанию
+                              try {
+                                const { imageService } = require('@/lib/image-service');
+                                e.currentTarget.src = imageService.getImageUrl(photo, 'resume');
+                              } catch (err) {
+                                e.currentTarget.src = '/uploads/default-resume.jpg';
+                              }
                             }}
                           />
                         </div>

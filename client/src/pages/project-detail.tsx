@@ -272,17 +272,17 @@ export default function ProjectDetail() {
                               <div className="overflow-hidden rounded-lg">
                                 <img 
                                   src={photo ? (photo.startsWith('http') ? photo : 
-                                    (photo.startsWith('/uploads') ? photo : `/uploads/${photo.replace(/"/g, '').split('/').pop()}`)) : '/uploads/default.jpg'} 
+                                    (photo.startsWith('/uploads') ? photo : `/uploads/${photo.replace(/"/g, '').split('/').pop()}`)) : '/uploads/default-project.jpg'} 
                                   alt={`Фото проекта ${index + 1}`} 
                                   className="h-52 w-full object-cover transition-all hover:scale-105"
                                   onError={(e) => {
                                     console.warn("Ошибка загрузки изображения:", photo);
-                                    // Проверяем и пробуем загрузить сервисное изображение через imageService
+                                    // Используем imageService для получения соответствующего изображения по умолчанию
                                     try {
                                       const { imageService } = require('@/lib/image-service');
-                                      e.currentTarget.src = imageService.getImageUrl('/uploads/default.jpg');
+                                      e.currentTarget.src = imageService.getImageUrl(photo, 'project');
                                     } catch (err) {
-                                      e.currentTarget.src = '/uploads/default.jpg';
+                                      e.currentTarget.src = '/uploads/default-project.jpg';
                                     }
                                   }}
                                 />

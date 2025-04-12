@@ -17,7 +17,10 @@ class ImageCache {
   private static instance: ImageCache;
   private cache: Map<string, ImageState> = new Map();
   private loadPromises: Map<string, Promise<HTMLImageElement>> = new Map();
-  private defaultImage: string = '/uploads/default-avatar-test.jpg';
+  private defaultImage: string = '/uploads/default.jpg';
+  private defaultAvatarImage: string = '/uploads/default-avatar-test.jpg';
+  private defaultProjectImage: string = '/uploads/default-project.jpg';
+  private defaultResumeImage: string = '/uploads/default-resume.jpg';
   private preloadQueue: string[] = [];
   private isProcessingQueue: boolean = false;
   private concurrentLoads: number = 5; // Количество одновременных загрузок
@@ -25,13 +28,18 @@ class ImageCache {
   private apiBasePaths = ['/api/users', '/api/projects', '/api/resumes', '/api/public'];
   
   private constructor() {
-    // Инициализируем дефолтное изображение сразу
-    this.loadImage(this.defaultImage).catch(() => {
-      console.error('Не удалось загрузить дефолтное изображение');
+    // Инициализируем все дефолтные изображения сразу
+    Promise.all([
+      this.loadImage(this.defaultImage),
+      this.loadImage(this.defaultAvatarImage),
+      this.loadImage(this.defaultProjectImage),
+      this.loadImage(this.defaultResumeImage)
+    ]).catch((err) => {
+      console.error('Не удалось загрузить одно или несколько дефолтных изображений:', err);
     });
     
     // Логируем для отладки - это поможет понять, что происходит
-    console.log('🖼️ ImageCache инициализирован, дефолтное изображение:', this.defaultImage);
+    console.log('🖼️ ImageCache инициализирован, дефолтные изображения загружены');
     
     // Обработчик для офлайн/онлайн событий
     window.addEventListener('online', () => this.handleOnlineStatusChange(true));
@@ -247,13 +255,14 @@ class ImageCache {
   /**
    * Получает URL изображения из кэша или возвращает дефолтное
    * @param url URL изображения
+   * @param type Тип изображения (avatar, resume, project)
    * @returns URL изображения из кэша или дефолтное
    */
-  public getImageUrl(url: string): string {
+  public getImageUrl(url: string, type: 'avatar' | 'resume' | 'project' | 'default' = 'default'): string {
     const normalizedUrl = this.normalizeUrl(url);
     const cachedImage = this.cache.get(normalizedUrl);
     
-    // Для тестовой страницы изображений и вкладки Банкстер всегда возвращаем оригинальный URL
+    // Для тестовой страницы изображений всегда возвращаем оригинальный URL
     // чтобы мы могли увидеть ошибки загрузки
     if (window.location.pathname === '/image-test') {
       console.log(`🧪 На тестовой странице: URL ${normalizedUrl} возвращается без фолбэка`);
@@ -267,8 +276,17 @@ class ImageCache {
     // Запускаем предзагрузку на будущее
     this.preloadImage(normalizedUrl);
     
-    // Возвращаем дефолтное изображение пока не загрузится настоящее
-    return this.defaultImage;
+    // Возвращаем соответствующее дефолтное изображение в зависимости от типа
+    switch (type) {
+      case 'avatar':
+        return this.defaultAvatarImage;
+      case 'resume':
+        return this.defaultResumeImage;
+      case 'project':
+        return this.defaultProjectImage;
+      default:
+        return this.defaultImage;
+    }
   }
   
   /**
