@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Search, MapPin, ChevronDown } from "lucide-react";
 import { CardContainer } from "@/components/card-container";
-import { ProjectImage } from "@/components/ui/universal-image";
+import { ProjectCardImage } from "@/components/project-card-image";
 import {
   Card,
   CardContent,
@@ -341,11 +341,10 @@ export default function Projects() {
                   >
                     {hasPhotos && (
                       <Link href={`/projects/${project.id}`}>
-                        <div className="relative h-48 w-full overflow-hidden">
-                          <ProjectImage 
-                            src={project.photos}
+                        <div className="relative overflow-hidden">
+                          <ProjectCardImage 
+                            photos={project.photos}
                             alt={project.title} 
-                            size="lg"
                             className="transition-transform duration-500 group-hover:scale-110"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
