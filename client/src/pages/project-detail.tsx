@@ -271,19 +271,21 @@ export default function ProjectDetail() {
                             <div className="p-1">
                               <div className="overflow-hidden rounded-lg">
                                 <img 
-                                  src={photo ? (photo.startsWith('http') ? photo : 
-                                    (photo.startsWith('/uploads') ? photo : `/uploads/${photo.replace(/"/g, '').split('/').pop()}`)) : '/uploads/default-project.jpg'} 
+                                  src={(photo && typeof photo === 'string') ? 
+                                    (photo.startsWith('http') ? photo : 
+                                      (photo.startsWith('/uploads') 
+                                        ? photo.replace(/^"+|"+$/g, '') // Удаляем кавычки в начале и конце
+                                        : `/uploads/${photo.replace(/^"+|"+$/g, '').split('/').pop()}`
+                                      )
+                                    ) 
+                                    : '/uploads/default-project.jpg'
+                                  } 
                                   alt={`Фото проекта ${index + 1}`} 
                                   className="h-52 w-full object-cover transition-all hover:scale-105"
                                   onError={(e) => {
                                     console.warn("Ошибка загрузки изображения:", photo);
-                                    // Используем imageService для получения соответствующего изображения по умолчанию
-                                    try {
-                                      const { imageService } = require('@/lib/image-service');
-                                      e.currentTarget.src = imageService.getImageUrl(photo, 'project');
-                                    } catch (err) {
-                                      e.currentTarget.src = '/uploads/default-project.jpg';
-                                    }
+                                    // Устанавливаем изображение по умолчанию напрямую
+                                    e.currentTarget.src = '/uploads/default-project.jpg';
                                   }}
                                 />
                               </div>

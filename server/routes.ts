@@ -1056,12 +1056,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       // Предварительно обрабатываем даты, преобразуя строки в объекты Date
-      const projectData = {
+      let projectData = {
         ...req.body,
         userId: req.user.id,
         startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
         endDate: req.body.endDate ? new Date(req.body.endDate) : undefined
       };
+      
+      // Нормализуем массивы фотографий - удаляем лишние кавычки
+      if (projectData.photos && Array.isArray(projectData.photos)) {
+        projectData.photos = projectData.photos.map((photo: string) => {
+          if (typeof photo === 'string') {
+            // Удаляем лишние кавычки
+            return photo.replace(/^"+|"+$/g, '');
+          }
+          return photo;
+        });
+      }
       
       // Валидируем данные с помощью Zod схемы
       const validatedData = insertProjectSchema.parse(projectData);
@@ -1095,13 +1106,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     
     try {
       // Предварительно обрабатываем даты, преобразуя строки в объекты Date
-      const projectData = {
+      let projectData = {
         ...req.body,
         startDate: req.body.startDate ? new Date(req.body.startDate) : undefined,
         endDate: req.body.endDate ? new Date(req.body.endDate) : undefined,
         moderationStatus: 'pending', // Возвращаем на модерацию при обновлении
         moderationComment: null // Сбрасываем комментарий модератора
       };
+      
+      // Нормализуем массивы фотографий - удаляем лишние кавычки
+      if (projectData.photos && Array.isArray(projectData.photos)) {
+        projectData.photos = projectData.photos.map((photo: string) => {
+          if (typeof photo === 'string') {
+            // Удаляем лишние кавычки
+            return photo.replace(/^"+|"+$/g, '');
+          }
+          return photo;
+        });
+      }
       
       const updatedProject = await storage.updateProject(projectId, projectData);
       res.json(updatedProject);

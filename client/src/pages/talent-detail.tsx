@@ -478,19 +478,21 @@ export default function TalentDetail() {
                       {photos.map((photo, index) => (
                         <div key={index} className="overflow-hidden rounded-md aspect-video">
                           <img 
-                            src={photo ? (photo.startsWith('http') ? photo : 
-                              (photo.startsWith('/uploads') ? photo : `/uploads/${photo.replace(/"/g, '').split('/').pop()}`)) : '/uploads/default-resume.jpg'}
+                            src={(photo && typeof photo === 'string') ? 
+                               (photo.startsWith('http') ? photo : 
+                                 (photo.startsWith('/uploads') 
+                                   ? photo.replace(/^"+|"+$/g, '') // Удаляем кавычки в начале и конце
+                                   : `/uploads/${photo.replace(/^"+|"+$/g, '').split('/').pop()}`
+                                 )
+                               ) 
+                               : '/uploads/default-resume.jpg'
+                            }
                             alt={`Портфолио ${index + 1}`} 
                             className="object-cover w-full h-full transition-transform hover:scale-105"
                             onError={(e) => {
                               console.warn("Ошибка загрузки изображения:", photo);
-                              // Используем imageService для получения соответствующего изображения по умолчанию
-                              try {
-                                const { imageService } = require('@/lib/image-service');
-                                e.currentTarget.src = imageService.getImageUrl(photo, 'resume');
-                              } catch (err) {
-                                e.currentTarget.src = '/uploads/default-resume.jpg';
-                              }
+                              // Устанавливаем изображение по умолчанию напрямую
+                              e.currentTarget.src = '/uploads/default-resume.jpg';
                             }}
                           />
                         </div>
