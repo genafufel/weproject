@@ -24,6 +24,7 @@ import DirectImageTest from "@/pages/direct-image-test";
 import DebugProject from "@/pages/debug-project";
 import ImageDebug from "@/pages/image-debug";
 import DebugProjects from "@/pages/debug-projects";
+import ImageTest from "@/pages/image-test";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { ProtectedRoute } from "@/lib/protected-route";
@@ -55,11 +56,12 @@ function Router() {
       <Route path="/talent/:id" component={TalentDetail} />
       
       {/* Тестовые страницы для изображений */}
-      <Route path="/image-test" component={ImageTestPage} />
+      <Route path="/image-test-page" component={ImageTestPage} />
       <Route path="/direct-image-test" component={DirectImageTest} />
       <Route path="/debug-project/:id" component={DebugProject} />
       <Route path="/image-debug" component={ImageDebug} />
       <Route path="/debug-projects" component={DebugProjects} />
+      <Route path="/image-test" component={ImageTest} />
       
       {/* Страница верификации (доступна только для авторизованных пользователей) */}
       <ProtectedRoute path="/verification" component={VerificationPage} />
