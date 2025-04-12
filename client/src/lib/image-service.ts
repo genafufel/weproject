@@ -18,7 +18,7 @@ class ImageCache {
   private cache: Map<string, ImageState> = new Map();
   private loadPromises: Map<string, Promise<HTMLImageElement>> = new Map();
   private defaultImage: string = '/uploads/default.jpg';
-  private defaultAvatarImage: string = '/uploads/default-avatar-test.jpg';
+  private defaultAvatarImage: string = '/uploads/default-avatar.jpg';
   private defaultProjectImage: string = '/uploads/default-project.jpg';
   private defaultResumeImage: string = '/uploads/default-resume.jpg';
   private preloadQueue: string[] = [];
@@ -62,17 +62,34 @@ class ImageCache {
   public normalizeUrl(url: string | undefined | null): string {
     if (!url) return this.defaultImage;
     
+    // Проверка на null, undefined или пустую строку
+    if (url === null || url === undefined || url === "") {
+      return this.defaultImage;
+    }
+    
+    // Корректное приведение к строке для обработки нестроковых входных данных
+    url = String(url);
+    
     // Удаляем лишние кавычки, которые могут быть в JSON строках
-    url = url.replace(/^"(.*)"$/, '$1');
+    url = url.replace(/^"+|"+$/g, '');
+    
+    // Если после удаления кавычек получается пустая строка, возвращаем дефолтное изображение
+    if (url.trim() === "") {
+      return this.defaultImage;
+    }
     
     // Если URL уже содержит протокол, возвращаем как есть
     if (url.startsWith('http://') || url.startsWith('https://')) {
       return url;
     }
     
-    // Проверяем, не является ли URL относительным путем к uploads
-    if (!url.startsWith('/')) {
+    // Корректная обработка путей к uploads
+    if (!url.startsWith('/uploads/') && !url.startsWith('/')) {
+      // Если это имя файла без пути, добавляем /uploads/
       return `/uploads/${url.split('/').pop()}`;
+    } else if (!url.startsWith('/')) {
+      // Добавляем начальный слеш, если его нет
+      return `/${url}`;
     }
     
     return url;
@@ -158,6 +175,9 @@ class ImageCache {
       };
       
       img.onerror = () => {
+        // Перехватываем ошибку загрузки для логирования
+        console.warn(`Перехвачена ошибка загрузки ресурса:`, normalizedUrl);
+        
         // Обновляем кэш с информацией об ошибке
         this.cache.set(normalizedUrl, {
           loaded: false,
@@ -167,13 +187,31 @@ class ImageCache {
         });
         this.loadPromises.delete(normalizedUrl);
         
+        // Выбираем подходящее дефолтное изображение в зависимости от типа
+        let defaultUrl = this.defaultImage;
+        
+        if (normalizedUrl.includes('avatar') || normalizedUrl.includes('profile')) {
+          defaultUrl = this.defaultAvatarImage;
+        } else if (normalizedUrl.includes('project') || normalizedUrl.includes('work')) {
+          defaultUrl = this.defaultProjectImage;
+        } else if (normalizedUrl.includes('resume') || normalizedUrl.includes('cv')) {
+          defaultUrl = this.defaultResumeImage;
+        }
+        
         // Если это не дефолтное изображение, пробуем загрузить дефолтное
-        if (normalizedUrl !== this.defaultImage) {
-          console.warn(`Ошибка загрузки изображения: ${normalizedUrl}, использую дефолтное изображение`);
+        if (normalizedUrl !== defaultUrl) {
+          console.warn(`[Error Handler] Перехвачена ошибка загрузки img:`, normalizedUrl);
+          this.loadImage(defaultUrl)
+            .then(resolve)
+            .catch(reject);
+        } else if (defaultUrl !== this.defaultImage) {
+          // Если не удалось загрузить специфичное дефолтное, пробуем общее дефолтное
+          console.warn(`Не удалось загрузить специфичное дефолтное изображение, использую общее дефолтное`);
           this.loadImage(this.defaultImage)
             .then(resolve)
             .catch(reject);
         } else {
+          // Если даже общее дефолтное не загружается, возвращаем ошибку
           reject(new Error(`Не удалось загрузить изображение: ${normalizedUrl}`));
         }
       };
