@@ -78,14 +78,38 @@ class ImageCache {
 
   /**
    * Нормализует URL изображения
-   * @param url Исходный URL изображения
+   * @param url Исходный URL изображения или массив URL
    * @returns Нормализованный URL
    */
-  public normalizeUrl(url: string | undefined | null): string {
+  public normalizeUrl(url: string | string[] | undefined | null): string {
+    // Обработка null или undefined
     if (!url) return '';
     
+    // Обработка массива URL (берем первый элемент)
+    if (Array.isArray(url)) {
+      console.debug("⚠️ Получен массив URL. Используем первый элемент:", url);
+      return url.length > 0 ? this.normalizeUrl(url[0]) : '';
+    }
+    
+    // Обработка не строкового типа
     if (typeof url !== 'string') {
+      console.debug("⚠️ URL не является строкой:", url);
       return '';
+    }
+    
+    // Проверка на JSON-строку, содержащую массив
+    if (url.startsWith('[') && url.endsWith(']')) {
+      try {
+        const parsedUrls = JSON.parse(url);
+        console.debug("⚠️ Обнаружена JSON-строка с массивом URL:", parsedUrls);
+        if (Array.isArray(parsedUrls) && parsedUrls.length > 0) {
+          // Рекурсивно вызываем normalizeUrl для первого элемента массива
+          return this.normalizeUrl(parsedUrls[0]);
+        }
+      } catch (e) {
+        // Если не удалось распарсить как JSON, продолжаем обработку как обычную строку
+        console.debug("⚠️ Не удалось распарсить строку как JSON. Обрабатываем как обычную строку:", url);
+      }
     }
     
     // Удаляем кавычки (если есть)
@@ -324,11 +348,11 @@ class ImageCache {
 
   /**
    * Получает URL изображения из кэша или возвращает дефолтное
-   * @param url URL изображения
+   * @param url URL изображения или массив URL
    * @param type Тип изображения (avatar, resume, project)
    * @returns URL изображения из кэша или дефолтное
    */
-  public getImageUrl(url: string, type: 'avatar' | 'resume' | 'project' | 'default' = 'default'): string {
+  public getImageUrl(url: string | string[] | undefined | null, type: 'avatar' | 'resume' | 'project' | 'default' = 'default'): string {
     // Получаем соответствующее дефолтное изображение
     const defaultImageForType = {
       'avatar': this.defaultAvatarImage,
@@ -338,7 +362,7 @@ class ImageCache {
     }[type];
     
     // Если URL не указан, возвращаем дефолтное
-    if (!url || typeof url !== 'string' || url.trim() === '') {
+    if (!url) {
       return defaultImageForType;
     }
     

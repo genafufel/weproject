@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { imageService } from "@/lib/image-service";
 
 interface UniversalImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
-  src: string;
+  src: string | string[];
   fallbackSrc?: string;
   type?: 'avatar' | 'project' | 'resume' | 'default';
   onError?: () => void;

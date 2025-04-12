@@ -66,29 +66,7 @@ export default function ProjectDetail() {
     isLoading: projectLoading,
     error: projectError,
   } = useQuery<any>({
-    queryKey: [`/api/projects/${projectId}`],
-    onSuccess: (data) => {
-      // Добавляем отладочный вывод для проекта Бомбардиро
-      if (data && data.title === "Бомбардиро Выскребдино") {
-        console.log("💾 Данные проекта Бомбардиро:", data);
-        console.log("📸 Фотографии проекта (тип):", typeof data.photos);
-        console.log("📸 Фотографии проекта (содержимое):", data.photos);
-        
-        // Если фотографии в виде строки, а не массива, попробуем преобразовать
-        if (typeof data.photos === 'string') {
-          try {
-            // Пробуем распарсить JSON-строку
-            const parsedPhotos = JSON.parse(data.photos);
-            console.log("🔄 Преобразованные фотографии:", parsedPhotos);
-            
-            // Динамически заменяем photos в объекте данных
-            data.photos = parsedPhotos;
-          } catch (error) {
-            console.error("❌ Ошибка при попытке преобразовать строку в JSON:", error);
-          }
-        }
-      }
-    }
+    queryKey: [`/api/projects/${projectId}`]
   });
   
   // Fetch project owner info
