@@ -1957,18 +1957,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
         })
         .filter(Boolean);
       
+      // Добавляем дефолтные изображения
+      const defaultImages = [
+        '/uploads/default.jpg', 
+        '/uploads/default-avatar.jpg', 
+        '/uploads/default-project.jpg', 
+        '/uploads/default-resume.jpg'
+      ];
+      
       // Объединяем все изображения
-      const allImages = [...userAvatars, ...projectImages, ...resumeImages, '/uploads/default.jpg'];
+      const allImages = [
+        ...userAvatars, 
+        ...projectImages, 
+        ...resumeImages, 
+        ...defaultImages
+      ];
       
       // Проверяем все изображения на существование
       for (const img of allImages) {
-        if (img) {
-          imageUrls.push(img);
+        if (img && typeof img === 'string') {
+          // Удаляем лишние кавычки из URL
+          const cleanImg = img.replace(/^"+|"+$/g, '');
+          imageUrls.push(cleanImg);
+          
           // Проверяем существование файла только если это локальный файл
-          if (img.startsWith('/uploads/')) {
-            const exists = await fileExists(img);
+          if (cleanImg.startsWith('/uploads/')) {
+            const exists = await fileExists(cleanImg);
             if (!exists) {
-              missingFiles.push(img);
+              missingFiles.push(cleanImg);
             }
           }
         }
