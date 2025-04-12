@@ -35,6 +35,7 @@ import {
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UniversalImage, UserAvatar, ProjectImage } from "@/components/ui/universal-image";
+import { DirectImage } from "@/components/direct-image";
 import { Textarea } from "@/components/ui/textarea";
 import { 
   MapPin, 
@@ -307,9 +308,9 @@ export default function ProjectDetail() {
                               <CarouselItem key={index} className="basis-full md:basis-1/2 lg:basis-1/3">
                                 <div className="p-1">
                                   <div className="overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-                                    <ProjectImage 
+                                    <DirectImage 
                                       src={photo} 
-                                      alt={`Фото проекта ${index + 1}`} 
+                                      alt={`${project.title} - фото ${index + 1}`} 
                                       className="h-52 w-full transition-all hover:scale-105"
                                     />
                                   </div>
