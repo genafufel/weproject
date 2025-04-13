@@ -450,7 +450,7 @@ export default function Talent() {
                     
                     <CardHeader className="pb-2 pt-4">
                       <div className="flex justify-between items-start">
-                        <h3 className="text-xl">
+                        <h3 className="text-xl font-bold">
                           <Link href={`/talent/${resume.id}`} className="text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80 transition-colors">
                             {resume.title}
                           </Link>
