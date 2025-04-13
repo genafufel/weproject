@@ -496,6 +496,10 @@ export default function Talent() {
                     </CardHeader>
                     
                     <CardContent className="pb-2 flex-grow">
+                      {resume.about && (
+                        <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">{resume.about}</p>
+                      )}
+                      
                       <div className="flex flex-wrap gap-1 mb-2">
                         {skills.map((skill, index) => (
                           <Badge key={index} className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 dark:bg-primary/20 dark:text-primary dark:hover:bg-primary/30 dark:border-primary/30">
