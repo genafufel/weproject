@@ -311,7 +311,7 @@ export default function TalentDetail() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Back button */}
           <div className="mb-6">
-            <Button variant="ghost" size="sm" asChild className="pl-0">
+            <Button variant="ghost" size="sm" asChild className="pl-0 text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80">
               <Link href="/talent">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Назад к списку талантов
