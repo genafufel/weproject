@@ -88,15 +88,6 @@ export const queryClient = new QueryClient({
       gcTime: 10 * 60 * 1000,      // Очищаем неиспользуемые данные после 10 минут
       retry: 1,                   // Делаем одну повторную попытку при ошибке
       refetchOnReconnect: true,    // Включаем обновление при восстановлении соединения
-      // Добавляем структурированную обработку ошибок
-      useErrorBoundary: (error) => {
-        // Перехватываем критические ошибки, остальные обрабатываем локально
-        return error instanceof Error && (
-          error.message.includes('500') || 
-          error.message.includes('503') ||
-          error.message.includes('ECONNABORTED')
-        );
-      },
     },
     mutations: {
       retry: 1,  // Делаем одну повторную попытку для мутаций
