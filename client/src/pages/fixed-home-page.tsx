@@ -293,37 +293,42 @@ export default function HomePage() {
                 <div className="mt-6 prose prose-lg dark:prose-invert">
                   <motion.p
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 0.2 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.7 }}
                   >
                     Платформа <span className="font-bold text-primary dark:text-primary bg-blue-50 dark:bg-blue-900/40 px-2 py-0.5 rounded-md border border-blue-100 dark:border-blue-800/30">weproject</span> создана для решения трех ключевых проблем:
                   </motion.p>
                   <motion.ul
                     initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.5, delay: 0.5 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                   >
                     <motion.li 
                       className="dark:text-gray-300"
                       initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 0.7 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: false, amount: 0.3 }}
+                      transition={{ duration: 0.5, delay: 0.3 }}
                     >
                       <span className="font-medium">Для студентов и специалистов без опыта</span> — возможность получить реальный опыт работы, создать портфолио и развить навыки в реальных проектах.
                     </motion.li>
                     <motion.li 
                       className="dark:text-gray-300"
                       initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 0.9 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: false, amount: 0.3 }}
+                      transition={{ duration: 0.5, delay: 0.5 }}
                     >
                       <span className="font-medium">Для стартапов и проектов с ограниченным бюджетом</span> — возможность найти талантливых сотрудников и собрать команду единомышленников для реализации идей.
                     </motion.li>
                     <motion.li 
                       className="dark:text-gray-300"
                       initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.5, delay: 1.1 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: false, amount: 0.3 }}
+                      transition={{ duration: 0.5, delay: 0.7 }}
                     >
                       <span className="font-medium">Для инвесторов и бизнес-ангелов</span> — возможность находить перспективные проекты на ранних стадиях развития и оказывать финансовую поддержку на выгодных условиях.
                     </motion.li>
@@ -331,8 +336,9 @@ export default function HomePage() {
                   <motion.p 
                     className="dark:text-gray-300"
                     initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.7, delay: 1.5 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, amount: 0.3 }}
+                    transition={{ duration: 0.7, delay: 0.9 }}
                   >
                     Мы верим, что каждый начинающий специалист заслуживает шанса проявить себя, инновационные проекты должны находить свою команду и инвестиции, а инвесторы — достойные проекты. Наша задача — создать экосистему, где талант, идеи и капитал встречаются для успешного сотрудничества.
                   </motion.p>
