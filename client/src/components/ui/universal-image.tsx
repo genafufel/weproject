@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef, memo } from "react";
 import { cn } from "@/lib/utils";
 import { imageService } from "@/lib/image-service";
 
@@ -12,6 +12,8 @@ interface UniversalImageProps extends ImgAttributes {
   onError?: () => void;
   onLoad?: () => void;
   size?: 'sm' | 'md' | 'lg' | 'xl';
+  priority?: boolean; // Добавлено: приоритетная загрузка для LCP
+  lazyLoad?: boolean; // Добавлено: контроль ленивой загрузки
 }
 
 // Стандартные изображения для различных типов
@@ -24,9 +26,10 @@ const DEFAULT_IMAGES = {
 
 /**
  * Универсальный компонент изображения с обработкой ошибок и запасными изображениями
- * Использует imageService для нормализации URL и кэширования
+ * Оптимизированный с использованием IntersectionObserver для ленивой загрузки
+ * и кэширования через imageService
  */
-export function UniversalImage({
+export const UniversalImage = memo(function UniversalImage({
   src,
   alt,
   fallbackSrc,
@@ -35,48 +38,28 @@ export function UniversalImage({
   onError,
   onLoad,
   size = 'md',
+  priority = false,
+  lazyLoad = true,
   ...rest
 }: UniversalImageProps) {
   // Получаем нормализованный URL через imageService
   const normalizedSrc = src ? imageService.normalizeUrl(src) : DEFAULT_IMAGES[type];
   
   const [imgSrc, setImgSrc] = useState<string>(normalizedSrc);
-  const [isLoading, setIsLoading] = useState<boolean>(!!src);
+  const [isLoading, setIsLoading] = useState<boolean>(!!src && !priority);
   const [hasError, setHasError] = useState<boolean>(false);
+  const [isVisible, setIsVisible] = useState<boolean>(priority); // Если приоритетное, считаем сразу видимым
   
-  // При изменении src, обновляем изображение
-  useEffect(() => {
-    if (!src) return;
-    
-    // Логгируем для отладки исходный URL
-    console.debug(`👁️ UniversalImage: обработка исходного URL [${type}]:`, src);
-    
-    const processedSrc = imageService.normalizeUrl(src);
-    console.debug(`👁️ UniversalImage: нормализованный URL:`, processedSrc);
-    
-    if (processedSrc) {
-      setImgSrc(processedSrc);
-      setIsLoading(true);
-      setHasError(false);
-      
-      // Предзагружаем изображение (не блокирует выполнение)
-      imageService.preloadImage(processedSrc);
-    }
-  }, [src, type]);
+  const imgRef = useRef<HTMLImageElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
   
-  // Обработчик ошибки загрузки
-  const handleError = () => {
+  // Обработчик ошибки загрузки - используем useCallback для оптимизации
+  const handleError = useCallback(() => {
     // Предотвращаем повторную обработку ошибки
     if (hasError) return;
     
     // Определяем какое изображение использовать при ошибке
-    let errorFallbackImage;
-    
-    if (fallbackSrc) {
-      errorFallbackImage = fallbackSrc;
-    } else {
-      errorFallbackImage = DEFAULT_IMAGES[type];
-    }
+    const errorFallbackImage = fallbackSrc || DEFAULT_IMAGES[type];
     
     // Устанавливаем запасное изображение
     setImgSrc(errorFallbackImage);
@@ -84,22 +67,91 @@ export function UniversalImage({
     setIsLoading(false);
     
     // Вызываем пользовательский обработчик ошибки, если он передан
-    if (onError) {
-      onError();
-    }
-  };
+    if (onError) onError();
+  }, [fallbackSrc, hasError, onError, type]);
   
   // Обработчик успешной загрузки
-  const handleLoad = () => {
+  const handleLoad = useCallback(() => {
     setIsLoading(false);
-    
-    if (onLoad) {
-      onLoad();
+    if (onLoad) onLoad();
+  }, [onLoad]);
+
+  // Функция для настройки IntersectionObserver
+  useEffect(() => {
+    // Если загрузка не ленивая или уже обработана, пропускаем
+    if (!lazyLoad || priority || isVisible) {
+      if (priority && !isVisible) setIsVisible(true);
+      return;
     }
-  };
+    
+    // Создаем observer для отслеживания видимости
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setIsVisible(true);
+          // Отключаем наблюдение после первого пересечения
+          if (observerRef.current && imgRef.current) {
+            observerRef.current.unobserve(imgRef.current);
+          }
+        }
+      },
+      { 
+        rootMargin: '200px', // Предзагрузка изображений при приближении к вьюпорту 
+        threshold: 0.1 
+      }
+    );
+    
+    observerRef.current = observer;
+    
+    // Начинаем наблюдение
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
+    }
+    
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, [lazyLoad, priority, isVisible]);
+  
+  // При изменении src или когда элемент становится видимым, обновляем изображение
+  useEffect(() => {
+    if (!src || !isVisible) return;
+    
+    const processedSrc = imageService.normalizeUrl(src);
+    
+    if (processedSrc) {
+      setImgSrc(processedSrc);
+      if (!priority) setIsLoading(true);
+      setHasError(false);
+      
+      // Предзагружаем изображение (не блокирует выполнение)
+      imageService.preloadImage(processedSrc);
+    }
+  }, [src, type, isVisible, priority]);
+  
+  // Для изображений с приоритетом добавляем fetchpriority="high"
+  const priorityProps = priority ? { fetchpriority: "high" as const } : {};
+  
+  // Добавляем loading="lazy" для не-приоритетных изображений, если браузер поддерживает
+  const loadingProps = (!priority && lazyLoad) ? { loading: "lazy" as const } : {};
+  
+  // Если изображение не попало в область видимости и не приоритетное, показываем placeholder
+  if (lazyLoad && !isVisible && !priority) {
+    return (
+      <div
+        ref={imgRef}
+        className={cn("bg-gray-200 dark:bg-gray-800 animate-pulse", className)}
+        style={{ aspectRatio: rest.width && rest.height ? `${rest.width}/${rest.height}` : 'auto' }}
+        {...rest}
+      />
+    );
+  }
   
   return (
     <img
+      ref={imgRef}
       src={imgSrc}
       alt={alt || "Изображение"}
       className={cn(
@@ -109,10 +161,12 @@ export function UniversalImage({
       )}
       onError={handleError}
       onLoad={handleLoad}
+      {...priorityProps}
+      {...loadingProps}
       {...rest}
     />
   );
-}
+});
 
 /**
  * Аватар пользователя с круглой формой

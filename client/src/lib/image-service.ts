@@ -4,10 +4,17 @@ interface ImageState {
   url: string;
   element?: HTMLImageElement;
   timestamp: number;
+  width?: number;  // Добавлены размеры изображения
+  height?: number; // для оптимизации рендеринга
 }
 
 /**
  * Класс для кэширования и работы с изображениями
+ * Оптимизирован для:
+ * - Более эффективной предзагрузки
+ * - Улучшенной обработки ошибок
+ * - Приоритизации изображений в видимой области 
+ * - Поддержки Largest Contentful Paint метрик
  */
 class ImageCache {
   private static instance: ImageCache;
@@ -18,30 +25,88 @@ class ImageCache {
   private defaultProjectImage: string = '/uploads/default-project.jpg';
   private defaultResumeImage: string = '/uploads/default-resume.jpg';
   private preloadQueue: string[] = [];
+  private priorityQueue: string[] = []; // Очередь приоритетных изображений
   private isProcessingQueue: boolean = false;
-  private concurrentLoads: number = 5; // Количество одновременных загрузок
+  private isProcessingPriorityQueue: boolean = false;
+  private concurrentLoads: number = 4; // Уменьшено для более стабильной загрузки
   private domainRegex = /^(?:https?:\/\/)?(?:[^@\n]+@)?(?:www\.)?([^:/\n?]+)/;
   private apiBasePaths = ['/api/users', '/api/projects', '/api/resumes', '/api/public'];
+  private cachePrefix = 'img_cache_v2_'; // Префикс для IndexedDB хранилища
+  private storageAvailable: boolean = false;
+  private db: IDBDatabase | null = null;
 
   private constructor() {
     // Проверяем наличие браузерного окружения (для SSR-совместимости)
     if (typeof window !== 'undefined') {
-      // Инициализируем дефолтные изображения
-      this.preloadDefaultImages();
-      
-      // Запускаем очистку кэша по таймеру
-      setInterval(() => this.clearOldCache(), 3600000); // Раз в час
-      
-      // Запускаем предзагрузку при загрузке страницы
-      console.log("🚀 Запускаем предзагрузку изображений при загрузке страницы");
-      setTimeout(() => {
-        this.preloadFromApi();
-      }, 3000); // Запускаем через 3 секунды после загрузки страницы
+      // Проверяем доступность IndexedDB для хранения изображений
+      this.initStorage().then(available => {
+        this.storageAvailable = available;
+        
+        // Инициализируем дефолтные изображения
+        this.preloadDefaultImages();
+        
+        // Загружаем кэш из IndexedDB если доступно
+        if (this.storageAvailable) {
+          this.loadCacheFromStorage();
+        }
+        
+        // Запускаем очистку кэша по таймеру, реже для экономии ресурсов
+        setInterval(() => this.clearOldCache(), 7200000); // Раз в 2 часа
+        
+        // Запускаем предзагрузку при загрузке страницы с задержкой
+        // чтобы не создавать нагрузку при первоначальном рендеринге
+        console.log("🚀 Запускаем предзагрузку изображений при загрузке страницы");
+        setTimeout(() => {
+          this.preloadFromApi();
+        }, 5000); // Увеличено до 5 секунд для лучшей производительности LCP
+      }).catch(() => {
+        // Продолжаем работу даже без хранилища
+        this.preloadDefaultImages();
+      });
       
       // Обработчики состояния онлайн/офлайн
       window.addEventListener('online', () => this.handleOnlineStatusChange(true));
       window.addEventListener('offline', () => this.handleOnlineStatusChange(false));
+      
+      // Слушаем события видимости страницы для оптимизации загрузки
+      document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
+      
+      // Используем Network Information API для адаптации к скорости сети
+      this.setupNetworkListener();
     }
+  }
+
+  /**
+   * Инициализирует хранилище IndexedDB для кэширования изображений
+   */
+  private async initStorage(): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      try {
+        const request = indexedDB.open('ImageCache', 1);
+        
+        request.onupgradeneeded = (event) => {
+          const db = (event.target as IDBOpenDBRequest).result;
+          // Создаем хранилище объектов для изображений
+          if (!db.objectStoreNames.contains('images')) {
+            const store = db.createObjectStore('images', { keyPath: 'url' });
+            store.createIndex('timestamp', 'timestamp', { unique: false });
+          }
+        };
+        
+        request.onsuccess = (event) => {
+          this.db = (event.target as IDBOpenDBRequest).result;
+          resolve(true);
+        };
+        
+        request.onerror = () => {
+          console.warn("⚠️ IndexedDB недоступен для кэширования изображений");
+          resolve(false);
+        };
+      } catch (error) {
+        console.warn("⚠️ Ошибка при инициализации IndexedDB:", error);
+        resolve(false);
+      }
+    });
   }
 
   /**
@@ -56,24 +121,141 @@ class ImageCache {
   }
 
   /**
-   * Предзагрузка дефолтных изображений
+   * Предзагрузка дефолтных изображений с высоким приоритетом
    */
   private preloadDefaultImages(): void {
-    this.loadImage(this.defaultImage).catch(() => {
-      console.warn("⚠️ Не удалось загрузить дефолтное изображение:", this.defaultImage);
-    });
+    // Добавляем все дефолтные изображения в приоритетную очередь
+    this.addToPriorityQueue(this.defaultImage);
+    this.addToPriorityQueue(this.defaultAvatarImage);
+    this.addToPriorityQueue(this.defaultProjectImage);
+    this.addToPriorityQueue(this.defaultResumeImage);
     
-    this.loadImage(this.defaultAvatarImage).catch(() => {
-      console.warn("⚠️ Не удалось загрузить дефолтное изображение аватара:", this.defaultAvatarImage);
-    });
+    // Запускаем обработку приоритетной очереди
+    this.processPriorityQueue();
+  }
+  
+  /**
+   * Загружает сохранённый кэш из IndexedDB
+   */
+  private async loadCacheFromStorage(): Promise<void> {
+    if (!this.db) return;
     
-    this.loadImage(this.defaultProjectImage).catch(() => {
-      console.warn("⚠️ Не удалось загрузить дефолтное изображение проекта:", this.defaultProjectImage);
-    });
+    try {
+      const transaction = this.db.transaction(['images'], 'readonly');
+      const store = transaction.objectStore('images');
+      const request = store.getAll();
+      
+      request.onsuccess = () => {
+        const items = request.result;
+        
+        // Восстанавливаем кэш из хранилища
+        items.forEach(item => {
+          // Проверяем, не устарело ли изображение (старше 7 дней)
+          if (Date.now() - item.timestamp < 7 * 24 * 60 * 60 * 1000) {
+            this.cache.set(item.url, {
+              loaded: true,
+              error: false,
+              url: item.url,
+              timestamp: item.timestamp,
+              width: item.width,
+              height: item.height
+            });
+          }
+        });
+        
+        console.log(`✅ Загружено ${this.cache.size} изображений из IndexedDB`);
+      };
+    } catch (error) {
+      console.warn("⚠️ Ошибка при загрузке из IndexedDB:", error);
+    }
+  }
+  
+  /**
+   * Обработчик изменения видимости страницы
+   */
+  private handleVisibilityChange(): void {
+    if (document.visibilityState === 'visible') {
+      // Когда страница видима, возобновляем загрузку
+      this.processPriorityQueue();
+      this.processPreloadQueue();
+    } else {
+      // Когда страница скрыта, не загружаем ничего, кроме приоритетных изображений
+      // (это оставляем решать браузеру)
+    }
+  }
+  
+  /**
+   * Настраивает слушатель для Network Information API
+   */
+  private setupNetworkListener(): void {
+    // @ts-ignore - Используем Network Information API
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     
-    this.loadImage(this.defaultResumeImage).catch(() => {
-      console.warn("⚠️ Не удалось загрузить дефолтное изображение резюме:", this.defaultResumeImage);
-    });
+    if (connection) {
+      // Адаптируем параметры в зависимости от типа соединения
+      const updateConnectionParams = () => {
+        const type = connection.type;
+        const effectiveType = connection.effectiveType;
+        
+        // Настраиваем параметры загрузки в зависимости от скорости сети
+        if (type === 'cellular' || effectiveType === 'slow-2g' || effectiveType === '2g') {
+          this.concurrentLoads = 2; // Медленное соединение
+        } else if (effectiveType === '3g') {
+          this.concurrentLoads = 3; // Среднее соединение
+        } else {
+          this.concurrentLoads = 4; // Быстрое соединение
+        }
+      };
+      
+      // Обновляем параметры при изменении соединения
+      connection.addEventListener('change', updateConnectionParams);
+      updateConnectionParams();
+    }
+  }
+
+  /**
+   * Добавляет URL в приоритетную очередь загрузки
+   * @param url URL для приоритетной загрузки
+   */
+  private addToPriorityQueue(url: string): void {
+    const normalizedUrl = this.normalizeUrl(url);
+    
+    // Если URL уже в кэше или в очереди, пропускаем
+    if (this.cache.has(normalizedUrl) || 
+        this.loadPromises.has(normalizedUrl) || 
+        this.priorityQueue.includes(normalizedUrl)) {
+      return;
+    }
+    
+    // Добавляем в приоритетную очередь и запускаем процесс загрузки
+    this.priorityQueue.push(normalizedUrl);
+    
+    if (!this.isProcessingPriorityQueue) {
+      this.processPriorityQueue();
+    }
+  }
+  
+  /**
+   * Обрабатывает приоритетную очередь загрузки изображений
+   */
+  private async processPriorityQueue(): Promise<void> {
+    if (this.isProcessingPriorityQueue || this.priorityQueue.length === 0) {
+      return;
+    }
+    
+    this.isProcessingPriorityQueue = true;
+    
+    // Загружаем все приоритетные изображения
+    while (this.priorityQueue.length > 0) {
+      const url = this.priorityQueue.shift()!;
+      try {
+        await this.loadImage(url);
+      } catch (error) {
+        // Игнорируем ошибки для приоритетной загрузки
+      }
+    }
+    
+    this.isProcessingPriorityQueue = false;
   }
 
   /**
