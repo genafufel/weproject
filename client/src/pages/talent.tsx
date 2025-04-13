@@ -450,9 +450,11 @@ export default function Talent() {
                     
                     <CardHeader className="pb-2 pt-4">
                       <div className="flex justify-between items-start">
-                        <Link href={`/talent/${resume.id}`} className="hover:underline">
-                          <h3 className="text-lg font-medium text-primary dark:text-primary">{resume.title}</h3>
-                        </Link>
+                        <h3 className="text-xl">
+                          <Link href={`/talent/${resume.id}`} className="text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80 transition-colors">
+                            {resume.title}
+                          </Link>
+                        </h3>
                         
                         {isOwnResume && (
                           <Link href={`/edit-resume/${resume.id}`}>
@@ -484,7 +486,7 @@ export default function Talent() {
                       {resumeUser && (
                         <div className="flex items-center mt-1">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-primary dark:text-primary font-semibold truncate">
+                            <p className="text-sm font-semibold text-primary dark:text-primary truncate">
                               {resumeUser.fullName}
                             </p>
                             {getEducationDisplay(resume)}
