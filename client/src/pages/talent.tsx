@@ -451,7 +451,7 @@ export default function Talent() {
                     <CardHeader className="pb-2 pt-4">
                       <div className="flex justify-between items-start">
                         <Link href={`/talent/${resume.id}`} className="hover:underline">
-                          <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100">{resume.title}</h3>
+                          <h3 className="text-lg font-medium text-primary dark:text-primary">{resume.title}</h3>
                         </Link>
                         
                         {isOwnResume && (
@@ -484,7 +484,7 @@ export default function Talent() {
                       {resumeUser && (
                         <div className="flex items-center mt-1">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-primary dark:text-primary truncate">
+                            <p className="text-sm font-medium text-primary dark:text-primary font-semibold truncate">
                               {resumeUser.fullName}
                             </p>
                             {getEducationDisplay(resume)}
@@ -496,7 +496,7 @@ export default function Talent() {
                     <CardContent className="pb-2 flex-grow">
                       <div className="flex flex-wrap gap-1 mb-2">
                         {skills.map((skill, index) => (
-                          <Badge key={index} className="bg-primary text-white hover:bg-primary/90">
+                          <Badge key={index} className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 dark:bg-primary/20 dark:text-primary dark:hover:bg-primary/30 dark:border-primary/30">
                             {skill}
                           </Badge>
                         ))}
