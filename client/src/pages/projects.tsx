@@ -364,12 +364,12 @@ export default function Projects() {
                     <div className="flex justify-between items-start gap-2">
                       <div>
                         <CardTitle className="text-xl">
-                          <Link href={`/projects/${project.id}`} className="text-primary dark:text-primary/90 hover:text-primary/80 dark:hover:text-primary/70 transition-colors">
+                          <Link href={`/projects/${project.id}`} className="text-primary dark:text-primary hover:text-primary/80 dark:hover:text-primary/80 transition-colors">
                             {project.title}
                           </Link>
                         </CardTitle>
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          Опубликовано: <span className="text-primary dark:text-primary/90">
+                          Опубликовано: <span className="text-primary dark:text-primary">
                             {userQueries.data && userQueries.data[project.userId]
                               ? userQueries.data[project.userId].name || userQueries.data[project.userId].username
                               : "Загрузка..."}
@@ -399,7 +399,7 @@ export default function Projects() {
                           {(project.positions || []).map((position: any, index: number) => (
                             <Badge 
                               key={index} 
-                              className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 dark:bg-primary/20 dark:text-primary/90 dark:hover:bg-primary/30 dark:border-primary/30"
+                              className="bg-primary/10 text-primary hover:bg-primary/20 border border-primary/20 dark:bg-primary/20 dark:text-primary dark:hover:bg-primary/30 dark:border-primary/30"
                             >
                               {typeof position === 'string' ? position : position.title}
                             </Badge>
