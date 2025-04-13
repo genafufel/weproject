@@ -160,7 +160,23 @@ export default function Dashboard() {
     
     // Определяем обработчик пользовательского события tabchange
     const handleTabChange = (event: any) => {
-      if (event.detail && event.detail.tab) {
+      // Если указан конкретный maintab, обновляем главную вкладку
+      if (event.detail && event.detail.maintab) {
+        setActiveTab(event.detail.maintab);
+        
+        // Если указан subtab, устанавливаем соответствующую подвкладку
+        if (event.detail.subtab) {
+          // Немного задерживаем, чтобы контент главной вкладки успел смонтироваться
+          setTimeout(() => {
+            const subtabTrigger = document.querySelector(`[data-subtab="${event.detail.subtab}"]`);
+            if (subtabTrigger) {
+              (subtabTrigger as HTMLElement).click();
+            }
+          }, 50);
+        }
+      } 
+      // Для обратной совместимости
+      else if (event.detail && event.detail.tab) {
         setActiveTab(event.detail.tab);
       }
     };
@@ -390,7 +406,7 @@ export default function Dashboard() {
               {/* Вкладки для переключения между резюме и отправленными заявками */}
               <Tabs defaultValue="resumes" className="mb-6">
                 <TabsList className="flex justify-center mb-6">
-                  <TabsTrigger value="resumes">Мои резюме</TabsTrigger>
+                  <TabsTrigger value="resumes" data-subtab="myresumes">Мои резюме</TabsTrigger>
                   <TabsTrigger value="sent-applications">Отправленные заявки</TabsTrigger>
                 </TabsList>
                 
@@ -596,7 +612,7 @@ export default function Dashboard() {
               {/* Вкладки для переключения между проектами и полученными заявками */}
               <Tabs defaultValue="projects" className="mb-6">
                 <TabsList className="flex justify-center mb-6">
-                  <TabsTrigger value="projects">Мои проекты</TabsTrigger>
+                  <TabsTrigger value="projects" data-subtab="myprojects">Мои проекты</TabsTrigger>
                   <TabsTrigger value="received-applications">Полученные заявки</TabsTrigger>
                 </TabsList>
                 

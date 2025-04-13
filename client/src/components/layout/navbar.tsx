@@ -86,19 +86,27 @@ export function Navbar() {
                     const url = new URL(window.location.href);
                     url.pathname = "/dashboard";
                     // Указываем вкладку соискателя и подвкладку мои резюме
-                    url.searchParams.set('maintab', 'applicant');
-                    url.searchParams.set('subtab', 'myresumes');
+                    url.searchParams.set('tab', 'applicant');
                     window.history.pushState({}, '', url);
                     
                     if (window.location.pathname === '/dashboard') {
                       // Если уже на странице dashboard, создаем событие для обновления вкладки
+                      // Сначала выбираем главную вкладку "Соискатель"
                       const event = new CustomEvent('tabchange', { 
                         detail: { 
-                          maintab: 'applicant',
-                          subtab: 'myresumes'
+                          tab: 'applicant' 
                         } 
                       });
                       window.dispatchEvent(event);
+                      
+                      // Затем после небольшой задержки, чтобы контент успел смонтироваться,
+                      // выбираем вложенную вкладку "Мои резюме"
+                      setTimeout(() => {
+                        const resumesTab = document.querySelector('[data-subtab="myresumes"]');
+                        if (resumesTab) {
+                          (resumesTab as HTMLElement).click();
+                        }
+                      }, 50);
                     } else {
                       // Иначе переходим на dashboard
                       window.location.href = url.toString();
@@ -113,20 +121,28 @@ export function Navbar() {
                   onClick={() => {
                     const url = new URL(window.location.href);
                     url.pathname = "/dashboard";
-                    // Указываем вкладку проекты и подвкладку мои проекты
-                    url.searchParams.set('maintab', 'project');
-                    url.searchParams.set('subtab', 'myprojects');
+                    // Указываем вкладку проекты
+                    url.searchParams.set('tab', 'project');
                     window.history.pushState({}, '', url);
                     
                     if (window.location.pathname === '/dashboard') {
                       // Если уже на странице dashboard, создаем событие для обновления вкладки
+                      // Сначала выбираем главную вкладку "Проект"
                       const event = new CustomEvent('tabchange', { 
                         detail: { 
-                          maintab: 'project',
-                          subtab: 'myprojects'
+                          tab: 'project' 
                         } 
                       });
                       window.dispatchEvent(event);
+                      
+                      // Затем после небольшой задержки, чтобы контент успел смонтироваться,
+                      // выбираем вложенную вкладку "Мои проекты"
+                      setTimeout(() => {
+                        const projectsTab = document.querySelector('[data-subtab="myprojects"]');
+                        if (projectsTab) {
+                          (projectsTab as HTMLElement).click();
+                        }
+                      }, 50);
                     } else {
                       // Иначе переходим на dashboard
                       window.location.href = url.toString();
