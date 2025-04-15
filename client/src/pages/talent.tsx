@@ -317,16 +317,23 @@ export default function Talent() {
       
       <main className="flex-1 bg-gray-50 dark:bg-gray-900">
         {/* Hero section */}
-        <div className="bg-primary text-white py-12">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold mb-4">Найти талантливых сотрудников</h1>
-              <p className="text-blue-100 text-lg mb-8 max-w-3xl mx-auto">
+        <div className="relative bg-gradient-to-br from-primary to-blue-600 text-white py-16 overflow-hidden">
+          {/* Декоративные элементы */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 left-0 w-72 h-72 rounded-full bg-blue-400 filter blur-3xl"></div>
+            <div className="absolute bottom-0 right-0 w-72 h-72 rounded-full bg-indigo-500 filter blur-3xl"></div>
+            <div className="absolute top-1/3 right-1/4 w-48 h-48 rounded-full bg-purple-500 filter blur-3xl"></div>
+          </div>
+          
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="text-center max-w-3xl mx-auto">
+              <h1 className="text-4xl font-extrabold mb-4 animate-fade-in">Найти талантливых сотрудников</h1>
+              <p className="text-blue-100 text-lg mb-8 animate-fade-in animate-delay-100">
                 Откройте для себя мотивированных студентов и молодых специалистов со свежими идеями и навыками.
               </p>
               
               {/* Search form */}
-              <form onSubmit={handleSearchSubmit} className="flex w-full max-w-3xl mx-auto gap-2">
+              <form onSubmit={handleSearchSubmit} className="flex w-full max-w-3xl mx-auto gap-2 animate-fade-in animate-delay-200">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
@@ -334,13 +341,13 @@ export default function Talent() {
                     placeholder="Поиск по названию, навыкам или направлению"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-9 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border-0 shadow-lg focus:bg-white dark:focus:bg-gray-700"
+                    className="pl-9 bg-white/90 dark:bg-gray-800 backdrop-blur-sm text-gray-900 dark:text-gray-100 border-0 shadow-lg focus:bg-white dark:focus:bg-gray-700"
                   />
                 </div>
                 <Button 
                   type="submit" 
                   variant="secondary" 
-                  className="bg-white dark:bg-gray-800 text-primary dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 shadow-lg transition-all duration-300 hover:scale-105 search-button"
+                  className="bg-white/90 dark:bg-gray-800 backdrop-blur-sm text-primary dark:text-white hover:bg-white dark:hover:bg-gray-700 shadow-lg transition-all duration-300 hover:scale-105 search-button"
                 >
                   Поиск
                 </Button>
