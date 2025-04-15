@@ -41,7 +41,7 @@ export function Footer() {
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
           <div className="col-span-2">
             <div className="flex items-center">
-              <Logo size="large" />
+              <Logo />
             </div>
             <p className="mt-4 text-base text-gray-600 dark:text-gray-300">
               Объединяем талантливых студентов с интересными стартап-возможностями.
@@ -89,7 +89,7 @@ export function Footer() {
         </div>
         <div className="mt-12 border-t border-gray-200 dark:border-gray-700 pt-8">
           <p className="text-base text-gray-400 dark:text-gray-500 text-center">
-            &copy; {currentYear} <span className="font-semibold">w</span>project. Все права защищены.
+            &copy; {currentYear} weproject. Все права защищены.
           </p>
         </div>
       </div>
