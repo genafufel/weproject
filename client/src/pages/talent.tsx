@@ -319,14 +319,14 @@ export default function Talent() {
         {/* Hero section */}
         <div className="bg-primary text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto">
+            <div className="text-center">
               <h1 className="text-3xl font-bold mb-4">Найти талантливых сотрудников</h1>
-              <p className="text-blue-100 text-lg mb-8">
+              <p className="text-blue-100 text-lg mb-8 max-w-3xl mx-auto">
                 Откройте для себя мотивированных студентов и молодых специалистов со свежими идеями и навыками.
               </p>
               
               {/* Search form */}
-              <form onSubmit={handleSearchSubmit} className="flex w-full gap-2">
+              <form onSubmit={handleSearchSubmit} className="flex w-full max-w-3xl mx-auto gap-2">
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                   <Input
